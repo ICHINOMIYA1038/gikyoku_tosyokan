@@ -1,6 +1,6 @@
-version: '3.7'
+version: "3.7"
 
-services: 
+services:
   db:
     image: mysql:5.7
     command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
@@ -22,6 +22,7 @@ services:
     command: sh -c 'npm install && yarn dev'
     ports:
       - "8000:3000"
+      - 5555:5555
 volumes:
   front_node_modules:
   mysql-db:
