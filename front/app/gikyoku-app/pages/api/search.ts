@@ -14,13 +14,13 @@ export default async function handler(
   try {
     const {
       keyword = "",
-      minMaleCount = "0",
+      minMaleCount = "-1",
       maxMaleCount = "9999",
-      minFemaleCount = "0",
+      minFemaleCount = "-1",
       maxFemaleCount = "9999",
-      minTotalCount = "0",
+      minTotalCount = "-1",
       maxTotalCount = "9999",
-      minPlaytime = "0",
+      minPlaytime = "-1",
       maxPlaytime = "5",
       sort_by = "",
       sortDirection = "",
@@ -34,26 +34,55 @@ export default async function handler(
       return isNaN(parsedValue) ? defaultValue : parsedValue;
     };
 
+    const perPage = parseIntSafe(per as string, 8);
+    const skip =
+      (parseIntSafe(page as string, 1) - 1) * parseIntSafe(per as string, 8);
+
+    const totalResultsCount = await prisma.post.count({
+      where: {
+        title: {
+          contains: keyword as string,
+        },
+        man: {
+          gte: parseIntSafe(minMaleCount as string, -1),
+          lte: parseIntSafe(maxMaleCount as string, 9999),
+        },
+        woman: {
+          gte: parseIntSafe(minFemaleCount as string, -1),
+          lte: parseIntSafe(maxFemaleCount as string, 9999),
+        },
+        totalNumber: {
+          gte: parseIntSafe(minTotalCount as string, -1),
+          lte: parseIntSafe(maxTotalCount as string, 9999),
+        },
+        playtime: {
+          gte: playTimeConvertToOption(parseIntSafe(minPlaytime as string, 0)),
+          lte: playTimeConvertToOption(parseIntSafe(maxPlaytime as string, 4)),
+        },
+        // 他の条件もここに追加
+      },
+    });
+
     const searchResults = await prisma.post.findMany({
       where: {
         title: {
           contains: keyword as string,
         },
         man: {
-          gte: parseIntSafe(minMaleCount as string, 0),
+          gte: parseIntSafe(minMaleCount as string, -1),
           lte: parseIntSafe(maxMaleCount as string, 9999),
         },
         woman: {
-          gte: parseIntSafe(minFemaleCount as string, 0),
+          gte: parseIntSafe(minFemaleCount as string, -1),
           lte: parseIntSafe(maxFemaleCount as string, 9999),
         },
         totalNumber: {
-          gte: parseIntSafe(minTotalCount as string, 0),
+          gte: parseIntSafe(minTotalCount as string, -1),
           lte: parseIntSafe(maxTotalCount as string, 9999),
         },
         playtime: {
           gte: playTimeConvertToOption(parseIntSafe(minPlaytime as string, 0)),
-          lte: playTimeConvertToOption(parseIntSafe(maxPlaytime as string, 4)),
+          lte: playTimeConvertToOption(parseIntSafe(maxPlaytime as string, 6)),
         },
         // Add more conditions as needed for sorting, tags, etc.
       },
@@ -61,13 +90,26 @@ export default async function handler(
         // Define the sorting order based on the sort_by and sortDirection parameters.
         // Use switch cases or if conditions to map the sort_by and sortDirection values to actual field names and directions.
       },
-      take: parseIntSafe(per as string, 8),
-      skip:
-        (parseIntSafe(page as string, 1) - 1) * parseIntSafe(per as string, 8),
+      take: perPage,
+      skip: skip,
+      include: {
+        author: true, // Include the associated Author records
+        categories: true,
+      },
       // Add tags filtering if needed.
     });
+    const limit_page = Math.ceil(totalResultsCount / perPage);
+    const response = {
+      searchResults,
+      pagination: {
+        count: totalResultsCount,
+        current: page,
+        per: per,
+        limit_page,
+      }, // 総ページ数
+    };
 
-    return res.status(200).json(searchResults);
+    return res.status(200).json(response);
   } catch (error) {
     return res.status(500).json({ error: "Internal server error" });
   } finally {
@@ -76,7 +118,9 @@ export default async function handler(
 }
 
 function playTimeConvertToOption(option: number) {
-  if (option == 0) {
+  if (option == -1) {
+    return -100;
+  } else if (option == 0) {
     return 0;
   } else if (option == 1) {
     return 30;

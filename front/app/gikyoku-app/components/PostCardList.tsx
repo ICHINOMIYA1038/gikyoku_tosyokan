@@ -10,7 +10,7 @@ type PostPageProps = {
 
 const PostCardList: React.FC<PostPageProps> = ({ posts }: any) => {
   return (
-    <div className="border-solid border border-black">
+    <div className="">
       {posts &&
         posts.map((post: any) => <PostCard key={post.id} post={post} />)}
     </div>

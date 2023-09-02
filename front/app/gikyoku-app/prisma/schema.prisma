@@ -23,7 +23,7 @@ model Author {
 model Post {
   id          Int      @id @default(autoincrement())
   title       String
-  content     String
+  content     String? @db.Text
   author_id   Int
   author      Author   @relation(fields: [author_id], references: [id])
   man         Int
@@ -31,9 +31,30 @@ model Post {
   others      Int
   totalNumber Int
   playtime Int
-  synopsis    String?
+  synopsis    String? @db.Text
   image_url   String?
+  categories Category[] @relation("PostCategory")
+  amazon_text_url String?
+  amazon_img_url String? @db.Text
+  amazon_img_text_url String? @db.Text
+  link_to_plot String?
+
   website1    String?
   website2    String?
   website3    String?
 }
+
+model Category {
+  id        Int      @id @default(autoincrement())
+  name      String
+  posts Post[]   @relation("PostCategory")
+}
+
+model News{
+  id        Int      @id @default(autoincrement())
+  date      DateTime @default(now())
+  url String
+  category String
+  title String
+}
+

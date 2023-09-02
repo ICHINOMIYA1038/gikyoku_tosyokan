@@ -1,7 +1,7 @@
 import { SetStateAction, useState, useEffect } from "react";
 import { useRouter } from "next/router";
 
-export default function SearchForm({ setData }: any) {
+export default function SearchForm({ setData, page }: any) {
   const [keyword, setKeyword] = useState<string>("");
   const [minMaleCount, setMinMaleCount] = useState<string>("");
   const [maxMaleCount, setMaxMaleCount] = useState<string>("");
@@ -21,8 +21,11 @@ export default function SearchForm({ setData }: any) {
     handleSubmit();
   }, []);
 
+  useEffect(() => {
+    handleSubmit();
+  }, [page]);
+
   const handleSubmit = async () => {
-    const page = 1;
     const per = 8;
 
     const searchParams: Record<string, string> = {
@@ -57,7 +60,7 @@ export default function SearchForm({ setData }: any) {
   };
 
   return (
-    <div className="border-solid border border-black p-10 lg:w-1/2">
+    <div className="border-solid h-3/4 border border-black p-10 m-5 lg:w-1/2 lg:sticky lg:top-24">
       <div>
         <div>
           <h3 className="text-xl font-bold  mb-1">キーワード</h3>

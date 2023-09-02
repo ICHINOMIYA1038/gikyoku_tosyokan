@@ -21,7 +21,7 @@ async function resetData() {
 }
 
 async function seed() {
-  const csvFilePath = "./prisma/authorSeed.csv";
+  const csvFilePath = "./prisma/author.csv";
   const csvData = await fs.promises.readFile(csvFilePath, "utf-8");
   const rows = csvData.split(/\n/);
 
@@ -30,12 +30,11 @@ async function seed() {
     if (index != 0) {
       authors[index] = await prisma.author.create({
         data: {
-          id: index,
-          name: row[0],
-          website: row[1],
-          group: row[2],
-          profile: row[3],
-          masterpiece: row[4],
+          name: row[1],
+          website: row[2],
+          group: row[3],
+          profile: row[4],
+          masterpiece: row[5],
         },
       });
     }
@@ -43,7 +42,7 @@ async function seed() {
 }
 
 async function seedPost() {
-  const postcsvFilePath = "./prisma/post_seed.csv";
+  const postcsvFilePath = "./prisma/post.csv";
   const postData = await fs.promises.readFile(postcsvFilePath, "utf-8");
   const postRows = postData.split(/\n/);
 
@@ -54,12 +53,17 @@ async function seedPost() {
         data: {
           title: row[1],
           content: "",
-          man: parseInt(row[2]) || -1,
-          woman: parseInt(row[3]) || -1,
-          others: 0,
-          totalNumber: parseInt(row[4]) || -1,
-          playtime: parseInt(row[5]) || -1,
-          author: { connect: { id: parseInt(row[6]) } },
+          man: parseInt(row[4]) || -1,
+          woman: parseInt(row[5]) || -1,
+          others: parseInt(row[6]) || -1,
+          totalNumber: parseInt(row[7]) || -1,
+          playtime: parseInt(row[8]) || -1,
+          author: { connect: { id: parseInt(row[3]) } },
+          synopsis: row[9],
+          image_url: row[10],
+          website1: row[11],
+          amazon_img_url: row[14],
+          amazon_text_url: row[15],
         },
       });
     }
