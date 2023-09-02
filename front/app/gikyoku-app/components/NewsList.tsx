@@ -11,31 +11,54 @@ const NewsItem: React.FC<NewsItemProps> = ({ date, category, title, url }) => {
   const categoryClassName = getCategoryClassName(category);
 
   return (
-    <li className="item">
-      <a href={url}>
-        <p className="date">{date}</p>
-        <p className={`category ${categoryClassName}`}>
-          <span>{category}</span>
-        </p>
-        <p className="title">{title}</p>
-      </a>
-    </li>
+    <div className="m-5 border-b-2 border-black lg:w-1/3">
+      {url ? (
+        <a
+          href={url}
+          className="flex flex-wrap items-center border-b border-gray-300 hover:text-blue-500"
+        >
+          <p
+            className={`px-2 py-1 mr-2 text-xs font-semibold bg-blue-600 text-white rounded-sm`}
+          >
+            {category}
+          </p>
+          <p className="text-sm mr-4">{date}</p>
+
+          <p className="">{title}</p>
+        </a>
+      ) : (
+        <div className="flex">
+          <p
+            className={`px-2 py-1 mr-2 text-xs font-semibold bg-blue-600 text-white rounded-sm`}
+          >
+            {category}
+          </p>
+          <p className="text-sm mr-4">{date}</p>
+
+          <p className="">{title}</p>
+        </div>
+      )}
+    </div>
   );
 };
 
 const NewsList: React.FC<{ news: NewsItemProps[] }> = ({ news }) => {
   return (
-    <ul className="news-list">
-      {news.slice(0, 5).map((item: any) => (
-        <NewsItem
-          key={item.id}
-          date={item.date}
-          category={item.category}
-          title={item.title}
-          url={item.url}
-        />
-      ))}
-    </ul>
+    <>
+      <h2 className="m-5 text-2xl font-bold">News</h2>
+      {news
+        .slice(0, 5)
+        .reverse()
+        .map((item: any) => (
+          <NewsItem
+            key={item.id}
+            date={item.date}
+            category={item.category}
+            title={item.title}
+            url={item.url}
+          />
+        ))}
+    </>
   );
 };
 
