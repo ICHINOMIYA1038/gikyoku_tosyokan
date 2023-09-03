@@ -1,17 +1,15 @@
-import Header from '@/components/Header'
-import Footer from './Footer'
+import Header from "@/components/Header";
+import Footer from "./Footer";
 
-function Layout({ children } :any ) {
+function Layout({ children }: any) {
   return (
-    <div >
+    <div>
       <div className="sticky-header">
         <Header />
       </div>
       <div className="header-gap"></div>
-      <div style={{padding:"20px 40px"}}>
-        { children }
-      </div>
-      <Footer/>
+      <div className="md:px-20 md:py-10">{children}</div>
+      <Footer />
     </div>
   );
 }

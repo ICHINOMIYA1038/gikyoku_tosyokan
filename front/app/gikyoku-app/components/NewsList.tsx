@@ -12,7 +12,7 @@ const NewsItem: React.FC<NewsItemProps> = ({ date, category, title, url }) => {
   const categoryClassName = getCategoryClassName(category);
 
   return (
-    <div className="m-5 border-b-2 border-black lg:w-1/3">
+    <div className="m-5 border-b-2 border-black lg:w-3/4">
       {url ? (
         <Link
           href={url}

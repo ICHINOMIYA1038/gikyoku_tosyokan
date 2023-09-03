@@ -6,21 +6,33 @@ import PostCardList from "@/components/PostCardList";
 import PostDetail from "@/components/PostDetail";
 import SearchForm from "@/components/SearchForm";
 import Pagination from "@/components/Pagination";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { PrismaClient } from "@prisma/client";
 import NewsList from "@/components/NewsList";
+import TopImage from "@/components/TopImage";
 
 const prisma = new PrismaClient();
 
 export default function Home({ news }: any) {
   const [data, setData] = useState<any>(null); // 取得したデータを格納
   const [page, setPage] = useState(1);
-  console.log(news);
-  console.log(process.env.POSTGRES_PRISMA_URL);
+  const searchFormRef = useRef<HTMLDivElement | null>(null);
+
+  const handleScrollToRegistrationForm = () => {
+    if (searchFormRef.current) {
+      searchFormRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
     <Layout>
+      <TopImage buttonClick={handleScrollToRegistrationForm} />
       <NewsList news={news} />
-      <div className="lg:flex relative  box-border">
+      <div
+        className="lg:flex relative  box-border"
+        id="registration-form"
+        ref={searchFormRef}
+      >
         <SearchForm setData={setData} page={page} />
         <div className="lg:w-2/3 flex flex-col gap-3 m-5">
           {data && (
