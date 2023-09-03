@@ -11,11 +11,12 @@ function AuthorListPage(authors: any) {
       <div>
         <h1>Authors</h1>
         <ul>
-          {authors.map((author: any) => (
-            <li key={author.id}>
-              <Link href={`/authors/${author.id}`}>{author.name}</Link>
-            </li>
-          ))}
+          {authors &&
+            authors.map((author: any) => (
+              <li key={author.id}>
+                <Link href={`/authors/${author.id}`}>{author.name}</Link>
+              </li>
+            ))}
         </ul>
       </div>
     </Layout>
