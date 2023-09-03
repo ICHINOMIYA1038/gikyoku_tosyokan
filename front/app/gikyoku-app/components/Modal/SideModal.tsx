@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-const SideModal = ({ closeModal }) => {
+const SideModal = ({ closeModal }: any) => {
   const [activeTab, setActiveTab] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -15,7 +15,7 @@ const SideModal = ({ closeModal }) => {
     setTimeout(closeModal, 300); // モーダルが閉じるアニメーション後に閉じる
   };
 
-  const handleTabClick = (index) => {
+  const handleTabClick = (index: any) => {
     if (index === 3) {
       handleCloseModal();
     } else {
