@@ -163,7 +163,7 @@ export default function SearchForm({ setData, page }: any) {
         </div>
       </div>
       <div>
-        <div className="border-2 font-bold border-gray-300 border-gray-300 bg-green-200">
+        <div className=" font-bold text-white  bg-green-600">
           <button className="w-full " onClick={handleSubmit}>
             検索
           </button>
