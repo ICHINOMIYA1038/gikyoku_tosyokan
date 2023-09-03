@@ -11,7 +11,7 @@ function AuthorPage({ author }: any) {
         <h1>name:{author.name}</h1>
         {author.website && (
           <p>
-            Website: <a href={author.website}>{author.website}</a>
+            Website: <Link href={author.website}>{author.website}</Link>
           </p>
         )}
         {author.group && <p>Group: {author.group}</p>}

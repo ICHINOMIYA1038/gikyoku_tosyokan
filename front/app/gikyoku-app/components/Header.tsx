@@ -1,6 +1,7 @@
 import * as React from "react";
 import { useEffect } from "react";
 import router from "next/router";
+import Link from "next/link";
 
 export default function Header() {
   return (
@@ -15,18 +16,18 @@ export default function Header() {
         <span className="text-xl font-bold">戯曲図書館</span>
       </div>
       <nav className="space-x-4">
-        <a href="#" className="text-gray-800 hover:text-gray-600">
+        <Link href="#" className="text-gray-800 hover:text-gray-600">
           Home
-        </a>
-        <a href="#" className="text-gray-800 hover:text-gray-600">
+        </Link>
+        <Link href="#" className="text-gray-800 hover:text-gray-600">
           About
-        </a>
-        <a href="#" className="text-gray-800 hover:text-gray-600">
+        </Link>
+        <Link href="#" className="text-gray-800 hover:text-gray-600">
           Services
-        </a>
-        <a href="#" className="text-gray-800 hover:text-gray-600">
+        </Link>
+        <Link href="#" className="text-gray-800 hover:text-gray-600">
           Contact
-        </a>
+        </Link>
       </nav>
     </header>
   );

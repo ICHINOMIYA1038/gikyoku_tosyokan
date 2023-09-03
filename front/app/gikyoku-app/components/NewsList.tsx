@@ -1,3 +1,4 @@
+import Link from "next/link";
 import React from "react";
 
 interface NewsItemProps {
@@ -13,7 +14,7 @@ const NewsItem: React.FC<NewsItemProps> = ({ date, category, title, url }) => {
   return (
     <div className="m-5 border-b-2 border-black lg:w-1/3">
       {url ? (
-        <a
+        <Link
           href={url}
           className="flex flex-wrap items-center border-b border-gray-300 hover:text-blue-500"
         >
@@ -25,7 +26,7 @@ const NewsItem: React.FC<NewsItemProps> = ({ date, category, title, url }) => {
           <p className="text-sm mr-4">{date}</p>
 
           <p className="">{title}</p>
-        </a>
+        </Link>
       ) : (
         <div className="flex">
           <p

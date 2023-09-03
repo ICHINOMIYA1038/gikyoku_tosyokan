@@ -16,6 +16,7 @@ export default function Home({ news }: any) {
   const [data, setData] = useState(null); // 取得したデータを格納
   const [page, setPage] = useState(1);
   console.log(news);
+  console.log(process.env.POSTGRES_PRISMA_URL);
   return (
     <Layout>
       <NewsList news={news} />
