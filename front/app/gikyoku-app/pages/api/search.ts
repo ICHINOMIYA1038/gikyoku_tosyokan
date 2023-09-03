@@ -56,8 +56,8 @@ export default async function handler(
           lte: parseIntSafe(maxTotalCount as string, 9999),
         },
         playtime: {
-          gte: playTimeConvertToOption(parseIntSafe(minPlaytime as string, 0)),
-          lte: playTimeConvertToOption(parseIntSafe(maxPlaytime as string, 4)),
+          gte: playTimeConvertToOption(parseIntSafe(minPlaytime as string, -1)),
+          lte: playTimeConvertToOption(parseIntSafe(maxPlaytime as string, 5)),
         },
         // 他の条件もここに追加
       },
