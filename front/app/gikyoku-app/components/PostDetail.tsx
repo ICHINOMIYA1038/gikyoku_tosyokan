@@ -15,7 +15,9 @@ const PostDetail: React.FC<PostPageProps> = ({ post }: PostPageProps) => {
         <div className="flex items-center mb-2"></div>
         <h2 className="text-lg font-semibold text-gray-800">{post.title}</h2>
         <p className="text-gray-600 mb-4">{post.synopsis}</p>
-        <div dangerouslySetInnerHTML={{ __html: post.content }} />
+        {post.content && (
+          <div dangerouslySetInnerHTML={{ __html: post.content }} />
+        )}
         <AmazonAffiliateLink
           title={post.title}
           amazonImgUrl={post.amazon_img_url}

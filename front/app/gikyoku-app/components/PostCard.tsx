@@ -9,7 +9,7 @@ type PostPageProps = {
   post: PostType & { author: { id: number; name: string } };
 };
 
-const PostCard: React.FC<PostPageProps> = ({ post }: PostPageProps) => {
+const PostCard: React.FC<PostPageProps> = ({ post }: any) => {
   const router = useRouter();
   const [hovered, setHovered] = useState(false);
 
