@@ -1,16 +1,48 @@
 import * as React from "react";
 import { PrismaClient, Post as PostType } from "@prisma/client";
 import Layout from "@/components/Layout";
-import PostCard from "@/components/PostCard";
-import { PostData, PostsPageProps } from "@/components/Type/type";
 import PostDetail from "@/components/PostDetail";
+import {
+  FacebookShareButton,
+  HatenaShareButton,
+  LineShareButton,
+  TwitterShareButton,
+  FacebookIcon,
+  HatenaIcon,
+  LineIcon,
+  TwitterIcon,
+} from "react-share";
 
 const prisma = new PrismaClient();
 
 function PostPage({ post }: any) {
+  const URL = `/posts/${post.id}`;
+  const QUOTE = "共有するときのメッセージ";
+
   return (
     <Layout>
-      <PostDetail post={post} />
+      <div className="relative mx-auto max-w-xl">
+        <div className="flex flex-col fixed mr-20">
+          <FacebookShareButton url={URL} quote={QUOTE}>
+            <FacebookIcon size={48} round />
+          </FacebookShareButton>
+          <TwitterShareButton url={URL} title={QUOTE}>
+            <TwitterIcon size={48} round />
+          </TwitterShareButton>
+          <LineShareButton url={URL} title={QUOTE}>
+            <LineIcon size={48} round />
+          </LineShareButton>
+          <HatenaShareButton
+            url={URL}
+            title={QUOTE}
+            windowWidth={660}
+            windowHeight={460}
+          >
+            <HatenaIcon size={48} round />
+          </HatenaShareButton>
+        </div>
+        <PostDetail post={post} />
+      </div>
     </Layout>
   );
 }

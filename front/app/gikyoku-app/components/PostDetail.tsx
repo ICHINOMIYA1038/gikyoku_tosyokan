@@ -10,12 +10,9 @@ type PostPageProps = {
   post: PostType & { author: { id: number; name: string; group: string } };
 };
 const PostDetail: React.FC<PostPageProps> = ({ post }: PostPageProps) => {
-  console.log(post);
-
   return (
     <div className="max-w-md mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
       <div className="p-4">
-        <div className="flex items-center mb-2"></div>
         <h2 className="text-lg font-semibold text-gray-800">{post.title}</h2>
         <p className="text-gray-600 mb-4">
           {post.author.name}
@@ -43,7 +40,7 @@ const PostDetail: React.FC<PostPageProps> = ({ post }: PostPageProps) => {
           <p>【あらすじ,概要】</p>
           <p className="text-gray-600 mb-4">{post.synopsis}</p>
         </div>
-        <p className="text-gray-600 mb-4">{post.synopsis}</p>
+
         {post.content && (
           <div dangerouslySetInnerHTML={{ __html: post.content }} />
         )}
