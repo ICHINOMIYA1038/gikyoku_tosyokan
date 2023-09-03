@@ -11,7 +11,7 @@ function AuthorListPage(authors: any) {
       <div>
         <h1>Authors</h1>
         <ul>
-          {authors &&
+          {authors.length == 0 &&
             authors.map((author: any) => (
               <li key={author.id}>
                 <Link href={`/authors/${author.id}`}>{author.name}</Link>
