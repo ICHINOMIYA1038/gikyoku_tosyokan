@@ -6,7 +6,7 @@ type PostPageProps = {
   post: PostType & { author: { id: number; name: string } };
 };
 
-const PostCardList: React.FC = ({ posts }: any) => {
+const PostCardList = ({ posts }: any) => {
   return (
     <div className="">
       {posts &&

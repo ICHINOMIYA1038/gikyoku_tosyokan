@@ -12,7 +12,7 @@ interface PaginationProps {
   setPage: (page: string) => void;
 }
 
-const Pagination: React.FC<PaginationProps> = ({ pagination, setPage }) => {
+const Pagination = ({ pagination, setPage }: any) => {
   const totalPages = Math.ceil(pagination.count / parseInt(pagination.per, 10));
   const currentPage = parseInt(pagination.current, 10);
 

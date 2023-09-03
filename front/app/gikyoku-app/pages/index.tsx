@@ -13,7 +13,7 @@ import NewsList from "@/components/NewsList";
 const prisma = new PrismaClient();
 
 export default function Home({ news }: any) {
-  const [data, setData] = useState(null); // 取得したデータを格納
+  const [data, setData] = useState<any>(null); // 取得したデータを格納
   const [page, setPage] = useState(1);
   console.log(news);
   console.log(process.env.POSTGRES_PRISMA_URL);
