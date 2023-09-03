@@ -7,7 +7,7 @@ import PostDetail from "@/components/PostDetail";
 
 const prisma = new PrismaClient();
 
-function PostPage({ post }: PostData) {
+function PostPage({ post }: any) {
   return (
     <Layout>
       <PostDetail post={post} />
