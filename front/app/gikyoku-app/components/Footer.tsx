@@ -13,14 +13,10 @@ const Footer: React.FC = () => {
             <h2 className="text-lg font-semibold mb-4">このサイトについて</h2>
             <ul>
               <li className="mb-2">
-                <Link href href="/support/aboutus">
-                  運営者概要
-                </Link>
+                <Link href="/support/aboutus">運営者概要</Link>
               </li>
               <li className="mb-2">
-                <Link href href="/support/press-release">
-                  プレスリリース
-                </Link>
+                <Link href="/support/press-release">プレスリリース</Link>
               </li>
             </ul>
           </div>
