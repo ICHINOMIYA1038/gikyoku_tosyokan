@@ -105,7 +105,7 @@ async function seedNews() {
     }
   });
 }
-
+/*
 seedAuthor()
   .catch((error) => {
     console.error("Seed error:", error);
@@ -137,7 +137,7 @@ seedPost()
   .finally(async () => {
     await prisma.$disconnect();
   });
-
+*/
 function playTimeConvertToOption(playtime: number) {
   if (playtime <= 30) {
     playtime = 0;
