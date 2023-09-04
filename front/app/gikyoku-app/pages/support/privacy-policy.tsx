@@ -1,11 +1,12 @@
 import Layout from "@/components/Layout";
+import SupportLayout from "@/components/SupportLayout";
 import { useRouter } from "next/router";
 
 function Home() {
   const router = useRouter();
 
   return (
-    <Layout>
+    <SupportLayout now="privacy-policy">
       <div className="support-document">
         <h2>プライバシーポリシー</h2>
 
@@ -122,7 +123,7 @@ function Home() {
           <li>Eメールアドレス：ichiryo108@gmail.com</li>
         </ul>
       </div>
-    </Layout>
+    </SupportLayout>
   );
 }
 

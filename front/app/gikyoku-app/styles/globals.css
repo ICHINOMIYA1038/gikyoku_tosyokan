@@ -1,15 +1,20 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 :root {
-  --foreground-rgb: 0, 0, 0; /* テキストの色 */
-  --background-rgb: 220, 220, 220; /* ベースの背景色（明るいグレー） */
+  --foreground-rgb: 0, 0, 0;
+  /* テキストの色 */
+  --background-rgb: 220, 220, 220;
+  /* ベースの背景色（明るいグレー） */
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --foreground-rgb: 255, 255, 255; /* テキストの色（ダークモード） */
-    --background-rgb: 70, 70, 70; /* ベースの背景色（ダークモード） */
+    --foreground-rgb: 255, 255, 255;
+    /* テキストの色（ダークモード） */
+    --background-rgb: 70, 70, 70;
+    /* ベースの背景色（ダークモード） */
   }
 }
 

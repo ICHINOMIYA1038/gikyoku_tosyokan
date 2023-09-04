@@ -1,13 +1,14 @@
 import Layout from "@/components/Layout";
 import ContactForm from "@/components/Form/ContactForm";
+import SupportLayout from "@/components/SupportLayout";
 
 function Home() {
   return (
-    <Layout>
+    <SupportLayout now="contact">
       <div className="support-document">
         <ContactForm />
       </div>
-    </Layout>
+    </SupportLayout>
   );
 }
 

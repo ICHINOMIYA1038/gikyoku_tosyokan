@@ -1,11 +1,12 @@
 import Layout from "@/components/Layout";
+import SupportLayout from "@/components/SupportLayout";
 import { useRouter } from "next/router";
 
 function Home() {
   const router = useRouter();
 
   return (
-    <Layout>
+    <SupportLayout now="tos">
       <div className="support-document">
         <h2>利用規約</h2>
         <p>
@@ -150,7 +151,7 @@ function Home() {
           本規約の解釈にあたっては，日本法を準拠法とします。本サービスに関して紛争が生じた場合には，当サイトの本店所在地を管轄する裁判所を専属的合意管轄とします。
         </p>
       </div>
-    </Layout>
+    </SupportLayout>
   );
 }
 
