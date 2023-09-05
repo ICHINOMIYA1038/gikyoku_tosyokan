@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { PrismaClient, Post as PostType } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
@@ -19,9 +19,13 @@ export default async function handler(
       playtime,
       synopsis,
       image_url,
-      website1,
-      website2,
-      website3,
+      categories, // Assuming you want to handle categories as an array of IDs
+      amazon_text_url,
+      amazon_img_url,
+      amazon_img_text_url,
+      link_to_plot,
+      buy_link,
+      ISBN_13,
     } = req.body;
     try {
       const newPost = await prisma.post.create({
@@ -36,9 +40,15 @@ export default async function handler(
           playtime,
           synopsis,
           image_url,
-          website1,
-          website2,
-          website3,
+          categories: {
+            connect: categories.map((categoryId: any) => ({ id: categoryId })),
+          }, // Connect categories by their IDs
+          amazon_text_url,
+          amazon_img_url,
+          amazon_img_text_url,
+          link_to_plot,
+          buy_link,
+          ISBN_13,
         },
       });
       res.status(201).json(newPost);

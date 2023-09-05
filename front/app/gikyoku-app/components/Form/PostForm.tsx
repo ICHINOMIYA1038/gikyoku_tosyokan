@@ -2,25 +2,38 @@ import { useState } from "react";
 import MessageModal from "../Modal/MessageModalProps";
 
 const PostForm: React.FC = () => {
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
-  const [authorId, setAuthorId] = useState(1);
-  const [man, setMan] = useState(0);
-  const [woman, setWoman] = useState(0);
-  const [others, setOthers] = useState(0);
-  const [totalNumber, setTotalNumber] = useState(0);
-  const [playtime, setPlaytime] = useState(100);
-  const [synopsis, setSynopsis] = useState("");
-  const [image_url, setImageUrl] = useState("");
-  const [website1, setWebsite1] = useState("");
-  const [website2, setWebsite2] = useState("");
-  const [website3, setWebsite3] = useState("");
-  const [sending, setSending] = useState(false);
+  const [formData, setFormData] = useState({
+    title: "",
+    content: "",
+    authorId: 1,
+    man: 0,
+    woman: 0,
+    others: 0,
+    totalNumber: 0,
+    playtime: 100,
+    synopsis: "",
+    image_url: "",
+    categories: [], // カテゴリーを選択するための配列
+    amazon_text_url: "",
+    amazon_img_url: "",
+    amazon_img_text_url: "",
+    link_to_plot: "",
+    buy_link: "",
+    ISBN_13: "",
+  });
 
+  const [sending, setSending] = useState(false);
   const [errorModal, setErrorModal] = useState(false);
   const [successModal, setSuccessModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+
+  const categoryOptions = [
+    { id: 1, name: "Category 1" },
+    { id: 2, name: "Category 2" },
+    { id: 3, name: "Category 3" },
+    // 他のカテゴリーを追加
+  ];
 
   const closeModal = () => {
     setErrorModal(false);
@@ -37,27 +50,30 @@ const PostForm: React.FC = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          title,
-          content,
-          authorId,
-          man,
-          woman,
-          others,
-          totalNumber,
-          playtime,
-          synopsis,
-          image_url,
-          website1,
-          website2,
-          website3,
-        }),
+        body: JSON.stringify(formData),
       });
       const data = await response.json();
 
-      setTitle("");
-      setContent("");
-      setAuthorId(0);
+      setFormData({
+        ...formData, // 既存のフォームデータを保持
+        title: "",
+        content: "",
+        authorId: 1,
+        man: -1,
+        woman: -1,
+        others: -1,
+        totalNumber: -1,
+        playtime: 100,
+        synopsis: "",
+        image_url: "",
+        categories: [], // カテゴリーを選択するための配列
+        amazon_text_url: "",
+        amazon_img_url: "",
+        amazon_img_text_url: "",
+        link_to_plot: "",
+        buy_link: "",
+        ISBN_13: "",
+      });
 
       setSuccessMessage("Post created successfully.");
       setErrorMessage("");
@@ -75,107 +91,161 @@ const PostForm: React.FC = () => {
     }
   };
 
+  // 各入力フィールドの変更を処理するハンドラー関数を追加することができます
+  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedCategoryIds = Array.from(e.target.selectedOptions, (option) =>
+      parseInt(option.value)
+    );
+    setFormData({
+      ...formData,
+      categories: selectedCategoryIds,
+    });
+  };
+
   return (
     <form onSubmit={handleSubmit}>
       <h3>Title</h3>
       <input
         type="text"
         placeholder="Title"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
+        value={formData.title}
+        onChange={(e) => setFormData({ ...formData, title: e.target.value })}
       />
-      <h3>Content</h3>
-      <textarea
-        placeholder="Content"
-        value={content}
-        onChange={(e) => setContent(e.target.value)}
-      />
-      <h3>Author ID</h3>
-      <input
-        type="text"
-        placeholder="Author ID"
-        value={authorId}
-        onChange={(e) => setAuthorId(parseInt(e.target.value))}
-      />
-
       <h3>Man</h3>
       <input
-        type="text"
+        type="number"
         placeholder="Man"
-        value={man}
-        onChange={(e) => setMan(parseInt(e.target.value))}
+        value={formData.man}
+        onChange={(e) =>
+          setFormData({ ...formData, man: parseInt(e.target.value) })
+        }
       />
 
       <h3>Woman</h3>
       <input
-        type="text"
+        type="number"
         placeholder="Woman"
-        value={woman}
-        onChange={(e) => setWoman(parseInt(e.target.value))}
+        value={formData.woman}
+        onChange={(e) =>
+          setFormData({ ...formData, woman: parseInt(e.target.value) })
+        }
       />
 
       <h3>Others</h3>
       <input
-        type="text"
+        type="number"
         placeholder="Others"
-        value={others}
-        onChange={(e) => setOthers(parseInt(e.target.value))}
+        value={formData.others}
+        onChange={(e) =>
+          setFormData({ ...formData, others: parseInt(e.target.value) })
+        }
       />
 
       <h3>Total Number</h3>
       <input
-        type="text"
+        type="number"
         placeholder="Total Number"
-        value={totalNumber}
-        onChange={(e) => setTotalNumber(parseInt(e.target.value))}
+        value={formData.totalNumber}
+        onChange={(e) =>
+          setFormData({ ...formData, totalNumber: parseInt(e.target.value) })
+        }
       />
 
       <h3>Playtime</h3>
       <input
-        type="text"
+        type="number"
         placeholder="Playtime"
-        value={playtime}
-        onChange={(e) => setPlaytime(parseInt(e.target.value))}
+        value={formData.playtime}
+        onChange={(e) =>
+          setFormData({ ...formData, playtime: parseInt(e.target.value) })
+        }
       />
 
       <h3>Synopsis</h3>
       <textarea
         placeholder="Synopsis"
-        value={synopsis}
-        onChange={(e) => setSynopsis(e.target.value)}
+        value={formData.synopsis}
+        onChange={(e) => setFormData({ ...formData, synopsis: e.target.value })}
       />
 
       <h3>Image URL</h3>
       <input
         type="text"
         placeholder="Image URL"
-        value={image_url}
-        onChange={(e) => setImageUrl(e.target.value)}
+        value={formData.image_url}
+        onChange={(e) =>
+          setFormData({ ...formData, image_url: e.target.value })
+        }
       />
 
-      <h3>Website 1</h3>
+      <h3>Amazon Text URL</h3>
       <input
         type="text"
-        placeholder="Website 1"
-        value={website1}
-        onChange={(e) => setWebsite1(e.target.value)}
+        placeholder="Amazon Text URL"
+        value={formData.amazon_text_url}
+        onChange={(e) =>
+          setFormData({ ...formData, amazon_text_url: e.target.value })
+        }
       />
 
-      <h3>Website 2</h3>
+      <h3>Amazon Image URL</h3>
       <input
         type="text"
-        placeholder="Website 2"
-        value={website2}
-        onChange={(e) => setWebsite2(e.target.value)}
+        placeholder="Amazon Image URL"
+        value={formData.amazon_img_url}
+        onChange={(e) =>
+          setFormData({ ...formData, amazon_img_url: e.target.value })
+        }
       />
 
-      <h3>Website 3</h3>
+      <h3>Amazon Image Text URL</h3>
       <input
         type="text"
-        placeholder="Website 3"
-        value={website3}
-        onChange={(e) => setWebsite3(e.target.value)}
+        placeholder="Amazon Image Text URL"
+        value={formData.amazon_img_text_url}
+        onChange={(e) =>
+          setFormData({ ...formData, amazon_img_text_url: e.target.value })
+        }
       />
+
+      <h3>Link to Plot</h3>
+      <input
+        type="text"
+        placeholder="Link to Plot"
+        value={formData.link_to_plot}
+        onChange={(e) =>
+          setFormData({ ...formData, link_to_plot: e.target.value })
+        }
+      />
+
+      <h3>Buy Link</h3>
+      <input
+        type="text"
+        placeholder="Buy Link"
+        value={formData.buy_link}
+        onChange={(e) => setFormData({ ...formData, buy_link: e.target.value })}
+      />
+
+      <h3>ISBN-13</h3>
+      <input
+        type="text"
+        placeholder="ISBN-13"
+        value={formData.ISBN_13}
+        onChange={(e) => setFormData({ ...formData, ISBN_13: e.target.value })}
+      />
+
+      <h3>Categories</h3>
+      <select
+        multiple // 複数のカテゴリーを選択できるようにする
+        value={formData.categories}
+        onChange={handleCategoryChange}
+      >
+        {categoryOptions.map((category) => (
+          <option key={category.id} value={category.id}>
+            {category.name}
+          </option>
+        ))}
+      </select>
 
       <button type="submit" disabled={sending}>
         {sending ? "Sending..." : "Submit"}

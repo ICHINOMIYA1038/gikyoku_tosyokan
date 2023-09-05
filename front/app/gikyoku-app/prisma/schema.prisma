@@ -27,11 +27,11 @@ model Post {
   content     String? @db.Text
   author_id   Int
   author      Author   @relation(fields: [author_id], references: [id])
-  man         Int
-  woman       Int
-  others      Int
-  totalNumber Int
-  playtime Int
+  man         Int?
+  woman       Int?
+  others      Int?
+  totalNumber Int?
+  playtime Int?
   synopsis    String? @db.Text
   image_url   String?
   categories Category[] @relation("PostCategory")
@@ -39,6 +39,9 @@ model Post {
   amazon_img_url String? @db.Text
   amazon_img_text_url String? @db.Text
   link_to_plot String?
+  buy_link String?
+  ISBN_13 String?
+
 
   website1    String?
   website2    String?
@@ -54,7 +57,7 @@ model Category {
 model News{
   id        Int      @id @default(autoincrement())
   date      DateTime @default(now())
-  url String
+  url String?
   category String
   title String
 }
