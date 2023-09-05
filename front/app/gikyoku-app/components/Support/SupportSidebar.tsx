@@ -10,6 +10,13 @@ const SupportSidebar = ({ now }: any) => {
 
                 </li>
                 <li>
+                    <Link href="/support/about">
+                        <div className={`p-2 cursor-pointer ${now === "about" ? "bg-blue-500 text-white" : "bg-white"} hover:bg-blue-500 hover:text-white`}>
+                            サイト概要
+                        </div>
+                    </Link>
+                </li>
+                <li>
                     <Link href="/support/aboutus">
                         <div className={`p-2 cursor-pointer ${now === "aboutus" ? "bg-blue-500 text-white" : "bg-white"} hover:bg-blue-500 hover:text-white`}>
                             運営者概要

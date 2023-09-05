@@ -7,7 +7,7 @@ function SupportLayout({ children, now }: any) {
     return (
         <div>
             <Head>
-                <title>Cool Title</title>
+                <title>戯曲図書館</title>
                 <meta name="description" content="
         上演する脚本を探しの方に。上演時間や人数などから検索ができます。戯曲を探す、戯曲図書館。" key="desc" />
                 <meta property="og:title" content="戯曲を探す、戯曲図書館" />

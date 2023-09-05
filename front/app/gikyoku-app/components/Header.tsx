@@ -19,14 +19,11 @@ export default function Header() {
         <Link href="#" className="text-gray-800 hover:text-gray-600">
           Home
         </Link>
-        <Link href="#" className="text-gray-800 hover:text-gray-600">
+        <Link href="/support/aboutus" className="text-gray-800 hover:text-gray-600">
           About
         </Link>
-        <Link href="#" className="text-gray-800 hover:text-gray-600">
-          Services
-        </Link>
-        <Link href="#" className="text-gray-800 hover:text-gray-600">
-          Contact
+        <Link href="/support/contact" className="text-gray-800 hover:text-gray-600">
+          お問い合わせ
         </Link>
       </nav>
     </header>
