@@ -19,7 +19,7 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ./front/app:/usr/src/app
-      - front_node_modules:/usr/src/app/node_modules
+      - front_node_modules:/usr/src/app/gikyoku-app/node_modules
     command: sh -c 'npm install && yarn dev'
     ports:
       - "8000:3000"
