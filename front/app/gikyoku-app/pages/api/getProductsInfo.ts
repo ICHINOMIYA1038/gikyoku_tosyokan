@@ -1,6 +1,7 @@
-/*
+
 import { NextApiRequest, NextApiResponse } from "next";
 import axios from "axios";
+/*
 import { HttpRequest } from "@aws-sdk/protocol-http";
 import { RequestSigner } from "@aws-sdk/s3-request-presigner";
 import { Sha256 } from "@aws-crypto/sha256-js";
@@ -101,3 +102,11 @@ const amazonApiHandler = async (_req: NextApiRequest, res: NextApiResponse) => {
 };
 
 export default amazonApiHandler;
+*/
+
+export default function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  res.status(200).json({ result: "this API does not work anymore" });
+}
