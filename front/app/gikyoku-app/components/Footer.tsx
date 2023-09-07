@@ -8,7 +8,7 @@ const Footer: React.FC = () => {
         <Link href="/" className="block mb-4">
           <img src="/logo.png" alt="Logo" className="w-16 h-auto" />
         </Link>
-        <div className="flex flex-wrap -mx-4">
+        <div className="flex flex-wrap">
           <div className="w-full md:w-1/3 px-4 mb-8 md:mb-0">
             <h2 className="text-lg font-semibold mb-4">このサイトについて</h2>
             <ul>

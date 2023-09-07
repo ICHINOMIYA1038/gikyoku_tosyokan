@@ -10,9 +10,9 @@ const ExternalLinkButton = ({ title, url }: any) => {
     >
       <div className="w-full">
         <div>
-          <h2 className="font-bold">{title}</h2>
+          <h3 className="font-bold">{title}</h3>
         </div>
-        <div className="p-4 m-4 text-center bg-indigo-500 cursor-pointer  rounded-md w-ful font-bold text-xl text-black transition duration-300 ease-in-out hover:border-2 hover:border-indigo-500  hover:bg-white hover:text-indigo-500">
+        <div className="p-4 m-2 text-center bg-indigo-500 cursor-pointer  rounded-md w-ful font-bold  text-black transition duration-300 ease-in-out hover:border-2 hover:border-indigo-500  hover:bg-white hover:text-indigo-500">
           外部サイトでチェックする
         </div>
       </div>

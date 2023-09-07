@@ -11,7 +11,7 @@ const AmazonAffiliateLink = ({ title, amazonImgUrl, amazonTextUrl }: any) => {
       <div dangerouslySetInnerHTML={{ __html: amazonImgUrl }} />
       <div className="w-full">
         <div>
-          <h3 className="mr-2 font-bold">{title}</h3>
+          <h3 className="ml-2 font-bold">{title}</h3>
         </div>
         <div className="p-4 m-4 text-center bg-indigo-500 cursor-pointer  rounded-md w-ful font-bold text-xl text-black transition duration-300 ease-in-out hover:border-2 hover:border-indigo-500  hover:bg-white hover:text-indigo-500">
           Amazonでチェックする
