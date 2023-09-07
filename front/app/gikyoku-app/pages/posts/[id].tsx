@@ -16,8 +16,8 @@ import {
 const prisma = new PrismaClient();
 
 function PostPage({ post }: any) {
-  const URL = `/posts/${post.id}`;
-  const QUOTE = "共有するときのメッセージ";
+  const URL = `https://gikyokutosyokan.com/posts/${post.id}`;
+  const QUOTE = `${post.author.name}作「${post.title}」をみんなにおすすめしよう`;
 
   return (
     <Layout>

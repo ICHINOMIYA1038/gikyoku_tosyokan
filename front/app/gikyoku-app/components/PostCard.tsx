@@ -11,22 +11,17 @@ type PostPageProps = {
 
 const PostCard: React.FC<PostPageProps> = ({ post }: any) => {
   const router = useRouter();
-  const [hovered, setHovered] = useState(false);
 
   return (
     <div
-      className={`mb-5 bg-white h-48 border-solid border border-black link-card ${
-        hovered ? "bg-gray-100" : ""
-      }`}
+      className="mb-5 bg-white h-48 border-solid border border-black link-card"
       onClick={() => {
         router.push(`/posts/${post.id}`);
       }}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
     >
       <div className="flex">
         {post.image_url && (
-          <div className="h-48 w-1/3 relative">
+          <div className="h-48 w-1/4 relative">
             <Image
               src={post.image_url}
               alt="Landscape picture"
@@ -38,7 +33,7 @@ const PostCard: React.FC<PostPageProps> = ({ post }: any) => {
           </div>
         )}
         {!post.image_url && (
-          <div className="h-48 w-1/3 relative">
+          <div className="h-48 w-1/4 relative">
             <Image
               src="/24202513.jpg"
               alt="Landscape picture"
@@ -49,7 +44,7 @@ const PostCard: React.FC<PostPageProps> = ({ post }: any) => {
             />
           </div>
         )}
-        <div className="w-2/3 md:p-2">
+        <div className="w-3/4 p-2 h-48">
           {post.categories &&
             post.categories.length !== 0 &&
             post.categories
@@ -57,20 +52,19 @@ const PostCard: React.FC<PostPageProps> = ({ post }: any) => {
               .map((category: any) => (
                 <Badge key={post.id} text={category.name} />
               ))}
-
-          <h2 className="text-xl font-bold">{post.title}</h2>
-          <div className="flex font-bold gap-3">
+          <h2 className="text-xl font-bold mt-1">{post.title}</h2>
+          <div className="flex font-bold gap-1 text-sm">
             <p>
               <span>男:</span>
-              {post.man !== -1 ? `${post.man}人` : "不明"}
+              {post.man !== -1 ? `${post.man}` : "不明"}
             </p>
             <p>
               <span>女:</span>
-              {post.woman !== -1 ? `${post.woman}人` : "不明"}
+              {post.woman !== -1 ? `${post.woman}` : "不明"}
             </p>
             <p>
               <span>総人数:</span>
-              {post.totalNumber !== -1 ? `${post.totalNumber}人` : "不明"}
+              {post.totalNumber !== -1 ? `${post.totalNumber}` : "不明"}
             </p>
             <p>
               <span>上演時間:</span>
@@ -79,8 +73,8 @@ const PostCard: React.FC<PostPageProps> = ({ post }: any) => {
           </div>
           <div>
             {post.synopsis && (
-              <p className="overflow-hidden mr-3">
-                {post.synopsis.slice(0, 90) + "..."}
+              <p className="line-clamp-3 mr-3 mt-3 mb-3 max-h-20 lg:max-h-24">
+                {post.synopsis}
               </p>
             )}
           </div>

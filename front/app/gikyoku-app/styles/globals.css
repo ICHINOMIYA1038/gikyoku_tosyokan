@@ -31,5 +31,9 @@ body {
 }
 
 .support-document {
-  @apply bg-white mx-auto my-2 p-4 max-w-2xl rounded-md;
+  @apply bg-white mx-auto my-2 max-w-3xl rounded-md p-6;
+}
+
+h2 {
+  @apply text-3xl font-bold;
 }

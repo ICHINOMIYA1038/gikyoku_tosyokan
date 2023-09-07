@@ -16,7 +16,7 @@ const PostDetail: React.FC<PostPageProps> = ({ post }: PostPageProps) => {
         <h2 className="text-lg font-semibold text-gray-800">{post.title}</h2>
         <p className="text-gray-600 mb-4">
           {post.author.name}
-          <span>({post.author.group})</span>
+          {post.author.group && <span>({post.author.group})</span>}
         </p>
         <div className="flex font-bold gap-5">
           <p>
