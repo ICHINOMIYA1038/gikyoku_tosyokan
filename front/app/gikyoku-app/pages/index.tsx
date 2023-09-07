@@ -3,7 +3,7 @@ import Layout from "@/components/Layout";
 import SideModal from "@/components/Modal/SideModal";
 import PostCard from "@/components/PostCard";
 import PostCardList from "@/components/PostCardList";
-import PostDetail from "@/components/PostDetail";
+import ReactPaginate from "react-paginate";
 import SearchForm from "@/components/SearchForm";
 import Pagination from "@/components/Pagination";
 import { useRef, useState } from "react";
@@ -38,7 +38,11 @@ export default function Home({ news }: any) {
           {data && (
             <>
               <PostCardList posts={data.searchResults} />
-              <Pagination setPage={setPage} pagination={data.pagination} />
+              <Pagination
+                setPage={setPage}
+                pagination={data.pagination}
+                className="max-w-full"
+              />
             </>
           )}
         </div>

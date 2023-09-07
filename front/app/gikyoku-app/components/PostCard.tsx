@@ -49,7 +49,7 @@ const PostCard: React.FC<PostPageProps> = ({ post }: any) => {
             />
           </div>
         )}
-        <div className="w-2/3 p-2">
+        <div className="w-2/3 md:p-2">
           {post.categories &&
             post.categories.length !== 0 &&
             post.categories
@@ -59,7 +59,7 @@ const PostCard: React.FC<PostPageProps> = ({ post }: any) => {
               ))}
 
           <h2 className="text-xl font-bold">{post.title}</h2>
-          <div className="flex font-bold gap-5">
+          <div className="flex font-bold gap-3">
             <p>
               <span>男:</span>
               {post.man !== -1 ? `${post.man}人` : "不明"}
@@ -77,9 +77,13 @@ const PostCard: React.FC<PostPageProps> = ({ post }: any) => {
               {post.playtime !== -1 ? `${post.playtime}分` : "不明"}
             </p>
           </div>
-          {post.synopsis && (
-            <p className="">{post.synopsis.slice(0, 90) + "..."}</p>
-          )}
+          <div>
+            {post.synopsis && (
+              <p className="overflow-hidden mr-3">
+                {post.synopsis.slice(0, 90) + "..."}
+              </p>
+            )}
+          </div>
         </div>
       </div>
     </div>

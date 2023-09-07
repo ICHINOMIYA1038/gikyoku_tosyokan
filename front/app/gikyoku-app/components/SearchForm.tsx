@@ -76,7 +76,7 @@ export default function SearchForm({ setData, page }: any) {
         </div>
       </div>
 
-      <div>
+      <div className="">
         <div>
           <h3 className="text-xl font-bold  mb-1">男性人数</h3>
         </div>
@@ -152,7 +152,7 @@ export default function SearchForm({ setData, page }: any) {
           <select
             value={maxPlaytime}
             onChange={(e) => setMaxPlaytime(parseInt(e.target.value))}
-            className="w-1/5"
+            className="md:w-1/5"
           >
             <option value={1}>30分</option>
             <option value={2}>60分</option>

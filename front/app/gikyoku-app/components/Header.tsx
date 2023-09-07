@@ -16,13 +16,19 @@ export default function Header() {
         <span className="text-xl font-bold">戯曲図書館</span>
       </div>
       <nav className="space-x-4">
-        <Link href="#" className="text-gray-800 hover:text-gray-600">
-          Home
+        <Link href="/" className="text-gray-800 hover:text-gray-600">
+          検索する
         </Link>
-        <Link href="/support/aboutus" className="text-gray-800 hover:text-gray-600">
-          About
+        <Link
+          href="/support/about"
+          className="text-gray-800 hover:text-gray-600"
+        >
+          概要
         </Link>
-        <Link href="/support/contact" className="text-gray-800 hover:text-gray-600">
+        <Link
+          href="/support/contact"
+          className="text-gray-800 hover:text-gray-600"
+        >
           お問い合わせ
         </Link>
       </nav>

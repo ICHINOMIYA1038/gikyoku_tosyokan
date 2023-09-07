@@ -103,170 +103,199 @@ const PostForm: React.FC = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h3>Title</h3>
-      <input
-        type="text"
-        placeholder="Title"
-        value={formData.title}
-        onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-      />
-      <h3>Man</h3>
-      <input
-        type="number"
-        placeholder="Man"
-        value={formData.man}
-        onChange={(e) =>
-          setFormData({ ...formData, man: parseInt(e.target.value) })
-        }
-      />
-
-      <h3>Woman</h3>
-      <input
-        type="number"
-        placeholder="Woman"
-        value={formData.woman}
-        onChange={(e) =>
-          setFormData({ ...formData, woman: parseInt(e.target.value) })
-        }
-      />
-
-      <h3>Others</h3>
-      <input
-        type="number"
-        placeholder="Others"
-        value={formData.others}
-        onChange={(e) =>
-          setFormData({ ...formData, others: parseInt(e.target.value) })
-        }
-      />
-
-      <h3>Total Number</h3>
-      <input
-        type="number"
-        placeholder="Total Number"
-        value={formData.totalNumber}
-        onChange={(e) =>
-          setFormData({ ...formData, totalNumber: parseInt(e.target.value) })
-        }
-      />
-
-      <h3>Playtime</h3>
-      <input
-        type="number"
-        placeholder="Playtime"
-        value={formData.playtime}
-        onChange={(e) =>
-          setFormData({ ...formData, playtime: parseInt(e.target.value) })
-        }
-      />
-
-      <h3>Synopsis</h3>
-      <textarea
-        placeholder="Synopsis"
-        value={formData.synopsis}
-        onChange={(e) => setFormData({ ...formData, synopsis: e.target.value })}
-      />
-
-      <h3>Image URL</h3>
-      <input
-        type="text"
-        placeholder="Image URL"
-        value={formData.image_url}
-        onChange={(e) =>
-          setFormData({ ...formData, image_url: e.target.value })
-        }
-      />
-
-      <h3>Amazon Text URL</h3>
-      <input
-        type="text"
-        placeholder="Amazon Text URL"
-        value={formData.amazon_text_url}
-        onChange={(e) =>
-          setFormData({ ...formData, amazon_text_url: e.target.value })
-        }
-      />
-
-      <h3>Amazon Image URL</h3>
-      <input
-        type="text"
-        placeholder="Amazon Image URL"
-        value={formData.amazon_img_url}
-        onChange={(e) =>
-          setFormData({ ...formData, amazon_img_url: e.target.value })
-        }
-      />
-
-      <h3>Amazon Image Text URL</h3>
-      <input
-        type="text"
-        placeholder="Amazon Image Text URL"
-        value={formData.amazon_img_text_url}
-        onChange={(e) =>
-          setFormData({ ...formData, amazon_img_text_url: e.target.value })
-        }
-      />
-
-      <h3>Link to Plot</h3>
-      <input
-        type="text"
-        placeholder="Link to Plot"
-        value={formData.link_to_plot}
-        onChange={(e) =>
-          setFormData({ ...formData, link_to_plot: e.target.value })
-        }
-      />
-
-      <h3>Buy Link</h3>
-      <input
-        type="text"
-        placeholder="Buy Link"
-        value={formData.buy_link}
-        onChange={(e) => setFormData({ ...formData, buy_link: e.target.value })}
-      />
-
-      <h3>ISBN-13</h3>
-      <input
-        type="text"
-        placeholder="ISBN-13"
-        value={formData.ISBN_13}
-        onChange={(e) => setFormData({ ...formData, ISBN_13: e.target.value })}
-      />
-
-      <h3>Categories</h3>
-      <select
-        multiple // 複数のカテゴリーを選択できるようにする
-        value={formData.categories}
-        onChange={handleCategoryChange}
+    <>
+      <form
+        onSubmit={handleSubmit}
+        className="bg-blue-200 shadow-md rounded px-8 pt-6 pb-8 mb-4"
       >
-        {categoryOptions.map((category) => (
-          <option key={category.id} value={category.id}>
-            {category.name}
-          </option>
-        ))}
-      </select>
-
-      <button type="submit" disabled={sending}>
-        {sending ? "Sending..." : "Submit"}
-      </button>
-      {errorModal && (
-        <MessageModal
-          type="error"
-          message={errorMessage}
-          onClose={closeModal}
+        <h2>脚本データ</h2>
+        <h3>
+          Title<span className="text-red-500">*</span>
+        </h3>
+        <input
+          type="text"
+          placeholder="Title"
+          value={formData.title}
+          onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+          className="border rounded w-full py-2 px-3 mb-4"
         />
-      )}
-      <div className="relative h-96">
-        {successModal && (
+        <h3>Man</h3>
+        <input
+          type="number"
+          placeholder="Man"
+          value={formData.man}
+          onChange={(e) =>
+            setFormData({ ...formData, man: parseInt(e.target.value) })
+          }
+          className="border rounded w-full py-2 px-3 mb-4"
+        />
+
+        <h3>Woman</h3>
+        <input
+          type="number"
+          placeholder="Woman"
+          value={formData.woman}
+          onChange={(e) =>
+            setFormData({ ...formData, woman: parseInt(e.target.value) })
+          }
+          className="border rounded w-full py-2 px-3 mb-4"
+        />
+
+        <h3>Others</h3>
+        <input
+          type="number"
+          placeholder="Others"
+          value={formData.others}
+          onChange={(e) =>
+            setFormData({ ...formData, others: parseInt(e.target.value) })
+          }
+          className="border rounded w-full py-2 px-3 mb-4"
+        />
+
+        <h3>Total Number</h3>
+        <input
+          type="number"
+          placeholder="Total Number"
+          value={formData.totalNumber}
+          onChange={(e) =>
+            setFormData({ ...formData, totalNumber: parseInt(e.target.value) })
+          }
+          className="border rounded w-full py-2 px-3 mb-4"
+        />
+
+        <h3>Playtime</h3>
+        <input
+          type="number"
+          placeholder="Playtime"
+          value={formData.playtime}
+          onChange={(e) =>
+            setFormData({ ...formData, playtime: parseInt(e.target.value) })
+          }
+          className="border rounded w-full py-2 px-3 mb-4"
+        />
+
+        <h3>Synopsis</h3>
+        <textarea
+          placeholder="Synopsis"
+          value={formData.synopsis}
+          onChange={(e) =>
+            setFormData({ ...formData, synopsis: e.target.value })
+          }
+          className="border rounded w-full py-2 px-3 mb-4"
+        />
+
+        <h3>Image URL</h3>
+        <input
+          type="text"
+          placeholder="Image URL"
+          value={formData.image_url}
+          onChange={(e) =>
+            setFormData({ ...formData, image_url: e.target.value })
+          }
+          className="border rounded w-full py-2 px-3 mb-4"
+        />
+
+        <h3>Amazon Text URL</h3>
+        <input
+          type="text"
+          placeholder="Amazon Text URL"
+          value={formData.amazon_text_url}
+          onChange={(e) =>
+            setFormData({ ...formData, amazon_text_url: e.target.value })
+          }
+          className="border rounded w-full py-2 px-3 mb-4"
+        />
+
+        <h3>Amazon Image URL</h3>
+        <input
+          type="text"
+          placeholder="Amazon Image URL"
+          value={formData.amazon_img_url}
+          onChange={(e) =>
+            setFormData({ ...formData, amazon_img_url: e.target.value })
+          }
+          className="border rounded w-full py-2 px-3 mb-4"
+        />
+
+        <h3>Amazon Image Text URL</h3>
+        <input
+          type="text"
+          placeholder="Amazon Image Text URL"
+          value={formData.amazon_img_text_url}
+          onChange={(e) =>
+            setFormData({ ...formData, amazon_img_text_url: e.target.value })
+          }
+          className="border rounded w-full py-2 px-3 mb-4"
+        />
+
+        <h3>Link to Plot</h3>
+        <input
+          type="text"
+          placeholder="Link to Plot"
+          value={formData.link_to_plot}
+          onChange={(e) =>
+            setFormData({ ...formData, link_to_plot: e.target.value })
+          }
+          className="border rounded w-full py-2 px-3 mb-4"
+        />
+
+        <h3>Buy Link</h3>
+        <input
+          type="text"
+          placeholder="Buy Link"
+          value={formData.buy_link}
+          onChange={(e) =>
+            setFormData({ ...formData, buy_link: e.target.value })
+          }
+          className="border rounded w-full py-2 px-3 mb-4"
+        />
+
+        <h3>ISBN-13</h3>
+        <input
+          type="text"
+          placeholder="ISBN-13"
+          value={formData.ISBN_13}
+          onChange={(e) =>
+            setFormData({ ...formData, ISBN_13: e.target.value })
+          }
+          className="border rounded w-full py-2 px-3 mb-4"
+        />
+
+        <h3>Categories</h3>
+        <select
+          multiple // 複数のカテゴリーを選択できるようにする
+          value={formData.categories}
+          onChange={handleCategoryChange}
+          className="border rounded w-full py-2 px-3 mb-4"
+        >
+          {categoryOptions.map((category) => (
+            <option key={category.id} value={category.id}>
+              {category.name}
+            </option>
+          ))}
+        </select>
+
+        <button type="submit" disabled={sending}>
+          {sending ? "Sending..." : "Submit"}
+        </button>
+        {errorModal && (
           <MessageModal
-            type="success"
-            message={successMessage}
+            type="error"
+            message={errorMessage}
             onClose={closeModal}
           />
         )}
-      </div>
-    </form>
+        <div className="relative h-96">
+          {successModal && (
+            <MessageModal
+              type="success"
+              message={successMessage}
+              onClose={closeModal}
+            />
+          )}
+        </div>
+      </form>
+    </>
   );
 };
 
