@@ -39,8 +39,8 @@ model Post {
   website3            String?
   ISBN_13             String?
   buy_link            String?
-  accesses            Access[]
-  comments            ParentComment[]
+  parentComments      ParentComment[]
+  access              Access[]
   author              Author          @relation(fields: [author_id], references: [id])
   categories          Category[]      @relation("PostCategory")
 }
@@ -59,13 +59,23 @@ model News {
   title    String
 }
 
+model Access {
+  id        Int      @id @default(autoincrement())
+  ipAddress String
+  postId    Int
+  date      DateTime
+  post      Post     @relation(fields: [postId], references: [id])
+
+  @@unique([ipAddress, postId, date])
+}
+
 model ParentComment {
   id       Int            @id @default(autoincrement())
   content  String
   deleted  Boolean        @default(false)
   post_id  Int
   author   String         @default("名無しさん")
-  ate      DateTime       @default(now())
+  date     DateTime       @default(now())
   children ChildComment[]
   post     Post           @relation(fields: [post_id], references: [id])
 }
@@ -78,14 +88,4 @@ model ChildComment {
   author          String        @default("名無しさん")
   date            DateTime      @default(now())
   parentComment   ParentComment @relation(fields: [parentCommentId], references: [id])
-}
-
-model Access {
-  id        Int      @id @default(autoincrement())
-  ipAddress String
-  postId    Int
-  date      DateTime
-  post      Post     @relation(fields: [postId], references: [id])
-
-  @@unique([ipAddress, postId, date])
 }

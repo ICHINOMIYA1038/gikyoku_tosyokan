@@ -14,7 +14,7 @@ export default async function handler(
         const comment = await prisma.parentComment.create({
           data: {
             author: "author",
-            deletead: false,
+            deleted: false,
             content: "content",
             post: { connect: { id: 1 } },
           },
@@ -27,7 +27,7 @@ export default async function handler(
           data: {
             author,
             content,
-            deletead: false,
+            deleted: false,
             parentCommentId: { connect: { id: targetid } },
           },
         });
