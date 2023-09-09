@@ -39,7 +39,7 @@ model Post {
   website3            String?
   ISBN_13             String?
   buy_link            String?
-  parentComments      ParentComment[]
+  comments      ParentComment[]
   access              Access[]
   author              Author          @relation(fields: [author_id], references: [id])
   categories          Category[]      @relation("PostCategory")
