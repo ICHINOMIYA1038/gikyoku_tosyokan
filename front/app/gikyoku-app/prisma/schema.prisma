@@ -1,63 +1,91 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
-  url = env("POSTGRES_PRISMA_URL") // uses connection pooling
-  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL")
+  directUrl = env("POSTGRES_URL_NON_POOLING")
 }
 
 model Author {
-  id        Int      @id @default(autoincrement())
-  name      String
-  website   String?
-  group     String?
-  profile   String?
+  id          Int     @id @default(autoincrement())
+  name        String
+  website     String?
+  group       String?
+  profile     String?
   masterpiece String?
-  posts     Post[]
+  posts       Post[]
 }
 
 model Post {
-  id          Int      @id @default(autoincrement())
-  title       String
-  content     String? @db.Text
-  author_id   Int
-  author      Author   @relation(fields: [author_id], references: [id])
-  man         Int?
-  woman       Int?
-  others      Int?
-  totalNumber Int?
-  playtime Int?
-  synopsis    String? @db.Text
-  image_url   String?
-  categories Category[] @relation("PostCategory")
-  amazon_text_url String?
-  amazon_img_url String? @db.Text
-  amazon_img_text_url String? @db.Text
-  link_to_plot String?
-  buy_link String?
-  ISBN_13 String?
-
-
-  website1    String?
-  website2    String?
-  website3    String?
+  id                  Int             @id @default(autoincrement())
+  title               String
+  content             String?
+  author_id           Int
+  man                 Int?
+  woman               Int?
+  others              Int?
+  totalNumber         Int?
+  playtime            Int?
+  synopsis            String?
+  image_url           String?
+  amazon_text_url     String?
+  amazon_img_url      String?
+  amazon_img_text_url String?
+  link_to_plot        String?
+  website1            String?
+  website2            String?
+  website3            String?
+  ISBN_13             String?
+  buy_link            String?
+  accesses            Access[]
+  comments            ParentComment[]
+  author              Author          @relation(fields: [author_id], references: [id])
+  categories          Category[]      @relation("PostCategory")
 }
 
 model Category {
-  id        Int      @id @default(autoincrement())
-  name      String
-  posts Post[]   @relation("PostCategory")
+  id    Int    @id @default(autoincrement())
+  name  String
+  posts Post[] @relation("PostCategory")
 }
 
-model News{
-  id        Int      @id @default(autoincrement())
-  date      DateTime @default(now())
-  url String?
+model News {
+  id       Int      @id @default(autoincrement())
+  date     DateTime @default(now())
+  url      String?
   category String
-  title String
+  title    String
+}
+
+model ParentComment {
+  id       Int            @id @default(autoincrement())
+  content  String
+  deleted  Boolean        @default(false)
+  post_id  Int
+  author   String         @default("名無しさん")
+  ate      DateTime       @default(now())
+  children ChildComment[]
+  post     Post           @relation(fields: [post_id], references: [id])
+}
+
+model ChildComment {
+  id              Int           @id @default(autoincrement())
+  content         String
+  deleted         Boolean       @default(false)
+  parentCommentId Int
+  author          String        @default("名無しさん")
+  date            DateTime      @default(now())
+  parentComment   ParentComment @relation(fields: [parentCommentId], references: [id])
+}
+
+model Access {
+  id        Int      @id @default(autoincrement())
+  ipAddress String
+  postId    Int
+  date      DateTime
+  post      Post     @relation(fields: [postId], references: [id])
+
+  @@unique([ipAddress, postId, date])
 }

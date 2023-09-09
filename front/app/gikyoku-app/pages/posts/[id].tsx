@@ -12,10 +12,12 @@ import {
   LineIcon,
   TwitterIcon,
 } from "react-share";
+import Comments from "@/components/Comments";
 
 const prisma = new PrismaClient();
 
 function PostPage({ post }: any) {
+  console.log(post);
   const URL = `https://gikyokutosyokan.com/posts/${post.id}`;
   const QUOTE = `${post.author.name}作「${post.title}」をみんなにおすすめしよう`;
 
@@ -42,6 +44,7 @@ function PostPage({ post }: any) {
           </HatenaShareButton>
         </div>
         <PostDetail post={post} />
+        {post.comments && <Comments comments={post.comments} postid={post.b} />}
       </div>
     </Layout>
   );
@@ -57,7 +60,14 @@ export async function getServerSideProps(context: any) {
   }
   const post = await prisma.post.findUnique({
     where: { id: postId },
-    include: { author: true }, // Include the related author information
+    include: {
+      comments: {
+        include: {
+          children: true,
+        },
+      },
+      author: true,
+    },
   });
 
   if (!post) {
