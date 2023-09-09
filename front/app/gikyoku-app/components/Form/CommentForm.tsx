@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 
-function CommentForm({ onCommentSubmit }: any) {
+function CommentForm({
+  onCommentSubmit,
+  commentResult,
+  isSendingComment,
+}: any) {
   const [author, setAuthor] = useState("");
   const [content, setContent] = useState("");
 
@@ -37,12 +41,27 @@ function CommentForm({ onCommentSubmit }: any) {
             required
           />
         </div>
-        <button
-          type="submit"
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-        >
-          投稿
-        </button>
+        <div className="mb-4">
+          <button
+            type="submit"
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            disabled={isSendingComment} // 送信中の場合はボタンを無効化
+          >
+            {isSendingComment ? "送信中..." : "投稿"}{" "}
+            {/* 送信中の場合、ボタンラベルを変更 */}
+          </button>
+        </div>
+        {commentResult && (
+          <div
+            className={`text-md ${
+              commentResult === "コメントが投稿されました"
+                ? "text-green-500"
+                : "text-red-500"
+            }`}
+          >
+            {commentResult}
+          </div>
+        )}
       </form>
     </div>
   );

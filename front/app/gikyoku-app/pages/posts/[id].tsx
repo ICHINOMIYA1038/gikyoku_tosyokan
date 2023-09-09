@@ -44,7 +44,9 @@ function PostPage({ post }: any) {
           </HatenaShareButton>
         </div>
         <PostDetail post={post} />
-        {post.comments && <Comments comments={post.comments} postid={post.b} />}
+        {post.comments && (
+          <Comments comments={post.comments} postid={post.id} />
+        )}
       </div>
     </Layout>
   );
@@ -70,15 +72,40 @@ export async function getServerSideProps(context: any) {
     },
   });
 
+  // Datetimeを指定したフォーマットに変換する関数
+  function formatDatetime(datetime: any) {
+    const date = new Date(datetime);
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+
+    return `${year}/${month}/${day} ${hours}:${minutes}`;
+  }
+
   if (!post) {
     return {
       notFound: true, // Return a 404 page
     };
   }
 
+  // postオブジェクト内のcommentsとchildrenのDatetimeカラムをフォーマット変換
+  const formattedPost = {
+    ...post,
+    comments: post.comments.map((comment: any) => ({
+      ...comment,
+      children: comment.children.map((child: any) => ({
+        ...child,
+        date: formatDatetime(child.date),
+      })),
+      date: formatDatetime(comment.date),
+    })),
+  };
+
   return {
     props: {
-      post,
+      post: formattedPost,
     },
   };
 }

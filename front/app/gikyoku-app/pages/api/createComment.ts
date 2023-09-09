@@ -13,10 +13,10 @@ export default async function handler(
       if (isParent) {
         const comment = await prisma.parentComment.create({
           data: {
-            author: "author",
+            author,
             deleted: false,
-            content: "content",
-            post: { connect: { id: 1 } },
+            content,
+            post: { connect: { id: targetid } },
           },
         });
         console.log(comment);
