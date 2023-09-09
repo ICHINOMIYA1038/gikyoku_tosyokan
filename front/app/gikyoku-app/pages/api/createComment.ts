@@ -28,7 +28,7 @@ export default async function handler(
             author,
             content,
             deleted: false,
-            parentCommentId: { connect: { id: targetid } },
+            parentComment: { connect: { id: targetid } },
           },
         });
         console.log(comment);
