@@ -1,9 +1,5 @@
-import AuthorForm from "@/components/Form/AuthorForm";
 import Layout from "@/components/Layout";
-import SideModal from "@/components/Modal/SideModal";
-import PostCard from "@/components/PostCard";
 import PostCardList from "@/components/PostCardList";
-import ReactPaginate from "react-paginate";
 import SearchForm from "@/components/SearchForm";
 import Pagination from "@/components/Pagination";
 import { useRef, useState } from "react";

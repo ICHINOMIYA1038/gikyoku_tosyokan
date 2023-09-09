@@ -106,11 +106,17 @@ const Comments = ({ comments, postid }: any) => {
 
   return (
     <div>
-      <h3>{comments.length}件のコメント</h3>
+      <h3 className="mt-5 font-bold text-xl">{comments.length}件のコメント</h3>
       {comments.map((comment: any) => (
         <div key={comment.id} className="mb-5">
           <div className="bg-white p-3 m-2 shadow-lg rounded-lg">
-            <div className="">{comment.content}</div>
+            <div className="md:flex justify-between">
+              <div className="md:w-3/4">{comment.content}</div>
+              <div className="md:w-1/4 text-sm">
+                <div>{comment.author}</div>
+                <div>{comment.date}</div>
+              </div>
+            </div>
           </div>
           <div className="ml-5">
             {comment.children &&
@@ -119,7 +125,13 @@ const Comments = ({ comments, postid }: any) => {
                   key={elem.id}
                   className="bg-white p-3 m-2 shadow-lg rounded-lg"
                 >
-                  <div className="">{elem.content}</div>
+                  <div className="md:flex justify-between">
+                    <div className="md:w-3/4">{elem.content}</div>
+                    <div className="md:w-1/4 text-sm mt-2">
+                      <div>{elem.author}</div>
+                      <div>{elem.date}</div>
+                    </div>
+                  </div>
                 </div>
               ))}
             <div className="flex justify-end">

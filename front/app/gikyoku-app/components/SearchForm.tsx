@@ -7,13 +7,13 @@ export default function SearchForm({ setData, page }: any) {
   const [maxMaleCount, setMaxMaleCount] = useState<string>("");
   const [minFemaleCount, setMinFemaleCount] = useState<string>("");
   const [maxFemaleCount, setMaxFemaleCount] = useState<string>("");
-  const [minTotalCount, setMinTotalCount] = useState<string>("0");
+  const [minTotalCount, setMinTotalCount] = useState<string>("");
   const [maxTotalCount, setMaxTotalCount] = useState<string>("");
   const [minPlaytime, setMinPlaytime] = useState<number>(0);
   const [maxPlaytime, setMaxPlaytime] = useState<number>(4);
   const [sort_by, setSortIndex] = useState<number>(0);
   const [sortDirection, setSortDirection] = useState<number>(0);
-  const [tags, setSelectedTags] = useState<string[]>([]);
+  const [categories, setCategories] = useState<string[]>([]);
 
   const router = useRouter();
 
@@ -40,6 +40,7 @@ export default function SearchForm({ setData, page }: any) {
       maxPlaytime: maxPlaytime.toString(),
       page: page.toString(),
       per: per.toString(),
+      categories: Array.isArray(categories) ? categories.join(",") : categories,
     };
 
     const query = new URLSearchParams(searchParams).toString();

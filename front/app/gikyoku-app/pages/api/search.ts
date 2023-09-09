@@ -3,6 +3,20 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
+function parseCategories(categories: any) {
+  if (!categories || categories.length === 0) {
+    return [];
+  }
+
+  // カンマで文字列を分割し、各要素を数値に変換する
+  const parsedCategories = categories.split(",").map((category: any) => {
+    const number = Number(category.trim()); // 前後の空白をトリムして数値に変換
+    return !isNaN(number) ? number : undefined;
+  });
+
+  // 数値に変換できた要素のみをフィルタリング
+  return parsedCategories.filter((category: any) => category !== undefined);
+}
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -24,10 +38,12 @@ export default async function handler(
       maxPlaytime = "5",
       sort_by = "",
       sortDirection = "",
-      tags = "",
+      categories = "",
       page = "1",
       per = "8",
     } = req.query;
+
+    const ids = parseCategories(categories);
 
     const parseIntSafe = (value: string, defaultValue: number): number => {
       const parsedValue = parseInt(value, 10);
@@ -43,6 +59,17 @@ export default async function handler(
         title: {
           contains: keyword as string,
         },
+        ...(ids.length > 0
+          ? {
+              categories: {
+                some: {
+                  id: {
+                    in: ids,
+                  },
+                },
+              },
+            }
+          : {}),
         man: {
           gte: parseIntSafe(minMaleCount as string, -1),
           lte: parseIntSafe(maxMaleCount as string, 9999),
@@ -68,6 +95,17 @@ export default async function handler(
         title: {
           contains: keyword as string,
         },
+        ...(ids.length > 0
+          ? {
+              categories: {
+                some: {
+                  id: {
+                    in: ids,
+                  },
+                },
+              },
+            }
+          : {}),
         man: {
           gte: parseIntSafe(minMaleCount as string, -1),
           lte: parseIntSafe(maxMaleCount as string, 9999),
