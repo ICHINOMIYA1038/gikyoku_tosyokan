@@ -1,5 +1,6 @@
-import { SetStateAction, useState, useEffect } from "react";
+import React, { SetStateAction, useState, useEffect } from "react";
 import { useRouter } from "next/router";
+import TagSelector from "./TagSelecter";
 
 export default function SearchForm({ setData, page }: any) {
   const [keyword, setKeyword] = useState<string>("");
@@ -13,9 +14,30 @@ export default function SearchForm({ setData, page }: any) {
   const [maxPlaytime, setMaxPlaytime] = useState<number>(4);
   const [sort_by, setSortIndex] = useState<number>(0);
   const [sortDirection, setSortDirection] = useState<number>(0);
-  const [categories, setCategories] = useState<string[]>([]);
+
+  const [selectedTags, setSelectedTags] = useState<number[]>([]);
 
   const router = useRouter();
+
+  interface Tag {
+    id: number;
+    name: string;
+  }
+
+  const category_ids: Tag[] = [
+    { id: 1, name: "岸田國士戯曲賞" },
+    { id: 2, name: "OMS戯曲賞" },
+    { id: 3, name: "新人戯曲賞" },
+    { id: 4, name: "無料で読める！" },
+    { id: 5, name: "鶴屋南北戯曲賞" },
+    { id: 6, name: "60分以内" },
+    { id: 7, name: "人数多数" },
+    { id: 8, name: "会話劇" },
+    { id: 9, name: "アクション" },
+    // 他のタグを追加
+  ];
+
+  console.log(selectedTags);
 
   useEffect(() => {
     handleSubmit();
@@ -40,7 +62,9 @@ export default function SearchForm({ setData, page }: any) {
       maxPlaytime: maxPlaytime.toString(),
       page: page.toString(),
       per: per.toString(),
-      categories: Array.isArray(categories) ? categories.join(",") : categories,
+      categories: Array.isArray(selectedTags)
+        ? selectedTags.join(",")
+        : selectedTags,
     };
 
     const query = new URLSearchParams(searchParams).toString();
@@ -76,91 +100,99 @@ export default function SearchForm({ setData, page }: any) {
           />
         </div>
       </div>
+      <div className="md:flex">
+        <div className="md:w-1/2">
+          <div>
+            <h3 className="text-xl font-bold  mb-1">男性人数</h3>
+          </div>
+          <div className="pb-5 ">
+            <input
+              className="w-1/3"
+              type="number"
+              value={minMaleCount}
+              onChange={(e) => setMinMaleCount(e.target.value)}
+            />
+            <span>〜</span>
+            <input
+              className="w-1/3"
+              type="number"
+              value={maxMaleCount}
+              onChange={(e) => setMaxMaleCount(e.target.value)}
+            />
+          </div>
 
-      <div className="">
-        <div>
-          <h3 className="text-xl font-bold  mb-1">男性人数</h3>
-        </div>
-        <div className="pb-5 ">
-          <input
-            className="w-1/5"
-            type="number"
-            value={minMaleCount}
-            onChange={(e) => setMinMaleCount(e.target.value)}
-          />
-          <span>〜</span>
-          <input
-            className="w-1/5"
-            type="number"
-            value={maxMaleCount}
-            onChange={(e) => setMaxMaleCount(e.target.value)}
-          />
-        </div>
+          <div>
+            <h3 className="text-xl font-bold  mb-1">女性人数</h3>
+          </div>
+          <div className="pb-5 ">
+            <input
+              className="w-1/3"
+              type="number"
+              value={minFemaleCount}
+              onChange={(e) => setMinFemaleCount(e.target.value)}
+            />
+            <span>〜</span>
+            <input
+              className="w-1/3"
+              type="number"
+              value={maxFemaleCount}
+              onChange={(e) => setMaxFemaleCount(e.target.value)}
+            />
+          </div>
+          <div>
+            <h3 className="text-xl font-bold  mb-1">総人数</h3>
+          </div>
+          <div className="pb-5 ">
+            <input
+              className="w-1/3"
+              type="number"
+              value={minTotalCount}
+              onChange={(e) => setMinTotalCount(e.target.value)}
+            />
+            <span>〜</span>
+            <input
+              className="w-1/3"
+              type="number"
+              value={maxTotalCount}
+              onChange={(e) => setMaxTotalCount(e.target.value)}
+            />
+          </div>
+          <div>
+            <h3 className="text-xl font-bold mb-1">上演時間</h3>
+          </div>
+          <div className="pb-5 ">
+            <select
+              value={minPlaytime}
+              onChange={(e) => setMinPlaytime(parseInt(e.target.value))}
+              className="w-1/3"
+            >
+              <option value={0}>0分</option>
+              <option value={1}>30分</option>
+              <option value={2}>60分</option>
+              <option value={3}>90分</option>
+              <option value={4}>120分</option>
+            </select>
 
-        <div>
-          <h3 className="text-xl font-bold  mb-1">女性人数</h3>
+            <span>〜</span>
+            <select
+              value={maxPlaytime}
+              onChange={(e) => setMaxPlaytime(parseInt(e.target.value))}
+              className="w-1/3"
+            >
+              <option value={1}>30分</option>
+              <option value={2}>60分</option>
+              <option value={3}>90分</option>
+              <option value={4}>120分</option>
+              <option value={5}>∞</option>
+            </select>
+          </div>
         </div>
-        <div className="pb-5 ">
-          <input
-            className="w-1/5"
-            type="number"
-            value={minFemaleCount}
-            onChange={(e) => setMinFemaleCount(e.target.value)}
+        <div className="md:w-1/2">
+          <TagSelector
+            category_ids={category_ids}
+            selectedTags={selectedTags}
+            setSelectedTags={setSelectedTags}
           />
-          <span>〜</span>
-          <input
-            className="w-1/5"
-            type="number"
-            value={maxFemaleCount}
-            onChange={(e) => setMaxFemaleCount(e.target.value)}
-          />
-        </div>
-        <div>
-          <h3 className="text-xl font-bold  mb-1">総人数</h3>
-        </div>
-        <div className="pb-5 ">
-          <input
-            className="w-1/5"
-            type="number"
-            value={minTotalCount}
-            onChange={(e) => setMinTotalCount(e.target.value)}
-          />
-          <span>〜</span>
-          <input
-            className="w-1/5"
-            type="number"
-            value={maxTotalCount}
-            onChange={(e) => setMaxTotalCount(e.target.value)}
-          />
-        </div>
-        <div>
-          <h3 className="text-xl font-bold mb-1">上演時間</h3>
-        </div>
-        <div className="pb-5 ">
-          <select
-            value={minPlaytime}
-            onChange={(e) => setMinPlaytime(parseInt(e.target.value))}
-            className="w-1/5"
-          >
-            <option value={0}>0分</option>
-            <option value={1}>30分</option>
-            <option value={2}>60分</option>
-            <option value={3}>90分</option>
-            <option value={4}>120分</option>
-          </select>
-
-          <span>〜</span>
-          <select
-            value={maxPlaytime}
-            onChange={(e) => setMaxPlaytime(parseInt(e.target.value))}
-            className="md:w-1/5"
-          >
-            <option value={1}>30分</option>
-            <option value={2}>60分</option>
-            <option value={3}>90分</option>
-            <option value={4}>120分</option>
-            <option value={5}>∞</option>
-          </select>
         </div>
       </div>
       <div>
