@@ -37,8 +37,6 @@ export default function SearchForm({ setData, page }: any) {
     // 他のタグを追加
   ];
 
-  console.log(selectedTags);
-
   useEffect(() => {
     handleSubmit();
   }, []);
