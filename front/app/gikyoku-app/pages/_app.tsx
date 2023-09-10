@@ -2,7 +2,7 @@ import "@/styles/globals.css";
 import type { AppProps } from "next/app";
 import { Analytics } from "@vercel/analytics/react";
 import Script from "next/script";
-import * as gtag from "@/components/lib/gtag";
+import * as gtag from "@/lib/gtag";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 
