@@ -78,22 +78,35 @@ export async function getServerSideProps(context: any) {
   const ipAddress = context.req.socket.remoteAddress;
   const currentDate = new Date();
 
-  // 年月日の部分を取得し、時刻部分を'00:00:00'に設定
+  // 年月日の部分を取得
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth() + 1; // 月は0から始まるため+1
   const day = currentDate.getDate();
-  const date = `${year}-${month.toString().padStart(2, "0")}-${day
-    .toString()
-    .padStart(2, "0")} 00:00:00`;
 
-  // Accessレコードを作成
-  await prisma.access.create({
-    data: {
-      ipAddress,
-      postId,
-      date,
+  // PostgreSQLのDate型に変換
+  const date = new Date(year, month - 1, day); // 月は0から始まるため-1
+
+  const existingAccess = await prisma.access.findFirst({
+    where: {
+      ipAddress: ipAddress,
+      postId: postId,
+      date: date,
     },
   });
+
+  if (!existingAccess) {
+    // 既存のレコードが見つからない場合、新しいレコードを作成
+    await prisma.access.create({
+      data: {
+        ipAddress,
+        postId,
+        date,
+      },
+    });
+  } else {
+    // 既存のレコードが存在する場合、適切なエラー処理を行います。
+    // 例えば、一意制約違反エラーをハンドルして通知するか、別のアクションを実行するなどの処理が考えられます。
+  }
 
   // Datetimeを指定したフォーマットに変換する関数
   function formatDatetime(datetime: any) {

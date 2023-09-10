@@ -52,7 +52,10 @@ const PostCard: React.FC<PostPageProps> = ({ post }: any) => {
               .map((category: any) => (
                 <Badge key={post.id} text={category.name} />
               ))}
-          <h2 className="text-xl font-bold mt-1">{post.title}</h2>
+          <div className="md:flex md:gap-5 items-center">
+            <h2 className="text-xl font-bold">{post.title}</h2>
+            <p className="text-md font-bold">{post.author.name}</p>
+          </div>
           <div className="flex font-bold gap-1 text-sm">
             <p>
               <span>男:</span>
