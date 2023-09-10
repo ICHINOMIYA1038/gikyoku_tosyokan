@@ -18,6 +18,8 @@ export default function App({ Component, pageProps }: AppProps) {
     };
   }, [router.events]);
 
+  console.log(gtag.GA_MEASUREMENT_ID);
+
   return (
     <>
       <Script
