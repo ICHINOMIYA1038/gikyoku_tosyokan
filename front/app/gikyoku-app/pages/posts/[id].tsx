@@ -17,7 +17,6 @@ import Comments from "@/components/Comments";
 const prisma = new PrismaClient();
 
 function PostPage({ post }: any) {
-  console.log(post);
   const URL = `https://gikyokutosyokan.com/posts/${post.id}`;
   const QUOTE = `${post.author.name}作「${post.title}」をみんなにおすすめしよう`;
 

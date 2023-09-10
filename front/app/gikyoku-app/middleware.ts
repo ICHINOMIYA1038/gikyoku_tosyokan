@@ -12,8 +12,6 @@ export function middleware(req: NextRequest) {
     const authValue = basicAuth.split(" ")[1];
     const [user, pwd] = atob(authValue).split(":");
 
-    console.log(process.env.ADMIN_USER);
-
     if (user === process.env.ADMIN_USER && pwd === process.env.ADMIN_PASSWORD) {
       return NextResponse.next();
     }
