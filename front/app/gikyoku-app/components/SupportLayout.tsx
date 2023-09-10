@@ -25,13 +25,13 @@ function SupportLayout({ children, now }: any) {
         <Header />
       </div>
       <div className="header-gap"></div>
-      <div className="md:flex max-w-4xl mx-auto">
-        <div className="md:w-1/2 mx-2">
-          <div className="mt-10 md:mx-20">
+      <div className="md:flex max-w-7xl mx-auto">
+        <div className="md:w-1/4">
+          <div className="mt-10 md:ml-20">
             <SupportSidebar now={now} />
           </div>
         </div>
-        <div className="md:w-1/2 mx-2">
+        <div className="md:w-3/4 mx-2">
           <div className="mt-10 ">{children}</div>
         </div>
       </div>

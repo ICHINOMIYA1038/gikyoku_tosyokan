@@ -24,7 +24,7 @@ function PostPage({ post }: any) {
   return (
     <Layout>
       <div className="relative mx-auto max-w-xl">
-        <div className="flex flex-col fixed mr-20">
+        <div className="md:flex flex-col md:fixed md:mr-20 max-w-md mx-auto">
           <FacebookShareButton url={URL} quote={QUOTE}>
             <FacebookIcon size={48} round />
           </FacebookShareButton>
@@ -44,9 +44,11 @@ function PostPage({ post }: any) {
           </HatenaShareButton>
         </div>
         <PostDetail post={post} />
-        {post.comments && (
-          <Comments comments={post.comments} postid={post.id} />
-        )}
+        <div className="max-w-md mx-auto">
+          {post.comments && (
+            <Comments comments={post.comments} postid={post.id} />
+          )}
+        </div>
       </div>
     </Layout>
   );

@@ -110,29 +110,37 @@ const Comments = ({ comments, postid }: any) => {
       {comments.map((comment: any) => (
         <div key={comment.id} className="mb-5">
           <div className="bg-white p-3 m-2 shadow-lg rounded-lg">
-            <div className="md:flex justify-between">
-              <div className="md:w-3/4">{comment.content}</div>
-              <div className="md:w-1/4 text-sm">
-                <div>{comment.author}</div>
-                <div>{comment.date}</div>
+            {!comment.deleted ? (
+              <div className="md:flex justify-between">
+                <div className="md:w-3/4">{comment.content}</div>
+                <div className="md:w-1/4 text-sm">
+                  <div>{comment.author}</div>
+                  <div>{comment.date}</div>
+                </div>
               </div>
-            </div>
+            ) : (
+              <div>このコメントは削除されました。</div>
+            )}
           </div>
           <div className="ml-5">
             {comment.children &&
               comment.children.map((elem: any) => (
-                <div
-                  key={elem.id}
-                  className="bg-white p-3 m-2 shadow-lg rounded-lg"
-                >
-                  <div className="md:flex justify-between">
-                    <div className="md:w-3/4">{elem.content}</div>
-                    <div className="md:w-1/4 text-sm mt-2">
-                      <div>{elem.author}</div>
-                      <div>{elem.date}</div>
+                <>
+                  {!comment.deleted && (
+                    <div
+                      key={elem.id}
+                      className="bg-white p-3 m-2 shadow-lg rounded-lg"
+                    >
+                      <div className="md:flex justify-between">
+                        <div className="md:w-3/4">{elem.content}</div>
+                        <div className="md:w-1/4 text-sm mt-2">
+                          <div>{elem.author}</div>
+                          <div>{elem.date}</div>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
+                  )}
+                </>
               ))}
             <div className="flex justify-end">
               <div

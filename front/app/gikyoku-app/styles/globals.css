@@ -35,5 +35,13 @@ body {
 }
 
 h2 {
-  @apply text-3xl font-bold;
+  @apply text-2xl font-bold my-2;
+}
+
+.under-line-blue {
+  @apply border-b-4 border-blue-500;
+}
+
+.marker-yellow {
+  @apply bg-yellow-300 text-black;
 }
