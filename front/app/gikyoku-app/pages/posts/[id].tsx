@@ -75,6 +75,18 @@ export async function getServerSideProps(context: any) {
     },
   });
 
+  const ipAddress = context.req.socket.remoteAddress;
+  const date = new Date();
+
+  // Accessレコードを作成
+  await prisma.access.create({
+    data: {
+      ipAddress,
+      postId,
+      date,
+    },
+  });
+
   // Datetimeを指定したフォーマットに変換する関数
   function formatDatetime(datetime: any) {
     const date = new Date(datetime);
