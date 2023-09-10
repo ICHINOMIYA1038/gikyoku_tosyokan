@@ -34,6 +34,14 @@ body {
   @apply bg-white mx-auto my-2 max-w-3xl rounded-md p-6;
 }
 
+.support-document h3 {
+  @apply text-xl font-bold my-3;
+}
+
+.support-document h4 {
+  @apply font-bold my-2;
+}
+
 h2 {
   @apply text-2xl font-bold my-2;
 }
