@@ -1,11 +1,17 @@
 import Header from "@/components/Header";
 import Footer from "./Footer";
 import Head from "next/head";
+import Script from "next/script";
 
 function Layout({ children }: any) {
   return (
     <div>
       <Head>
+        <Script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8691137965825158"
+          crossOrigin="anonymous"
+        ></Script>
         <title>戯曲図書館</title>
         <meta
           name="description"
