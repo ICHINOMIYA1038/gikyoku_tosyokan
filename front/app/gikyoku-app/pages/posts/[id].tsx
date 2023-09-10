@@ -76,7 +76,15 @@ export async function getServerSideProps(context: any) {
   });
 
   const ipAddress = context.req.socket.remoteAddress;
-  const date = new Date();
+  const currentDate = new Date();
+
+  // 年月日の部分を取得し、時刻部分を'00:00:00'に設定
+  const year = currentDate.getFullYear();
+  const month = currentDate.getMonth() + 1; // 月は0から始まるため+1
+  const day = currentDate.getDate();
+  const date = `${year}-${month.toString().padStart(2, "0")}-${day
+    .toString()
+    .padStart(2, "0")} 00:00:00`;
 
   // Accessレコードを作成
   await prisma.access.create({

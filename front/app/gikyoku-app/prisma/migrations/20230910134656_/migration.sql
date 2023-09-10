@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Access" ALTER COLUMN "date" SET DATA TYPE DATE;

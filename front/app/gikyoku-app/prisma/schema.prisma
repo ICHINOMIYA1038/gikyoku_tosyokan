@@ -63,7 +63,7 @@ model Access {
   id        Int      @id @default(autoincrement())
   ipAddress String
   postId    Int
-  date      DateTime
+  date      DateTime @db.Date
   post      Post     @relation(fields: [postId], references: [id])
 
   @@unique([ipAddress, postId, date])
