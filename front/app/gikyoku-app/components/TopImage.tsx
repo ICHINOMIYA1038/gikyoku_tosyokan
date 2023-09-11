@@ -1,15 +1,13 @@
 import * as React from "react";
-import { Post as PostType } from "@prisma/client";
-import PostCard from "@/components/PostCard";
 import { useRouter } from "next/router";
 import Image from "next/image";
 
 const TopImage = ({ buttonClick }: any) => {
   const router = useRouter();
   return (
-    <div className="bg-yellow-300 bg-contain bg-no-repeat bg-center text-center py-16">
-      <div className="mx-auto max-w-4xl flex">
-        <div className="w-1/2 h-auto relative">
+    <div className="bg-yellow-300  text-center py-16">
+      <div className="mx-auto max-w-4xl md:flex">
+        <div className="w-1/2  relative">
           <Image
             src="/readbookman.svg"
             alt="top-image-read-book-man"
@@ -18,9 +16,8 @@ const TopImage = ({ buttonClick }: any) => {
           />
         </div>
         <div className="py-16 px-10">
-          <h2 className="text-4xl font-bold mb-6">
-            戯曲を探すプラットフォーム
-          </h2>
+          <p className="text-sm font-bold mb-2">戯曲を探すプラットフォーム</p>
+          <h2 className="text-4xl font-bold mb-6">戯曲図書館</h2>
           <p className="text-lg mb-6">
             ※ 著作権のため、作品の内容自体は公開されていません。
           </p>

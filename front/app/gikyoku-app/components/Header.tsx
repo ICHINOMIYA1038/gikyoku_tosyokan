@@ -15,7 +15,7 @@ export default function Header() {
         <img src="/logo.png" alt="Logo" className="w-12 h-12 mr-4" />
         <span className="text-xl font-bold">戯曲図書館</span>
       </div>
-      <nav className="space-x-4">
+      <nav className="space-x-4 hidden md:block">
         <Link href="/" className="text-gray-800 hover:text-gray-600">
           検索する
         </Link>
