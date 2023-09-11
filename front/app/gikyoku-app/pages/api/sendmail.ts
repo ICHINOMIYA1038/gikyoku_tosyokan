@@ -27,7 +27,7 @@ export default async function handler(
       const mailOptionsToSelf = {
         from: process.env.MAIL_ACCOUNT,
         to: process.env.MAIL_ACCOUNT,
-        subject: "お問い合わせがありました:${subject}",
+        subject: `お問い合わせがありました:${subject}`,
         text: `${name}様\n\nお問い合わせありがとうございました。\n\n返信までしばらくお待ちください。\n\nお問い合わせ内容\n\n${content}`,
       };
 
