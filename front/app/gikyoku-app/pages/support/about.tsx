@@ -10,7 +10,11 @@ function Home() {
     <SupportLayout now="about">
       <div className="support-document">
         <h2>概要</h2>
-        <p>戯曲図書館は戯曲を検索するためのサービスです。</p>
+        <p>
+          <span className="font-bold">
+            戯曲図書館は戯曲を検索するためのサービスです。
+          </span>
+        </p>
         <p>上演するにあたって人数、上演時間などから検索することができます。</p>
         <p>著作権の観点から、戯曲の内容自体は公開しておりません。</p>
         <p>

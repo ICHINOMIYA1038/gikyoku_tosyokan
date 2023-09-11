@@ -24,7 +24,15 @@ export default async function handler(
         text: `${name}様\n\nお問い合わせありがとうございました。\n\n返信までしばらくお待ちください。\n\nお問い合わせ内容\n\n${content}`,
       };
 
+      const mailOptionsToSelf = {
+        from: process.env.MAIL_ACCOUNT,
+        to: process.env.MAIL_ACCOUNT,
+        subject: "お問い合わせがありました:${subject}",
+        text: `${name}様\n\nお問い合わせありがとうございました。\n\n返信までしばらくお待ちください。\n\nお問い合わせ内容\n\n${content}`,
+      };
+
       const info = await transporter.sendMail(mailOptions);
+      const toself = await transporter.sendMail(mailOptionsToSelf);
       console.log("Email sent: " + info.response);
 
       res.status(200).json({ message: "メールが送信されました。" });

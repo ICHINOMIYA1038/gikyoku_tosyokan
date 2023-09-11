@@ -5,10 +5,6 @@ import Layout from "./Layout";
 function SupportLayout({ children, now }: any) {
   return (
     <Layout>
-      <div className="sticky-header">
-        <Header />
-      </div>
-      <div className="header-gap"></div>
       <div className="md:flex max-w-7xl mx-auto">
         <div className="md:w-1/4">
           <div className="mt-10 md:ml-20">
