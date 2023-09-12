@@ -26,6 +26,10 @@ body {
 
 /* ここに追加のスタイルを定義できます */
 
+.basic-card {
+  @apply shadow-lg bg-white border-solid border border-black rounded-lg;
+}
+
 .link-card {
   @apply shadow-md cursor-pointer hover:shadow-md hover:scale-105 transition-transform duration-300 rounded-lg;
 }

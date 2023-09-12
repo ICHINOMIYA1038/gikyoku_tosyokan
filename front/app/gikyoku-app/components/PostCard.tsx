@@ -14,14 +14,14 @@ const PostCard: React.FC<PostPageProps> = ({ post }: any) => {
 
   return (
     <div
-      className="mb-5 bg-white h-48 border-solid border border-black link-card"
+      className="mb-5 bg-white h-60 border-solid border border-black link-card"
       onClick={() => {
         router.push(`/posts/${post.id}`);
       }}
     >
       <div className="flex">
         {post.image_url && (
-          <div className="h-48 w-1/4 relative">
+          <div className="h-60 w-1/4 relative">
             <Image
               src={post.image_url}
               alt="投稿の写真"
@@ -33,7 +33,7 @@ const PostCard: React.FC<PostPageProps> = ({ post }: any) => {
           </div>
         )}
         {!post.image_url && (
-          <div className="h-48 w-1/4 relative">
+          <div className="h-60 w-1/4 relative">
             <Image
               src="/24202513.jpg"
               alt="NoImage"
@@ -45,13 +45,15 @@ const PostCard: React.FC<PostPageProps> = ({ post }: any) => {
           </div>
         )}
         <div className="w-3/4 p-2 h-48">
-          {post.categories &&
-            post.categories.length !== 0 &&
-            post.categories
-              .slice(0, 3)
-              .map((category: any) => (
-                <Badge key={post.id} text={category.name} />
-              ))}
+          <div className="text-xs h-8">
+            {post.categories &&
+              post.categories.length !== 0 &&
+              post.categories
+                .slice(0, 3)
+                .map((category: any) => (
+                  <Badge key={post.id} text={category.name} />
+                ))}
+          </div>
           <div className="md:flex md:gap-5 items-center">
             <h2 className="text-base md:text-xl font-bold">{post.title}</h2>
             <p className=" text-xs md:text-base font-bold">

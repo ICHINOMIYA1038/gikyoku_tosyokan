@@ -6,10 +6,12 @@ import { useRef, useState } from "react";
 import { PrismaClient } from "@prisma/client";
 import NewsList from "@/components/NewsList";
 import TopImage from "@/components/TopImage";
+import Recommend from "@/components/Widget/recommend";
+import AuthorList from "@/components/Widget/AuthorList";
 
 const prisma = new PrismaClient();
 
-export default function Home({ news }: any) {
+export default function Home({ news, authors, posts }: any) {
   const [data, setData] = useState<any>(null); // 取得したデータを格納
   const [page, setPage] = useState(1);
   const searchFormRef = useRef<HTMLDivElement | null>(null);
@@ -31,7 +33,7 @@ export default function Home({ news }: any) {
       >
         <SearchForm setData={setData} page={page} />
         <div className="lg:w-2/3 flex flex-col gap-3 m-1 md:m-5">
-          {data && (
+          {data ? (
             <>
               <PostCardList posts={data.searchResults} />
               <Pagination
@@ -40,6 +42,43 @@ export default function Home({ news }: any) {
                 className="max-w-full"
               />
             </>
+          ) : (
+            <div
+              className="flex justify-center h-3/4 items-center"
+              aria-label="読み込み中"
+            >
+              <div className="animate-spin h-10 w-10 border-4 border-blue-500 rounded-full border-t-transparent"></div>
+            </div>
+          )}
+        </div>
+      </div>
+      <div className="flex">
+        <div className="mx-5">
+          {posts ? (
+            <Recommend posts={posts} />
+          ) : (
+            <div
+              className="flex justify-center items-center"
+              aria-label="読み込み中"
+            >
+              <div className="animate-ping h-2 w-2 bg-blue-600 rounded-full"></div>
+              <div className="animate-ping h-2 w-2 bg-blue-600 rounded-full mx-4"></div>
+              <div className="animate-ping h-2 w-2 bg-blue-600 rounded-full"></div>
+            </div>
+          )}
+        </div>
+        <div className="mx-5">
+          {authors ? (
+            <AuthorList authors={authors} />
+          ) : (
+            <div
+              className="flex justify-center items-center"
+              aria-label="読み込み中"
+            >
+              <div className="animate-ping h-2 w-2 bg-blue-600 rounded-full"></div>
+              <div className="animate-ping h-2 w-2 bg-blue-600 rounded-full mx-4"></div>
+              <div className="animate-ping h-2 w-2 bg-blue-600 rounded-full"></div>
+            </div>
           )}
         </div>
       </div>
@@ -60,9 +99,16 @@ export async function getStaticProps() {
     }),
   }));
 
+  const authors = await prisma.author.findMany();
+  const posts = await prisma.post.findMany({
+    include: { author: true },
+  });
+
   return {
     props: {
       news: formattedNews,
+      authors,
+      posts,
     },
     revalidate: 3600, // 必要に応じて再検証期間を調整できます
   };

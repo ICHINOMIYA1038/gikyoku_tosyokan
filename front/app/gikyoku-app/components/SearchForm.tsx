@@ -83,14 +83,14 @@ export default function SearchForm({ setData, page }: any) {
   };
 
   return (
-    <div className="border-solid h-3/4 border border-black p-10 m-1 md:m-5 lg:w-1/2 lg:sticky lg:top-24">
+    <div className="shadow-lg rounded-lg  bg-white border-solid h-3/4 border border-black p-10 m-1 md:m-5 lg:w-1/2 lg:sticky lg:top-24">
       <div>
         <div>
-          <h3 className="text-xl font-bold  mb-1">キーワード</h3>
+          <h3 className="text-xl font-bold mb-1">キーワード</h3>
         </div>
         <div className="w-full pb-5 ">
           <input
-            className="w-full p-5"
+            className="w-full p-5 bg-gray-50 rounded-md border border-solid border-black"
             value={keyword}
             onChange={(e: { target: { value: SetStateAction<string> } }) =>
               setKeyword(e.target.value)
@@ -105,14 +105,14 @@ export default function SearchForm({ setData, page }: any) {
           </div>
           <div className="pb-5 ">
             <input
-              className="w-1/3"
+              className="w-2/5 bg-gray-50 rounded-md border border-solid border-black"
               type="number"
               value={minMaleCount}
               onChange={(e) => setMinMaleCount(e.target.value)}
             />
             <span>〜</span>
             <input
-              className="w-1/3"
+              className="w-2/5 bg-gray-50 rounded-md border border-solid border-black"
               type="number"
               value={maxMaleCount}
               onChange={(e) => setMaxMaleCount(e.target.value)}
@@ -124,14 +124,14 @@ export default function SearchForm({ setData, page }: any) {
           </div>
           <div className="pb-5 ">
             <input
-              className="w-1/3"
+              className="w-2/5 bg-gray-50 rounded-md border border-solid border-black"
               type="number"
               value={minFemaleCount}
               onChange={(e) => setMinFemaleCount(e.target.value)}
             />
             <span>〜</span>
             <input
-              className="w-1/3"
+              className="w-2/5 bg-gray-50 rounded-md border border-solid border-black"
               type="number"
               value={maxFemaleCount}
               onChange={(e) => setMaxFemaleCount(e.target.value)}
@@ -142,14 +142,14 @@ export default function SearchForm({ setData, page }: any) {
           </div>
           <div className="pb-5 ">
             <input
-              className="w-1/3"
+              className="w-2/5 bg-gray-50 rounded-md border border-solid border-black"
               type="number"
               value={minTotalCount}
               onChange={(e) => setMinTotalCount(e.target.value)}
             />
             <span>〜</span>
             <input
-              className="w-1/3"
+              className="w-2/5 bg-gray-50 rounded-md border border-solid border-black"
               type="number"
               value={maxTotalCount}
               onChange={(e) => setMaxTotalCount(e.target.value)}
@@ -162,7 +162,7 @@ export default function SearchForm({ setData, page }: any) {
             <select
               value={minPlaytime}
               onChange={(e) => setMinPlaytime(parseInt(e.target.value))}
-              className="w-1/3"
+              className="w-2/5 bg-gray-50 rounded-md border border-solid border-black"
             >
               <option value={0}>0分</option>
               <option value={1}>30分</option>
@@ -175,7 +175,7 @@ export default function SearchForm({ setData, page }: any) {
             <select
               value={maxPlaytime}
               onChange={(e) => setMaxPlaytime(parseInt(e.target.value))}
-              className="w-1/3"
+              className="w-2/5 bg-gray-50 rounded-md border border-solid border-black"
             >
               <option value={1}>30分</option>
               <option value={2}>60分</option>
