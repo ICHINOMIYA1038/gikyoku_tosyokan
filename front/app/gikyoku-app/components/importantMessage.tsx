@@ -9,7 +9,7 @@ export default function ImportantMessage() {
       現在サイトをリニューアル中です。<br></br>
       一部のサイトはリダイレクトされるように設定しています。
       元のサイトに戻る場合は
-      <a className="font-bold" href="https:gekidankatakago.com">
+      <a className="font-bold" href="https://gekidankatakago.com">
         こちら
       </a>
     </div>
