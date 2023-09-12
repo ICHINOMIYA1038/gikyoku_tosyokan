@@ -83,7 +83,7 @@ export default function SearchForm({ setData, page }: any) {
   };
 
   return (
-    <div className="border-solid h-3/4 border border-black p-10 m-5 lg:w-1/2 lg:sticky lg:top-24">
+    <div className="border-solid h-3/4 border border-black p-10 m-1 md:m-5 lg:w-1/2 lg:sticky lg:top-24">
       <div>
         <div>
           <h3 className="text-xl font-bold  mb-1">キーワード</h3>

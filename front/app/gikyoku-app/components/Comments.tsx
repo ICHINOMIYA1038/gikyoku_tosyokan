@@ -166,13 +166,19 @@ const Comments = ({ comments, postid }: any) => {
         </div>
       ))}
       <div
-        className="cursor-pointer bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+        className="cursor-pointer bg-blue-500 hover:bg-blue-700 text-white font-bold p-3 m-2 rounded-lg focus:outline-none focus:shadow-outline"
         onClick={() => {
           setTarget(postid);
           openParentModal();
         }}
       >
         コメントをする
+      </div>
+      <div className="bg-white p-3 m-2 shadow-lg rounded-lg ">
+        <span className="font-bold">
+          面白かった！上演します！上演しました！
+        </span>
+        などご自由にお書きください
       </div>
       <Modal isOpen={isParentModalOpen} onClose={closeParentModal}>
         <CommentForm onCommentSubmit={handleParentCommentSubmit} />

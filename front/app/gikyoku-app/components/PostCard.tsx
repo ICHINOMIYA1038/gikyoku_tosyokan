@@ -24,7 +24,7 @@ const PostCard: React.FC<PostPageProps> = ({ post }: any) => {
           <div className="h-48 w-1/4 relative">
             <Image
               src={post.image_url}
-              alt="Landscape picture"
+              alt="投稿の写真"
               layout="fill" // 画像を親要素に合わせる
               objectFit="contain" // 画像をトリミングなしで合わせる
               objectPosition="center center" // 画像の表示位置を中央に
@@ -36,7 +36,7 @@ const PostCard: React.FC<PostPageProps> = ({ post }: any) => {
           <div className="h-48 w-1/4 relative">
             <Image
               src="/24202513.jpg"
-              alt="Landscape picture"
+              alt="NoImage"
               layout="fill" // 画像を親要素に合わせる
               objectFit="contain" // 画像をトリミングなしで合わせる
               objectPosition="center center" // 画像の表示位置を中央に
@@ -53,11 +53,13 @@ const PostCard: React.FC<PostPageProps> = ({ post }: any) => {
                 <Badge key={post.id} text={category.name} />
               ))}
           <div className="md:flex md:gap-5 items-center">
-            <h2 className="text-xl font-bold">{post.title}</h2>
-            <p className="text-md font-bold">{post.author.name}</p>
+            <h2 className="text-base md:text-xl font-bold">{post.title}</h2>
+            <p className=" text-xs md:text-base font-bold">
+              {post.author.name}
+            </p>
           </div>
-          <div className="flex font-bold gap-1 text-sm">
-            <p>
+          <div className="flex font-bold gap-1 text-xs md:text-sm mt-1">
+            <p className="">
               <span>男:</span>
               {post.man !== -1 ? `${post.man}` : "不明"}
             </p>

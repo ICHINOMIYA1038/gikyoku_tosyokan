@@ -30,7 +30,7 @@ export default function Home({ news }: any) {
         ref={searchFormRef}
       >
         <SearchForm setData={setData} page={page} />
-        <div className="lg:w-2/3 flex flex-col gap-3 m-5">
+        <div className="lg:w-2/3 flex flex-col gap-3 m-1 md:m-5">
           {data && (
             <>
               <PostCardList posts={data.searchResults} />
