@@ -59,9 +59,6 @@ export default async function handler(
         title: {
           contains: keyword as string,
         },
-        synopsis: {
-          contains: keyword as string,
-        },
 
         ...(ids.length > 0
           ? {
