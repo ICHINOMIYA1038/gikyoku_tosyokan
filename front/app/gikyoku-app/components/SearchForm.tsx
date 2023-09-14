@@ -2,7 +2,7 @@ import React, { SetStateAction, useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import TagSelector from "./TagSelecter";
 
-export default function SearchForm({ setData, page }: any) {
+export default function SearchForm({ setData, page, setPage }: any) {
   const [keyword, setKeyword] = useState<string>("");
   const [minMaleCount, setMinMaleCount] = useState<string>("");
   const [maxMaleCount, setMaxMaleCount] = useState<string>("");
@@ -195,7 +195,16 @@ export default function SearchForm({ setData, page }: any) {
       </div>
       <div>
         <div className=" font-bold text-white  bg-green-600">
-          <button className="w-full " onClick={handleSubmit}>
+          <button
+            className="w-full "
+            onClick={() => {
+              if (page != 1) {
+                setPage(1);
+              } else {
+                handleSubmit();
+              }
+            }}
+          >
             検索
           </button>
         </div>

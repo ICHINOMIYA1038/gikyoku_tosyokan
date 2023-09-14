@@ -9,7 +9,7 @@ type PostPageProps = {
   post: PostType & { author: { id: number; name: string } };
 };
 
-const PostCard: React.FC<PostPageProps> = ({ post }: any) => {
+const PostCardSmall: React.FC<PostPageProps> = ({ post }: any) => {
   const router = useRouter();
 
   return (
@@ -64,4 +64,4 @@ const PostCard: React.FC<PostPageProps> = ({ post }: any) => {
   );
 };
 
-export default PostCard;
+export default PostCardSmall;

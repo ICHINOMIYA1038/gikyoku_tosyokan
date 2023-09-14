@@ -8,24 +8,20 @@ import ExLinkwithOG from "@/components/ExLinkwithOG";
 import ExternalLinkButton from "@/components/ExternalLinkButton";
 const prisma = new PrismaClient();
 
-function AuthorPage({ author }: any) {
+function CategoryPage({ category }: any) {
   return (
     <Layout>
       <div className="md:max-w-2xl px-4 my-4 mx-auto basic-card">
-        <h2>作者詳細</h2>
+        <h2>カテゴリ詳細</h2>
       </div>
       <div className="md:max-w-2xl mx-auto">
         <div className="basic-card p-4 ">
-          <h2>{author.name}</h2>
-          {author.group && <p>{author.group}</p>}
-          {author.website && <ExternalLinkButton url={author.website} />}
-          {author.profile && <p>{author.profile}</p>}
-          {author.masterpiece && <p>代表作: {author.masterpiece}</p>}
+          <h2>{category.name}</h2>
         </div>
         <div className="basic-card p-4 my-2">
           <h2>作品一覧</h2>
           <ul className="flex flex-wrap gap-3 my-2">
-            {author.posts.map((post: any) => (
+            {category.posts.map((post: any) => (
               <li key={post.id}>
                 <PostCardSmall post={post} />
               </li>
@@ -37,17 +33,17 @@ function AuthorPage({ author }: any) {
   );
 }
 
-export default AuthorPage;
+export default CategoryPage;
 
 export async function getServerSideProps(context: any) {
-  const authorId = parseInt(context.params.id);
-  if (isNaN(authorId)) {
+  const categoryid = parseInt(context.params.id);
+  if (isNaN(categoryid)) {
     return {
       notFound: true, // Return a 404 page for non-numeric IDs
     };
   }
-  const author = await prisma.author.findUnique({
-    where: { id: authorId },
+  const category = await prisma.category.findUnique({
+    where: { id: categoryid },
     include: {
       posts: {
         include: { author: true },
@@ -55,7 +51,7 @@ export async function getServerSideProps(context: any) {
     }, // Include the related author information
   });
 
-  if (!author) {
+  if (!category) {
     return {
       notFound: true, // Return a 404 page
     };
@@ -63,7 +59,7 @@ export async function getServerSideProps(context: any) {
 
   return {
     props: {
-      author,
+      category,
     },
   };
 }

@@ -5,16 +5,16 @@ import { AuthorPageProps, AuthorData } from "@/components/Type/type";
 
 const prisma = new PrismaClient();
 
-function AuthorListPage(authors: any) {
+function CategoryListPage(categories: any) {
   return (
     <Layout>
       <div>
-        <h1>Authors</h1>
+        <h2>カテゴリ</h2>
         <ul>
-          {authors.length == 0 &&
-            authors.map((author: any) => (
-              <li key={author.id}>
-                <Link href={`/authors/${author.id}`}>{author.name}</Link>
+          {categories.length == 0 &&
+            categories.map((category: any) => (
+              <li key={category.id}>
+                <Link href={`/categories/${category.id}`}>{category.name}</Link>
               </li>
             ))}
         </ul>
@@ -24,7 +24,7 @@ function AuthorListPage(authors: any) {
 }
 
 export async function getStaticProps() {
-  const authors = await prisma.author.findMany({
+  const categories = await prisma.category.findMany({
     include: {
       posts: {
         include: { author: true },
@@ -34,10 +34,10 @@ export async function getStaticProps() {
 
   return {
     props: {
-      authors,
+      categories,
     },
     revalidate: 3600, // You can adjust the revalidation period as needed
   };
 }
 
-export default AuthorListPage;
+export default CategoryListPage;

@@ -1,30 +1,29 @@
 import * as React from "react";
 import { Post as PostType } from "@prisma/client";
-import PostCardSmall from "../PostCardSmall";
-import { BadgeGreen } from "../Badge";
+import Badge, { BadgeGreen } from "../Badge";
 import { useRouter } from "next/router";
 
 type PostPageProps = {
   post: PostType & { author: { id: number; name: string } };
 };
 
-const AuthorList = ({ authors }: any) => {
+const CategoryList = ({ categories }: any) => {
   const router = useRouter();
   return (
     <>
       <div className="basic-card p-4 inline-block">
-        <h2 className="m-4">作者一覧</h2>
-        <p>個別ページは順次作成していきますm(__)m</p>
+        <h2 className="m-4">カテゴリ一覧</h2>
+        <p>カテゴリは順次追加していきますm(__)m</p>
         <div className="flex gap-2 flex-wrap">
-          {authors &&
-            authors.map((author: any) => (
+          {categories &&
+            categories.map((category: any) => (
               <div
                 className="cursor-pointer"
                 onClick={() => {
-                  router.push(`/authors/${author.id}`);
+                  router.push(`/categories/${category.id}`);
                 }}
               >
-                <BadgeGreen key={author.id} text={author.name} />
+                <Badge key={category.id} text={category.name} />
               </div>
             ))}
         </div>
@@ -33,4 +32,4 @@ const AuthorList = ({ authors }: any) => {
   );
 };
 
-export default AuthorList;
+export default CategoryList;
