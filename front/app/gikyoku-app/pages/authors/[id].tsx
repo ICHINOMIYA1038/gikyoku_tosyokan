@@ -2,12 +2,13 @@ import * as React from "react";
 import Link from "next/link";
 import { PrismaClient, Author as AuthorType } from "@prisma/client";
 import Layout from "@/components/Layout";
+import PostCard from "@/components/PostCard";
 const prisma = new PrismaClient();
 
 function AuthorPage({ author }: any) {
   return (
     <Layout>
-      <div>
+      <div className="basic-card">
         <h1>name:{author.name}</h1>
         {author.website && (
           <p>
@@ -22,7 +23,7 @@ function AuthorPage({ author }: any) {
         <ul>
           {author.posts.map((post: any) => (
             <li key={post.id}>
-              <Link href={`/posts/${post.id}`}>{post.title}</Link>
+              <PostCard post={post}/>
             </li>
           ))}
         </ul>

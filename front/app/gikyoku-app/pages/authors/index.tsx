@@ -25,7 +25,11 @@ function AuthorListPage(authors: any) {
 
 export async function getStaticProps() {
   const authors = await prisma.author.findMany({
-    include: { posts: true }, // Include the related author information
+    include: { posts: {
+      include: { author: true }
+  }
+
+  }, // Include the related author information
   });
 
   return {
