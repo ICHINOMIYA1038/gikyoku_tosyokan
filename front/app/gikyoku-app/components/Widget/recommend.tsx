@@ -6,6 +6,11 @@ type PostPageProps = {
   post: PostType & { author: { id: number; name: string } };
 };
 
+const getposts = async (): Promise<any> => {
+  const res = await fetch("/api/popular");
+  return res.json();
+};
+
 const Recommend = ({ posts }: any) => {
   return (
     <>
