@@ -2,7 +2,24 @@ import React, { SetStateAction, useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import TagSelector from "./TagSelecter";
 
-export default function SearchForm({ setData, page, setPage }: any) {
+import { useQuery } from "@tanstack/react-query";
+
+const getPosts = async ({ queryKey }: any): Promise<any> => {
+  if (queryKey === undefined || queryKey === null) {
+    throw new Error("queryKey is undefined or null");
+  }
+  const res = await fetch(`/api/search/${queryKey}`);
+  return res.json();
+};
+
+export default function SearchForm({
+  setData,
+  page,
+  setPage,
+  sort_by,
+  sortDirection,
+  onSearch,
+}: any) {
   const [keyword, setKeyword] = useState<string>("");
   const [minMaleCount, setMinMaleCount] = useState<string>("");
   const [maxMaleCount, setMaxMaleCount] = useState<string>("");
@@ -12,10 +29,40 @@ export default function SearchForm({ setData, page, setPage }: any) {
   const [maxTotalCount, setMaxTotalCount] = useState<string>("");
   const [minPlaytime, setMinPlaytime] = useState<number>(0);
   const [maxPlaytime, setMaxPlaytime] = useState<number>(4);
-  const [sort_by, setSortIndex] = useState<number>(0);
-  const [sortDirection, setSortDirection] = useState<number>(0);
 
   const [selectedTags, setSelectedTags] = useState<number[]>([]);
+  const per = 8;
+  const searchParams: Record<string, string> = {
+    keyword: keyword,
+    minMaleCount: minMaleCount,
+    maxMaleCount: maxMaleCount,
+    minFemaleCount: minFemaleCount,
+    maxFemaleCount: maxFemaleCount,
+    minTotalCount: minTotalCount,
+    maxTotalCount: maxTotalCount,
+    minPlaytime: minPlaytime.toString(),
+    maxPlaytime: maxPlaytime.toString(),
+    page: page.toString(),
+    per: per.toString(),
+    categories: Array.isArray(selectedTags)
+      ? selectedTags.join(",")
+      : selectedTags,
+  };
+
+  const query = new URLSearchParams(searchParams).toString();
+
+  const {
+    data,
+    isLoading,
+    // isFetching,
+    error,
+  } = useQuery({
+    queryKey: [query],
+    queryFn: getPosts,
+    refetchOnWindowFocus: false,
+    staleTime: 1000 * 60 * 5,
+    cacheTime: Infinity,
+  });
 
   const router = useRouter();
 
@@ -45,25 +92,13 @@ export default function SearchForm({ setData, page, setPage }: any) {
     handleSubmit();
   }, [page]);
 
-  const handleSubmit = async () => {
-    const per = 8;
+  useEffect(() => {
+    setPage(1);
+    handleSubmit();
+  }, [sort_by, sortDirection]);
 
-    const searchParams: Record<string, string> = {
-      keyword: keyword,
-      minMaleCount: minMaleCount,
-      maxMaleCount: maxMaleCount,
-      minFemaleCount: minFemaleCount,
-      maxFemaleCount: maxFemaleCount,
-      minTotalCount: minTotalCount,
-      maxTotalCount: maxTotalCount,
-      minPlaytime: minPlaytime.toString(),
-      maxPlaytime: maxPlaytime.toString(),
-      page: page.toString(),
-      per: per.toString(),
-      categories: Array.isArray(selectedTags)
-        ? selectedTags.join(",")
-        : selectedTags,
-    };
+  const handleSubmit = async () => {
+    setData([]);
 
     const query = new URLSearchParams(searchParams).toString();
 

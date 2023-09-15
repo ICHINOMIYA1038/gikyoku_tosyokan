@@ -9,12 +9,16 @@ import TopImage from "@/components/TopImage";
 import Recommend from "@/components/Widget/recommend";
 import AuthorList from "@/components/Widget/AuthorList";
 import CategoryList from "@/components/Widget/CategoryList";
+import DropBox from "@/components/DropBox";
+import { defaultOverrides } from "next/dist/server/require-hook";
 
 const prisma = new PrismaClient();
 
 export default function Home({ news, authors, posts, categories }: any) {
   const [data, setData] = useState<any>(null); // 取得したデータを格納
   const [page, setPage] = useState(1);
+  const [sort_by, setSortIndex] = useState<number>(1);
+  const [sortDirection, setSortDirection] = useState<number>(1);
   const searchFormRef = useRef<HTMLDivElement | null>(null);
 
   const handleScrollToRegistrationForm = () => {
@@ -32,16 +36,46 @@ export default function Home({ news, authors, posts, categories }: any) {
         id="registration-form"
         ref={searchFormRef}
       >
-        <SearchForm setData={setData} page={page} setPage={setPage} />
+        <SearchForm
+          setData={setData}
+          page={page}
+          setPage={setPage}
+          sort_by={sort_by}
+          sortDirection={sortDirection}
+          onSearch={handleScrollToRegistrationForm}
+        />
         <div className="lg:w-2/3 flex flex-col gap-3 m-1 md:m-5">
           {data ? (
             <>
-              <PostCardList posts={data.searchResults} />
-              <Pagination
-                setPage={setPage}
-                pagination={data.pagination}
-                className="max-w-full"
+              <DropBox
+                sort_by={sort_by}
+                setSortIndex={setSortIndex}
+                setSortDirection={setSortDirection}
+                sortDirection={sortDirection}
               />
+              {data.searchResults && (
+                <>
+                  {data.searchResults.length !== 0 ? (
+                    <PostCardList posts={data.searchResults} />
+                  ) : (
+                    <div>条件にあう戯曲は見つかりませんでした。</div>
+                  )}
+                </>
+              )}
+              {data.pagination ? (
+                <Pagination
+                  setPage={setPage}
+                  pagination={data.pagination}
+                  className="max-w-full"
+                />
+              ) : (
+                <div
+                  className="flex justify-center h-3/4 items-center"
+                  aria-label="読み込み中"
+                >
+                  <div className="animate-spin h-10 w-10 border-4 border-blue-500 rounded-full border-t-transparent"></div>
+                </div>
+              )}
             </>
           ) : (
             <div

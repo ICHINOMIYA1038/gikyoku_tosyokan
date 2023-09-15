@@ -36,14 +36,37 @@ export default async function handler(
       maxTotalCount = "9999",
       minPlaytime = "-1",
       maxPlaytime = "5",
-      sort_by = "",
-      sortDirection = "",
-      categories = "",
+      sort_by,
+      sortDirection,
+      categories,
       page = "1",
       per = "8",
     } = req.query;
 
     const ids = parseCategories(categories);
+
+    const getSortField = (sortValue: any) => {
+      switch (sortValue) {
+        case "1":
+          return { id: sortDirection === "1" ? "desc" : "asc" };
+        case "2":
+          return { access: { _count: sortDirection === "1" ? "desc" : "asc" } };
+        case "3":
+          return { man: sortDirection === "1" ? "desc" : "asc" };
+        case "4":
+          return { woman: sortDirection === "1" ? "desc" : "asc" };
+        case "5":
+          return { totalNumber: sortDirection === "1" ? "desc" : "asc" };
+        case "6":
+          return { playtime: sortDirection === "1" ? "desc" : "asc" };
+        default:
+          return {
+            access: { _count: sortDirection === "1" ? "desc" : "asc" },
+          };
+      }
+    };
+
+    const sortField = getSortField(sort_by);
 
     const parseIntSafe = (value: string, defaultValue: number): number => {
       const parsedValue = parseInt(value, 10);
@@ -125,10 +148,7 @@ export default async function handler(
         },
         // Add more conditions as needed for sorting, tags, etc.
       },
-      orderBy: {
-        // Define the sorting order based on the sort_by and sortDirection parameters.
-        // Use switch cases or if conditions to map the sort_by and sortDirection values to actual field names and directions.
-      },
+      orderBy: sortField,
       take: perPage,
       skip: skip,
       include: {
