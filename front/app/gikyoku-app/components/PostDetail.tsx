@@ -6,6 +6,7 @@ import ReactMarkdown from "react-markdown";
 import AmazonAffiliateLink from "@/components/Ad/AmazonAffiliateLink";
 import ExternalLinkButton from "@/components/ExternalLinkButton";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import Link from "next/link";
 
 const queryClient = new QueryClient();
 
@@ -99,7 +100,7 @@ const PostDetail: React.FC<PostPageProps> = ({ post }: PostPageProps) => {
 
         <div className="my-10">
           <h3 className="text-xl font-bold">{post.title}の台本入手方法</h3>
-          {!post.link_to_plot && !post.amazon_text_url && !post.buyLink ? (
+          {!post.link_to_plot && !post.amazon_text_url && !post.buy_link ? (
             <>
               <div>この台本の入手方法の情報はまだありません。</div>
               <div>ご存じの方がいらっしゃいましたらぜひ報告ください。</div>
@@ -117,6 +118,16 @@ const PostDetail: React.FC<PostPageProps> = ({ post }: PostPageProps) => {
 
               <ExternalLinkButton title={post.title} url={post.link_to_plot} />
               <div className="flex justify-end">(外部サイトに飛びます)</div>
+            </div>
+          )}
+
+          {post.buy_link && (
+            <div>
+              {post.author}「{post.title}」
+              はこちらのサイトからご購入いただけます。
+              <Link href={post.buy_link}>
+                {post.author}「{post.title}」のご購入はこちらから
+              </Link>
             </div>
           )}
 
