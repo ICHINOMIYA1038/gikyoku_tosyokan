@@ -10,7 +10,15 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 const queryClient = new QueryClient();
 
 type PostPageProps = {
-  post: PostType & { author: { id: number; name: string; group: string } };
+  post: PostType & {
+    author: {
+      id: number;
+      name: string;
+      group: string;
+      website: string;
+      profile: string;
+    };
+  };
 };
 const PostDetail: React.FC<PostPageProps> = ({ post }: PostPageProps) => {
   return (
