@@ -32,7 +32,9 @@ const PostDetail: React.FC<PostPageProps> = ({ post }: PostPageProps) => {
           {post.author.group && <span>({post.author.group})</span>}
         </p>
         <div className="my-10">
-          <h3 className="text-xl font-bold ">{post.title}の上演時間と人数</h3>
+          <h3 className="text-xl font-bold ">
+            『{post.title}』の上演時間と人数
+          </h3>
           <div className="flex font-bold gap-2 flex-wrap">
             <p>
               <span>男:</span>
@@ -97,7 +99,7 @@ const PostDetail: React.FC<PostPageProps> = ({ post }: PostPageProps) => {
         )}
 
         <div className="my-10">
-          <h3 className="text-xl font-bold">{post.title}の台本入手方法</h3>
+          <h3 className="text-xl font-bold">『{post.title}』の台本入手方法</h3>
           {!post.link_to_plot && !post.amazon_text_url && !post.buy_link ? (
             <>
               <div>この台本の入手方法の情報はまだありません。</div>
