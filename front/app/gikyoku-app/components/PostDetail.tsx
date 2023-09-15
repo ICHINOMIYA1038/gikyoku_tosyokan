@@ -32,9 +32,7 @@ const PostDetail: React.FC<PostPageProps> = ({ post }: PostPageProps) => {
           {post.author.group && <span>({post.author.group})</span>}
         </p>
         <div className="my-10">
-          <h3 className="text-xl font-bold ">
-            【{post.title}の上演時間と人数】
-          </h3>
+          <h3 className="text-xl font-bold ">{post.title}の上演時間と人数</h3>
           <div className="flex font-bold gap-2 flex-wrap">
             <p>
               <span>男:</span>
@@ -63,13 +61,13 @@ const PostDetail: React.FC<PostPageProps> = ({ post }: PostPageProps) => {
           </div>
         </div>
         <div className="font-bold my-10">
-          <h3 className="text-xl  font-bold">【あらすじ,概要】</h3>
+          <h3 className="text-xl  font-bold">あらすじ,概要</h3>
           <p className="text-gray-600 mb-4">{post.synopsis}</p>
         </div>
 
         {post.content && (
           <div className="my-10">
-            <h3 className="text-xl font-bold">【{post.title}を読んだ感想】</h3>
+            <h3 className="text-xl font-bold">{post.title}を読んだ感想</h3>
             <div
               className="text-lg"
               dangerouslySetInnerHTML={{ __html: post.content }}
@@ -80,7 +78,7 @@ const PostDetail: React.FC<PostPageProps> = ({ post }: PostPageProps) => {
         {post.content && (
           <div className="my-10">
             <h3 className="text-xl font-bold">
-              【{post.author.name}さんのプロフィール】
+              {post.author.name}さんのプロフィール
             </h3>
             {!post.author.profile ? (
               <div>
