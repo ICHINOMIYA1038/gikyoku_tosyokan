@@ -57,6 +57,9 @@ const PostCardSmall: React.FC<PostPageProps> = ({ post }: any) => {
           <div className="text-center">
             <h2 className="text-base text-base font-bold">{post.title}</h2>
             <div className=" text-xs font-bold">{post.author.name}</div>
+            {post._count && (
+              <div className="text-xs">{post._count.access} view</div>
+            )}
           </div>
         </div>
       </div>

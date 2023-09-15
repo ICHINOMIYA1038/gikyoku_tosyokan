@@ -9,9 +9,6 @@ import TopImage from "@/components/TopImage";
 import Recommend from "@/components/Widget/recommend";
 import AuthorList from "@/components/Widget/AuthorList";
 import CategoryList from "@/components/Widget/CategoryList";
-import Script from "next/script";
-import { Tweet } from "@/components/Widget/Tweet";
-import { TweetTimeLine } from "@/components/Widget/TweetTimeLine";
 
 const prisma = new PrismaClient();
 
@@ -59,7 +56,7 @@ export default function Home({ news, authors, posts, categories }: any) {
       <div className="lg:flex">
         <div className="mx-5 my-5">
           {posts ? (
-            <Recommend posts={posts} />
+            <Recommend />
           ) : (
             <div
               className="flex justify-center items-center"
@@ -108,7 +105,7 @@ export async function getStaticProps() {
   const news = await prisma.news.findMany();
 
   // 日付データの変換（日本の形式）
-  const formattedNews = news.map((item) => ({
+  const formattedNews = news.map((item: any) => ({
     ...item,
     date: item.date.toLocaleDateString("ja-JP", {
       year: "numeric",

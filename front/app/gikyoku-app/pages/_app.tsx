@@ -5,6 +5,9 @@ import Script from "next/script";
 import * as gtag from "@/lib/gtag";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
 
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
@@ -37,7 +40,9 @@ export default function App({ Component, pageProps }: AppProps) {
            `,
         }}
       />
-      <Component {...pageProps} />
+      <QueryClientProvider client={queryClient}>
+        <Component {...pageProps} />
+      </QueryClientProvider>
       <Analytics />
     </>
   );

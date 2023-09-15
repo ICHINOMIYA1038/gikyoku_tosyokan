@@ -19,6 +19,7 @@
     "@aws-sdk/s3-request-presigner": "^3.405.0",
     "@prisma/client": "^5.2.0",
     "@tailwindcss/line-clamp": "^0.4.4",
+    "@tanstack/react-query": "^4.35.3",
     "@types/csv-parse": "^1.2.2",
     "@types/gtag.js": "^0.0.13",
     "@types/nodemailer": "^6.4.9",
