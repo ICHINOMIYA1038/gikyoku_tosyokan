@@ -1,32 +1,14 @@
 import * as React from "react";
-import Link from "next/link";
 import { PrismaClient, Author as AuthorType } from "@prisma/client";
 import Layout from "@/components/Layout";
-import PostCard from "@/components/PostCard";
 import PostCardSmall from "@/components/PostCardSmall";
-import ExLinkwithOG from "@/components/ExLinkwithOG";
-import ExternalLinkButton from "@/components/ExternalLinkButton";
-import Head from "next/head";
+import Seo from "@/components/seo";
 const prisma = new PrismaClient();
 
 function CategoryPage({ category }: any) {
   return (
     <>
-      <Head>
-        <title>{category.name}の戯曲一覧 -戯曲図書館</title>
-        <meta
-          name="description"
-          content="
-  上演する脚本を探しの方に。上演時間や人数などから検索ができます。戯曲を探す、戯曲図書館。"
-          key="desc"
-        />
-        <meta property="og:title" content="戯曲を探す、戯曲図書館" />
-        <meta
-          property="og:description"
-          content="上演する脚本を探しの方に。上演時間や人数などから検索ができます。戯曲を探す、戯曲図書館。"
-        />
-        <meta property="og:image" content="https://gikyokutosyokan.logo.png" />
-      </Head>
+      <Seo pageTitle={`{category.name}の戯曲一覧 -戯曲図書館`} />
       <Layout ishead="true">
         <div className="md:max-w-2xl px-4 my-4 mx-auto basic-card">
           <h2>カテゴリ詳細</h2>

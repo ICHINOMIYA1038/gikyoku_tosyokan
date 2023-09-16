@@ -1,29 +1,14 @@
 import Layout from "@/components/Layout";
 import { PrismaClient, Author } from "@prisma/client";
 import Link from "next/link";
-import { AuthorPageProps, AuthorData } from "@/components/Type/type";
-import Head from "next/head";
+import Seo from "@/components/seo";
 
 const prisma = new PrismaClient();
 
 function CategoryListPage(categories: any) {
   return (
     <>
-      <Head>
-        <title>カテゴリから戯曲を探す -戯曲図書館</title>
-        <meta
-          name="description"
-          content="
-  上演する脚本を探しの方に。上演時間や人数などから検索ができます。戯曲を探す、戯曲図書館。"
-          key="desc"
-        />
-        <meta property="og:title" content="戯曲を探す、戯曲図書館" />
-        <meta
-          property="og:description"
-          content="上演する脚本を探しの方に。上演時間や人数などから検索ができます。戯曲を探す、戯曲図書館。"
-        />
-        <meta property="og:image" content="https://gikyokutosyokan.logo.png" />
-      </Head>
+      <Seo pageTitle={`カテゴリから戯曲を探す -戯曲図書館`} />
       <Layout>
         <div>
           <h2>カテゴリ</h2>

@@ -1,11 +1,13 @@
 import Layout from "@/components/Layout";
 import PostCard from "@/components/PostCard";
+import Seo from "@/components/seo";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 function PostListPage({ posts }: any) {
   return (
     <Layout>
+      <Seo />
       <div>
         <h1>Post List</h1>
         <ul>

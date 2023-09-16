@@ -1,10 +1,12 @@
 import ExternalLinkButton from "@/components/ExternalLinkButton";
 import NewsLayout from "@/components/NewsLayout";
+import Seo from "@/components/seo";
 import * as React from "react";
 //固定ページのためのレイアウト
 const Publish = ({ children }: any) => {
   return (
     <NewsLayout>
+      <Seo />
       <div>
         <h2>サイトがリニューアルされました。</h2>
         <h3 className="font-bold text-xl mt-5 mb-2">はじめに</h3>

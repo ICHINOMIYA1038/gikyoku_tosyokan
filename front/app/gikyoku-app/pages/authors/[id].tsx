@@ -6,11 +6,13 @@ import PostCard from "@/components/PostCard";
 import PostCardSmall from "@/components/PostCardSmall";
 import ExLinkwithOG from "@/components/ExLinkwithOG";
 import ExternalLinkButton from "@/components/ExternalLinkButton";
+import Seo from "@/components/seo";
 const prisma = new PrismaClient();
 
 function AuthorPage({ author }: any) {
   return (
     <Layout>
+      <Seo />
       <div className="md:max-w-2xl px-4 my-4 mx-auto basic-card">
         <h2>作者詳細</h2>
       </div>
