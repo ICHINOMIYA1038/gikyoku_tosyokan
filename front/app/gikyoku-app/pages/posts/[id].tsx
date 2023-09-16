@@ -13,6 +13,7 @@ import {
   TwitterIcon,
 } from "react-share";
 import Comments from "@/components/Comments";
+import { Head } from "next/document";
 
 const prisma = new PrismaClient();
 
@@ -21,35 +22,64 @@ function PostPage({ post }: any) {
   const QUOTE = `${post.author.name}作「${post.title}」をみんなにおすすめしよう`;
 
   return (
-    <Layout>
-      <div className="relative mx-auto max-w-xl">
-        <div className="md:flex flex-col md:fixed md:mr-20 max-w-md mx-auto">
-          <FacebookShareButton url={URL} quote={QUOTE}>
-            <FacebookIcon size={48} round />
-          </FacebookShareButton>
-          <TwitterShareButton url={URL} title={QUOTE}>
-            <TwitterIcon size={48} round />
-          </TwitterShareButton>
-          <LineShareButton url={URL} title={QUOTE}>
-            <LineIcon size={48} round />
-          </LineShareButton>
-          <HatenaShareButton
-            url={URL}
-            title={QUOTE}
-            windowWidth={660}
-            windowHeight={460}
-          >
-            <HatenaIcon size={48} round />
-          </HatenaShareButton>
+    <>
+      <Head>
+        <title>
+          {post.author}『{post.title}』-戯曲図書館
+        </title>
+        <meta
+          name="description"
+          content={
+            post.synopsis
+              ? post.synopsis
+              : "上演する脚本を探しの方に。上演時間や人数などから検索ができます。戯曲を探す、戯曲図書館。"
+          }
+          key="desc"
+        />
+        <meta
+          property="og:title"
+          content={`${post.author}『${post.title}』-戯曲図書館`}
+        />
+        <meta
+          property="og:description"
+          content={
+            post.synopsis
+              ? post.synopsis
+              : "上演する脚本を探しの方に。上演時間や人数などから検索ができます。戯曲を探す、戯曲図書館。"
+          }
+        />
+        <meta property="og:image" content="https://gikyokutosyokan.logo.png" />
+      </Head>
+      <Layout>
+        <div className="relative mx-auto max-w-xl">
+          <div className="md:flex flex-col md:fixed md:mr-20 max-w-md mx-auto">
+            <FacebookShareButton url={URL} quote={QUOTE}>
+              <FacebookIcon size={48} round />
+            </FacebookShareButton>
+            <TwitterShareButton url={URL} title={QUOTE}>
+              <TwitterIcon size={48} round />
+            </TwitterShareButton>
+            <LineShareButton url={URL} title={QUOTE}>
+              <LineIcon size={48} round />
+            </LineShareButton>
+            <HatenaShareButton
+              url={URL}
+              title={QUOTE}
+              windowWidth={660}
+              windowHeight={460}
+            >
+              <HatenaIcon size={48} round />
+            </HatenaShareButton>
+          </div>
+          <PostDetail post={post} />
+          <div className="max-w-md mx-auto">
+            {post.comments && (
+              <Comments comments={post.comments} postid={post.id} />
+            )}
+          </div>
         </div>
-        <PostDetail post={post} />
-        <div className="max-w-md mx-auto">
-          {post.comments && (
-            <Comments comments={post.comments} postid={post.id} />
-          )}
-        </div>
-      </div>
-    </Layout>
+      </Layout>
+    </>
   );
 }
 export default PostPage;

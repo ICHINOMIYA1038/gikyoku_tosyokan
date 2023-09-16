@@ -24,6 +24,11 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <>
       <Script
+        async
+        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8691137965825158"
+        crossOrigin="anonymous"
+      ></Script>
+      <Script
         strategy="afterInteractive"
         src={`https://www.googletagmanager.com/gtag/js?id=${gtag.GA_MEASUREMENT_ID}`}
       />

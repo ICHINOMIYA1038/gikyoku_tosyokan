@@ -11,6 +11,7 @@ import AuthorList from "@/components/Widget/AuthorList";
 import CategoryList from "@/components/Widget/CategoryList";
 import DropBox from "@/components/DropBox";
 import { defaultOverrides } from "next/dist/server/require-hook";
+import { Head } from "next/document";
 
 const prisma = new PrismaClient();
 
@@ -28,110 +29,127 @@ export default function Home({ news, authors, posts, categories }: any) {
   };
 
   return (
-    <Layout>
-      <TopImage buttonClick={handleScrollToRegistrationForm} />
-      <NewsList news={news} />
-      <div
-        className="lg:flex relative  box-border"
-        id="registration-form"
-        ref={searchFormRef}
-      >
-        <SearchForm
-          setData={setData}
-          page={page}
-          setPage={setPage}
-          sort_by={sort_by}
-          sortDirection={sortDirection}
-          onSearch={handleScrollToRegistrationForm}
+    <>
+      <Head>
+        <title>戯曲図書館</title>
+        <meta
+          name="description"
+          content="
+    上演する脚本を探しの方に。上演時間や人数などから検索ができます。戯曲を探す、戯曲図書館。"
+          key="desc"
         />
-        <div className="lg:w-2/3 flex flex-col gap-3 m-1 md:m-5">
-          {data ? (
-            <>
-              <DropBox
-                sort_by={sort_by}
-                setSortIndex={setSortIndex}
-                setSortDirection={setSortDirection}
-                sortDirection={sortDirection}
-              />
-              {data.searchResults && (
-                <>
-                  {data.searchResults.length !== 0 ? (
-                    <PostCardList posts={data.searchResults} />
-                  ) : (
-                    <div>条件にあう戯曲は見つかりませんでした。</div>
-                  )}
-                </>
-              )}
-              {data.pagination ? (
-                <Pagination
-                  setPage={setPage}
-                  pagination={data.pagination}
-                  className="max-w-full"
+        <meta property="og:title" content="戯曲を探す、戯曲図書館" />
+        <meta
+          property="og:description"
+          content="上演する脚本を探しの方に。上演時間や人数などから検索ができます。戯曲を探す、戯曲図書館。"
+        />
+        <meta property="og:image" content="https://gikyokutosyokan.logo.png" />
+      </Head>
+      <Layout>
+        <TopImage buttonClick={handleScrollToRegistrationForm} />
+        <NewsList news={news} />
+        <div
+          className="lg:flex relative  box-border"
+          id="registration-form"
+          ref={searchFormRef}
+        >
+          <SearchForm
+            setData={setData}
+            page={page}
+            setPage={setPage}
+            sort_by={sort_by}
+            sortDirection={sortDirection}
+            onSearch={handleScrollToRegistrationForm}
+          />
+          <div className="lg:w-2/3 flex flex-col gap-3 m-1 md:m-5">
+            {data ? (
+              <>
+                <DropBox
+                  sort_by={sort_by}
+                  setSortIndex={setSortIndex}
+                  setSortDirection={setSortDirection}
+                  sortDirection={sortDirection}
                 />
-              ) : (
-                <div
-                  className="flex justify-center h-3/4 items-center"
-                  aria-label="読み込み中"
-                >
-                  <div className="animate-spin h-10 w-10 border-4 border-blue-500 rounded-full border-t-transparent"></div>
-                </div>
-              )}
-            </>
-          ) : (
-            <div
-              className="flex justify-center h-3/4 items-center"
-              aria-label="読み込み中"
-            >
-              <div className="animate-spin h-10 w-10 border-4 border-blue-500 rounded-full border-t-transparent"></div>
-            </div>
-          )}
+                {data.searchResults && (
+                  <>
+                    {data.searchResults.length !== 0 ? (
+                      <PostCardList posts={data.searchResults} />
+                    ) : (
+                      <div>条件にあう戯曲は見つかりませんでした。</div>
+                    )}
+                  </>
+                )}
+                {data.pagination ? (
+                  <Pagination
+                    setPage={setPage}
+                    pagination={data.pagination}
+                    className="max-w-full"
+                  />
+                ) : (
+                  <div
+                    className="flex justify-center h-3/4 items-center"
+                    aria-label="読み込み中"
+                  >
+                    <div className="animate-spin h-10 w-10 border-4 border-blue-500 rounded-full border-t-transparent"></div>
+                  </div>
+                )}
+              </>
+            ) : (
+              <div
+                className="flex justify-center h-3/4 items-center"
+                aria-label="読み込み中"
+              >
+                <div className="animate-spin h-10 w-10 border-4 border-blue-500 rounded-full border-t-transparent"></div>
+              </div>
+            )}
+          </div>
         </div>
-      </div>
-      <div className="lg:flex">
-        <div className="mx-5 my-5">
-          {posts ? (
-            <Recommend />
-          ) : (
-            <div
-              className="flex justify-center items-center"
-              aria-label="読み込み中"
-            >
-              <div className="animate-ping h-2 w-2 bg-blue-600 rounded-full"></div>
-              <div className="animate-ping h-2 w-2 bg-blue-600 rounded-full mx-4"></div>
-              <div className="animate-ping h-2 w-2 bg-blue-600 rounded-full"></div>
-            </div>
-          )}
+        <div className="lg:flex">
+          <div className="mx-5 my-5">
+            {posts ? (
+              <Recommend />
+            ) : (
+              <div
+                className="flex justify-center items-center"
+                aria-label="読み込み中"
+              >
+                <div className="animate-ping h-2 w-2 bg-blue-600 rounded-full"></div>
+                <div className="animate-ping h-2 w-2 bg-blue-600 rounded-full mx-4"></div>
+                <div className="animate-ping h-2 w-2 bg-blue-600 rounded-full"></div>
+              </div>
+            )}
+          </div>
+          <div className="mx-5 my-5">
+            {authors ? (
+              <AuthorList authors={authors} />
+            ) : (
+              <div
+                className="flex justify-center items-center"
+                aria-label="読み込み中"
+              >
+                <div className="animate-ping h-2 w-2 bg-blue-600 rounded-full"></div>
+                <div className="animate-ping h-2 w-2 bg-blue-600 rounded-full mx-4"></div>
+                <div className="animate-ping h-2 w-2 bg-blue-600 rounded-full"></div>
+              </div>
+            )}
+          </div>
+          <div className="mx-5 my-5">
+            {categories ? (
+              <CategoryList categories={categories} />
+            ) : (
+              <div
+                className="flex justify-center items-center"
+                aria-label="読み込み中"
+              >
+                <div className="animate-ping h-2 w-2 bg-blue-600 rounded-full"></div>
+                <div className="animate-ping h-2 w-2 bg-blue-600 rounded-full mx-4"></div>
+                <div className="animate-ping h-2 w-2 bg-blue-600 rounded-full"></div>
+              </div>
+            )}
+          </div>
         </div>
-        <div className="mx-5 my-5">
-          {authors ? (
-            <AuthorList authors={authors} />
-          ) : (
-            <div
-              className="flex justify-center items-center"
-              aria-label="読み込み中"
-            >
-              <div className="animate-ping h-2 w-2 bg-blue-600 rounded-full"></div>
-              <div className="animate-ping h-2 w-2 bg-blue-600 rounded-full mx-4"></div>
-              <div className="animate-ping h-2 w-2 bg-blue-600 rounded-full"></div>
-            </div>
-          )}
-        </div>
-        <div className="mx-5 my-5">
-          {categories ? (
-            <CategoryList categories={categories} />
-          ) : (
-            <div
-              className="flex justify-center items-center"
-              aria-label="読み込み中"
-            >
-              <div className="animate-ping h-2 w-2 bg-blue-600 rounded-full"></div>
-              <div className="animate-ping h-2 w-2 bg-blue-600 rounded-full mx-4"></div>
-              <div className="animate-ping h-2 w-2 bg-blue-600 rounded-full"></div>
-            </div>
-          )}
-        </div>
-      </div>
-    </Layout>
+      </Layout>
+    </>
   );
 }
 
