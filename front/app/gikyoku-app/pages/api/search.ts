@@ -45,7 +45,7 @@ export default async function handler(
 
     const ids = parseCategories(categories);
 
-    const getSortField = (sortValue: any) => {
+    const getSortField: any = (sortValue: any) => {
       switch (sortValue) {
         case "1":
           return { id: sortDirection === "1" ? "desc" : "asc" };
