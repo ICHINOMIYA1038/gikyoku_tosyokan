@@ -47,16 +47,13 @@ export default function SearchForm({
     categories: Array.isArray(selectedTags)
       ? selectedTags.join(",")
       : selectedTags,
+    sortDirection,
+    sort_by,
   };
 
   const query = new URLSearchParams(searchParams).toString();
 
-  const {
-    data,
-    isLoading,
-    // isFetching,
-    error,
-  } = useQuery({
+  const { data, isLoading, error } = useQuery({
     queryKey: [query],
     queryFn: getPosts,
     refetchOnWindowFocus: false,
@@ -89,6 +86,7 @@ export default function SearchForm({
   }, []);
 
   useEffect(() => {
+    onSearch();
     handleSubmit();
   }, [page]);
 
@@ -237,6 +235,7 @@ export default function SearchForm({
                 setPage(1);
               } else {
                 handleSubmit();
+                onSearch();
               }
             }}
           >
