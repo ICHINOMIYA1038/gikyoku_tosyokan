@@ -125,9 +125,7 @@ const PostDetail: React.FC<PostPageProps> = ({ post }: PostPageProps) => {
             <div>
               {post.author.name}「{post.title}」
               はこちらのサイトからご購入いただけます。
-              <Link href={post.buy_link}>
-                {post.author.name}「{post.title}」のご購入はこちらから
-              </Link>
+              <ExternalLinkButton title={post.title} url={post.buy_link} />
             </div>
           )}
 
