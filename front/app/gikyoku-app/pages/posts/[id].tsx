@@ -33,7 +33,9 @@ function PostPage({ post }: any) {
               : "上演する脚本を探しの方に。上演時間や人数などから検索ができます。戯曲を探す、戯曲図書館。"
           }
           pageImg={
-            post.image_url ? post.image_url : "https://gikyokutosyokan/logo.png"
+            post.image_url
+              ? post.image_url
+              : "https://gikyokutosyokan.com/logo.png"
           }
         />
         <div className="relative mx-auto max-w-xl">

@@ -11,7 +11,7 @@ const Seo = ({
   const defaultTitle = "戯曲図書館";
   const defaultDescription =
     "上演する脚本を探しの方に。上演時間や人数などから検索ができます。戯曲を探す、戯曲図書館。";
-  const defaultImg = "https://gikyokutosyokan/logo.png";
+  const defaultImg = "https://gikyokutosyokan.com/logo.png";
 
   const title = pageTitle ? `${pageTitle} | ${defaultTitle}` : defaultTitle;
   const description = pageDescription ? pageDescription : defaultDescription;
