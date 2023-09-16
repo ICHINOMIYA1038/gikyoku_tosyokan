@@ -45,7 +45,7 @@ const PostCard: React.FC<PostPageProps> = ({ post }: any) => {
           </div>
         )}
         <div className="w-3/4 p-2 h-48">
-          <div className="text-xs h-8">
+          <div className="text-xs h-8 flex gap-2">
             {post.categories &&
               post.categories.length !== 0 &&
               post.categories

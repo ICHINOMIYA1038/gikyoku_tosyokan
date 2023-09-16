@@ -24,7 +24,7 @@ const Recommend = () => {
     <>
       <div className="basic-card p-4 inline-block">
         <h2 className="m-4">人気戯曲BEST3</h2>
-        <div className="flex gap-5 flex-wrap">
+        <div className="flex gap-5 flex-wrap mx-auto w-full justify-center">
           {data &&
             data
               .slice(0, 3)

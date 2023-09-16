@@ -35,11 +35,7 @@ export default function Home({ news, authors, posts, categories }: any) {
         <Seo />
         <TopImage buttonClick={handleScrollToRegistrationForm} />
         <NewsList news={news} />
-        <div
-          className="lg:flex relative  box-border"
-          id="registration-form"
-          ref={searchFormRef}
-        >
+        <div className="lg:flex relative  box-border" id="registration-form">
           <SearchForm
             setData={setData}
             page={page}
@@ -51,6 +47,7 @@ export default function Home({ news, authors, posts, categories }: any) {
           <div className="lg:w-2/3 flex flex-col gap-3 m-1 md:m-5">
             {data ? (
               <>
+                <div ref={searchFormRef}></div>
                 <DropBox
                   sort_by={sort_by}
                   setSortIndex={setSortIndex}
