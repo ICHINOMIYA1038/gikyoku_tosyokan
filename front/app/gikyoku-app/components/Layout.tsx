@@ -5,7 +5,7 @@ import ImportantMessage from "./importantMessage";
 function Layout({ children, ishead }: any) {
   return (
     <div>
-      <div className="sticky-header">
+      <div className="sticky top-0 z-50">
         <Header />
       </div>
       <div className="header-gap"></div>
