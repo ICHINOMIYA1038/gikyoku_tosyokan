@@ -106,7 +106,9 @@ const Comments = ({ comments, postid }: any) => {
 
   return (
     <div>
-      <h3 className="mt-5 font-bold text-xl">{comments.length}件のコメント</h3>
+      <h3 className="ml-5 mt-5 font-bold text-xl">
+        {comments.length}件のコメント
+      </h3>
       {comments.map((comment: any) => (
         <div key={comment.id} className="mb-5">
           <div className="bg-white p-3 m-2 shadow-lg rounded-lg">
@@ -175,10 +177,27 @@ const Comments = ({ comments, postid }: any) => {
         コメントをする
       </div>
       <div className="bg-white p-3 m-2 shadow-lg rounded-lg ">
-        <span className="font-bold">
-          面白かった！上演します！上演しました！
-        </span>
-        などご自由にお書きください
+        <p>
+          <span className="font-bold">
+            面白かった！上演します！上演しました！
+          </span>
+          などご自由にお書きください
+        </p>
+        <p>公演の宣伝の投稿も大歓迎です！</p>
+        <p>自由に交流していただけますと幸いです！</p>
+        <div className="text-red-600 my-5">
+          <h3>※コメント投稿時の注意事項</h3>
+          <ul>
+            {" "}
+            <li>誹謗中傷、他人へのなりすましの禁止</li>
+            <li>本記事と関係のない投稿、事実に反する投稿の禁止</li>
+            <li>重複投稿やスパム行為の禁止</li>
+            <li>個人情報を含む投稿の禁止</li>
+            <li>
+              一度行った投稿は消せません。削除を希望される場合はお問い合わせフォームよりご連絡ください。
+            </li>
+          </ul>
+        </div>
       </div>
       <Modal isOpen={isParentModalOpen} onClose={closeParentModal}>
         <CommentForm onCommentSubmit={handleParentCommentSubmit} />

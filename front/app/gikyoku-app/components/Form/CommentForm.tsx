@@ -90,10 +90,10 @@ function CommentForm({
           <p className="text-red-500 text-sm">
             注意事項:
             <ul className="list-disc ml-5">
-              <li>個人情報、誹謗中傷、他人へのなりすましの禁止</li>
+              <li>誹謗中傷、他人へのなりすましの禁止</li>
               <li>本記事と関係のない投稿、事実に反する投稿の禁止</li>
               <li>重複投稿やスパム行為の禁止</li>
-              <li>一度行った投稿は削除できません。</li>
+              <li>個人情報を含む投稿の禁止</li>
             </ul>
           </p>
         </div>

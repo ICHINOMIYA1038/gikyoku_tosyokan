@@ -71,7 +71,7 @@ const PostDetail: React.FC<PostPageProps> = ({ post }: PostPageProps) => {
           <div className="my-10">
             <h3 className="text-xl font-bold">{post.title}を読んだ感想</h3>
             <div
-              className="text-lg"
+              className="text-md md:text-lg"
               dangerouslySetInnerHTML={{ __html: post.content }}
             ></div>
           </div>
