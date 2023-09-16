@@ -14,8 +14,8 @@ const SortDropdown = ({
           value={sort_by}
           onChange={(e) => setSortIndex(Number(e.target.value))}
         >
-          <option value="1">人気順</option>
-          <option value="2">最新順</option>
+          <option value="1">最新順</option>
+          <option value="2">人気順</option>
           <option value="3">男性人数</option>
           <option value="4">女性人数</option>
           <option value="5">総人数</option>
@@ -41,8 +41,8 @@ const SortDropdown = ({
           value={sortDirection}
           onChange={(e) => setSortDirection(Number(e.target.value))}
         >
-          <option value="1">昇順</option>
-          <option value="2">降順</option>
+          <option value="0">昇順</option>
+          <option value="1">降順</option>
         </select>
         <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
           <svg

@@ -60,9 +60,7 @@ export default async function handler(
         case "6":
           return { playtime: sortDirection === "1" ? "desc" : "asc" };
         default:
-          return {
-            access: { _count: sortDirection === "1" ? "desc" : "asc" },
-          };
+          return { id: sortDirection === "1" ? "desc" : "asc" };
       }
     };
 
