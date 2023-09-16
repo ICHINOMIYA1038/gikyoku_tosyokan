@@ -10,8 +10,6 @@ import Recommend from "@/components/Widget/recommend";
 import AuthorList from "@/components/Widget/AuthorList";
 import CategoryList from "@/components/Widget/CategoryList";
 import DropBox from "@/components/DropBox";
-import { defaultOverrides } from "next/dist/server/require-hook";
-import Head from "next/head";
 import Seo from "@/components/seo";
 
 const prisma = new PrismaClient();

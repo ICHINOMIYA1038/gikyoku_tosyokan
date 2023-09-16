@@ -77,21 +77,30 @@ export default async function handler(
 
     const totalResultsCount = await prisma.post.count({
       where: {
-        title: {
-          contains: keyword as string,
-        },
-
-        ...(ids.length > 0
-          ? {
-              categories: {
-                some: {
-                  id: {
-                    in: ids,
-                  },
-                },
+        OR: [
+          {
+            author: {
+              name: {
+                contains: keyword,
               },
-            }
-          : {}),
+            },
+          },
+          {
+            title: {
+              contains: keyword,
+            },
+          },
+          {
+            content: {
+              contains: keyword,
+            },
+          },
+          {
+            synopsis: {
+              contains: keyword,
+            },
+          },
+        ],
         man: {
           gte: parseIntSafe(minMaleCount as string, -1),
           lte: parseIntSafe(maxMaleCount as string, 9999),
@@ -108,26 +117,49 @@ export default async function handler(
           gte: playTimeConvertToOption(parseIntSafe(minPlaytime as string, -1)),
           lte: playTimeConvertToOption(parseIntSafe(maxPlaytime as string, 5)),
         },
+        ...(ids.length > 0
+          ? {
+              AND: ids.map((id: any) => ({
+                categories: {
+                  some: {
+                    id: {
+                      equals: id,
+                    },
+                  },
+                },
+              })),
+            }
+          : {}),
         // 他の条件もここに追加
       },
     });
 
     const searchResults = await prisma.post.findMany({
       where: {
-        title: {
-          contains: keyword as string,
-        },
-        ...(ids.length > 0
-          ? {
-              categories: {
-                some: {
-                  id: {
-                    in: ids,
-                  },
-                },
+        OR: [
+          {
+            author: {
+              name: {
+                contains: keyword,
               },
-            }
-          : {}),
+            },
+          },
+          {
+            title: {
+              contains: keyword,
+            },
+          },
+          {
+            content: {
+              contains: keyword,
+            },
+          },
+          {
+            synopsis: {
+              contains: keyword,
+            },
+          },
+        ],
         man: {
           gte: parseIntSafe(minMaleCount as string, -1),
           lte: parseIntSafe(maxMaleCount as string, 9999),
@@ -144,6 +176,19 @@ export default async function handler(
           gte: playTimeConvertToOption(parseIntSafe(minPlaytime as string, -1)),
           lte: playTimeConvertToOption(parseIntSafe(maxPlaytime as string, 5)),
         },
+        ...(ids.length > 0
+          ? {
+              AND: ids.map((id: any) => ({
+                categories: {
+                  some: {
+                    id: {
+                      equals: id,
+                    },
+                  },
+                },
+              })),
+            }
+          : {}),
         // Add more conditions as needed for sorting, tags, etc.
       },
       orderBy: sortField,
