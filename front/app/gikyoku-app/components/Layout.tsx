@@ -1,10 +1,8 @@
 import Header from "@/components/Header";
 import Footer from "./Footer";
-import Head from "next/head";
-import Script from "next/script";
 import ImportantMessage from "./importantMessage";
 
-function Layout({ children }: any) {
+function Layout({ children, ishead }: any) {
   return (
     <div>
       <div className="sticky-header">

@@ -11,7 +11,8 @@ import AuthorList from "@/components/Widget/AuthorList";
 import CategoryList from "@/components/Widget/CategoryList";
 import DropBox from "@/components/DropBox";
 import { defaultOverrides } from "next/dist/server/require-hook";
-import { Head } from "next/document";
+import Head from "next/head";
+import Seo from "@/components/seo";
 
 const prisma = new PrismaClient();
 
@@ -30,22 +31,8 @@ export default function Home({ news, authors, posts, categories }: any) {
 
   return (
     <>
-      <Head>
-        <title>戯曲図書館</title>
-        <meta
-          name="description"
-          content="
-    上演する脚本を探しの方に。上演時間や人数などから検索ができます。戯曲を探す、戯曲図書館。"
-          key="desc"
-        />
-        <meta property="og:title" content="戯曲を探す、戯曲図書館" />
-        <meta
-          property="og:description"
-          content="上演する脚本を探しの方に。上演時間や人数などから検索ができます。戯曲を探す、戯曲図書館。"
-        />
-        <meta property="og:image" content="https://gikyokutosyokan.logo.png" />
-      </Head>
       <Layout>
+        <Seo />
         <TopImage buttonClick={handleScrollToRegistrationForm} />
         <NewsList news={news} />
         <div

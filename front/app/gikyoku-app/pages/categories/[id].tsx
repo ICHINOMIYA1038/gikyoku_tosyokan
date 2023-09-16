@@ -6,14 +6,14 @@ import PostCard from "@/components/PostCard";
 import PostCardSmall from "@/components/PostCardSmall";
 import ExLinkwithOG from "@/components/ExLinkwithOG";
 import ExternalLinkButton from "@/components/ExternalLinkButton";
-import { Head } from "next/document";
+import Head from "next/head";
 const prisma = new PrismaClient();
 
 function CategoryPage({ category }: any) {
   return (
     <>
       <Head>
-        <title>戯曲図書館</title>
+        <title>{category.name}の戯曲一覧 -戯曲図書館</title>
         <meta
           name="description"
           content="
@@ -27,7 +27,7 @@ function CategoryPage({ category }: any) {
         />
         <meta property="og:image" content="https://gikyokutosyokan.logo.png" />
       </Head>
-      <Layout>
+      <Layout ishead="true">
         <div className="md:max-w-2xl px-4 my-4 mx-auto basic-card">
           <h2>カテゴリ詳細</h2>
         </div>

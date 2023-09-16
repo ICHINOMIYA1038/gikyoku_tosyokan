@@ -13,7 +13,8 @@ import {
   TwitterIcon,
 } from "react-share";
 import Comments from "@/components/Comments";
-import { Head } from "next/document";
+import Head from "next/head";
+import Seo from "@/components/seo";
 
 const prisma = new PrismaClient();
 
@@ -23,34 +24,18 @@ function PostPage({ post }: any) {
 
   return (
     <>
-      <Head>
-        <title>
-          {post.author}『{post.title}』-戯曲図書館
-        </title>
-        <meta
-          name="description"
-          content={
-            post.synopsis
-              ? post.synopsis
-              : "上演する脚本を探しの方に。上演時間や人数などから検索ができます。戯曲を探す、戯曲図書館。"
-          }
-          key="desc"
-        />
-        <meta
-          property="og:title"
-          content={`${post.author}『${post.title}』-戯曲図書館`}
-        />
-        <meta
-          property="og:description"
-          content={
-            post.synopsis
-              ? post.synopsis
-              : "上演する脚本を探しの方に。上演時間や人数などから検索ができます。戯曲を探す、戯曲図書館。"
-          }
-        />
-        <meta property="og:image" content="https://gikyokutosyokan.logo.png" />
-      </Head>
       <Layout>
+        <Seo
+          pageTitle={`${post.author.name}『${post.title}』-戯曲図書館`}
+          pageDescription={
+            post.synopsis
+              ? post.synopsis
+              : "上演する脚本を探しの方に。上演時間や人数などから検索ができます。戯曲を探す、戯曲図書館。"
+          }
+          pageImg={
+            post.image_url ? post.image_url : "https://gikyokutosyokan/logo.png"
+          }
+        />
         <div className="relative mx-auto max-w-xl">
           <div className="md:flex flex-col md:fixed md:mr-20 max-w-md mx-auto">
             <FacebookShareButton url={URL} quote={QUOTE}>
