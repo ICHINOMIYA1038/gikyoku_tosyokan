@@ -41,7 +41,7 @@ function CommentForm({
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
           <label className="block text-gray-700 text-sm font-bold mb-2">
-            投稿者名:
+            ニックネーム:
           </label>
           <input
             type="text"
@@ -52,7 +52,7 @@ function CommentForm({
             onChange={(e) => {
               setAuthor(e.target.value);
               if (e.target.value.length > 20) {
-                setAuthorError("投稿者名は20文字以内で入力してください");
+                setAuthorError("ニックネームは20文字以内で入力してください");
               } else {
                 setAuthorError("");
               }
