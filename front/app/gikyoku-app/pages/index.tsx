@@ -30,7 +30,13 @@ export default function Home({ news, authors, posts, categories }: any) {
   return (
     <>
       <Layout>
-        <Seo />
+        <Seo
+          pageTitle={`戯曲図書館`}
+          pageDescription={
+            "上演する脚本を探しの方に。上演時間や人数などから検索ができます。戯曲を探す、戯曲図書館。"
+          }
+          pageImg={"https://gikyokutosyokan.com/logo.png"}
+        />
         <TopImage buttonClick={handleScrollToRegistrationForm} />
         <NewsList news={news} />
         <div className="lg:flex relative  box-border" id="registration-form">
