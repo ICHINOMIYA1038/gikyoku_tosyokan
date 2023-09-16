@@ -90,8 +90,8 @@ const PostDetail: React.FC<PostPageProps> = ({ post }: PostPageProps) => {
             ) : (
               <>
                 <div>{post.author.name}</div>
-                <div>{post.author.group}</div>
-                <div>{post.author.website}</div>
+                <div>所属劇団等:{post.author.group}</div>
+                <div>ウェブサイト:{post.author.website}</div>
                 <div>{post.author.profile}</div>
               </>
             )}
