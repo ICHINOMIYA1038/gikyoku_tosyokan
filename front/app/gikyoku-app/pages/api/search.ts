@@ -81,23 +81,23 @@ export default async function handler(
           {
             author: {
               name: {
-                contains: keyword,
+                contains: keyword as string,
               },
             },
           },
           {
             title: {
-              contains: keyword,
+              contains: keyword as string,
             },
           },
           {
             content: {
-              contains: keyword,
+              contains: keyword as string,
             },
           },
           {
             synopsis: {
-              contains: keyword,
+              contains: keyword as string,
             },
           },
         ],
@@ -140,23 +140,23 @@ export default async function handler(
           {
             author: {
               name: {
-                contains: keyword,
+                contains: keyword as string,
               },
             },
           },
           {
             title: {
-              contains: keyword,
+              contains: keyword as string,
             },
           },
           {
             content: {
-              contains: keyword,
+              contains: keyword as string,
             },
           },
           {
             synopsis: {
-              contains: keyword,
+              contains: keyword as string,
             },
           },
         ],
