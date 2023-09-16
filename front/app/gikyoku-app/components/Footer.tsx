@@ -1,7 +1,19 @@
 import React from "react";
 import Link from "next/link";
+import { useRouter } from "next/router";
+import { FaSearch, FaPhone, FaArrowUp, FaEnvelope } from "react-icons/fa";
 
 const Footer: React.FC = () => {
+  const router = useRouter();
+
+  const handleNavigate = (path: string) => {
+    router.push(path);
+  };
+
+  const handleScrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   return (
     <footer className="bg-pink-300">
       <div className="container mx-auto py-8">
@@ -42,6 +54,31 @@ const Footer: React.FC = () => {
         </div>
       </div>
       <p className="text-center py-4">© 2023 戯曲図書館 All Rights Reserved.</p>
+
+      {/* Mobile Footer */}
+      <div className="sm:hidden fixed bottom-0 left-0 right-0 p-4 bg-pink-300 text-white">
+        <nav className="flex justify-around space-x-4">
+          <button
+            className="hover:bg-pink-400"
+            onClick={() => handleNavigate("/")}
+          >
+            <FaSearch className="inline-block mr-2" /> FIND
+          </button>
+          <button
+            className="hover:bg-pink-400"
+            onClick={() => handleNavigate("/support/contact")}
+          >
+            <FaEnvelope className="inline-block mr-2" /> CONTACT
+          </button>
+          <button
+            className="hover:bg-pink-400"
+            onClick={() => handleScrollToTop()}
+          >
+            <FaArrowUp className="inline-block mr-2" />
+            Top
+          </button>
+        </nav>
+      </div>
     </footer>
   );
 };
