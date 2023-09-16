@@ -1,5 +1,6 @@
 import Layout from "@/components/Layout";
 import SupportLayout from "@/components/SupportLayout";
+import Link from "next/link";
 import { useRouter } from "next/router";
 
 function Home() {
@@ -25,6 +26,12 @@ function Home() {
         <p>
           それ以外のあらすじ、感想に関しては戯曲図書館側で制作したものになります。
         </p>
+        <p>
+          掲載に当たって著作権に関して慎重に精査しておりますが、掲載されている情報で著作権を侵害しているものがあればお問い合わせフォームにてお知らせいただけますと幸いです。
+        </p>
+        <div className="text-blue-600">
+          <Link href="/support/contact">お問い合わせフォーム</Link>
+        </div>
       </div>
     </SupportLayout>
   );

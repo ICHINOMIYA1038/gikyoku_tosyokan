@@ -29,17 +29,7 @@ const SupportSidebar = ({ now }: any) => {
             </div>
           </Link>
         </li>
-        <li>
-          <Link href="/support/press-release">
-            <div
-              className={`p-2 cursor-pointer ${
-                now === "press-release" ? "bg-blue-500 text-white" : "bg-white"
-              } hover:bg-blue-500 hover:text-white`}
-            >
-              プレスリリース
-            </div>
-          </Link>
-        </li>
+
         <li>
           <Link href="/support/contact">
             <div
@@ -51,6 +41,58 @@ const SupportSidebar = ({ now }: any) => {
             </div>
           </Link>
         </li>
+
+        <li>
+          <Link href="/support/press-release">
+            <div
+              className={`p-2 cursor-pointer ${
+                now === "press-release" ? "bg-blue-500 text-white" : "bg-white"
+              } hover:bg-blue-500 hover:text-white`}
+            >
+              プレスリリース
+            </div>
+          </Link>
+        </li>
+
+        <li>
+          <Link href="/support/copyright">
+            <div
+              className={`p-2 cursor-pointer ${
+                now === "copyright" ? "bg-blue-500 text-white" : "bg-white"
+              } hover:bg-blue-500 hover:text-white`}
+            >
+              著作権に関して
+            </div>
+          </Link>
+        </li>
+
+        <li>
+          <Link href="/support/posting-request">
+            <div
+              className={`p-2 cursor-pointer ${
+                now === "posting-request"
+                  ? "bg-blue-500 text-white"
+                  : "bg-white"
+              } hover:bg-blue-500 hover:text-white`}
+            >
+              掲載依頼
+            </div>
+          </Link>
+        </li>
+
+        {/*
+        <li>
+          <Link href="/support/voluntary">
+            <div
+              className={`p-2 cursor-pointer ${
+                now === "voluntary" ? "bg-blue-500 text-white" : "bg-white"
+              } hover:bg-blue-500 hover:text-white`}
+            >
+              ボランティア募集
+            </div>
+          </Link>
+        </li>
+            */}
         <li>
           <Link href="/support/privacy-policy">
             <div
