@@ -6,6 +6,7 @@ function Home() {
   return (
     <SupportLayout now="contact">
       <div className="support-document">
+        メール:gekidankatakago@gmail.com
         <ContactForm />
       </div>
     </SupportLayout>
