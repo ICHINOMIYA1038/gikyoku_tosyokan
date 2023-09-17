@@ -1,3 +1,5 @@
+import { PrismaClient } from "@prisma/client";
+
 const EXTERNAL_DATA_URL = "https://gikyokutosyokan.com/";
 const prisma = new PrismaClient();
 function generateSiteMap(posts, authors, categories) {
