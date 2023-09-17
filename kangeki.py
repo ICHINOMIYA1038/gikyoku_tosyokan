@@ -12,7 +12,7 @@ with open('kangeki_data.csv', 'w', newline='', encoding='utf-8') as csvfile:
     csvwriter = csv.writer(csvfile)
     
     # ヘッダーを書き込む
-    csvwriter.writerow(['Title','group' 'url', 'category'])
+    csvwriter.writerow(['Title','group' 'url', 'category','pay_labels'])
 
     # IDを指定した範囲でループ
     for id in range(start_id, end_id + 1):
@@ -40,10 +40,10 @@ with open('kangeki_data.csv', 'w', newline='', encoding='utf-8') as csvfile:
             groupname = group.replace(" ", "").replace("\n", "")
             title = soup.find('meta', attrs={'property': 'og:title', 'content': True})["content"]
             #title = soup.cssselect('meta[property="og:title"]')[0].get('content')
-           
+            pay_labels = soup.find('span', class_='payLabel').get_text()
            
             # データをCSVファイルに書き込む
-            csvwriter.writerow([title, groupname ,url,category])
+            csvwriter.writerow([title, groupname ,url,category,pay_labels])
 
             time.sleep(3)  # 3秒待つ
 
