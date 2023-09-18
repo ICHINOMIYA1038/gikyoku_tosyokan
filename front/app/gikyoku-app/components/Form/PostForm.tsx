@@ -1,7 +1,15 @@
-import { useState } from "react";
+import {
+  JSXElementConstructor,
+  Key,
+  PromiseLikeOfReactNode,
+  ReactElement,
+  ReactNode,
+  ReactPortal,
+  useState,
+} from "react";
 import MessageModal from "../Modal/MessageModalProps";
 
-const PostForm: React.FC = () => {
+const PostForm: React.FC = ({ authors, categories }: any) => {
   const [formData, setFormData] = useState<any>({
     title: "",
     content: "",
@@ -91,24 +99,45 @@ const PostForm: React.FC = () => {
     }
   };
 
-  // 各入力フィールドの変更を処理するハンドラー関数を追加することができます
-  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedCategoryIds = Array.from(e.target.selectedOptions, (option) =>
-      parseInt(option.value)
+  const [selectedCategories, setSelectedCategories] = useState<any>([]);
+
+  const handleCategorySelect = (categoryId: any) => {
+    if (!selectedCategories.includes(categoryId)) {
+      setSelectedCategories([...selectedCategories, categoryId]);
+    } else {
+      handleCategoryRemove(categoryId);
+    }
+  };
+
+  const handleCategoryRemove = (categoryId: any) => {
+    setSelectedCategories(
+      selectedCategories.filter((id: any) => id !== categoryId)
     );
-    setFormData({
-      ...formData,
-      categories: selectedCategoryIds,
-    });
   };
 
   return (
     <>
       <form
         onSubmit={handleSubmit}
-        className="bg-blue-200 shadow-md rounded px-8 pt-6 pb-8 mb-4"
+        className="bg-blue-200 shadow-md rounded px-8 pt-6 pb-8 mb-4 max-w-2xl"
       >
         <h2>脚本データ</h2>
+        <div>
+          <label htmlFor="selectAuthor">既存の著者を選択：</label>
+          <select
+            id="selectAuthor"
+            onChange={(e) =>
+              setFormData({ ...formData, authorId: parseInt(e.target.value) })
+            }
+          >
+            <option value="">選択してください</option>
+            {authors.map((author: any) => (
+              <option key={author.id} value={author.id}>
+                {author.name}
+              </option>
+            ))}
+          </select>
+        </div>
         <h3>
           Title<span className="text-red-500">*</span>
         </h3>
@@ -117,7 +146,7 @@ const PostForm: React.FC = () => {
           placeholder="Title"
           value={formData.title}
           onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-          className="border rounded w-full py-2 px-3 mb-4"
+          className="border rounded w-full py-2 px-3 mb-4 inline-block"
         />
         <h3>Man</h3>
         <input
@@ -184,6 +213,48 @@ const PostForm: React.FC = () => {
           className="border rounded w-full py-2 px-3 mb-4"
         />
 
+        <h3>content</h3>
+        <textarea
+          placeholder="content"
+          value={formData.content}
+          onChange={(e) =>
+            setFormData({ ...formData, content: e.target.value })
+          }
+          className="border rounded w-full py-2 px-3 mb-4"
+        />
+
+        <div>
+          <div>
+            <div>
+              <h3>選択したカテゴリ:</h3>
+              <div className="max-w-md flex flex-wrap">
+                {selectedCategories.map((categoryId) => (
+                  <Chip
+                    key={categoryId}
+                    label={
+                      categories.find((category) => category.id === categoryId)
+                        ?.name || ""
+                    }
+                    onRemove={() => handleCategoryRemove(categoryId)}
+                  />
+                ))}
+              </div>
+            </div>
+            <div>
+              <h3>カテゴリを選択してください:</h3>
+              <ul className="space-y-1">
+                {categories.map((category: { id: any; name: any }) => (
+                  <div
+                    className="inline-block"
+                    onClick={() => handleCategorySelect(category.id)}
+                  >
+                    <SelectChip key={category.id} label={category.name} />
+                  </div>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
         <h3>Image URL</h3>
         <input
           type="text"
@@ -261,20 +332,6 @@ const PostForm: React.FC = () => {
           className="border rounded w-full py-2 px-3 mb-4"
         />
 
-        <h3>Categories</h3>
-        <select
-          multiple // 複数のカテゴリーを選択できるようにする
-          value={formData.categories}
-          onChange={handleCategoryChange}
-          className="border rounded w-full py-2 px-3 mb-4"
-        >
-          {categoryOptions.map((category) => (
-            <option key={category.id} value={category.id}>
-              {category.name}
-            </option>
-          ))}
-        </select>
-
         <button type="submit" disabled={sending}>
           {sending ? "Sending..." : "Submit"}
         </button>
@@ -298,5 +355,43 @@ const PostForm: React.FC = () => {
     </>
   );
 };
+
+const SelectChip: React.FC<any> = ({ label }) => {
+  const [isSelected, setSelected] = useState(false);
+  return (
+    <div
+      className="inline-block cursor-pointer"
+      onClick={() => {
+        setSelected(!isSelected);
+      }}
+    >
+      <span
+        className={`text-white p-2 m-1 rounded flex items-center ${
+          isSelected ? "bg-blue-500" : "bg-gray-500"
+        }`}
+      >
+        {label}
+      </span>
+    </div>
+  );
+};
+
+const Chip: React.FC<ChipProps> = ({ label, onRemove }) => (
+  <span className="bg-blue-500 text-white p-2 m-1 rounded flex items-center">
+    {label}
+    <button onClick={onRemove} className="ml-2">
+      ×
+    </button>
+  </span>
+);
+interface Category {
+  id: number;
+  name: string;
+}
+
+interface ChipProps {
+  label: string;
+  onRemove: () => void;
+}
 
 export default PostForm;
