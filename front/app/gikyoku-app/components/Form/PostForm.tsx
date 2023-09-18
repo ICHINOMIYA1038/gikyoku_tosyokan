@@ -9,7 +9,7 @@ import {
 } from "react";
 import MessageModal from "../Modal/MessageModalProps";
 
-const PostForm: React.FC = ({ authors, categories }: any) => {
+const PostForm: React.FC<any> = ({ authors, categories }: any) => {
   const [formData, setFormData] = useState<any>({
     title: "",
     content: "",

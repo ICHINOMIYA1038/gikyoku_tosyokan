@@ -10,7 +10,7 @@ export default function Home({ authors, categories }: any) {
       <div className="">
         <CategoryForm />
         <AuthorForm />
-        <PostForm authors={authors} categories={categories} />
+        <PostForm categories={categories} authors={authors} />
       </div>
     </Layout>
   );
