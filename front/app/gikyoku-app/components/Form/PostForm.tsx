@@ -228,16 +228,20 @@ const PostForm: React.FC = ({ authors, categories }: any) => {
             <div>
               <h3>選択したカテゴリ:</h3>
               <div className="max-w-md flex flex-wrap">
-                {selectedCategories.map((categoryId) => (
-                  <Chip
-                    key={categoryId}
-                    label={
-                      categories.find((category) => category.id === categoryId)
-                        ?.name || ""
-                    }
-                    onRemove={() => handleCategoryRemove(categoryId)}
-                  />
-                ))}
+                {selectedCategories.map(
+                  (categoryId: Key | null | undefined) => (
+                    <Chip
+                      key={categoryId}
+                      label={
+                        categories.find(
+                          (category: { id: Key | null | undefined }) =>
+                            category.id === categoryId
+                        )?.name || ""
+                      }
+                      onRemove={() => handleCategoryRemove(categoryId)}
+                    />
+                  )
+                )}
               </div>
             </div>
             <div>
