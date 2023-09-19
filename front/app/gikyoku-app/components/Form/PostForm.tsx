@@ -36,13 +36,6 @@ const PostForm: React.FC<any> = ({ authors, categories }: any) => {
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
 
-  const categoryOptions = [
-    { id: 1, name: "Category 1" },
-    { id: 2, name: "Category 2" },
-    { id: 3, name: "Category 3" },
-    // 他のカテゴリーを追加
-  ];
-
   const closeModal = () => {
     setErrorModal(false);
     setSuccessModal(false);
@@ -107,12 +100,20 @@ const PostForm: React.FC<any> = ({ authors, categories }: any) => {
     } else {
       handleCategoryRemove(categoryId);
     }
+    setFormData({
+      ...formData, // 既存のフォームデータを保持
+      categories: selectedCategories, // カテゴリーを選択するための配列
+    });
   };
 
   const handleCategoryRemove = (categoryId: any) => {
     setSelectedCategories(
       selectedCategories.filter((id: any) => id !== categoryId)
     );
+    setFormData({
+      ...formData, // 既存のフォームデータを保持
+      categories: selectedCategories, // カテゴリーを選択するための配列
+    });
   };
 
   return (
