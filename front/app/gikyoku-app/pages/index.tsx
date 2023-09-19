@@ -32,7 +32,6 @@ export default function Home({ news, authors, posts, categories }: any) {
     <>
       <Layout>
         <Seo
-          pageTitle={`戯曲図書館`}
           pageDescription={
             "上演する脚本を探しの方に。上演時間や人数などから検索ができます。戯曲を探す、戯曲図書館。"
           }
