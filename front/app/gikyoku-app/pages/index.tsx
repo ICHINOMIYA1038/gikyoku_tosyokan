@@ -11,6 +11,7 @@ import AuthorList from "@/components/Widget/AuthorList";
 import CategoryList from "@/components/Widget/CategoryList";
 import DropBox from "@/components/DropBox";
 import Seo from "@/components/seo";
+import GikyokuIntroduction from "@/components/Ad/Gikyoku";
 
 const prisma = new PrismaClient();
 
@@ -92,7 +93,7 @@ export default function Home({ news, authors, posts, categories }: any) {
             )}
           </div>
         </div>
-        <div className="lg:flex">
+        <div className="lg:flex lg:flex-wrap">
           <div className="mx-5 my-5">
             {posts ? (
               <Recommend />
@@ -106,6 +107,9 @@ export default function Home({ news, authors, posts, categories }: any) {
                 <div className="animate-ping h-2 w-2 bg-blue-600 rounded-full"></div>
               </div>
             )}
+          </div>
+          <div className="inline-block">
+            <GikyokuIntroduction />
           </div>
           <div className="mx-5 my-5">
             {authors ? (

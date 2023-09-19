@@ -1,3 +1,4 @@
+import TwitterIntroduction from "@/components/Ad/TwitterIntroduction";
 import Layout from "@/components/Layout";
 import MessageModal from "@/components/Modal/MessageModalProps";
 import { PrismaClient } from "@prisma/client";
@@ -141,7 +142,6 @@ export default function Home({ post, categories, authors }: any) {
             }
             className="border rounded w-full py-2 px-3 mb-4"
           />
-
           <h3>Woman</h3>
           <input
             type="number"
@@ -152,7 +152,6 @@ export default function Home({ post, categories, authors }: any) {
             }
             className="border rounded w-full py-2 px-3 mb-4"
           />
-
           <h3>Others</h3>
           <input
             type="number"
@@ -163,7 +162,6 @@ export default function Home({ post, categories, authors }: any) {
             }
             className="border rounded w-full py-2 px-3 mb-4"
           />
-
           <h3>Total Number</h3>
           <input
             type="number"
@@ -177,7 +175,6 @@ export default function Home({ post, categories, authors }: any) {
             }
             className="border rounded w-full py-2 px-3 mb-4"
           />
-
           <h3>Playtime</h3>
           <input
             type="number"
@@ -188,7 +185,6 @@ export default function Home({ post, categories, authors }: any) {
             }
             className="border rounded w-full py-2 px-3 mb-4"
           />
-
           <h3>Synopsis</h3>
           <textarea
             placeholder="Synopsis"
@@ -198,7 +194,6 @@ export default function Home({ post, categories, authors }: any) {
             }
             className="border rounded w-full py-2 px-3 mb-4"
           />
-
           <h3>content</h3>
           <textarea
             placeholder="content"
@@ -208,7 +203,6 @@ export default function Home({ post, categories, authors }: any) {
             }
             className="border rounded w-full py-2 px-3 mb-4"
           />
-
           <div>
             <div>
               <div>
@@ -252,7 +246,6 @@ export default function Home({ post, categories, authors }: any) {
             }
             className="border rounded w-full py-2 px-3 mb-4"
           />
-
           <h3>Amazon Text URL</h3>
           <input
             type="text"
@@ -263,7 +256,6 @@ export default function Home({ post, categories, authors }: any) {
             }
             className="border rounded w-full py-2 px-3 mb-4"
           />
-
           <h3>Amazon Image URL</h3>
           <input
             type="text"
@@ -274,7 +266,6 @@ export default function Home({ post, categories, authors }: any) {
             }
             className="border rounded w-full py-2 px-3 mb-4"
           />
-
           <h3>Amazon Image Text URL</h3>
           <input
             type="text"
@@ -288,7 +279,6 @@ export default function Home({ post, categories, authors }: any) {
             }
             className="border rounded w-full py-2 px-3 mb-4"
           />
-
           <h3>Link to Plot</h3>
           <input
             type="text"
@@ -299,7 +289,6 @@ export default function Home({ post, categories, authors }: any) {
             }
             className="border rounded w-full py-2 px-3 mb-4"
           />
-
           <h3>Buy Link</h3>
           <input
             type="text"
@@ -310,7 +299,6 @@ export default function Home({ post, categories, authors }: any) {
             }
             className="border rounded w-full py-2 px-3 mb-4"
           />
-
           <h3>ISBN-13</h3>
           <input
             type="text"
@@ -321,7 +309,6 @@ export default function Home({ post, categories, authors }: any) {
             }
             className="border rounded w-full py-2 px-3 mb-4"
           />
-
           <button type="submit" disabled={sending}>
             {sending ? "Sending..." : "Submit"}
           </button>
@@ -341,6 +328,7 @@ export default function Home({ post, categories, authors }: any) {
               />
             )}
           </div>
+          <TwitterIntroduction post={post} />
         </form>
       </>
     </Layout>
