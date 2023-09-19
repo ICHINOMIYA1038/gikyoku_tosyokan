@@ -1,4 +1,4 @@
 # Allow all crawlers
 User-agent: *
 Allow: /
-Sitemap:
+Sitemap:https://www.gikyokutosyokan.com/sitemap.xml
