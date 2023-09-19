@@ -25,6 +25,7 @@ const GikyokuIntroduction = ({ post }: any) => {
           <iframe
             sandbox="allow-popups allow-scripts allow-modals allow-forms allow-same-origin"
             style={amazonStyle}
+            title="優秀新人戯曲賞2023"
             marginWidth={0}
             marginHeight={0}
             scrolling="no"
@@ -34,6 +35,7 @@ const GikyokuIntroduction = ({ post }: any) => {
           <iframe
             sandbox="allow-popups allow-scripts allow-modals allow-forms allow-same-origin"
             style={amazonStyle}
+            title="優秀新人戯曲賞2022"
             marginWidth={0}
             marginHeight={0}
             scrolling="no"
@@ -43,6 +45,7 @@ const GikyokuIntroduction = ({ post }: any) => {
           <iframe
             sandbox="allow-popups allow-scripts allow-modals allow-forms allow-same-origin"
             style={amazonStyle}
+            title="優秀新人戯曲賞2021"
             marginWidth={0}
             marginHeight={0}
             scrolling="no"

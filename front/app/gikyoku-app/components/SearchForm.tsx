@@ -8,7 +8,7 @@ const getPosts = async ({ queryKey }: any): Promise<any> => {
   if (queryKey === undefined || queryKey === null) {
     throw new Error("queryKey is undefined or null");
   }
-  const res = await fetch(`/api/search/${queryKey}`);
+  const res = await fetch(`/api/search/?${queryKey}`);
   return res.json();
 };
 
