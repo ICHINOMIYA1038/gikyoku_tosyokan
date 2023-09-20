@@ -26,7 +26,7 @@ function PostPage({ post }: any) {
     <>
       <Layout>
         <Seo
-          pageTitle={`${post.author.name}『${post.title}』-戯曲図書館`}
+          pageTitle={`${post.author.name}『${post.title}』`}
           pageDescription={
             post.synopsis
               ? post.synopsis
