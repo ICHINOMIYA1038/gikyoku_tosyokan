@@ -9,7 +9,7 @@ function Layout({ children, ishead }: any) {
         <Header />
       </div>
       <div className="header-gap"></div>
-      <ImportantMessage />
+      {/*<ImportantMessage />*/}
       <div className="md:px-20 md:py-10">{children}</div>
       <Footer />
     </div>
