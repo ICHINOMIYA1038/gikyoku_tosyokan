@@ -12,6 +12,7 @@ import CategoryList from "@/components/Widget/CategoryList";
 import DropBox from "@/components/DropBox";
 import Seo from "@/components/seo";
 import GikyokuIntroduction from "@/components/Ad/Gikyoku";
+import DisplayAd from "@/components/Ad/google/displayAd";
 
 const prisma = new PrismaClient();
 
@@ -39,8 +40,12 @@ export default function Home({ news, authors, posts, categories }: any) {
         />
         <TopImage buttonClick={handleScrollToRegistrationForm} />
         <NewsList news={news} />
-        <div className="lg:flex relative  box-border" id="registration-form"  ref={searchFormRef}>
-        <div></div>
+        <div
+          className="lg:flex relative  box-border"
+          id="registration-form"
+          ref={searchFormRef}
+        >
+          <div></div>
           <SearchForm
             setData={setData}
             page={page}
@@ -52,7 +57,6 @@ export default function Home({ news, authors, posts, categories }: any) {
           <div className="lg:w-2/3 flex flex-col gap-3 m-1 md:m-5">
             {data ? (
               <>
-               
                 <DropBox
                   sort_by={sort_by}
                   setSortIndex={setSortIndex}
@@ -110,6 +114,15 @@ export default function Home({ news, authors, posts, categories }: any) {
           </div>
           <div className="inline-block">
             <GikyokuIntroduction />
+          </div>
+          <div className="inline-block">
+            {process.env.NODE_ENV == "development" && (
+              <DisplayAd
+                client="ca-pub-8691137965825158"
+                slot="8363116928"
+                style={{ display: "block" }}
+              />
+            )}
           </div>
           <div className="mx-5 my-5">
             {authors ? (
