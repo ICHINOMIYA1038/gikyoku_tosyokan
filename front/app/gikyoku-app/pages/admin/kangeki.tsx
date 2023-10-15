@@ -20,6 +20,11 @@ export default function Home() {
     point2detail: "",
     point3detail: "",
     impressions: "",
+    fee: "無料",
+    streamingid: "510",
+    twitter1: "",
+    twitter2: "",
+    twitter3: "",
   });
 
   const sampleString = `『「観劇三昧」でおすすめの動画がわからない』という人向けに動画紹介をしています。
@@ -33,15 +38,11 @@ export default function Home() {
   330作品以上無料！月額950円（税別）で全作品観放題！
   ==============================================
   <h2 class="mb-2"> 観劇三昧で『{{group}}』の{{title}}を観る</h2>
-  <span class="ep-label bgc-DPblue brc-white ftc-white es-radius es-RpaddingSS es-LpaddingSS">無料</span>
-  
-  <a href="https://px.a8.net/svt/ejp?a8mat=3B9F8F+DQ5TNE+34L2+BWGDT&amp;a8ejpredirect=https%3A%2F%2Fv2.kan-geki.com%2Fstreaming%2Fplay%2F510" rel="nofollow"> <img src="https://imgs.kan-geki.com/production/streaming/work/thumbnail/000510_00000000000000.jpg" alt="" border="0" /></a> <img src="https://www17.a8.net/0.gif?a8mat=3B9F8F+DQ5TNE+34L2+BWGDT" alt="" width="1" height="1" border="0" />
-  
-  &nbsp;
+  <span class="ep-label bgc-DPblue brc-white ftc-white es-radius es-RpaddingSS es-LpaddingSS">{{無料}}</span>
   
   =================================
   
-  <a href="https://px.a8.net/svt/ejp?a8mat=3B9F8F+DQ5SVM+34L2+BW8O2&amp;a8ejpredirect=https%3A%2F%2Fv2.kan-geki.com%2Fstreaming%2Fplay%2F510" rel="nofollow">→ 観劇三昧で{{group}}{{title}}を観る</a> <img src="https://www11.a8.net/0.gif?a8mat=3B9F8F+DQ5SVM+34L2+BW8O2" alt="" width="1" height="1" border="0" />
+  <a href="https://px.a8.net/svt/ejp?a8mat=3B9F8F+DQ5SVM+34L2+BW8O2&amp;a8ejpredirect=https%3A%2F%2Fv2.kan-geki.com%2Fstreaming%2Fplay%2F{{streamingid}}" rel="nofollow">→ 観劇三昧で{{group}}{{title}}を観る</a> <img src="https://www11.a8.net/0.gif?a8mat=3B9F8F+DQ5SVM+34L2+BW8O2" alt="" width="1" height="1" border="0" />
   
   =================================
   <h3>基本情報</h3>
@@ -121,8 +122,9 @@ export default function Home() {
     {{impressions}}
   
     <h2>twitterでの意見(抜粋)</h2>
-    <blockquote class="twitter-tweet"><p lang="ja" dir="ltr">観劇三昧にてステージタイガーさんの『ラブラブドッキュンフォーエバー』観劇。<br>美喜役の人の演技が、病人で心の弱い感じを出しつつその中で感情が激しく動いている様子を見事に表現していて好きだった。最後の歌のシーンも圧巻。歌の入る芝居もいつかやってみたいものです。</p>&mdash; 桜糀るな🌸 next➡️10/21 役者SINGER!!昼の部 (@sakurakoji042) <a href="https://twitter.com/sakurakoji042/status/1508651496417550343?ref_src=twsrc%5Etfw">March 29, 2022</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-    <blockquote class="twitter-tweet"><p lang="ja" dir="ltr"><a href="https://twitter.com/hashtag/%E3%82%89%E3%81%B6%E3%81%A9%E3%81%8D%E3%82%85?src=hash&amp;ref_src=twsrc%5Etfw">#らぶどきゅ</a><br>観劇してきました。優しい言葉を、温かな声色を、柔らかな表情を。<br>沢山の愛を飲み込んできました。</p>&mdash; 小東 こと (@koto_minieast) <a href="https://twitter.com/koto_minieast/status/1497773019585937414?ref_src=twsrc%5Etfw">February 27, 2022</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    {{twitter1}}
+    {{twitter2}}
+    {{twitter3}}
   </div>
   <div class="mb-2">
   <h2>まとめ</h2>
@@ -143,7 +145,7 @@ export default function Home() {
   
   =================================
   
-  <a href="https://px.a8.net/svt/ejp?a8mat=3B9F8F+DQ5SVM+34L2+BW8O2&amp;a8ejpredirect=https%3A%2F%2Fv2.kan-geki.com%2Fstreaming%2Fplay%2F510" rel="nofollow">→ 観劇三昧で{{group}}{{title}}を観る</a>
+  <a href="https://px.a8.net/svt/ejp?a8mat=3B9F8F+DQ5SVM+34L2+BW8O2&amp;a8ejpredirect=https%3A%2F%2Fv2.kan-geki.com%2Fstreaming%2Fplay%2F{{streamingid}}" rel="nofollow">→ 観劇三昧で{{group}}{{title}}を観る</a>
   
   =================================
   
