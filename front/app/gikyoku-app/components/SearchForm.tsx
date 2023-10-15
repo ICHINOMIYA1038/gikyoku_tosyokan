@@ -28,7 +28,7 @@ export default function SearchForm({
   const [minTotalCount, setMinTotalCount] = useState<string>("");
   const [maxTotalCount, setMaxTotalCount] = useState<string>("");
   const [minPlaytime, setMinPlaytime] = useState<number>(0);
-  const [maxPlaytime, setMaxPlaytime] = useState<number>(4);
+  const [maxPlaytime, setMaxPlaytime] = useState<number>(5);
 
   const [selectedTags, setSelectedTags] = useState<number[]>([]);
   const per = 8;
@@ -77,7 +77,6 @@ export default function SearchForm({
     { id: 6, name: "60分以内" },
     { id: 7, name: "人数多数" },
     { id: 8, name: "会話劇" },
-    { id: 9, name: "アクション" },
     // 他のタグを追加
   ];
 
