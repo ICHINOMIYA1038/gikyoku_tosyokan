@@ -174,6 +174,19 @@ export default function Home() {
     <div className="container mx-auto mt-4">
       <h1 className="text-2xl font-semibold mb-4">String Replacement App</h1>
       <div className="mb-4">
+        <label htmlFor="id" className="block mb-2">
+          id:
+        </label>
+        <input
+          type="text"
+          name="id"
+          id="id"
+          value={inputValues.id}
+          onChange={handleInputChange}
+          className="w-full p-2 border rounded focus:outline-none focus:border-blue-400"
+        />
+      </div>
+      <div className="mb-4">
         <label htmlFor="group" className="block mb-2">
           group:
         </label>
@@ -390,6 +403,45 @@ export default function Home() {
           name="eval6"
           id="eval6"
           value={inputValues.eval6}
+          onChange={handleInputChange}
+          className="w-full p-2 border rounded focus:outline-none focus:border-blue-400"
+        />
+      </div>
+      <div className="mb-4">
+        <label htmlFor="twitter1" className="block mb-2">
+          twitter1:
+        </label>
+        <input
+          type="text"
+          name="twitter1"
+          id="twitter1"
+          value={inputValues.twitter1}
+          onChange={handleInputChange}
+          className="w-full p-2 border rounded focus:outline-none focus:border-blue-400"
+        />
+      </div>
+      <div className="mb-4">
+        <label htmlFor="twitter2" className="block mb-2">
+          twitter2:
+        </label>
+        <input
+          type="text"
+          name="twitter2"
+          id="twitter2"
+          value={inputValues.twitter2}
+          onChange={handleInputChange}
+          className="w-full p-2 border rounded focus:outline-none focus:border-blue-400"
+        />
+      </div>
+      <div className="mb-4">
+        <label htmlFor="twitter2" className="block mb-2">
+          twitter3:
+        </label>
+        <input
+          type="text"
+          name="twitter3"
+          id="twitter3"
+          value={inputValues.twitter3}
           onChange={handleInputChange}
           className="w-full p-2 border rounded focus:outline-none focus:border-blue-400"
         />
