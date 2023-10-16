@@ -174,14 +174,14 @@ export default function Home() {
     <div className="container mx-auto mt-4">
       <h1 className="text-2xl font-semibold mb-4">String Replacement App</h1>
       <div className="mb-4">
-        <label htmlFor="id" className="block mb-2">
-          id:
+        <label htmlFor="streamingid" className="block mb-2">
+          streamingid:
         </label>
         <input
           type="text"
-          name="id"
-          id="id"
-          value={inputValues.id}
+          name="streamingid"
+          id="streamingid"
+          value={inputValues.streamingid}
           onChange={handleInputChange}
           className="w-full p-2 border rounded focus:outline-none focus:border-blue-400"
         />
