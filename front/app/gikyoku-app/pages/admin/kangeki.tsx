@@ -29,7 +29,7 @@ export default function Home() {
 
   const sampleString = `『「観劇三昧」でおすすめの動画がわからない』という人向けに動画紹介をしています。
 
-  今回は観劇三昧で配信されている無料動画「{{title}}」の紹介をします。
+  今回は観劇三昧で配信されている動画「{{title}}」の紹介をします。
   
   もしもまだ、観劇三昧の登録をしていない方は登録することをおすすめします！==============================================
   もっともっといろんな劇団を知りたいあなたに
@@ -38,7 +38,7 @@ export default function Home() {
   330作品以上無料！月額950円（税別）で全作品観放題！
   ==============================================
   <h2 class="mb-2"> 観劇三昧で『{{group}}』の{{title}}を観る</h2>
-  <span class="ep-label bgc-DPblue brc-white ftc-white es-radius es-RpaddingSS es-LpaddingSS">{{無料}}</span>
+  <span class="ep-label bgc-DPblue brc-white ftc-white es-radius es-RpaddingSS es-LpaddingSS">{{fee}}</span>
   
   =================================
   
