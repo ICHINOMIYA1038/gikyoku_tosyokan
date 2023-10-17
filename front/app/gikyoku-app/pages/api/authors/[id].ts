@@ -15,7 +15,8 @@ export default async function handler(
       const author = await prisma.author.findUnique({
         where: {
           id: Number(id),
-        }, include:{posts:{include:{author:true}}}
+        },
+        include: { posts: { include: { author: true } } },
       });
 
       if (!author) {

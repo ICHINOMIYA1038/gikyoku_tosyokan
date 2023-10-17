@@ -2,6 +2,7 @@ import AuthorForm from "@/components/Form/AuthorForm";
 import CategoryForm from "@/components/Form/CategoryForm";
 import PostForm from "@/components/Form/PostForm";
 import Layout from "@/components/Layout";
+import getOgpData from "@/components/util/getOgpData";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 export default function Home({ authors, categories }: any) {

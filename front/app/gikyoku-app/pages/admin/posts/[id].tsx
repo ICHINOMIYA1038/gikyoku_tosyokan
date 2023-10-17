@@ -1,6 +1,7 @@
 import TwitterIntroduction from "@/components/Ad/TwitterIntroduction";
 import Layout from "@/components/Layout";
 import MessageModal from "@/components/Modal/MessageModalProps";
+import getOgpData from "@/components/util/getOgpData";
 import { PrismaClient } from "@prisma/client";
 import { useState } from "react";
 const prisma = new PrismaClient();
@@ -336,6 +337,7 @@ export default function Home({ post, categories, authors }: any) {
 }
 
 export async function getServerSideProps(context: any) {
+  console.log(getOgpData(["https://gekidankatakago.com"]));
   const postId = parseInt(context.params.id);
   if (isNaN(postId)) {
     return {
