@@ -42,7 +42,7 @@ export default function Home() {
   
   =================================
   
-  <a href="https://px.a8.net/svt/ejp?a8mat=3B9F8F+DQ5SVM+34L2+BW8O2&amp;a8ejpredirect=https%3A%2F%2Fv2.kan-geki.com%2Fstreaming%2Fplay%2F{{streamingid}}" rel="nofollow">→ 観劇三昧で{{group}}{{title}}を観る</a> <img src="https://www11.a8.net/0.gif?a8mat=3B9F8F+DQ5SVM+34L2+BW8O2" alt="" width="1" height="1" border="0" />
+  <a href="https://px.a8.net/svt/ejp?a8mat=3B9F8F+DQ5SVM+34L2+BW8O2&amp;a8ejpredirect=https%3A%2F%2Fv2.kan-geki.com%2Fstreaming%2Fplay%2F{{streamingid}}" rel="nofollow">→ 観劇三昧で{{group}}『{{title}}』を観る</a> <img src="https://www11.a8.net/0.gif?a8mat=3B9F8F+DQ5SVM+34L2+BW8O2" alt="" width="1" height="1" border="0" />
   
   =================================
   <h3>基本情報</h3>
@@ -145,7 +145,7 @@ export default function Home() {
   
   =================================
   
-  <a href="https://px.a8.net/svt/ejp?a8mat=3B9F8F+DQ5SVM+34L2+BW8O2&amp;a8ejpredirect=https%3A%2F%2Fv2.kan-geki.com%2Fstreaming%2Fplay%2F{{streamingid}}" rel="nofollow">→ 観劇三昧で{{group}}{{title}}を観る</a>
+  <a href="https://px.a8.net/svt/ejp?a8mat=3B9F8F+DQ5SVM+34L2+BW8O2&amp;a8ejpredirect=https%3A%2F%2Fv2.kan-geki.com%2Fstreaming%2Fplay%2F{{streamingid}}" rel="nofollow">→ 観劇三昧で{{group}}『{{title}}』を観る</a>
   
   =================================
   
