@@ -27,6 +27,7 @@ function AuthorListPage(authors: any) {
 }
 
 export async function getStaticProps() {
+  try{
   const authors = await prisma.author.findMany({
     include: {
       posts: {
@@ -41,6 +42,13 @@ export async function getStaticProps() {
     },
     revalidate: 3600, // You can adjust the revalidation period as needed
   };
+  }catch{
+    return {
+      notFound: true, // Return a 404 page
+    };
+  }finally {
+    await prisma.$disconnect(); // リクエスト処理の最後で接続を切断
+  }
 }
 
 export default AuthorListPage;

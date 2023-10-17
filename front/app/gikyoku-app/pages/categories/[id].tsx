@@ -42,6 +42,7 @@ export async function getServerSideProps(context: any) {
       notFound: true, // Return a 404 page for non-numeric IDs
     };
   }
+  try{
   const category = await prisma.category.findUnique({
     where: { id: categoryid },
     include: {
@@ -62,4 +63,11 @@ export async function getServerSideProps(context: any) {
       category,
     },
   };
+}catch{
+  return {
+    notFound: true, // Return a 404 page
+  };
+}finally {
+  await prisma.$disconnect(); // リクエスト処理の最後で接続を切断
+}
 }

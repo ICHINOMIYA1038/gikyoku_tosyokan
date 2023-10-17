@@ -48,6 +48,7 @@ export async function getServerSideProps(context: any) {
       notFound: true, // Return a 404 page for non-numeric IDs
     };
   }
+  try{
   const author = await prisma.author.findUnique({
     where: { id: authorId },
     include: {
@@ -56,7 +57,7 @@ export async function getServerSideProps(context: any) {
       },
     }, // Include the related author information
   });
-
+  
   if (!author) {
     return {
       notFound: true, // Return a 404 page
@@ -68,4 +69,11 @@ export async function getServerSideProps(context: any) {
       author,
     },
   };
+}catch{
+  return {
+    notFound: true, // Return a 404 page
+  };
+}finally {
+  await prisma.$disconnect(); // リクエスト処理の最後で接続を切断
+}
 }

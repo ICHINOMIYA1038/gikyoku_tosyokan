@@ -19,6 +19,18 @@ import OtherPosts from "@/components/Widget/OtherPosts";
 
 const prisma = new PrismaClient();
 
+  // Datetimeを指定したフォーマットに変換する関数
+  function formatDatetime(datetime: any) {
+    const date = new Date(datetime);
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+
+    return `${year}/${month}/${day} ${hours}:${minutes}`;
+  }
+
 function PostPage({ post }: any) {
   const URL = `https://gikyokutosyokan.com/posts/${post.id}`;
   const QUOTE = `${post.author.name}作「${post.title}」をみんなにおすすめしよう`;
@@ -84,6 +96,7 @@ export async function getServerSideProps(context: any) {
       notFound: true, // Return a 404 page for non-numeric IDs
     };
   }
+  try{
   const post = await prisma.post.findUnique({
     where: { id: postId },
     include: {
@@ -96,6 +109,7 @@ export async function getServerSideProps(context: any) {
       categories: true,
     },
   });
+
 
   const ipAddress = context.req.socket.remoteAddress;
   const currentDate = new Date();
@@ -130,17 +144,7 @@ export async function getServerSideProps(context: any) {
     // 例えば、一意制約違反エラーをハンドルして通知するか、別のアクションを実行するなどの処理が考えられます。
   }
 
-  // Datetimeを指定したフォーマットに変換する関数
-  function formatDatetime(datetime: any) {
-    const date = new Date(datetime);
-    const year = date.getFullYear();
-    const month = date.getMonth() + 1;
-    const day = date.getDate();
-    const hours = date.getHours();
-    const minutes = date.getMinutes();
 
-    return `${year}/${month}/${day} ${hours}:${minutes}`;
-  }
 
   if (!post) {
     return {
@@ -166,4 +170,11 @@ export async function getServerSideProps(context: any) {
       post: formattedPost,
     },
   };
+}catch{
+  return {
+    notFound: true, // Return a 404 page
+  };
+}finally {
+  await prisma.$disconnect(); // リクエスト処理の最後で接続を切断
+}
 }
