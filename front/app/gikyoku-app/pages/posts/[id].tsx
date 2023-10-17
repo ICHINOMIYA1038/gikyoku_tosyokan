@@ -15,6 +15,7 @@ import {
 import Comments from "@/components/Comments";
 import Head from "next/head";
 import Seo from "@/components/seo";
+import OtherPosts from "@/components/Widget/OtherPosts";
 
 const prisma = new PrismaClient();
 
@@ -66,6 +67,7 @@ function PostPage({ post }: any) {
               <Comments comments={post.comments} postid={post.id} />
             )}
           </div>
+          
         </div>
       </Layout>
     </>
