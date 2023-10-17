@@ -22,7 +22,7 @@ const prisma = new PrismaClient();
 function PostPage({ post }: any) {
   const URL = `https://gikyokutosyokan.com/posts/${post.id}`;
   const QUOTE = `${post.author.name}作「${post.title}」をみんなにおすすめしよう`;
-
+  console.log(post)
   return (
     <>
       <Layout>
@@ -67,7 +67,9 @@ function PostPage({ post }: any) {
               <Comments comments={post.comments} postid={post.id} />
             )}
           </div>
-          
+        </div>
+        <div className="flex justify-center">
+          <OtherPosts authorId={post.author_id} postId={post.id} authorName={post.author.name}/>
         </div>
       </Layout>
     </>

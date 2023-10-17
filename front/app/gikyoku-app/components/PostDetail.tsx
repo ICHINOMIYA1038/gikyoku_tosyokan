@@ -11,16 +11,9 @@ import Link from "next/link";
 const queryClient = new QueryClient();
 
 type PostPageProps = {
-  post: PostType & {
-    author: {
-      id: number;
-      name: string;
-      group: string;
-      website: string;
-      profile: string;
-    };
+  post: any
   };
-};
+
 const PostDetail: React.FC<PostPageProps> = ({ post }: PostPageProps) => {
   return (
     <div className="max-w-md mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
@@ -31,6 +24,13 @@ const PostDetail: React.FC<PostPageProps> = ({ post }: PostPageProps) => {
           {post.author.name}
           {post.author.group && <span>({post.author.group})</span>}
         </p>
+        {post.categories &&
+              post.categories.length !== 0 &&
+              post.categories
+                .slice(0, 3)
+                .map((category: any) => (
+                  <Badge key={post.id} text={category.name} />
+                ))}
         <div className="my-10">
           <h3 className="text-xl font-bold ">
             『{post.title}』の上演時間と人数
