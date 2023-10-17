@@ -18,7 +18,9 @@ export default async function handler(
     } catch (error) {
       res.status(500).json({ error: "An error occurred" });
     }
-  } else {
+  finally {
+    await prisma.$disconnect(); // リクエスト処理の最後で接続を切断
+  }} else {
     res.status(405).json({ error: "Method not allowed" });
   }
 }

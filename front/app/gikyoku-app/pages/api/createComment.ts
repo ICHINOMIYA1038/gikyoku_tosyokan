@@ -39,7 +39,9 @@ export default async function handler(
       console.error(error);
       res.status(500).json({ error: "コメントの投稿中にエラーが発生しました" });
     }
-  } else {
+    finally {
+      await prisma.$disconnect(); // リクエスト処理の最後で接続を切断
+    }} else {
     // POST以外のHTTPメソッドに対する処理を追加する場合はここに記述
     res.status(405).json({ error: "このメソッドは許可されていません" });
   }

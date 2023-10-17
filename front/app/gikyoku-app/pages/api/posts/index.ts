@@ -12,9 +12,7 @@ export default async function handler(
     try {
       const posts = await prisma.post.findMany({
         orderBy: {
-          access: {
-            _count: "desc", // Accessの数順に降順で並べ替え
-          },
+          id: "asc", 
         },
         include: {
           _count: {
@@ -27,10 +25,11 @@ export default async function handler(
       res.status(201).json(posts);
     } catch (error) {
       res.status(500).json({ error: "An error occurred" });
-    }
-    finally {
-      await prisma.$disconnect(); // リクエスト処理の最後で接続を切断
-    }} else {
+    
+  }finally {
+    await prisma.$disconnect(); // リクエスト処理の最後で接続を切断
+  }}else {
     res.status(405).json({ error: "Method not allowed" });
   }
+  
 }

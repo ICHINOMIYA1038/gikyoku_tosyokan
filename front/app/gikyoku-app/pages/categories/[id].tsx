@@ -8,7 +8,7 @@ const prisma = new PrismaClient();
 function CategoryPage({ category }: any) {
   return (
     <>
-      <Seo pageTitle={`{category.name}の戯曲一覧 -戯曲図書館`} />
+      <Seo pageTitle={`${category.name}の戯曲一覧 -戯曲図書館`} />
       <Layout ishead="true">
         <div className="md:max-w-2xl px-4 my-4 mx-auto basic-card">
           <h2>カテゴリ詳細</h2>
