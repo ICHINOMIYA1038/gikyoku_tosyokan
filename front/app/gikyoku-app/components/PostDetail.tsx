@@ -7,29 +7,33 @@ import AmazonAffiliateLink from "@/components/Ad/AmazonAffiliateLink";
 import ExternalLinkButton from "@/components/ExternalLinkButton";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 const queryClient = new QueryClient();
+
 
 type PostPageProps = {
   post: any
   };
 
 const PostDetail: React.FC<PostPageProps> = ({ post }: PostPageProps) => {
+  const router = useRouter();
   return (
     <div className="max-w-md mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
       <div className="p-4">
         <h2 className="text-3xl font-bold text-gray-800">{post.title}</h2>
-        <p className="text-gray-600 mb-4 flex justify-end">
+        <div className=" text-gray-600 mb-4 flex justify-end cursor-pointer hover:underline" onClick={()=>{router.push(`/authors/${post.author_id}`)}}>
           <span>作者: </span>
           {post.author.name}
           {post.author.group && <span>({post.author.group})</span>}
-        </p>
+        </div>
         {post.categories &&
               post.categories.length !== 0 &&
               post.categories
-                .slice(0, 3)
                 .map((category: any) => (
-                  <Badge key={post.id} text={category.name} />
+                  <div className="cursor-pointer inline-block" onClick={()=>{router.push(`/categories/${category.id}`)}}>
+                    <Badge key={post.id} text={category.name} />
+                  </div>
                 ))}
         <div className="my-10">
           <h3 className="text-xl font-bold ">
