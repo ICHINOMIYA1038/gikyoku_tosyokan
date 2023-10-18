@@ -2,11 +2,9 @@ import * as React from "react";
 import Link from "next/link";
 import { PrismaClient, Author as AuthorType } from "@prisma/client";
 import Layout from "@/components/Layout";
-import PostCard from "@/components/PostCard";
 import PostCardSmall from "@/components/PostCardSmall";
-import ExLinkwithOG from "@/components/ExLinkwithOG";
-import ExternalLinkButton from "@/components/ExternalLinkButton";
 import Seo from "@/components/seo";
+import LinkCard from "@/components/LinkCard";
 const prisma = new PrismaClient();
 
 function AuthorPage({ author }: any) {
@@ -20,7 +18,7 @@ function AuthorPage({ author }: any) {
         <div className="basic-card p-4 ">
           <h2>{author.name}</h2>
           {author.group && <p>{author.group}</p>}
-          {author.website && <ExternalLinkButton url={author.website} />}
+          {author.website && <LinkCard href={author.website} />}
           {author.profile && <p>{author.profile}</p>}
           {author.masterpiece && <p>代表作: {author.masterpiece}</p>}
         </div>
@@ -48,32 +46,32 @@ export async function getServerSideProps(context: any) {
       notFound: true, // Return a 404 page for non-numeric IDs
     };
   }
-  try{
-  const author = await prisma.author.findUnique({
-    where: { id: authorId },
-    include: {
-      posts: {
-        include: { author: true },
+  try {
+    const author = await prisma.author.findUnique({
+      where: { id: authorId },
+      include: {
+        posts: {
+          include: { author: true },
+        },
+      }, // Include the related author information
+    });
+
+    if (!author) {
+      return {
+        notFound: true, // Return a 404 page
+      };
+    }
+
+    return {
+      props: {
+        author,
       },
-    }, // Include the related author information
-  });
-  
-  if (!author) {
+    };
+  } catch {
     return {
       notFound: true, // Return a 404 page
     };
+  } finally {
+    await prisma.$disconnect(); // リクエスト処理の最後で接続を切断
   }
-
-  return {
-    props: {
-      author,
-    },
-  };
-}catch{
-  return {
-    notFound: true, // Return a 404 page
-  };
-}finally {
-  await prisma.$disconnect(); // リクエスト処理の最後で接続を切断
-}
 }

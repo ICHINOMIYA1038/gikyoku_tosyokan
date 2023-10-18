@@ -1,4 +1,5 @@
 import ExternalLinkButton from "@/components/ExternalLinkButton";
+import LinkCard from "@/components/LinkCard";
 import NewsLayout from "@/components/NewsLayout";
 import Seo from "@/components/seo";
 import * as React from "react";
@@ -32,10 +33,7 @@ const Publish = ({ children }: any) => {
           <p>
             しばらく更新を停止している間に、劇作家協会から戯曲デジタルアーカイブというサイトが公開されました。
           </p>
-          <ExternalLinkButton
-            title="戯曲デジタルアーカイブ"
-            url="https://playtextdigitalarchive.com/drama/list/dramaRa"
-          />
+          <LinkCard href="https://playtextdigitalarchive.com/drama/list/dramaRa" />
           <p>
             <span className="font-bold">
               このサイトは戯曲を無料で読むことができ、さらには上演許可の仲介までしてくれるとても優れたサイトです。

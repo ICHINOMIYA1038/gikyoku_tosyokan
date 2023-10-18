@@ -8,13 +8,13 @@ import ExternalLinkButton from "@/components/ExternalLinkButton";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import LinkCard from "./LinkCard";
 
 const queryClient = new QueryClient();
 
-
 type PostPageProps = {
-  post: any
-  };
+  post: any;
+};
 
 const PostDetail: React.FC<PostPageProps> = ({ post }: PostPageProps) => {
   const router = useRouter();
@@ -22,19 +22,28 @@ const PostDetail: React.FC<PostPageProps> = ({ post }: PostPageProps) => {
     <div className="max-w-md mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
       <div className="p-4">
         <h2 className="text-3xl font-bold text-gray-800">{post.title}</h2>
-        <div className=" text-gray-600 mb-4 flex justify-end cursor-pointer hover:underline" onClick={()=>{router.push(`/authors/${post.author_id}`)}}>
+        <div
+          className=" text-gray-600 mb-4 flex justify-end cursor-pointer hover:underline"
+          onClick={() => {
+            router.push(`/authors/${post.author_id}`);
+          }}
+        >
           <span>作者: </span>
           {post.author.name}
           {post.author.group && <span>({post.author.group})</span>}
         </div>
         {post.categories &&
-              post.categories.length !== 0 &&
-              post.categories
-                .map((category: any) => (
-                  <div className="cursor-pointer inline-block" onClick={()=>{router.push(`/categories/${category.id}`)}}>
-                    <Badge key={post.id} text={category.name} />
-                  </div>
-                ))}
+          post.categories.length !== 0 &&
+          post.categories.map((category: any) => (
+            <div
+              className="cursor-pointer inline-block"
+              onClick={() => {
+                router.push(`/categories/${category.id}`);
+              }}
+            >
+              <Badge key={post.id} text={category.name} />
+            </div>
+          ))}
         <div className="my-10">
           <h3 className="text-xl font-bold ">
             『{post.title}』の上演時間と人数
@@ -120,7 +129,7 @@ const PostDetail: React.FC<PostPageProps> = ({ post }: PostPageProps) => {
               </div>
               <div>下記のURLからぜひ一度ご確認ください。</div>
 
-              <ExternalLinkButton title={post.title} url={post.link_to_plot} />
+              <LinkCard href={post.link_to_plot} />
               <div className="flex justify-end">(外部サイトに飛びます)</div>
             </div>
           )}
@@ -129,7 +138,7 @@ const PostDetail: React.FC<PostPageProps> = ({ post }: PostPageProps) => {
             <div>
               {post.author.name}「{post.title}」
               はこちらのサイトからご購入いただけます。
-              <ExternalLinkButton title={post.title} url={post.buy_link} />
+              <LinkCard href={post.buy_link} />
             </div>
           )}
 
