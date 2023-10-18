@@ -34,8 +34,8 @@ const handler: NextApiHandler = async (
 
   const og: OgData = { url };
   const metaTags = jsdom.window.document.getElementsByTagName("meta");
-
-  for (const metaTag of metaTags) {
+  const metaTagsArray = Array.from(metaTags);
+  for (const metaTag of metaTagsArray) {
     const property = metaTag.getAttribute("property");
     const content = metaTag.getAttribute("content");
     switch (property) {
