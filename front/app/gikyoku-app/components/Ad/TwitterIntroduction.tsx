@@ -14,7 +14,10 @@ const TwitterIntroduction = ({ post }: any) => {
         https://gikyokutosyokan.com/posts/{post.id}
       </Link>
       <p>
-        #{post.author.name} #{post.title} #{post.author.group}
+        #{post.author.name} #{post.title} #{post.author.group} #戯デジ
+        #戯曲デジタルアーカイブ #ヒューマンドラマ #コメディ #演劇 #戯曲
+        #銀河鉄道の夜 #戯曲図書館 #戯曲 #脚本{" "}
+        {post.categories.map((category: any) => `#${category}`).join(" ")}
       </p>
     </>
   );
