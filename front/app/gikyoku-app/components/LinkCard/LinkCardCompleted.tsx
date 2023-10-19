@@ -19,14 +19,22 @@ const LinkCardCompleted = ({ ogData, openInNewTab = true }: any) => {
               />
             </div>
           )}
-          <div className="flex-1 flex flex-col p-4">
-            <p className="text-xs font-bold break-all truncate-2-lines">
-              {ogData.title}
-            </p>
-            <p className="text-xs break-all truncate-2-lines">
-              {ogData.description}
-            </p>
-          </div>
+          {ogData.title ? (
+            <div className="flex-1 flex flex-col p-4">
+              <p className="text-xs font-bold break-all truncate-2-lines">
+                {ogData.title}
+              </p>
+              <p className="text-xs break-all truncate-2-lines">
+                {ogData.description}
+              </p>
+            </div>
+          ) : (
+            <div className="flex-1 flex flex-col p-4">
+              <p className="text-xs font-bold break-all truncate-2-lines">
+                外部サイトを開く
+              </p>
+            </div>
+          )}
         </div>
       </a>
     </div>
