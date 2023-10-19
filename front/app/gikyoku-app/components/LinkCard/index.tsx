@@ -34,10 +34,19 @@ const LinkCard = ({ href }: any) => {
 
   return !state.isCompleted ? (
     <>
-      <div className="flex justify-center items-center" aria-label="読み込み中">
-        <div className="animate-ping h-2 w-2 bg-blue-600 rounded-full"></div>
-        <div className="animate-ping h-2 w-2 bg-blue-600 rounded-full mx-4"></div>
-        <div className="animate-ping h-2 w-2 bg-blue-600 rounded-full"></div>
+      <div className="border border-solid border-gray-300 rounded-lg overflow-hidden">
+        <a
+          href={href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="block"
+        >
+          <div className="flex-1 flex flex-col p-4">
+            <p className="text-xs font-bold break-all truncate-2-lines">
+              外部サイトを開く
+            </p>
+          </div>
+        </a>
       </div>
       ;
     </>
