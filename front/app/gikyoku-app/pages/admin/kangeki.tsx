@@ -28,7 +28,10 @@ export default function Home() {
     twitter3: "",
   });
 
-  const sampleString = `『「観劇三昧」でおすすめの動画がわからない』という人向けに動画紹介をしています。
+  const sampleString = `
+  <div class="ep-box es-BmarkExcl es-borderSolidS brc-DPred bgc-white es-radius">この記事は広告やPRを含みます</div>
+  
+  『「観劇三昧」でおすすめの動画がわからない』という人向けに動画紹介をしています。
 
   今回は観劇三昧で配信されている動画「{{title}}」の紹介をします。
   
