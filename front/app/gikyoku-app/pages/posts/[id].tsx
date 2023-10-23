@@ -16,6 +16,7 @@ import Comments from "@/components/Comments";
 import Head from "next/head";
 import Seo from "@/components/seo";
 import OtherPosts from "@/components/Widget/OtherPosts";
+import { useState } from "react";
 
 const prisma = new PrismaClient();
 
@@ -27,6 +28,8 @@ const prisma = new PrismaClient();
     const day = date.getDate();
     const hours = date.getHours();
     const minutes = date.getMinutes();
+    
+
 
     return `${year}/${month}/${day} ${hours}:${minutes}`;
   }
@@ -34,7 +37,35 @@ const prisma = new PrismaClient();
 function PostPage({ post }: any) {
   const URL = `https://gikyokutosyokan.com/posts/${post.id}`;
   const QUOTE = `${post.author.name}作「${post.title}」をみんなにおすすめしよう`;
-  console.log(post)
+  const [star, setStar] = useState(0);
+  const handleStarChange = (event:any) => {
+    setStar(event.target.value);
+  };
+
+  const handleSubmit = async () => {
+    try {
+      // 評価を投稿
+      const response = await fetch(`/api/posts/${post.id}`, {
+        method: 'POST',
+        body: JSON.stringify({ star }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.status === 201) {
+        // 成功したらリロードして更新
+        window.location.reload();
+      } else {
+        // エラーハンドリング
+        console.error('Error submitting rating');
+      }
+    } catch (error) {
+      console.error('Error submitting rating:', error);
+    }
+  };
+
+
   return (
     <>
       <Layout>
@@ -83,6 +114,21 @@ function PostPage({ post }: any) {
         <div className="flex justify-center">
           <OtherPosts authorId={post.author_id} postId={post.id} authorName={post.author.name}/>
         </div>
+        <div>
+
+      <label>Rate this post:</label>
+      <select value={star} onChange={handleStarChange}>
+        <option value={0}>0 Stars</option>
+        <option value={1}>1 Star</option>
+        <option value={2}>2 Stars</option>
+        <option value={3}>3 Stars</option>
+        <option value={4}>4 Stars</option>
+        <option value={5}>5 Stars</option>
+      </select>
+
+      <button onClick={handleSubmit}>Submit Rating</button>
+      </div>
+        
       </Layout>
     </>
   );

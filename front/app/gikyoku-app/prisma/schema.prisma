@@ -16,6 +16,8 @@ model Author {
   profile     String?
   masterpiece String?
   posts       Post[]
+  authorTwitter String?
+  groupTwitter String?
 }
 
 model Post {
@@ -41,6 +43,7 @@ model Post {
   buy_link            String?
   comments      ParentComment[]
   access              Access[]
+  ratings   Rating[]
   author              Author          @relation(fields: [author_id], references: [id])
   categories          Category[]      @relation("PostCategory")
 }
@@ -88,4 +91,13 @@ model ChildComment {
   author          String        @default("名無しさん")
   date            DateTime      @default(now())
   parentComment   ParentComment @relation(fields: [parentCommentId], references: [id])
+}
+
+model Rating {
+  id        Int      @id @default(autoincrement())
+  ipAddress String
+  star      Float
+  createdAt DateTime @default(now())
+  postId    Int
+  Post      Post     @relation(fields: [postId], references: [id])
 }
