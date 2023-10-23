@@ -21,6 +21,7 @@ export default function Home() {
     point3detail: "",
     impressions: "",
     fee: "無料",
+    feeColor:"blue",
     streamingid: "510",
     twitter1: "",
     twitter2: "",
@@ -38,7 +39,7 @@ export default function Home() {
   330作品以上無料！月額950円（税別）で全作品観放題！
   ==============================================
   <h2 class="mb-2"> 観劇三昧で『{{group}}』の{{title}}を観る</h2>
-  <span class="ep-label bgc-DPblue brc-white ftc-white es-radius es-RpaddingSS es-LpaddingSS">{{fee}}</span>
+  <span class="ep-label bgc-DP{{feeColor}} brc-white ftc-white es-radius es-RpaddingSS es-LpaddingSS">{{fee}}</span>
   
   =================================
   
@@ -188,6 +189,32 @@ export default function Home() {
       </div>
       <div className="mb-4">
         <label htmlFor="group" className="block mb-2">
+          fee:
+        </label>
+        <input
+          type="fee"
+          name="fee"
+          id="fee"
+          value={inputValues.fee}
+          onChange={handleInputChange}
+          className="w-full p-2 border rounded focus:outline-none focus:border-blue-400"
+        />
+        </div>
+        <div className="mb-4">
+        <label htmlFor="group" className="block mb-2">
+          feeColor:
+        </label>
+        <input
+          type="feeColor"
+          name="feeColor"
+          id="feeColor"
+          value={inputValues.feeColor}
+          onChange={handleInputChange}
+          className="w-full p-2 border rounded focus:outline-none focus:border-blue-400"
+        />
+        </div>
+      <div className="mb-4">
+        <label htmlFor="fee" className="block mb-2">
           group:
         </label>
         <input
