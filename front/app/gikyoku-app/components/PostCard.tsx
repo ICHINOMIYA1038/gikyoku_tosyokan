@@ -4,6 +4,8 @@ import Badge from "@/components/Badge";
 import { Post as PostType } from "@prisma/client";
 import { useRouter } from "next/router";
 import { useState } from "react";
+import Star from "./Widget/Star";
+import Link from "next/link";
 
 type PostPageProps = {
   post: PostType & { author: { id: number; name: string } };
@@ -13,55 +15,55 @@ const PostCard: React.FC<PostPageProps> = ({ post }: any) => {
   const router = useRouter();
 
   return (
-    <div
-      className="mb-5 bg-white h-60 border-solid border border-black link-card"
-      onClick={() => {
-        router.push(`/posts/${post.id}`);
-      }}
-    >
-      <div className="flex">
-        {post.image_url && (
-          <div className="h-60 w-1/4 relative">
+    <Link href={`/posts/${post.id}`} target="_blank">
+      <div className="flex mb-2 bg-white border-solid border border-black shadow-md hover:shadow-md hover:scale-105 transition-transform duration-300 rounded-xl cursor-pointer">
+        <div className="h-60 w-1/4 relative flex flex-col">
+          <div className="h-10 mb-2 py-2 pl-1">
+            {post.ratings ? (
+              <Star
+                star={post.averageRating}
+                rateCount={post.ratings.length || 0}
+              />
+            ) : (
+              <Star star={post.averageRating} />
+            )}
+          </div>
+          {post.image_url ? (
             <Image
               src={post.image_url}
               alt="投稿の写真"
-              layout="fill" // 画像を親要素に合わせる
-              objectFit="contain" // 画像をトリミングなしで合わせる
-              objectPosition="center center" // 画像の表示位置を中央に
-              className="p-2"
+              layout="fill"
+              objectFit="contain"
+              objectPosition="center center"
+              className="py-8"
             />
-          </div>
-        )}
-        {!post.image_url && (
-          <div className="h-60 w-1/4 relative">
+          ) : (
             <Image
               src="/24202513.jpg"
               alt="NoImage"
-              layout="fill" // 画像を親要素に合わせる
-              objectFit="contain" // 画像をトリミングなしで合わせる
-              objectPosition="center center" // 画像の表示位置を中央に
-              className="p-2"
+              layout="fill"
+              objectFit="contain"
+              objectPosition="center center"
+              className="py-8"
             />
-          </div>
-        )}
-        <div className="w-3/4 p-2 h-48">
+          )}
+        </div>
+        <div className="w-3/4 p-2">
           <div className="text-xs h-8 flex gap-2">
             {post.categories &&
               post.categories.length !== 0 &&
               post.categories
                 .slice(0, 3)
                 .map((category: any) => (
-                  <Badge key={post.id} text={category.name} />
+                  <Badge key={category.id} text={category.name} />
                 ))}
           </div>
           <div className="md:flex md:gap-5 items-center">
             <h2 className="text-base md:text-xl font-bold">{post.title}</h2>
-            <p className=" text-xs md:text-base font-bold">
-              {post.author.name}
-            </p>
+            <p className="text-xs md:text-base font-bold">{post.author.name}</p>
           </div>
           <div className="flex font-bold gap-1 text-xs md:text-sm mt-1">
-            <p className="">
+            <p>
               <span>男:</span>
               {post.man !== -1 ? `${post.man}` : "不明"}
             </p>
@@ -87,7 +89,7 @@ const PostCard: React.FC<PostPageProps> = ({ post }: any) => {
           </div>
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
 

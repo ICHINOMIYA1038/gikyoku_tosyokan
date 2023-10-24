@@ -197,6 +197,7 @@ export default async function handler(
       include: {
         author: true, // Include the associated Author records
         categories: true,
+        ratings: { select: { id: true } },
       },
       // Add tags filtering if needed.
     });

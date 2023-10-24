@@ -33,16 +33,14 @@ const PostDetail: React.FC<PostPageProps> = ({ post }: PostPageProps) => {
           )}
         </div>
         <h2 className="text-3xl font-bold text-gray-800">{post.title}</h2>
-        <div
+        <Link
           className=" text-gray-600 mb-4 flex justify-end cursor-pointer hover:underline"
-          onClick={() => {
-            router.push(`/authors/${post.author_id}`);
-          }}
+          href={`/authors/${post.author_id}`}
         >
           <span>作者: </span>
           {post.author.name}
           {post.author.group && <span>({post.author.group})</span>}
-        </div>
+        </Link>
         {post.categories &&
           post.categories.length !== 0 &&
           post.categories.map((category: any) => (
