@@ -13,7 +13,6 @@ import {
   TwitterIcon,
 } from "react-share";
 import Comments from "@/components/Comments";
-import Head from "next/head";
 import Seo from "@/components/seo";
 import OtherPosts from "@/components/Widget/OtherPosts";
 import { useState } from "react";
@@ -67,10 +66,11 @@ function PostPage({ post }: any) {
         setSuccess("評価ありがとうございます！");
       } else {
         // エラーハンドリング
+        setError("評価は1日1回までです。");
         console.error("Error submitting rating");
       }
     } catch (error) {
-      setError("評価は1日1回までです。");
+      setError("評価に失敗しました。");
       console.error("Error submitting rating:", error);
     }
   };
@@ -114,36 +114,47 @@ function PostPage({ post }: any) {
           <div className="px-2 md:p-0">
             <PostDetail post={post} />
           </div>
+           <div className="px-4 py-4 items-center max-w-md mx-auto flex bg-white shadow-lg my-4 rounded-lg">
+          <div>
+          <label className="text-sm font-bold">あなたの声を聞かせてください!</label>
+          <div className="flex items-center mt-2 justify-center">
+            {[1, 2, 3, 4, 5].map((value) => (
+              <span key={value}>
+                <FontAwesomeIcon
+                  icon={faStar}
+                  className={value <= star ? "text-yellow-500 text-xl" : "text-gray-300 text-xl"}
+                  onClick={() => handleStarClick(value)}
+                />
+              </span>
+            ))}
+                      <button
+            className="ml-2 py-1 px-3 rounded-md bg-blue-500 text-white text-sm"
+            onClick={handleSubmit}
+            >
+            評価を送信
+          </button>
+          </div>
+          <div className="mt-2">
+          {error && <p className="text-red-600">{error}</p>}
+          {success && <p className="text-green-600">{success}</p>}
+          </div>
+          </div>
+          
+        </div>
           <div className="max-w-md mx-auto">
             {post.comments && (
               <Comments comments={post.comments} postid={post.id} />
             )}
           </div>
         </div>
-        <div className="flex justify-center">
+        <div className="flex justify-center max-w-md mx-auto">
           <OtherPosts
             authorId={post.author_id}
             postId={post.id}
             authorName={post.author.name}
           />
         </div>
-        <div>
-          <label>Rate this post:</label>
-          <div className="flex">
-            {[1, 2, 3, 4, 5].map((value) => (
-              <span key={value}>
-                <FontAwesomeIcon
-                  icon={faStar}
-                  className={value <= star ? "text-yellow-500" : "text-white"}
-                  onClick={() => handleStarClick(value)}
-                />
-              </span>
-            ))}
-          </div>
-          <button onClick={handleSubmit}>Submit Rating</button>
-          {error && <p>{error}</p>}
-          {success && <p>{success}</p>}
-        </div>
+       
       </Layout>
     </>
   );
