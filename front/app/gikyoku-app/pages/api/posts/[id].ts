@@ -7,8 +7,9 @@ export default async (req: any, res: any) => {
     const postId = parseInt(req.query.id);
     const star = parseInt(req.body.star);
     const ipAddress =
-      req.headers["x-forwarded-for"] || req.connection.remoteAddress;
-
+      req.headers["x-real-ip"] ||
+      req.headers["x-forwarded-for"] ||
+      req.connection.remoteAddress;
     // ユーザーが今日既に評価を登録しているか確認
     const today = new Date();
     today.setUTCHours(0, 0, 0, 0);
