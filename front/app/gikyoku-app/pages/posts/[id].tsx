@@ -183,6 +183,7 @@ export async function getServerSideProps(context: any) {
         },
         author: true,
         categories: true,
+        ratings: true,
       },
     });
 
