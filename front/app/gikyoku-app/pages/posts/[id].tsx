@@ -114,33 +114,38 @@ function PostPage({ post }: any) {
           <div className="px-2 md:p-0">
             <PostDetail post={post} />
           </div>
-           <div className="px-4 py-4 items-center max-w-md mx-auto flex bg-white shadow-lg my-4 rounded-lg">
-          <div>
-          <label className="text-sm font-bold">あなたの声を聞かせてください!</label>
-          <div className="flex items-center mt-2 justify-center">
-            {[1, 2, 3, 4, 5].map((value) => (
-              <span key={value}>
-                <FontAwesomeIcon
-                  icon={faStar}
-                  className={value <= star ? "text-yellow-500 text-xl" : "text-gray-300 text-xl"}
-                  onClick={() => handleStarClick(value)}
-                />
-              </span>
-            ))}
-                      <button
-            className="ml-2 py-1 px-3 rounded-md bg-blue-500 text-white text-sm"
-            onClick={handleSubmit}
-            >
-            評価を送信
-          </button>
+          <div className="px-4 py-4 items-center max-w-md mx-auto flex bg-white shadow-lg my-4 rounded-lg">
+            <div>
+              <label className="text-sm font-bold">
+                あなたの声を聞かせてください!
+              </label>
+              <div className="flex items-center mt-2 justify-center">
+                {[1, 2, 3, 4, 5].map((value) => (
+                  <span key={value}>
+                    <FontAwesomeIcon
+                      icon={faStar}
+                      className={
+                        value <= star
+                          ? "text-yellow-500 text-xl"
+                          : "text-gray-300 text-xl"
+                      }
+                      onClick={() => handleStarClick(value)}
+                    />
+                  </span>
+                ))}
+                <button
+                  className="ml-2 py-1 px-3 rounded-md bg-blue-500 text-white text-sm"
+                  onClick={handleSubmit}
+                >
+                  評価を送信
+                </button>
+              </div>
+              <div className="mt-2">
+                {error && <p className="text-red-600">{error}</p>}
+                {success && <p className="text-green-600">{success}</p>}
+              </div>
+            </div>
           </div>
-          <div className="mt-2">
-          {error && <p className="text-red-600">{error}</p>}
-          {success && <p className="text-green-600">{success}</p>}
-          </div>
-          </div>
-          
-        </div>
           <div className="max-w-md mx-auto">
             {post.comments && (
               <Comments comments={post.comments} postid={post.id} />
@@ -154,7 +159,6 @@ function PostPage({ post }: any) {
             authorName={post.author.name}
           />
         </div>
-       
       </Layout>
     </>
   );
@@ -182,7 +186,12 @@ export async function getServerSideProps(context: any) {
       },
     });
 
-    const ipAddress = context.req.socket.remoteAddress;
+    // クライアントのIPアドレスをHTTPヘッダーから取得
+    const ipAddress =
+      context.req.headers["x-real-ip"] ||
+      context.req.headers["x-forwarded-for"] ||
+      context.req.connection.remoteAddress;
+
     const currentDate = new Date();
 
     // 年月日の部分を取得
