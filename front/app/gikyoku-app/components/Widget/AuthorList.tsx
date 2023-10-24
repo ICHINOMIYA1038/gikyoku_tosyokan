@@ -1,8 +1,8 @@
 import * as React from "react";
 import { Post as PostType } from "@prisma/client";
-import PostCardSmall from "../PostCardSmall";
 import { BadgeGreen } from "../Badge";
 import { useRouter } from "next/router";
+import Link from "next/link";
 
 type PostPageProps = {
   post: PostType & { author: { id: number; name: string } };
@@ -18,14 +18,9 @@ const AuthorList = ({ authors }: any) => {
         <div className="flex gap-2 flex-wrap">
           {authors &&
             authors.map((author: any) => (
-              <div
-                className="cursor-pointer"
-                onClick={() => {
-                  router.push(`/authors/${author.id}`);
-                }}
-              >
+              <Link className="cursor-pointer" href={`/authors/${author.id}`}>
                 <BadgeGreen key={author.id} text={author.name} />
-              </div>
+              </Link>
             ))}
         </div>
       </div>

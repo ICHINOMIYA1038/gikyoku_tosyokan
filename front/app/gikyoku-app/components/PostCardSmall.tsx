@@ -4,6 +4,7 @@ import Badge from "@/components/Badge";
 import { Post as PostType } from "@prisma/client";
 import { useRouter } from "next/router";
 import { useState } from "react";
+import Link from "next/link";
 
 type PostPageProps = {
   post: PostType & { author: { id: number; name: string } };
@@ -13,11 +14,9 @@ const PostCardSmall: React.FC<PostPageProps> = ({ post }: any) => {
   const router = useRouter();
 
   return (
-    <div
+    <Link
       className="mb-5 bg-white h-80 w-48 border-solid border border-black link-card"
-      onClick={() => {
-        router.push(`/posts/${post.id}`);
-      }}
+      href={`/posts/${post.id}`}
     >
       <div className="">
         {post.image_url && (
@@ -63,7 +62,7 @@ const PostCardSmall: React.FC<PostPageProps> = ({ post }: any) => {
           </div>
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
 

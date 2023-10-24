@@ -44,14 +44,12 @@ const PostDetail: React.FC<PostPageProps> = ({ post }: PostPageProps) => {
         {post.categories &&
           post.categories.length !== 0 &&
           post.categories.map((category: any) => (
-            <div
+            <Link
               className="cursor-pointer inline-block"
-              onClick={() => {
-                router.push(`/categories/${category.id}`);
-              }}
+              href={`/categories/${category.id}`}
             >
               <Badge key={post.id} text={category.name} />
-            </div>
+            </Link>
           ))}
         <div className="my-10">
           <h3 className="text-xl font-bold ">

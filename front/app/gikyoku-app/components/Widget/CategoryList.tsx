@@ -2,6 +2,7 @@ import * as React from "react";
 import { Post as PostType } from "@prisma/client";
 import Badge, { BadgeGreen } from "../Badge";
 import { useRouter } from "next/router";
+import Link from "next/link";
 
 type PostPageProps = {
   post: PostType & { author: { id: number; name: string } };
@@ -17,14 +18,12 @@ const CategoryList = ({ categories }: any) => {
         <div className="flex gap-2 flex-wrap">
           {categories &&
             categories.map((category: any) => (
-              <div
+              <Link
                 className="cursor-pointer"
-                onClick={() => {
-                  router.push(`/categories/${category.id}`);
-                }}
+                href={`/categories/${category.id}`}
               >
                 <Badge key={category.id} text={category.name} />
-              </div>
+              </Link>
             ))}
         </div>
       </div>
