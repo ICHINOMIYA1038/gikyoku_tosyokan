@@ -22,7 +22,9 @@ const PostDetail: React.FC<PostPageProps> = ({ post }: PostPageProps) => {
   return (
     <div className="max-w-md mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
       <div className="p-4">
-        <div><Star star={post.averageRating}/></div>
+        <div>
+          <Star star={post.averageRating} rateCount={post.rating.length} />
+        </div>
         <h2 className="text-3xl font-bold text-gray-800">{post.title}</h2>
         <div
           className=" text-gray-600 mb-4 flex justify-end cursor-pointer hover:underline"
