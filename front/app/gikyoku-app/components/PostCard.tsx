@@ -16,8 +16,8 @@ const PostCard: React.FC<PostPageProps> = ({ post }: any) => {
 
   return (
     <Link href={`/posts/${post.id}`} target="_blank">
-      <div className="flex mb-2 bg-white border-solid border border-black shadow-md hover:shadow-md hover:scale-105 transition-transform duration-300 rounded-xl cursor-pointer">
-        <div className="h-60 w-1/4 relative flex flex-col">
+      <div className="mb-2 bg-white border-solid border border-black shadow-md hover:shadow-md hover:scale-105 transition-transform duration-300 rounded-xl cursor-pointer">
+        <div className="">
           <div className="h-10 mb-2 py-2 pl-1">
             {post.ratings ? (
               <Star
@@ -28,14 +28,16 @@ const PostCard: React.FC<PostPageProps> = ({ post }: any) => {
               <Star star={post.averageRating} />
             )}
           </div>
+        </div>
+        <div className="h-60 max-w-32 relative flex flex-col">
           {post.image_url ? (
             <Image
               src={post.image_url}
               alt="投稿の写真"
               layout="fill"
               objectFit="contain"
-              objectPosition="center center"
-              className="py-8"
+              objectPosition="left center"
+              className=""
             />
           ) : (
             <Image
@@ -43,12 +45,12 @@ const PostCard: React.FC<PostPageProps> = ({ post }: any) => {
               alt="NoImage"
               layout="fill"
               objectFit="contain"
-              objectPosition="center center"
-              className="py-8"
+              objectPosition="left center"
+              className=""
             />
           )}
         </div>
-        <div className="w-3/4 p-2">
+        <div className="p-2">
           <div className="text-xs h-8 flex gap-2">
             {post.categories &&
               post.categories.length !== 0 &&
