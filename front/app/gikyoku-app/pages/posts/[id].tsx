@@ -17,54 +17,63 @@ import Head from "next/head";
 import Seo from "@/components/seo";
 import OtherPosts from "@/components/Widget/OtherPosts";
 import { useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faStar } from "@fortawesome/free-solid-svg-icons";
 
 const prisma = new PrismaClient();
 
-  // Datetimeを指定したフォーマットに変換する関数
-  function formatDatetime(datetime: any) {
-    const date = new Date(datetime);
-    const year = date.getFullYear();
-    const month = date.getMonth() + 1;
-    const day = date.getDate();
-    const hours = date.getHours();
-    const minutes = date.getMinutes();
-    
+// Datetimeを指定したフォーマットに変換する関数
+function formatDatetime(datetime: any) {
+  const date = new Date(datetime);
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+  const hours = date.getHours();
+  const minutes = date.getMinutes();
 
-
-    return `${year}/${month}/${day} ${hours}:${minutes}`;
-  }
+  return `${year}/${month}/${day} ${hours}:${minutes}`;
+}
 
 function PostPage({ post }: any) {
   const URL = `https://gikyokutosyokan.com/posts/${post.id}`;
   const QUOTE = `${post.author.name}作「${post.title}」をみんなにおすすめしよう`;
   const [star, setStar] = useState(0);
-  const handleStarChange = (event:any) => {
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+
+  const handleStarChange = (event: any) => {
     setStar(event.target.value);
+  };
+
+  const handleStarClick = (value: React.SetStateAction<number>) => {
+    // クリックした星の値を設定
+    setStar(value);
   };
 
   const handleSubmit = async () => {
     try {
+      setError("");
+      setSuccess("");
       // 評価を投稿
       const response = await fetch(`/api/posts/${post.id}`, {
-        method: 'POST',
+        method: "POST",
         body: JSON.stringify({ star }),
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
       });
 
       if (response.status === 201) {
-        // 成功したらリロードして更新
-        window.location.reload();
+        setSuccess("評価ありがとうございます！");
       } else {
         // エラーハンドリング
-        console.error('Error submitting rating');
+        console.error("Error submitting rating");
       }
     } catch (error) {
-      console.error('Error submitting rating:', error);
+      setError("評価は1日1回までです。");
+      console.error("Error submitting rating:", error);
     }
   };
-
 
   return (
     <>
@@ -112,23 +121,29 @@ function PostPage({ post }: any) {
           </div>
         </div>
         <div className="flex justify-center">
-          <OtherPosts authorId={post.author_id} postId={post.id} authorName={post.author.name}/>
+          <OtherPosts
+            authorId={post.author_id}
+            postId={post.id}
+            authorName={post.author.name}
+          />
         </div>
         <div>
-
-      <label>Rate this post:</label>
-      <select value={star} onChange={handleStarChange}>
-        <option value={0}>0 Stars</option>
-        <option value={1}>1 Star</option>
-        <option value={2}>2 Stars</option>
-        <option value={3}>3 Stars</option>
-        <option value={4}>4 Stars</option>
-        <option value={5}>5 Stars</option>
-      </select>
-
-      <button onClick={handleSubmit}>Submit Rating</button>
-      </div>
-        
+          <label>Rate this post:</label>
+          <div className="flex">
+            {[1, 2, 3, 4, 5].map((value) => (
+              <span key={value}>
+                <FontAwesomeIcon
+                  icon={faStar}
+                  className={value <= star ? "text-yellow-500" : "text-white"}
+                  onClick={() => handleStarClick(value)}
+                />
+              </span>
+            ))}
+          </div>
+          <button onClick={handleSubmit}>Submit Rating</button>
+          {error && <p>{error}</p>}
+          {success && <p>{success}</p>}
+        </div>
       </Layout>
     </>
   );
@@ -142,85 +157,82 @@ export async function getServerSideProps(context: any) {
       notFound: true, // Return a 404 page for non-numeric IDs
     };
   }
-  try{
-  const post = await prisma.post.findUnique({
-    where: { id: postId },
-    include: {
-      comments: {
-        include: {
-          children: true,
+  try {
+    const post = await prisma.post.findUnique({
+      where: { id: postId },
+      include: {
+        comments: {
+          include: {
+            children: true,
+          },
         },
-      },
-      author: true,
-      categories: true,
-    },
-  });
-
-
-  const ipAddress = context.req.socket.remoteAddress;
-  const currentDate = new Date();
-
-  // 年月日の部分を取得
-  const year = currentDate.getFullYear();
-  const month = currentDate.getMonth() + 1; // 月は0から始まるため+1
-  const day = currentDate.getDate();
-
-  // PostgreSQLのDate型に変換
-  const date = new Date(year, month - 1, day); // 月は0から始まるため-1
-
-  const existingAccess = await prisma.access.findFirst({
-    where: {
-      ipAddress: ipAddress,
-      postId: postId,
-      date: date,
-    },
-  });
-
-  if (!existingAccess) {
-    // 既存のレコードが見つからない場合、新しいレコードを作成
-    await prisma.access.create({
-      data: {
-        ipAddress,
-        postId,
-        date,
+        author: true,
+        categories: true,
       },
     });
-  } else {
-    // 既存のレコードが存在する場合、適切なエラー処理を行います。
-    // 例えば、一意制約違反エラーをハンドルして通知するか、別のアクションを実行するなどの処理が考えられます。
-  }
 
+    const ipAddress = context.req.socket.remoteAddress;
+    const currentDate = new Date();
 
+    // 年月日の部分を取得
+    const year = currentDate.getFullYear();
+    const month = currentDate.getMonth() + 1; // 月は0から始まるため+1
+    const day = currentDate.getDate();
 
-  if (!post) {
+    // PostgreSQLのDate型に変換
+    const date = new Date(year, month - 1, day); // 月は0から始まるため-1
+
+    const existingAccess = await prisma.access.findFirst({
+      where: {
+        ipAddress: ipAddress,
+        postId: postId,
+        date: date,
+      },
+    });
+
+    if (!existingAccess) {
+      // 既存のレコードが見つからない場合、新しいレコードを作成
+      await prisma.access.create({
+        data: {
+          ipAddress,
+          postId,
+          date,
+        },
+      });
+    } else {
+      // 既存のレコードが存在する場合、適切なエラー処理を行います。
+      // 例えば、一意制約違反エラーをハンドルして通知するか、別のアクションを実行するなどの処理が考えられます。
+    }
+
+    if (!post) {
+      return {
+        notFound: true, // Return a 404 page
+      };
+    }
+
+    // postオブジェクト内のcommentsとchildrenのDatetimeカラムをフォーマット変換
+    const formattedPost = {
+      ...post,
+      comments: post.comments.map((comment: any) => ({
+        ...comment,
+        children: comment.children.map((child: any) => ({
+          ...child,
+          date: formatDatetime(child.date),
+        })),
+        date: formatDatetime(comment.date),
+      })),
+    };
+
+    return {
+      props: {
+        post: formattedPost,
+      },
+    };
+  } catch {
     return {
       notFound: true, // Return a 404 page
     };
+  } finally {
+    await prisma.$disconnect(); // リクエスト処理の最後で接続を切断
   }
-
-  // postオブジェクト内のcommentsとchildrenのDatetimeカラムをフォーマット変換
-  const formattedPost = {
-    ...post,
-    comments: post.comments.map((comment: any) => ({
-      ...comment,
-      children: comment.children.map((child: any) => ({
-        ...child,
-        date: formatDatetime(child.date),
-      })),
-      date: formatDatetime(comment.date),
-    })),
-  };
-
-  return {
-    props: {
-      post: formattedPost,
-    },
-  };
-}catch{
-  return {
-    notFound: true, // Return a 404 page
-  };
-}finally {
-  await prisma.$disconnect(); // リクエスト処理の最後で接続を切断
-}
 }

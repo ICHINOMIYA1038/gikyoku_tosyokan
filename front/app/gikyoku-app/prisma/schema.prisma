@@ -43,6 +43,7 @@ model Post {
   buy_link            String?
   comments      ParentComment[]
   access              Access[]
+  averageRating Float?
   ratings   Rating[]
   author              Author          @relation(fields: [author_id], references: [id])
   categories          Category[]      @relation("PostCategory")
