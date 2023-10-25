@@ -20,6 +20,9 @@ export default function Header() {
         >
           概要
         </Link>
+        <Link href="/diary/plot" className="text-gray-800 hover:text-gray-600">
+          オリジナル作品
+        </Link>
         <Link
           href="/support/posting-request"
           className="text-gray-800 hover:text-gray-600"
