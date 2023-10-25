@@ -2,8 +2,6 @@ import * as React from "react";
 import Image from "next/image";
 import Badge from "@/components/Badge";
 import { Post as PostType } from "@prisma/client";
-import { useRouter } from "next/router";
-import { useState } from "react";
 import Link from "next/link";
 
 type PostPageProps = {
@@ -11,8 +9,6 @@ type PostPageProps = {
 };
 
 const PostCardSmall: React.FC<PostPageProps> = ({ post }: any) => {
-  const router = useRouter();
-
   return (
     <Link
       className="mb-5 bg-white h-80 w-48 border-solid border border-black link-card"

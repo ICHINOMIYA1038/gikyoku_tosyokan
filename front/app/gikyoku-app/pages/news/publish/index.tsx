@@ -86,6 +86,21 @@ const Publish = ({ children }: any) => {
           <p className="font-bold">それ以降で開発を検討している機能</p>
           <p>ユーザー自身が脚本を投稿し、相互評価しあうSNSサイト(別サイト)</p>
         </div>
+        <a
+          data-ofuse-widget-button
+          href="https://ofuse.me/o?uid=65586"
+          data-ofuse-id="65586"
+          data-ofuse-size="large"
+          data-ofuse-color="pink"
+          data-ofuse-text="戯曲図書館に賛同する"
+        >
+          戯曲図書館に賛同する
+        </a>
+        <script
+          async
+          src="https://ofuse.me/assets/platform/widget.js"
+          charset="utf-8"
+        ></script>
       </div>
     </NewsLayout>
   );

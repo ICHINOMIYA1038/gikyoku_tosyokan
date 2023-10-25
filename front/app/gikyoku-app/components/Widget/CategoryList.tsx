@@ -1,7 +1,6 @@
 import * as React from "react";
 import { Post as PostType } from "@prisma/client";
 import Badge, { BadgeGreen } from "../Badge";
-import { useRouter } from "next/router";
 import Link from "next/link";
 
 type PostPageProps = {
@@ -9,7 +8,6 @@ type PostPageProps = {
 };
 
 const CategoryList = ({ categories }: any) => {
-  const router = useRouter();
   return (
     <>
       <div className="basic-card p-4 inline-block">
