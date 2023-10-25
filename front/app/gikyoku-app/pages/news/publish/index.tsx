@@ -96,11 +96,7 @@ const Publish = ({ children }: any) => {
         >
           戯曲図書館に賛同する
         </a>
-        <script
-          async
-          src="https://ofuse.me/assets/platform/widget.js"
-          charset="utf-8"
-        ></script>
+        <script async src="https://ofuse.me/assets/platform/widget.js"></script>
       </div>
     </NewsLayout>
   );
