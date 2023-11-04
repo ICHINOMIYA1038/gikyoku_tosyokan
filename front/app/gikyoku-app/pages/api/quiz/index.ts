@@ -13,15 +13,23 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
   });
 
   // パースされたCSVデータをJSON形式に変換
-  const quizData = parsedData.data.map(
-    (row: {
+  const quizData = (
+    parsedData.data as {
       question: any;
       option1: any;
       option2: any;
       option3: any;
       option4: any;
       correctAnswer: any;
-    }) => ({
+    }[]
+  ).map(
+    (
+      row
+    ): {
+      question: any;
+      options: any[];
+      correctAnswer: any;
+    } => ({
       question: row.question,
       options: [row.option1, row.option2, row.option3, row.option4],
       correctAnswer: row.correctAnswer,
