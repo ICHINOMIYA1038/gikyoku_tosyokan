@@ -5,6 +5,7 @@ import Layout from "@/components/Layout";
 import PostCardSmall from "@/components/PostCardSmall";
 import Seo from "@/components/seo";
 import LinkCard from "@/components/LinkCard";
+import OtherPosts from "@/components/Widget/OtherPosts";
 const prisma = new PrismaClient();
 
 function AuthorPage({ author }: any) {
@@ -24,13 +25,9 @@ function AuthorPage({ author }: any) {
         </div>
         <div className="basic-card p-4 my-2">
           <h2>作品一覧</h2>
-          <ul className="flex flex-wrap gap-3 my-2">
-            {author.posts.map((post: any) => (
-              <li key={post.id}>
-                <PostCardSmall post={post} />
-              </li>
-            ))}
-          </ul>
+          <div className="flex justify-center max-w-md mx-auto">
+            <OtherPosts authorId={author.id} authorName={author.name} />
+          </div>
         </div>
       </div>
     </Layout>

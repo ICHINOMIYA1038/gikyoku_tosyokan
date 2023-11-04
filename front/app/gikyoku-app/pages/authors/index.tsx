@@ -27,26 +27,26 @@ function AuthorListPage(authors: any) {
 }
 
 export async function getStaticProps() {
-  try{
-  const authors = await prisma.author.findMany({
-    include: {
-      posts: {
-        include: { author: true },
-      },
-    }, // Include the related author information
-  });
+  try {
+    const authors = await prisma.author.findMany({
+      include: {
+        posts: {
+          include: { author: true },
+        },
+      }, // Include the related author information
+    });
 
-  return {
-    props: {
-      authors,
-    },
-    revalidate: 3600, // You can adjust the revalidation period as needed
-  };
-  }catch{
+    return {
+      props: {
+        authors,
+      },
+      revalidate: 3600, // You can adjust the revalidation period as needed
+    };
+  } catch {
     return {
       notFound: true, // Return a 404 page
     };
-  }finally {
+  } finally {
     await prisma.$disconnect(); // リクエスト処理の最後で接続を切断
   }
 }
