@@ -28,5 +28,18 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
     })
   );
 
-  res.status(200).json(quizData);
+  // ランダムに10個のデータを選択
+  const randomQuizData = getRandomQuizQuestions(quizData, 10);
+
+  res.status(200).json(randomQuizData);
 };
+
+// ランダムに10個のデータを選択する関数
+function getRandomQuizQuestions(data: any, count: any) {
+  const shuffledData = [...data];
+  for (let i = shuffledData.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffledData[i], shuffledData[j]] = [shuffledData[j], shuffledData[i]];
+  }
+  return shuffledData.slice(0, count);
+}

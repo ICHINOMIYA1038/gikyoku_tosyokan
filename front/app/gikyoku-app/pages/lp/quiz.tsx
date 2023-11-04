@@ -21,6 +21,8 @@ export const QUIZ_ANSWER_CORRECT = 2;
 export const QUIZ_ANSWER_WRONG = 3;
 export const QUIZ_END = 4;
 export const QUIZ_TIME_OVER = 5;
+export const SHARE_TEXT =
+  "<戯曲>に関するクイズを出題！あなたは何問答えられますか？ https://gikyokutossyokan.com/lp/quiz";
 
 function QuizApp({ quizData }: any) {
   const [questions, setQuestions] = useState(quizData); // クイズの質問データ
@@ -82,7 +84,7 @@ function QuizApp({ quizData }: any) {
             onClick={() => {
               setStatus(QUIZ_QUESTION);
             }}
-            className="hover:shadow:lg bg-blue-500 text-white px-4 py-2 rounded-md h-12 w-32"
+            className="hover:shadow:lg bg-blue-500 text-white px-4 py-2 rounded-md h-12 w-32 my-4"
           >
             スタート
           </button>
