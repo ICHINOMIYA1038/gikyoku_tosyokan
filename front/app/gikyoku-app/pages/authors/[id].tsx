@@ -25,8 +25,10 @@ function AuthorPage({ author }: any) {
         </div>
         <div className="basic-card p-4 my-2">
           <h2>作品一覧</h2>
-          <div className="flex justify-center max-w-md mx-auto">
-            <OtherPosts authorId={author.id} authorName={author.name} />
+          <div className="flex flex-wrap gap-3">
+            {author.posts.map((post: any) => (
+              <PostCardSmall post={post} />
+            ))}
           </div>
         </div>
       </div>

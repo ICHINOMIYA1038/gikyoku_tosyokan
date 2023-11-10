@@ -10,7 +10,7 @@ datasource db {
 
 model Author {
   id          Int     @id @default(autoincrement())
-  name        String
+  name        String @unique
   website     String?
   group       String?
   profile     String?
@@ -51,7 +51,7 @@ model Post {
 
 model Category {
   id    Int    @id @default(autoincrement())
-  name  String
+  name  String @unique
   posts Post[] @relation("PostCategory")
 }
 

@@ -19,13 +19,11 @@ function CategoryPage({ category }: any) {
           </div>
           <div className="basic-card p-4 my-2">
             <h2>作品一覧</h2>
-            <ul className="flex flex-wrap gap-3 my-2">
+            <div className="flex flex-wrap gap-3">
               {category.posts.map((post: any) => (
-                <li key={post.id}>
-                  <PostCardSmall post={post} />
-                </li>
+                <PostCardSmall post={post} />
               ))}
-            </ul>
+            </div>
           </div>
         </div>
       </Layout>
@@ -42,32 +40,32 @@ export async function getServerSideProps(context: any) {
       notFound: true, // Return a 404 page for non-numeric IDs
     };
   }
-  try{
-  const category = await prisma.category.findUnique({
-    where: { id: categoryid },
-    include: {
-      posts: {
-        include: { author: true },
-      },
-    }, // Include the related author information
-  });
+  try {
+    const category = await prisma.category.findUnique({
+      where: { id: categoryid },
+      include: {
+        posts: {
+          include: { author: true },
+        },
+      }, // Include the related author information
+    });
 
-  if (!category) {
+    if (!category) {
+      return {
+        notFound: true, // Return a 404 page
+      };
+    }
+
+    return {
+      props: {
+        category,
+      },
+    };
+  } catch {
     return {
       notFound: true, // Return a 404 page
     };
+  } finally {
+    await prisma.$disconnect(); // リクエスト処理の最後で接続を切断
   }
-
-  return {
-    props: {
-      category,
-    },
-  };
-}catch{
-  return {
-    notFound: true, // Return a 404 page
-  };
-}finally {
-  await prisma.$disconnect(); // リクエスト処理の最後で接続を切断
-}
 }
