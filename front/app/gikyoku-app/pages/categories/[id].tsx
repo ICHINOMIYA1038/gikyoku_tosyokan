@@ -21,7 +21,7 @@ function CategoryPage({ category }: any) {
             <h2>作品一覧</h2>
             <div className="flex flex-wrap gap-3">
               {category.posts.map((post: any) => (
-                <PostCardSmall post={post} />
+                <PostCardSmall post={post} key={post.id} />
               ))}
             </div>
           </div>
