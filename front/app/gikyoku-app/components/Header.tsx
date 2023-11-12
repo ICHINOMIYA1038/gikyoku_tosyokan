@@ -6,7 +6,7 @@ import Link from "next/link";
 export default function Header() {
   return (
     <header className="flex items-center justify-between p-4 bg-pink-300">
-      <Link className="flex items-center cursor-pointer" href={""}>
+      <Link className="flex items-center cursor-pointer" href={"/"}>
         <img src="/logo.png" alt="Logo" className="w-12 h-12 mr-4" />
         <span className="text-xl font-bold">戯曲図書館</span>
       </Link>
