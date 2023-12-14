@@ -15,7 +15,8 @@ function CategoryPage({ category }: any) {
         </div>
         <div className="md:max-w-2xl mx-auto">
           <div className="basic-card p-4 ">
-            <h2>{category.name}</h2>
+            <h2>{category.name}の脚本一覧</h2>
+            <p>{category.name}の</p>
           </div>
           <div className="basic-card p-4 my-2">
             <h2>作品一覧</h2>
