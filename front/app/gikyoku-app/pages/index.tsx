@@ -159,30 +159,44 @@ export default function Home({ news, authors, posts, categories }: any) {
 }
 
 export async function getStaticProps() {
-  const news = await prisma.news.findMany();
+  let authors, posts, categories;
+  let formattedNews = []; // formattedNews を初期化
 
-  // 日付データの変換（日本の形式）
-  const formattedNews = news.map((item: any) => ({
-    ...item,
-    date: item.date.toLocaleDateString("ja-JP", {
-      year: "numeric",
-      month: "long", // 月のフルネーム
-      day: "numeric",
-    }),
-  }));
+  try {
+    // データベースからニュースを取得
+    const news = await prisma.news.findMany();
 
-  const authors = await prisma.author.findMany();
-  const posts = await prisma.post.findMany({
-    include: { author: true },
-  });
+    // 日付データの変換（日本の形式）
+    formattedNews = news.map((item) => ({
+      ...item,
+      date: item.date.toLocaleDateString("ja-JP", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      }),
+    }));
 
-  const categories = await prisma.category.findMany({
-    include: {
-      posts: {
-        include: { author: true },
+    // その他のデータを取得
+    authors = await prisma.author.findMany();
+    posts = await prisma.post.findMany({
+      include: { author: true },
+    });
+    categories = await prisma.category.findMany({
+      include: {
+        posts: {
+          include: { author: true },
+        },
       },
-    }, // Include the related author information
-  });
+    });
+  } catch (error) {
+    // エラーハンドリング
+    console.error("Error fetching data: ", error);
+    // エラーが発生した場合の処理
+    return { props: { error: "Data fetching error" } };
+  } finally {
+    // データベース接続を閉じる
+    await prisma.$disconnect();
+  }
 
   return {
     props: {
@@ -191,6 +205,6 @@ export async function getStaticProps() {
       posts,
       categories,
     },
-    revalidate: 3600, // 必要に応じて再検証期間を調整できます
+    revalidate: 3600, // 必要に応じて再検証期間を調整
   };
 }

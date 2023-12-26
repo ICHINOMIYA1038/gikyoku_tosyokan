@@ -47,18 +47,19 @@ const NewsList: React.FC<{ news: NewsItemProps[] }> = ({ news }) => {
   return (
     <>
       <h2 className="m-5 text-2xl font-bold">News</h2>
-      {news
-        .slice(0, 5)
-        .reverse()
-        .map((item: any) => (
-          <NewsItem
-            key={item.id}
-            date={item.date}
-            category={item.category}
-            title={item.title}
-            url={item.url}
-          />
-        ))}
+      {news &&
+        news
+          .slice(0, 5)
+          .reverse()
+          .map((item: any) => (
+            <NewsItem
+              key={item.id}
+              date={item.date}
+              category={item.category}
+              title={item.title}
+              url={item.url}
+            />
+          ))}
     </>
   );
 };

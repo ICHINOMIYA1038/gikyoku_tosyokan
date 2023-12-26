@@ -21,7 +21,7 @@
     "@fortawesome/fontawesome-svg-core": "^6.4.2",
     "@fortawesome/free-solid-svg-icons": "^6.4.2",
     "@fortawesome/react-fontawesome": "^0.2.0",
-    "@prisma/client": "^5.2.0",
+    "@prisma/client": "^5.7.1",
     "@tailwindcss/line-clamp": "^0.4.4",
     "@tanstack/react-query": "^4.35.3",
     "@types/csv-parse": "^1.2.2",

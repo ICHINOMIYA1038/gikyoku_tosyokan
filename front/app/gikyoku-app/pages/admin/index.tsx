@@ -17,14 +17,27 @@ export default function Home({ authors, categories }: any) {
 }
 
 export async function getStaticProps() {
-  const authors = await prisma.author.findMany({});
-  const categories = await prisma.category.findMany({});
+  let authors: any;
+  let categories: any;
+
+  try {
+    // データベースから著者とカテゴリを取得
+    authors = await prisma.author.findMany({});
+    categories = await prisma.category.findMany({});
+  } catch (error) {
+    // エラーが発生した場合、空のリストを返すか、適切に対応
+    authors = [];
+    categories = [];
+  } finally {
+    // データベース接続を閉じる
+    await prisma.$disconnect();
+  }
 
   return {
     props: {
       authors,
       categories,
     },
-    revalidate: 3600, // You can adjust the revalidation period as needed
+    revalidate: 3600, // 再検証の期間を必要に応じて調整
   };
 }
