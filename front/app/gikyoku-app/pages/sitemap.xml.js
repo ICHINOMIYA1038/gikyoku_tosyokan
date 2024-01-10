@@ -68,6 +68,10 @@ function generateSiteMap(posts, authors, categories) {
      <url>
        <loc>${`${EXTERNAL_DATA_URL}/support/voluntary`}</loc>
      </url>
+     <url>
+     <loc>${`${EXTERNAL_DATA_URL}/editor`}</loc>
+    </url>
+     
    </urlset>
  `;
 }
