@@ -13,6 +13,8 @@ import DropBox from "@/components/DropBox";
 import Seo from "@/components/seo";
 import GikyokuIntroduction from "@/components/Ad/Gikyoku";
 import DisplayAd from "@/components/Ad/google/displayAd";
+import Image from "next/image";
+import router from "next/router";
 
 const prisma = new PrismaClient();
 
@@ -112,18 +114,20 @@ export default function Home({ news, authors, posts, categories }: any) {
               </div>
             )}
           </div>
-          <div className="inline-block">
-            <GikyokuIntroduction />
+          <div
+            className="p-4 cursor-pointer"
+            onClick={() => {
+              router.push("/editor");
+            }}
+          >
+            <Image
+              src="/img/gikyoku_editor.png"
+              alt="My Image"
+              width={1366 / 2} // 画像の幅
+              height={768 / 2} // 画像の高さ
+            />
           </div>
-          <div className="inline-block">
-            {process.env.NODE_ENV == "development" && (
-              <DisplayAd
-                client="ca-pub-8691137965825158"
-                slot="8363116928"
-                style={{ display: "block" }}
-              />
-            )}
-          </div>
+
           <div className="mx-5 my-5">
             {authors ? (
               <AuthorList authors={authors} />
