@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 
-const EXTERNAL_DATA_URL = "https://gikyokutosyokan.com/";
+const EXTERNAL_DATA_URL = "https://gikyokutosyokan.com";
 const prisma = new PrismaClient();
 function generateSiteMap(posts, authors, categories) {
   return `<?xml version="1.0" encoding="UTF-8"?>
@@ -69,7 +69,7 @@ function generateSiteMap(posts, authors, categories) {
        <loc>${`${EXTERNAL_DATA_URL}/support/voluntary`}</loc>
      </url>
      <url>
-     <loc>${`${EXTERNAL_DATA_URL}/editor`}</loc>
+      <loc>${`${EXTERNAL_DATA_URL}/editor`}</loc>
     </url>
      
    </urlset>
