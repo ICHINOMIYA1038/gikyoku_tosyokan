@@ -16,18 +16,6 @@ const nextConfig = {
       "www.geigeki.jp",
     ],
   },
-  async rewrites() {
-    return [
-      {
-        source: "/editor/",
-        destination: process.env.PROJECT2_URL,
-      },
-      {
-        source: "/editor/:match*",
-        destination: process.env.PROJECT2_URL + ":match*",
-      },
-    ];
-  },
 };
 
 module.exports = nextConfig;
