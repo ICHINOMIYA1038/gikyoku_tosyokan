@@ -13,16 +13,20 @@ services:
       - 4306:3306
     volumes:
       - mysql-db:/var/lib/mysql
+
   front:
     build:
       context: ./front/
       dockerfile: Dockerfile
     volumes:
       - ./front/app:/usr/src/app
-    command: sh -c 'npm install && yarn dev'
+    command: sh -c 'apk update && apk add --no-cache openssl && npm install && yarn dev'
     ports:
       - "8000:3000"
       - 5555:5555
+    depends_on:
+      - db # データベースが起動してからフロントエンドを起動
+
 volumes:
   mysql-db:
     driver: local
