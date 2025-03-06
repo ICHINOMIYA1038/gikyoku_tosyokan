@@ -12,6 +12,14 @@ const getPosts = async ({ queryKey }: any): Promise<any> => {
   return res.json();
 };
 
+const getCategories = async (): Promise<any> => {
+  const res = await fetch("/api/categories");
+  if (!res.ok) {
+    throw new Error("Failed to fetch categories");
+  }
+  return res.json();
+};
+
 export default function SearchForm({
   setData,
   page,
@@ -60,6 +68,11 @@ export default function SearchForm({
     staleTime: 1000 * 60 * 5,
     cacheTime: Infinity,
   });
+
+  const { data: categories, isLoading: categoriesLoading, error: categoriesError } = useQuery(
+    ["categories"],
+    getCategories
+  );
 
   const router = useRouter();
 
@@ -216,11 +229,17 @@ export default function SearchForm({
           </div>
         </div>
         <div className="md:w-1/2">
-          <TagSelector
-            category_ids={category_ids}
-            selectedTags={selectedTags}
-            setSelectedTags={setSelectedTags}
-          />
+          {categoriesLoading ? (
+            <p>Loading categories...</p>
+          ) : categoriesError ? (
+            <p>Error loading categories</p>
+          ) : (
+            <TagSelector
+              category_ids={categories}
+              selectedTags={selectedTags}
+              setSelectedTags={setSelectedTags}
+            />
+          )}
         </div>
       </div>
       <div>
