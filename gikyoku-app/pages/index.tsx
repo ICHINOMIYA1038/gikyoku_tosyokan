@@ -9,7 +9,6 @@ import TopImage from "@/components/TopImage"
 import DropBox from "@/components/DropBox";
 import Seo from "@/components/seo";
 import ContentSection from "@/components/ContentSection";
-import LoadingIndicator from "@/components/LoadingIndicator";
 import SearchResults from "@/components/SearchResults";
 
 const prisma = new PrismaClient();
