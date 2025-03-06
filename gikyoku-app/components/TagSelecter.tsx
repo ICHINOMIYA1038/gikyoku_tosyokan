@@ -26,18 +26,17 @@ function TagSelector({
   };
 
   return (
-    <div className="m-5">
+    <div className="m-2">
       <div className="flex flex-wrap gap-2 select-none">
         {/* タグ一覧を表示 */}
         {category_ids.map((tag: Tag) => (
           <div
             key={tag.id}
             onClick={() => handleTagClick(tag.id)}
-            className={`p-2 rounded-lg cursor-pointer ${
-              selectedTags.includes(tag.id)
-                ? "bg-blue-500 text-white shadow-md"
-                : "bg-gray-200 text-gray-700"
-            }`}
+            className={`p-1 rounded-lg cursor-pointer ${selectedTags.includes(tag.id)
+              ? "bg-blue-500 text-white shadow-md"
+              : "bg-gray-200 text-gray-700"
+              }`}
           >
             {tag.name}
           </div>
