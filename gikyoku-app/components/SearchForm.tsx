@@ -115,20 +115,18 @@ export default function SearchForm({
   };
 
   return (
-    <div className="shadow-lg rounded-lg  bg-white border-solid h-3/4 border border-black p-10 m-1 md:m-5 lg:w-1/2 lg:sticky lg:top-24">
+    <div>
       <div>
-        <div>
-          <h3 className="text-xl font-bold mb-1">キーワード</h3>
-        </div>
-        <div className="w-full pb-5 ">
-          <input
-            className="w-full p-5 bg-gray-50 rounded-md border border-solid border-black"
-            value={keyword}
-            onChange={(e: { target: { value: SetStateAction<string> } }) =>
-              setKeyword(e.target.value)
-            }
-          />
-        </div>
+        <h3 className="text-xl font-bold mb-1">キーワード</h3>
+      </div>
+      <div className="pb-5">
+        <input
+          className="w-full p-5 bg-gray-50 rounded-md border border-solid border-black"
+          value={keyword}
+          onChange={(e: { target: { value: SetStateAction<string> } }) =>
+            setKeyword(e.target.value)
+          }
+        />
       </div>
       <div className="md:flex">
         <div className="md:w-1/2">
@@ -226,9 +224,9 @@ export default function SearchForm({
         </div>
       </div>
       <div>
-        <div className=" font-bold text-white  bg-green-600">
+        <div className="font-bold text-white bg-green-600">
           <button
-            className="w-full "
+            className="w-full"
             onClick={() => {
               if (page != 1) {
                 setPage(1);
