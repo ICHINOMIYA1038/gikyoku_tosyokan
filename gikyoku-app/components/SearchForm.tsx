@@ -1,7 +1,5 @@
 import React, { SetStateAction, useState, useEffect } from "react";
-import { useRouter } from "next/router";
 import TagSelector from "./TagSelecter";
-
 import { useQuery } from "@tanstack/react-query";
 
 const getPosts = async ({ queryKey }: any): Promise<any> => {
@@ -39,6 +37,7 @@ export default function SearchForm({
   const [maxPlaytime, setMaxPlaytime] = useState<number>(5);
 
   const [selectedTags, setSelectedTags] = useState<number[]>([]);
+  const [activeTab, setActiveTab] = useState<string>("search");
   const per = 8;
   const searchParams: Record<string, string> = {
     keyword: keyword,
@@ -61,37 +60,10 @@ export default function SearchForm({
 
   const query = new URLSearchParams(searchParams).toString();
 
-  const { data, isLoading, error } = useQuery({
-    queryKey: [query],
-    queryFn: getPosts,
-    refetchOnWindowFocus: false,
-    staleTime: 1000 * 60 * 5,
-    cacheTime: Infinity,
-  });
-
   const { data: categories, isLoading: categoriesLoading, error: categoriesError } = useQuery(
     ["categories"],
     getCategories
   );
-
-  const router = useRouter();
-
-  interface Tag {
-    id: number;
-    name: string;
-  }
-
-  const category_ids: Tag[] = [
-    { id: 1, name: "岸田國士戯曲賞" },
-    { id: 2, name: "OMS戯曲賞" },
-    { id: 3, name: "新人戯曲賞" },
-    { id: 4, name: "無料で読める！" },
-    { id: 5, name: "鶴屋南北戯曲賞" },
-    { id: 6, name: "60分以内" },
-    { id: 7, name: "人数多数" },
-    { id: 8, name: "会話劇" },
-    // 他のタグを追加
-  ];
 
   useEffect(() => {
     handleSubmit();
@@ -107,6 +79,10 @@ export default function SearchForm({
     handleSubmit();
   }, [sort_by, sortDirection]);
 
+  useEffect(() => {
+    handleSubmit();
+  }, [selectedTags]);
+
   const handleSubmit = async () => {
     setData([]);
 
@@ -120,144 +96,187 @@ export default function SearchForm({
 
       const data = await response.json();
       setData(data);
-      // レスポンスデータを使って何かを行う
     } catch (error) {
       console.error("An error occurred:", error);
-      // エラーハンドリング
     }
   };
 
   return (
-    <div>
-      <div>
-        <h3 className="text-xl font-bold mb-1">キーワード</h3>
+    <div className="search-form relative">
+      <div className="tabs flex mb-4 absolute -top-4">
+        <button
+          className={`tab ${activeTab === "search" ? "active" : ""}`}
+          onClick={() => setActiveTab("search")}
+          style={{
+            backgroundColor: activeTab === "search" ? "#f0e68c" : "#fffacd",
+            border: "1px solid #ccc",
+            borderBottom: activeTab === "search" ? "none" : "1px solid #ccc",
+            borderRadius: "5px 5px 0 0",
+            padding: "10px 20px",
+            marginRight: "5px",
+            cursor: "pointer",
+            position: "relative",
+            zIndex: 1,
+          }}
+        >
+          検索
+        </button>
+        <button
+          className={`tab ${activeTab === "categories" ? "active" : ""}`}
+          onClick={() => setActiveTab("categories")}
+          style={{
+            backgroundColor: activeTab === "categories" ? "#f0e68c" : "#fffacd",
+            border: "1px solid #ccc",
+            borderBottom: activeTab === "categories" ? "none" : "1px solid #ccc",
+            borderRadius: "5px 5px 0 0",
+            padding: "10px 20px",
+            cursor: "pointer",
+            position: "relative",
+            zIndex: 1,
+          }}
+        >
+          カテゴリー
+        </button>
       </div>
-      <div className="pb-5">
-        <input
-          className="w-full p-5 bg-gray-50 rounded-md border border-solid border-black"
-          value={keyword}
-          onChange={(e: { target: { value: SetStateAction<string> } }) =>
-            setKeyword(e.target.value)
-          }
-        />
-      </div>
-      <div className="md:flex">
-        <div className="md:w-1/2">
-          <div>
-            <h3 className="text-xl font-bold  mb-1">男性人数</h3>
-          </div>
-          <div className="pb-5 ">
-            <input
-              className="w-2/5 bg-gray-50 rounded-md border border-solid border-black"
-              type="number"
-              value={minMaleCount}
-              onChange={(e) => setMinMaleCount(e.target.value)}
-            />
-            <span>〜</span>
-            <input
-              className="w-2/5 bg-gray-50 rounded-md border border-solid border-black"
-              type="number"
-              value={maxMaleCount}
-              onChange={(e) => setMaxMaleCount(e.target.value)}
-            />
-          </div>
 
+      <div className="pt-8">
+        {activeTab === "search" && (
           <div>
-            <h3 className="text-xl font-bold  mb-1">女性人数</h3>
-          </div>
-          <div className="pb-5 ">
-            <input
-              className="w-2/5 bg-gray-50 rounded-md border border-solid border-black"
-              type="number"
-              value={minFemaleCount}
-              onChange={(e) => setMinFemaleCount(e.target.value)}
-            />
-            <span>〜</span>
-            <input
-              className="w-2/5 bg-gray-50 rounded-md border border-solid border-black"
-              type="number"
-              value={maxFemaleCount}
-              onChange={(e) => setMaxFemaleCount(e.target.value)}
-            />
-          </div>
-          <div>
-            <h3 className="text-xl font-bold  mb-1">総人数</h3>
-          </div>
-          <div className="pb-5 ">
-            <input
-              className="w-2/5 bg-gray-50 rounded-md border border-solid border-black"
-              type="number"
-              value={minTotalCount}
-              onChange={(e) => setMinTotalCount(e.target.value)}
-            />
-            <span>〜</span>
-            <input
-              className="w-2/5 bg-gray-50 rounded-md border border-solid border-black"
-              type="number"
-              value={maxTotalCount}
-              onChange={(e) => setMaxTotalCount(e.target.value)}
-            />
-          </div>
-          <div>
-            <h3 className="text-xl font-bold mb-1">上演時間</h3>
-          </div>
-          <div className="pb-5 ">
-            <select
-              value={minPlaytime}
-              onChange={(e) => setMinPlaytime(parseInt(e.target.value))}
-              className="w-2/5 bg-gray-50 rounded-md border border-solid border-black"
-            >
-              <option value={0}>0分</option>
-              <option value={1}>30分</option>
-              <option value={2}>60分</option>
-              <option value={3}>90分</option>
-              <option value={4}>120分</option>
-            </select>
+            <div>
+              <h3 className="text-lg font-bold mb-1">キーワード</h3>
+            </div>
+            <div className="pb-3">
+              <input
+                className="w-full p-3 bg-gray-50 rounded-md border border-solid border-black"
+                value={keyword}
+                onChange={(e: { target: { value: SetStateAction<string> } }) =>
+                  setKeyword(e.target.value)
+                }
+              />
+            </div>
+            <div className="flex flex-col md:flex-col">
+              <div className="w-full">
+                <div>
+                  <h3 className="text-lg font-bold mb-1">男性人数</h3>
+                </div>
+                <div className="pb-3 flex items-center">
+                  <input
+                    className="w-1/2 bg-gray-50 rounded-md border border-solid border-black mr-1"
+                    type="number"
+                    value={minMaleCount}
+                    onChange={(e) => setMinMaleCount(e.target.value)}
+                  />
+                  <span>〜</span>
+                  <input
+                    className="w-1/2 bg-gray-50 rounded-md border border-solid border-black ml-1"
+                    type="number"
+                    value={maxMaleCount}
+                    onChange={(e) => setMaxMaleCount(e.target.value)}
+                  />
+                </div>
 
-            <span>〜</span>
-            <select
-              value={maxPlaytime}
-              onChange={(e) => setMaxPlaytime(parseInt(e.target.value))}
-              className="w-2/5 bg-gray-50 rounded-md border border-solid border-black"
-            >
-              <option value={1}>30分</option>
-              <option value={2}>60分</option>
-              <option value={3}>90分</option>
-              <option value={4}>120分</option>
-              <option value={5}>∞</option>
-            </select>
+                <div>
+                  <h3 className="text-lg font-bold mb-1">女性人数</h3>
+                </div>
+                <div className="pb-3 flex items-center">
+                  <input
+                    className="w-1/2 bg-gray-50 rounded-md border border-solid border-black mr-1"
+                    type="number"
+                    value={minFemaleCount}
+                    onChange={(e) => setMinFemaleCount(e.target.value)}
+                  />
+                  <span>〜</span>
+                  <input
+                    className="w-1/2 bg-gray-50 rounded-md border border-solid border-black ml-1"
+                    type="number"
+                    value={maxFemaleCount}
+                    onChange={(e) => setMaxFemaleCount(e.target.value)}
+                  />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold mb-1">総人数</h3>
+                </div>
+                <div className="pb-3 flex items-center">
+                  <input
+                    className="w-1/2 bg-gray-50 rounded-md border border-solid border-black mr-1"
+                    type="number"
+                    value={minTotalCount}
+                    onChange={(e) => setMinTotalCount(e.target.value)}
+                  />
+                  <span>〜</span>
+                  <input
+                    className="w-1/2 bg-gray-50 rounded-md border border-solid border-black ml-1"
+                    type="number"
+                    value={maxTotalCount}
+                    onChange={(e) => setMaxTotalCount(e.target.value)}
+                  />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold mb-1">上演時間</h3>
+                </div>
+                <div className="pb-3 flex items-center">
+                  <select
+                    value={minPlaytime}
+                    onChange={(e) => setMinPlaytime(parseInt(e.target.value))}
+                    className="w-1/2 bg-gray-50 rounded-md border border-solid border-black mr-1"
+                  >
+                    <option value={0}>0分</option>
+                    <option value={1}>30分</option>
+                    <option value={2}>60分</option>
+                    <option value={3}>90分</option>
+                    <option value={4}>120分</option>
+                  </select>
+
+                  <span>〜</span>
+                  <select
+                    value={maxPlaytime}
+                    onChange={(e) => setMaxPlaytime(parseInt(e.target.value))}
+                    className="w-1/2 bg-gray-50 rounded-md border border-solid border-black ml-1"
+                  >
+                    <option value={1}>30分</option>
+                    <option value={2}>60分</option>
+                    <option value={3}>90分</option>
+                    <option value={4}>120分</option>
+                    <option value={5}>∞</option>
+                  </select>
+                </div>
+                <div className="font-bold text-white bg-green-600 mb-3">
+                  <button
+                    className="w-full"
+                    onClick={() => {
+                      if (page != 1) {
+                        setPage(1);
+                      } else {
+                        handleSubmit();
+                        onSearch();
+                      }
+                    }}
+                  >
+                    検索
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
-        <div className="md:w-1/2">
-          {categoriesLoading ? (
-            <p>Loading categories...</p>
-          ) : categoriesError ? (
-            <p>Error loading categories</p>
-          ) : (
-            <TagSelector
-              category_ids={categories}
-              selectedTags={selectedTags}
-              setSelectedTags={setSelectedTags}
-            />
-          )}
-        </div>
-      </div>
-      <div>
-        <div className="font-bold text-white bg-green-600">
-          <button
-            className="w-full"
-            onClick={() => {
-              if (page != 1) {
-                setPage(1);
-              } else {
-                handleSubmit();
-                onSearch();
-              }
-            }}
-          >
-            検索
-          </button>
-        </div>
+        )}
+
+        {activeTab === "categories" && (
+          <div className="w-full category-selector">
+            {categoriesLoading ? (
+              <p>Loading categories...</p>
+            ) : categoriesError ? (
+              <p>Error loading categories</p>
+            ) : (
+              <TagSelector
+                category_ids={categories}
+                selectedTags={selectedTags}
+                setSelectedTags={(tags) => {
+                  setSelectedTags(tags);
+                }}
+              />
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
