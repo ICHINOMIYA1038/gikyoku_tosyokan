@@ -3,26 +3,29 @@ version: "3.7"
 services:
   db:
     platform: linux/x86_64
-    image: mysql:5.7
-    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    image: postgres:13 # MySQLをPostgreSQLに変更
     environment:
-      MYSQL_ROOT_PASSWORD: password
-      MYSQL_DATABASE: sample
-      MYSQL_PASSWORD: password
+      POSTGRES_USER: postgres # PostgreSQL用の環境変数
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: sample
     ports:
-      - 4306:3306
+      - 5432:5432 # PostgreSQLのデフォルトポート
     volumes:
-      - mysql-db:/var/lib/mysql
+      - postgres-db:/var/lib/postgresql/data # ボリュームも変更
+
   front:
     build:
-      context: ./front/
+      context: ./gikyoku-app
       dockerfile: Dockerfile
     volumes:
-      - ./front/app:/usr/src/app
-    command: sh -c 'npm install && yarn dev'
+      - ./gikyoku-app:/usr/src/app
+    command: sh -c 'apk update && apk add --no-cache openssl && npm install && yarn dev'
     ports:
       - "8000:3000"
       - 5555:5555
+    depends_on:
+      - db # データベースが起動してからフロントエンドを起動
+
 volumes:
-  mysql-db:
+  postgres-db: # ボリューム名を変更
     driver: local
