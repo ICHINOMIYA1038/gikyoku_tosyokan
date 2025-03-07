@@ -14,9 +14,6 @@ const CustomMarkdown: React.FC<CustomMarkdownProps> = ({ content }) => {
 
     const htmlContent = marked(content);
 
-    // デバッグ用に変換されたHTMLをログ出力
-    console.log(htmlContent);
-
     return (
         <div
             className="markdown-content"
