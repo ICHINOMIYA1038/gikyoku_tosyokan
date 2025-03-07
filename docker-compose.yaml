@@ -19,7 +19,10 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ./gikyoku-app:/usr/src/app
-    command: sh -c 'apk update && apk add --no-cache openssl && npm install && yarn dev'
+      - ./gikyoku-app/prisma:/usr/src/app/prisma # prismaディレクトリをマウント
+    command: sh -c 'apk update && apk add --no-cache openssl && npm install && yarn dev & npx prisma studio --port 5555 --schema /usr/src/app/prisma/schema.prisma'
+    env_file: # ここで .env.local を指定
+      - ./gikyoku-app/.env.local
     ports:
       - "8000:3000"
       - 5555:5555
@@ -29,3 +32,4 @@ services:
 volumes:
   postgres-db: # ボリューム名を変更
     driver: local
+# psql -h localhost -p 5432 -U postgres sample
