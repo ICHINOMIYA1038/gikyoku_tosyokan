@@ -1,0 +1,34 @@
+.markdown-content {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+}
+
+.markdown-content h1,
+.markdown-content h2,
+.markdown-content h3 {
+    margin-top: 1em;
+    margin-bottom: 0.5em;
+    font-weight: bold;
+    color: #333;
+}
+
+.markdown-content h1 {
+    font-size: 2em;
+}
+
+.markdown-content h2 {
+    font-size: 1.75em;
+}
+
+.markdown-content h3 {
+    font-size: 1.5em;
+}
+
+.markdown-content p {
+    margin-bottom: 1em;
+}
+
+.markdown-content a {
+    color: blue;
+    text-decoration: underline;
+}

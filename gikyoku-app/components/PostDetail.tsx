@@ -1,15 +1,12 @@
 import * as React from "react";
-import Image from "next/image";
 import Badge from "@/components/Badge";
-import { Post as PostType } from "@prisma/client";
-import ReactMarkdown from "react-markdown";
 import AmazonAffiliateLink from "@/components/Ad/AmazonAffiliateLink";
-import ExternalLinkButton from "@/components/ExternalLinkButton";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClient } from "@tanstack/react-query";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import LinkCard from "./LinkCard";
 import Star from "./Widget/Star";
+import CustomMarkdown from './CustomMarkdown';
 
 const queryClient = new QueryClient();
 
@@ -90,33 +87,28 @@ const PostDetail: React.FC<PostPageProps> = ({ post }: PostPageProps) => {
         {post.content && (
           <div className="my-10">
             <h3 className="text-xl font-bold">{post.title}を読んだ感想</h3>
-            <div
-              className="text-md md:text-lg"
-              dangerouslySetInnerHTML={{ __html: post.content }}
-            ></div>
+            <CustomMarkdown content={post.content} />
           </div>
         )}
 
-        {post.content && (
-          <div className="my-10">
-            <h3 className="text-xl font-bold">
-              {post.author.name}さんのプロフィール
-            </h3>
-            {!post.author.profile ? (
-              <div>
-                {post.title}の作者、{post.author.name}
-                さんの情報はまだありません。ぜひ情報をご提供いただけますと幸いです。
-              </div>
-            ) : (
-              <>
-                <div>{post.author.name}</div>
-                <div>所属劇団等:{post.author.group}</div>
-                <div>ウェブサイト:{post.author.website}</div>
-                <div>{post.author.profile}</div>
-              </>
-            )}
-          </div>
-        )}
+        <div className="my-10">
+          <h3 className="text-xl font-bold">
+            {post.author.name}さんのプロフィール
+          </h3>
+          {!post.author.profile ? (
+            <div>
+              {post.title}の作者、{post.author.name}
+              さんの情報はまだありません。ぜひ情報をご提供いただけますと幸いです。
+            </div>
+          ) : (
+            <>
+              <div>{post.author.name}</div>
+              <div>所属劇団等:{post.author.group}</div>
+              <div>ウェブサイト:{post.author.website}</div>
+              <CustomMarkdown content={post.author.profile} />
+            </>
+          )}
+        </div>
 
         <div className="my-10">
           <h3 className="text-xl font-bold">『{post.title}』の台本入手方法</h3>
@@ -172,7 +164,7 @@ const PostDetail: React.FC<PostPageProps> = ({ post }: PostPageProps) => {
           )}
         </div>
       </div>
-    </div>
+    </div >
   );
 };
 

@@ -6,6 +6,7 @@ import PostCardSmall from "@/components/PostCardSmall";
 import Seo from "@/components/seo";
 import LinkCard from "@/components/LinkCard";
 import OtherPosts from "@/components/Widget/OtherPosts";
+import CustomMarkdown from "@/components/CustomMarkdown";
 const prisma = new PrismaClient();
 
 function AuthorPage({ author }: any) {
@@ -20,8 +21,7 @@ function AuthorPage({ author }: any) {
           <h2>{author.name}</h2>
           {author.group && <p>{author.group}</p>}
           {author.website && <LinkCard href={author.website} />}
-          {author.profile && <p>{author.profile}</p>}
-          {author.masterpiece && <p>代表作: {author.masterpiece}</p>}
+          {author.profile && <CustomMarkdown content={author.profile} />}
         </div>
         <div className="basic-card p-4 my-2">
           <h2>作品一覧</h2>
