@@ -15,41 +15,42 @@ const PostCard: React.FC<PostPageProps> = ({ post }: any) => {
 
   return (
     <Link href={`/posts/${post.id}`} target="_blank">
-      <div className="mb-2 bg-white border-solid border border-black shadow-md hover:shadow-md hover:scale-105 transition-transform duration-300 rounded-xl cursor-pointer">
-        <div className="flex flex-wrap md:flex-nowrap">
-          <div className="h-60 w-full md:w-1/2 relative">
-            {post.image_url ? (
+      <div className="mb-2 bg-white border-solid border border-black shadow-md hover:shadow-md hover:scale-105 transition-transform duration-300 rounded-xl cursor-pointer min-h-[350px] md:min-h-0">
+        <div className="flex flex-wrap md:flex-nowrap h-full">
+          <div className="w-full md:w-1/2 relative flex items-center justify-center" style={{ maxHeight: '100%', minHeight: '200px' }}>
+            <div className="absolute inset-0">
               <Image
-                src={post.image_url}
+                src={post.image_url || "/24202513.jpg"}
+                alt="背景画像"
+                layout="fill"
+                objectFit="cover"
+                objectPosition="center"
+                className="opacity-30"
+              />
+            </div>
+            <div className="relative h-full w-full flex items-center justify-center">
+              <Image
+                src={post.image_url || "/24202513.jpg"}
                 alt="投稿の写真"
                 layout="fill"
                 objectFit="contain"
-                objectPosition="left center"
+                objectPosition="center"
                 className=""
               />
-            ) : (
-              <Image
-                src="/24202513.jpg"
-                alt="NoImage"
-                layout="fill"
-                objectFit="contain"
-                objectPosition="left center"
-                className=""
-              />
-            )}
+            </div>
           </div>
-          <div className="w-full md:w-1/2 p-2 flex-grow">
-            <div className="text-xs h-8 flex gap-2 whitespace-nowrap overflow-x-hidden">
+          <div className="w-full md:w-1/2 p-2 flex flex-col">
+            <div className="text-xs flex gap-2 whitespace-nowrap overflow-x-hidden mb-2">
               {post.categories &&
                 post.categories.map((category: any) => (
                   <Badge key={category.id} text={category.name} />
                 ))}
             </div>
-            <div className="md:flex md:gap-5 items-center">
+            <div className="md:flex md:gap-5 items-center mb-2">
               <h2 className="text-base md:text-xl font-bold">{post.title}</h2>
               <p className="text-xs md:text-base font-bold">{post.author.name}</p>
             </div>
-            <div className="flex font-bold gap-1 text-xs md:text-sm mt-1">
+            <div className="flex font-bold gap-1 text-xs md:text-sm mt-1 mb-2">
               <p>
                 <span>男:</span>
                 {post.man !== -1 ? `${post.man}` : "不明"}
@@ -67,9 +68,9 @@ const PostCard: React.FC<PostPageProps> = ({ post }: any) => {
                 {post.playtime !== -1 ? `${post.playtime}分` : "不明"}
               </p>
             </div>
-            <div>
+            <div className="mt-2">
               {post.synopsis && (
-                <p className="line-clamp-3 mr-3 mt-3 mb-3 max-h-20 lg:max-h-24">
+                <p className="line-clamp-3 mr-3 mb-3 max-h-20 lg:max-h-24">
                   {post.synopsis}
                 </p>
               )}

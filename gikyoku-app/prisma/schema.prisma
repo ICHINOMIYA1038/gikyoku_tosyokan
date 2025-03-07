@@ -55,6 +55,8 @@ model Category {
   id    Int    @id @default(autoincrement())
   name  String @unique
   posts Post[] @relation("PostCategory")
+  image_url String?
+  contentMarkdown String?
 }
 
 model News {
