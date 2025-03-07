@@ -40,6 +40,7 @@
     "eslint-config-next": "13.4.19",
     "fs": "^0.0.1-security",
     "jsdom": "^22.1.0",
+    "marked": "^15.0.7",
     "next": "13.4.19",
     "nodemailer": "^6.9.4",
     "papaparse": "^5.4.1",
