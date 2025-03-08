@@ -1,7 +1,6 @@
 generator client {
   provider      = "prisma-client-js"
   binaryTargets = ["native", "linux-musl-arm64-openssl-1.1.x", "linux-musl-arm64-openssl-3.0.x"]
-  dotenv = "../.env.local"
 }
 
 datasource db {
@@ -11,15 +10,15 @@ datasource db {
 }
 
 model Author {
-  id          Int     @id @default(autoincrement())
-  name        String @unique
-  website     String?
-  group       String?
-  profile     String?
-  masterpiece String?
-  posts       Post[]
+  id            Int     @id @default(autoincrement())
+  name          String  @unique
+  website       String?
+  group         String?
+  profile       String?
+  masterpiece   String?
+  posts         Post[]
   authorTwitter String?
-  groupTwitter String?
+  groupTwitter  String?
 }
 
 model Post {
@@ -43,19 +42,19 @@ model Post {
   website3            String?
   ISBN_13             String?
   buy_link            String?
-  comments      ParentComment[]
+  comments            ParentComment[]
   access              Access[]
-  averageRating Float?
-  ratings   Rating[]
+  averageRating       Float?
+  ratings             Rating[]
   author              Author          @relation(fields: [author_id], references: [id])
-  categories          Category[]      @relation("PostCategory")
+  categories          PostCategory[]  // 中間テーブルを参照
 }
 
 model Category {
-  id    Int    @id @default(autoincrement())
-  name  String @unique
-  posts Post[] @relation("PostCategory")
-  image_url String?
+  id              Int              @id @default(autoincrement())
+  name            String           @unique
+  posts           PostCategory[]   // 中間テーブルを参照
+  image_url       String?
   contentMarkdown String?
 }
 
@@ -105,4 +104,15 @@ model Rating {
   createdAt DateTime @default(now())
   postId    Int
   Post      Post     @relation(fields: [postId], references: [id])
+}
+
+model PostCategory {
+  id         Int     @id @default(autoincrement())  // 主キー
+  postId     Int
+  categoryId Int
+
+  post       Post     @relation(fields: [postId], references: [id])
+  category   Category @relation(fields: [categoryId], references: [id])
+
+  @@unique([postId, categoryId])  // 複合ユニークキー (同じ組み合わせは一度だけ)
 }
