@@ -143,7 +143,7 @@ export default function SearchForm({
         {activeTab === "search" && (
           <div>
             <div>
-              <h3 className="text-lg font-bold mb-1">キーワード</h3>
+              <div className="text-lg font-bold mb-1">キーワード</div>
             </div>
             <div className="pb-3">
               <input
@@ -157,7 +157,7 @@ export default function SearchForm({
             <div className="flex flex-col md:flex-col">
               <div className="w-full">
                 <div>
-                  <h3 className="text-lg font-bold mb-1">男性人数</h3>
+                  <div className="text-lg font-bold mb-1">男性人数</div>
                 </div>
                 <div className="pb-3 flex items-center">
                   <input
@@ -176,7 +176,7 @@ export default function SearchForm({
                 </div>
 
                 <div>
-                  <h3 className="text-lg font-bold mb-1">女性人数</h3>
+                  <div className="text-lg font-bold mb-1">女性人数</div>
                 </div>
                 <div className="pb-3 flex items-center">
                   <input
@@ -194,7 +194,7 @@ export default function SearchForm({
                   />
                 </div>
                 <div>
-                  <h3 className="text-lg font-bold mb-1">総人数</h3>
+                  <div className="text-lg font-bold mb-1">総人数</div>
                 </div>
                 <div className="pb-3 flex items-center">
                   <input
@@ -212,7 +212,7 @@ export default function SearchForm({
                   />
                 </div>
                 <div>
-                  <h3 className="text-lg font-bold mb-1">上演時間</h3>
+                  <div className="text-lg font-bold mb-1">上演時間</div>
                 </div>
                 <div className="pb-3 flex items-center">
                   <select
