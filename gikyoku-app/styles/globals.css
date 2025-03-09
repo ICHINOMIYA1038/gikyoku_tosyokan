@@ -57,3 +57,14 @@ h2 {
 .marker-yellow {
   @apply bg-yellow-300 text-black;
 }
+
+h3 {
+  font-size: 1.2em;
+  background-color: rgba(249, 168, 212, 0.2);
+  border-left: 4px solid rgba(249, 168, 212, 1);
+  padding: 0.5em;
+  margin-top: 1em;
+  margin-bottom: 0.5em;
+  font-weight: bold;
+  color: #333;
+}

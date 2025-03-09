@@ -13,15 +13,48 @@
 }
 
 .markdown-content h1 {
-    font-size: 2em;
+    font-size: 1.5em;
 }
 
 .markdown-content h2 {
-    font-size: 1.75em;
+    position: relative;
+    color: white;
+    font-size: 1.0em;
+    background: rgba(249, 168, 212, 1);
+    line-height: 1.0;
+    padding: 0.5em 0.5em 0.5em 1.8em;
+}
+
+.markdown-content h2:before {
+    content: "";
+    display: inline-block;
+    width: 0.5em;
+    /* 丸の直径 */
+    height: 0.5em;
+    /* 丸の直径 */
+    background-color: white;
+    /* 丸の色 */
+    border-radius: 50%;
+    /* 丸くする */
+    position: absolute;
+    left: 0.5em;
+    top: 50%;
+    transform: translateY(-50%);
+    /* 垂直方向の中央に配置 */
 }
 
 .markdown-content h3 {
-    font-size: 1.5em;
+    /* シンプルなデザイン */
+    color: black;
+    /* サイトのメインカラーに揃える */
+    font-size: 0.9em;
+    margin: 1em 0;
+    font-weight: bold;
+    background-color: transparent;
+    border: 1px solid rgba(249, 168, 212, 1);
+    border-radius: 0.5em;
+    padding: 0.5em;
+
 }
 
 .markdown-content p {
