@@ -38,8 +38,8 @@ const Comments = ({ comments: initialComments, postid }: any) => {
         if (newCommentData && newCommentData.content && newCommentData.author) {
           if (replyTo) {
             // 返信の場合、親コメントの子コメントとして追加
-            setComments((prevComments) =>
-              prevComments.map(comment =>
+            setComments((prevComments: any) =>
+              prevComments.map((comment: any) =>
                 comment.id === replyTo.id
                   ? {
                     ...comment,
@@ -50,7 +50,7 @@ const Comments = ({ comments: initialComments, postid }: any) => {
             );
           } else {
             // 通常のコメントの場合
-            setComments((prevComments) => [...prevComments, newCommentData]); // 新しいコメントを追加
+            setComments((prevComments: any) => [...prevComments, newCommentData]); // 新しいコメントを追加
           }
           setCommentResult("コメントが投稿されました"); // 成功メッセージを設定
           setNewComment(""); // コメントフィールドをクリア
