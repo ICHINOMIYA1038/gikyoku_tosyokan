@@ -43,6 +43,7 @@ function PostPage({ post }: any) {
   const [showShareButtons, setShowShareButtons] = useState(false);
   const commentsRef = useRef<HTMLDivElement>(null);
   const [isDesktop, setIsDesktop] = useState(false);
+  const [isTablet, setIsTablet] = useState(false);
 
   const handleStarChange = (event: any) => {
     setStar(event.target.value);
@@ -89,25 +90,26 @@ function PostPage({ post }: any) {
 
   // ウィンドウサイズを監視して、デスクトップかモバイルかを判定
   useEffect(() => {
-    const checkIfDesktop = () => {
+    const checkScreenSize = () => {
       setIsDesktop(window.innerWidth >= 1024); // 1024px以上をデスクトップとみなす
+      setIsTablet(window.innerWidth >= 768); // 768px以上をタブレットとみなす
     };
 
     // 初期チェック
-    checkIfDesktop();
+    checkScreenSize();
 
     // リサイズイベントのリスナーを追加
-    window.addEventListener('resize', checkIfDesktop);
+    window.addEventListener('resize', checkScreenSize);
 
     // クリーンアップ
     return () => {
-      window.removeEventListener('resize', checkIfDesktop);
+      window.removeEventListener('resize', checkScreenSize);
     };
   }, []);
 
   const handleSwipe = (e: React.TouchEvent) => {
     // モバイルの場合のみスワイプ処理を有効にする
-    if (isDesktop) return;
+    if (isTablet) return;
 
     const touch = e.touches[0];
     const startY = touch.clientY;
@@ -139,12 +141,21 @@ function PostPage({ post }: any) {
             to { transform: translateY(0); }
           }
           
+          @keyframes slideIn {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+          }
+          
           .animate-fadeIn {
             animation: fadeIn 0.3s ease-in-out;
           }
           
           .animate-slideUp {
             animation: slideUp 0.3s ease-out;
+          }
+          
+          .animate-slideIn {
+            animation: slideIn 0.3s ease-out;
           }
         `}</style>
 
@@ -162,56 +173,76 @@ function PostPage({ post }: any) {
           }
         />
         <div className="container mx-auto px-4">
-          <div className="relative mx-auto max-w-xl">
+          <div className={`relative mx-auto ${showComments && isTablet ? 'md:grid md:grid-cols-2 md:gap-6 md:max-w-4xl' : 'max-w-xl'}`}>
             {/* 記事コンテンツ */}
-            <div>
+            <div className={`${showComments && isTablet ? 'md:col-span-1' : ''}`}>
               <PostDetail post={post} />
-            </div>
 
-            {/* 評価セクション */}
-            <div className="px-4 py-4 items-center max-w-md mx-auto flex bg-white shadow-lg my-4 rounded-lg">
-              <div>
-                <label className="text-sm font-bold">
-                  あなたの声を聞かせてください!
-                </label>
-                <div className="flex items-center mt-2 justify-center">
-                  {[1, 2, 3, 4, 5].map((value) => (
-                    <span key={value}>
-                      <FontAwesomeIcon
-                        icon={faStar}
-                        className={
-                          value <= star
-                            ? "text-yellow-500 text-xl"
-                            : "text-gray-300 text-xl"
-                        }
-                        onClick={() => handleStarClick(value)}
-                      />
-                    </span>
-                  ))}
-                  <button
-                    className="ml-2 py-1 px-3 rounded-md bg-blue-500 text-white text-sm"
-                    onClick={handleSubmit}
-                  >
-                    評価を送信
-                  </button>
+              {/* 評価セクション */}
+              <div className="px-4 py-4 items-center max-w-md mx-auto flex bg-white shadow-lg my-4 rounded-lg">
+                <div>
+                  <label className="text-sm font-bold">
+                    あなたの声を聞かせてください!
+                  </label>
+                  <div className="flex items-center mt-2 justify-center">
+                    {[1, 2, 3, 4, 5].map((value) => (
+                      <span key={value}>
+                        <FontAwesomeIcon
+                          icon={faStar}
+                          className={
+                            value <= star
+                              ? "text-yellow-500 text-xl"
+                              : "text-gray-300 text-xl"
+                          }
+                          onClick={() => handleStarClick(value)}
+                        />
+                      </span>
+                    ))}
+                    <button
+                      className="ml-2 py-1 px-3 rounded-md bg-blue-500 text-white text-sm"
+                      onClick={handleSubmit}
+                    >
+                      評価を送信
+                    </button>
+                  </div>
+                  <div className="mt-2">
+                    {error && <p className="text-red-600">{error}</p>}
+                    {success && <p className="text-green-600">{success}</p>}
+                  </div>
                 </div>
-                <div className="mt-2">
-                  {error && <p className="text-red-600">{error}</p>}
-                  {success && <p className="text-green-600">{success}</p>}
-                </div>
+              </div>
+
+              {/* 関連記事 */}
+              <div className="flex justify-center max-w-md mx-auto">
+                <OtherPosts
+                  authorId={post.author_id}
+                  postId={post.id}
+                  authorName={post.author.name}
+                />
               </div>
             </div>
 
-            {/* 関連記事 */}
-            <div className="flex justify-center max-w-md mx-auto">
-              <OtherPosts
-                authorId={post.author_id}
-                postId={post.id}
-                authorName={post.author.name}
-              />
-            </div>
+            {/* コメントセクション - タブレット以上 */}
+            {showComments && isTablet && (
+              <div className="md:col-span-1 bg-white rounded-lg shadow-lg overflow-y-auto md:h-screen md:sticky md:top-0 animate-slideIn">
+                <div className="sticky top-0 bg-white p-2 border-b border-gray-200 flex justify-between items-center z-10">
+                  <h2 className="text-xl font-bold">コメント</h2>
+                  <button
+                    className="text-gray-500 hover:text-gray-700 p-2"
+                    onClick={toggleComments}
+                  >
+                    <FontAwesomeIcon icon={faTimes} />
+                  </button>
+                </div>
+                <div className="p-4">
+                  {post.comments && (
+                    <Comments comments={post.comments} postid={post.id} />
+                  )}
+                </div>
+              </div>
+            )}
 
-            {/* 固定ボタンエリア - 位置を上に調整 */}
+            {/* 固定ボタンエリア */}
             <div className="fixed bottom-16 right-4 z-50 flex flex-col items-end space-y-3">
               {/* SNSシェアボタン */}
               {showShareButtons && (
@@ -257,8 +288,8 @@ function PostPage({ post }: any) {
               </button>
             </div>
 
-            {/* コメントセクション - 共通 */}
-            {showComments && (
+            {/* コメントセクション - モバイル */}
+            {showComments && !isTablet && (
               <div
                 className="fixed bottom-0 left-0 right-0 h-1/2 bg-white shadow-lg overflow-y-auto z-40 animate-slideUp"
                 ref={commentsRef}
