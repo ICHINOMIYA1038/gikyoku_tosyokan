@@ -127,20 +127,18 @@ const ContactForm: React.FC = () => {
             type="button"
             onClick={handleSendMail}
             disabled={isSending}
-            className={`bg-blue-500 text-white p-2 rounded-md ${
-              isSending ? "opacity-50 cursor-not-allowed" : ""
-            }`}
+            className={`bg-blue-500 text-white p-2 rounded-md ${isSending ? "opacity-50 cursor-not-allowed" : ""
+              }`}
           >
             {isSending ? "送信中..." : "送信"}
           </button>
         </div>
         {message && (
           <div
-            className={`${
-              message.includes("successfully")
-                ? "text-green-700"
-                : "text-red-700"
-            } text-sm font-medium`}
+            className={`${message.includes("successfully")
+              ? "text-green-700"
+              : "text-red-700"
+              } text-sm font-medium`}
           >
             {message}
           </div>

@@ -3,6 +3,7 @@ import { PrismaClient, Author as AuthorType } from "@prisma/client";
 import Layout from "@/components/Layout";
 import PostCardSmall from "@/components/PostCardSmall";
 import Seo from "@/components/seo";
+import CustomMarkdown from "@/components/CustomMarkdown";
 const prisma = new PrismaClient();
 
 function CategoryPage({ category }: any) {
@@ -16,7 +17,12 @@ function CategoryPage({ category }: any) {
         <div className="md:max-w-2xl mx-auto">
           <div className="basic-card p-4 ">
             <h2>{category.name}の脚本一覧</h2>
-            <p>{category.name}の</p>
+            {category.image_url && (
+              <img src={category.image_url} alt={`${category.name}のアイキャッチ`} className="w-full h-auto" />
+            )}
+            {category.contentMarkdown && (
+              <CustomMarkdown content={category.contentMarkdown} />
+            )}
           </div>
           <div className="basic-card p-4 my-2">
             <h2>作品一覧</h2>
