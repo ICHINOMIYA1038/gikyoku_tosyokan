@@ -82,9 +82,9 @@ const Comments = ({ comments: initialComments, postid }: any) => {
 
   return (
     <div className="comments-container">
-      <h3 className="text-xl font-bold mb-4 px-2">
+      <p className="text-xl font-bold mb-4 px-2">
         {comments.length}件のコメント
-      </h3>
+      </p>
 
       {/* コメント入力エリア */}
       <div className="bg-white shadow-md rounded-lg p-4 mb-6">
