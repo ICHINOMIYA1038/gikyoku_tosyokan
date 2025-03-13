@@ -125,7 +125,7 @@ h2 {
 
 h3 {
   font-size: 1.2em;
-  background-color: rgba(var(--secondary-color), 0.2);
+  background-color: rgba(var(--secondary-color), 1);
   border-left: 4px solid rgba(var(--secondary-color), 1);
   padding: 0.5em;
   margin-top: 1em;
