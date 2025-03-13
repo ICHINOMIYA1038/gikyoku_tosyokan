@@ -42,7 +42,7 @@ export default function Home({ news, authors, posts, categories }: any) {
           id="registration-form"
           ref={searchFormRef}
         >
-          <div className="shadow-lg rounded-lg bg-white border-solid h-3/4 border border-black p-10 m-1 md:m-5 lg:w-1/2 lg:sticky lg:top-24">
+          <div className="m-1 md:m-5 lg:w-1/2 lg:sticky lg:top-24">
             <SearchForm
               setData={setData}
               page={page}

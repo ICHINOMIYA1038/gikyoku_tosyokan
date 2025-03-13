@@ -102,21 +102,24 @@ export default function SearchForm({
   };
 
   return (
-    <div className="search-form relative">
-      <div className="tabs flex mb-4 absolute -top-4">
+    <div className="search-form mb-6">
+      <div className="tabs flex">
         <button
           className={`tab ${activeTab === "search" ? "active" : ""}`}
           onClick={() => setActiveTab("search")}
           style={{
-            backgroundColor: activeTab === "search" ? "#f0e68c" : "#fffacd",
-            border: "1px solid #ccc",
-            borderBottom: activeTab === "search" ? "none" : "1px solid #ccc",
-            borderRadius: "5px 5px 0 0",
-            padding: "10px 20px",
+            backgroundColor: activeTab === "search" ? "#4a9e5c" : "#e8f5e9",
+            color: activeTab === "search" ? "white" : "#2e7d32",
+            border: "1px solid #2e7d32",
+            borderBottom: activeTab === "search" ? "none" : "1px solid #2e7d32",
+            borderRadius: "8px 8px 0 0",
+            padding: "12px 24px",
             marginRight: "5px",
             cursor: "pointer",
             position: "relative",
             zIndex: 1,
+            fontWeight: "bold",
+            transition: "all 0.3s ease",
           }}
         >
           検索
@@ -125,21 +128,32 @@ export default function SearchForm({
           className={`tab ${activeTab === "categories" ? "active" : ""}`}
           onClick={() => setActiveTab("categories")}
           style={{
-            backgroundColor: activeTab === "categories" ? "#f0e68c" : "#fffacd",
-            border: "1px solid #ccc",
-            borderBottom: activeTab === "categories" ? "none" : "1px solid #ccc",
-            borderRadius: "5px 5px 0 0",
-            padding: "10px 20px",
+            backgroundColor: activeTab === "categories" ? "#4a9e5c" : "#e8f5e9",
+            color: activeTab === "categories" ? "white" : "#2e7d32",
+            border: "1px solid #2e7d32",
+            borderBottom: activeTab === "categories" ? "none" : "1px solid #2e7d32",
+            borderRadius: "8px 8px 0 0",
+            padding: "12px 24px",
             cursor: "pointer",
             position: "relative",
             zIndex: 1,
+            fontWeight: "bold",
+            transition: "all 0.3s ease",
           }}
         >
           カテゴリー
         </button>
       </div>
 
-      <div className="pt-8">
+      <div
+        className="tab-content p-5 bg-white shadow-md"
+        style={{
+          border: "1px solid #2e7d32",
+          borderRadius: "0 8px 8px 8px",
+          borderTop: activeTab === "search" ? "4px solid #4a9e5c" : "4px solid #4a9e5c",
+          marginTop: "-1px"
+        }}
+      >
         {activeTab === "search" && (
           <div>
             <div>
