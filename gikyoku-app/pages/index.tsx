@@ -1,12 +1,9 @@
 import Layout from "@/components/Layout";
-import PostCardList from "@/components/PostCardList";
 import SearchForm from "@/components/SearchForm";
-import Pagination from "@/components/Pagination";
 import { useRef, useState } from "react";
 import { PrismaClient } from "@prisma/client";
 import NewsList from "@/components/NewsList";
 import TopImage from "@/components/TopImage"
-import DropBox from "@/components/DropBox";
 import Seo from "@/components/seo";
 import ContentSection from "@/components/ContentSection";
 import SearchResults from "@/components/SearchResults";

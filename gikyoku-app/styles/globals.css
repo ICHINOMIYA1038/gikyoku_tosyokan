@@ -8,15 +8,77 @@
   --primary-color: 59, 130, 246;
   --secondary-color: 249, 168, 212;
   --accent-color: 253, 224, 71;
+  --top-image-bg: 253, 224, 71;
+  --card-bg: 255, 255, 255;
+  /* yellow-300 */
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-rgb: 70, 70, 70;
+    --foreground-rgb: 0, 0, 0;
+    --background-rgb: 120, 120, 120;
     --primary-color: 96, 165, 250;
     --secondary-color: 249, 168, 212;
     --accent-color: 253, 224, 71;
+    --top-image-bg: 120, 120, 120;
+    --card-bg: 180, 180, 180;
+    /* darker color for dark mode */
+  }
+
+  body {
+    background: rgb(var(--background-rgb));
+    color: rgb(var(--foreground-rgb));
+  }
+
+  .basic-card {
+    @apply bg-gray-800 border-gray-700;
+  }
+
+  .link-card {
+    @apply bg-gray-800 hover:bg-gray-700;
+  }
+
+  .support-document {
+    @apply bg-gray-800;
+  }
+
+  .support-document h3,
+  .support-document h4,
+  h2,
+  h3 {
+    color: rgb(var(--foreground-rgb));
+  }
+
+  .under-line-blue {
+    @apply border-b-4 border-blue-300;
+  }
+
+  .marker-yellow {
+    @apply bg-yellow-600 text-white;
+  }
+
+  .post-section {
+    @apply bg-gray-800 border-gray-700;
+  }
+
+  .section-title {
+    @apply border-b border-gray-600;
+  }
+
+  .info-badge {
+    @apply bg-gray-800 border-gray-700;
+  }
+
+  .info-badge-label {
+    @apply text-gray-400;
+  }
+
+  .author-link {
+    @apply text-gray-300 hover:text-blue-400;
+  }
+
+  .category-badge {
+    @apply bg-gray-800;
   }
 }
 
@@ -63,7 +125,7 @@ h2 {
 
 h3 {
   font-size: 1.2em;
-  background-color: rgba(var(--secondary-color), 0.2);
+  background-color: rgba(var(--secondary-color), 1);
   border-left: 4px solid rgba(var(--secondary-color), 1);
   padding: 0.5em;
   margin-top: 1em;

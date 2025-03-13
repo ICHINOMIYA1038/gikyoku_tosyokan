@@ -15,7 +15,7 @@ const PostCard: React.FC<PostPageProps> = ({ post }: any) => {
 
   return (
     <Link href={`/posts/${post.id}`} target="_blank">
-      <div className="mb-2 bg-white border-solid border border-black shadow-md hover:shadow-md hover:scale-105 transition-transform duration-300 rounded-xl cursor-pointer min-h-[350px] md:min-h-0">
+      <div className="mb-2 border-solid border border-black shadow-md hover:shadow-md hover:scale-105 transition-transform duration-300 rounded-xl cursor-pointer min-h-[350px] md:min-h-0" style={{ backgroundColor: 'rgb(var(--card-bg))' }}>
         <div className="flex flex-wrap md:flex-nowrap h-full">
           <div className="w-full md:w-1/2 relative flex items-center justify-center" style={{ maxHeight: '100%', minHeight: '200px' }}>
             <div className="absolute inset-0">

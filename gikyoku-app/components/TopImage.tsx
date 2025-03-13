@@ -5,9 +5,9 @@ import Image from "next/image";
 const TopImage = ({ buttonClick }: any) => {
   const router = useRouter();
   return (
-    <div className="bg-yellow-300  text-center py-16">
+    <div className="text-center py-16" style={{ backgroundColor: 'rgb(var(--top-image-bg))' }}>
       <div className="mx-auto max-w-4xl md:flex">
-        <div className="w-1/2  relative">
+        <div className="w-1/2 relative">
           <Image
             src="/readbookman.svg"
             alt="top-image-read-book-man"

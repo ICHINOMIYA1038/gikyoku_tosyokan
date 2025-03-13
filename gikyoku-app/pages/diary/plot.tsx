@@ -1,5 +1,6 @@
 import Layout from "@/components/Layout";
 import Link from "next/link";
+import Seo from "@/components/seo";
 
 const shortStoriesData = [
   {
@@ -14,7 +15,7 @@ const shortStoriesData = [
     imgSrc: "/img/card_senaka.jpg",
     pdfSrc: "/pdf/senakani.pdf",
     description:
-      "「子供は親の背中を見て育つんだから」\n「見せられないですよ、僕の背中なんて」\n「私、死にたい」",
+      "「子供は親の背中を見て育つんだから」\n「見せられないですよ、僕の背中なんて」",
   },
   {
     title: "ゴミ箱と大人",
@@ -96,28 +97,36 @@ const longStoriesData = [
   // 他の長編作品も同様に追加
 ];
 
+const cardStyle = "bg-white rounded-lg shadow-lg hover:shadow-xl hover:scale-105 transition-transform duration-300 relative overflow-hidden flex flex-col h-96";
+const sectionStyle = "border p-4 rounded-lg flex flex-col justify-between h-full";
+const imgContainerStyle = "w-full relative flex items-center justify-center";
+const imgStyle = "rounded-lg object-cover h-48 w-full";
+const textContainerStyle = "p-4 flex flex-col justify-center flex-grow";
+
 const ShortStories = () => {
   return (
     <div>
       <h3 className="text-3xl font-semibold my-5">短編作品</h3>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         {shortStoriesData.map((story, index) => (
-          <div
-            key={index}
-            className="bg-white rounded-lg shadow-lg hover:shadow-md hover:scale-105 transition-transform duration-300"
-          >
-            <section className="border p-4 rounded-lg">
-              <Link href={story.pdfSrc} target="_blank">
-                <img
-                  className="mb-4 mx-auto"
-                  src={story.imgSrc}
-                  alt={story.title}
-                />
-                <h2 className="text-xl font-semibold mb-2">{story.title}</h2>
-                <p className="text-gray-700">{story.description}</p>
-              </Link>
-            </section>
-          </div>
+          <Link href={story.pdfSrc} target="_blank" key={index}>
+            <div className={cardStyle}>
+              <section className={sectionStyle}>
+                <div className={imgContainerStyle}>
+                  <img
+                    className={imgStyle}
+                    src={story.imgSrc}
+                    alt={story.title}
+                    style={{ objectFit: 'contain' }}
+                  />
+                </div>
+                <div className={textContainerStyle}>
+                  <h2 className="text-xl font-semibold mb-2">{story.title}</h2>
+                  <p className="text-gray-700">{story.description}</p>
+                </div>
+              </section>
+            </div>
+          </Link>
         ))}
       </div>
     </div>
@@ -130,22 +139,24 @@ const MediumStories = () => {
       <h3 className="text-3xl font-semibold my-5">中編作品</h3>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         {mediumStoriesData.map((story, index) => (
-          <div
-            key={index}
-            className="bg-white rounded-lg shadow-lg hover:shadow-md hover:scale-105 transition-transform duration-300"
-          >
-            <section className="border p-4 rounded-lg">
-              <Link href={story.pdfSrc} target="_blank">
-                <img
-                  className="mb-4 mx-auto"
-                  src={story.imgSrc}
-                  alt={story.title}
-                />
-                <h2 className="text-xl font-semibold mb-2">{story.title}</h2>
-                <p className="text-gray-700">{story.description}</p>
-              </Link>
-            </section>
-          </div>
+          <Link href={story.pdfSrc} target="_blank" key={index}>
+            <div className={cardStyle}>
+              <section className={sectionStyle}>
+                <div className={imgContainerStyle}>
+                  <img
+                    className={imgStyle}
+                    src={story.imgSrc}
+                    alt={story.title}
+                    style={{ objectFit: 'contain' }}
+                  />
+                </div>
+                <div className={textContainerStyle}>
+                  <h2 className="text-xl font-semibold mb-2">{story.title}</h2>
+                  <p className="text-gray-700">{story.description}</p>
+                </div>
+              </section>
+            </div>
+          </Link>
         ))}
       </div>
     </div>
@@ -158,22 +169,24 @@ const LongStories = () => {
       <h3 className="text-3xl font-semibold my-5">長編作品</h3>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         {longStoriesData.map((story, index) => (
-          <div
-            key={index}
-            className="bg-white rounded-lg shadow-lg hover:shadow-md hover:scale-105 transition-transform duration-300"
-          >
-            <section className="border p-4 rounded-lg">
-              <Link href={story.pdfSrc} target="_blank">
-                <img
-                  className="mb-4 mx-auto"
-                  src={story.imgSrc}
-                  alt={story.title}
-                />
-                <h2 className="text-xl font-semibold mb-2">{story.title}</h2>
-                <p className="text-gray-700">{story.description}</p>
-              </Link>
-            </section>
-          </div>
+          <Link href={story.pdfSrc} target="_blank" key={index}>
+            <div className={cardStyle}>
+              <section className={sectionStyle}>
+                <div className={imgContainerStyle}>
+                  <img
+                    className={imgStyle}
+                    src={story.imgSrc}
+                    alt={story.title}
+                    style={{ objectFit: 'contain' }}
+                  />
+                </div>
+                <div className={textContainerStyle}>
+                  <h2 className="text-xl font-semibold mb-2">{story.title}</h2>
+                  <p className="text-gray-700">{story.description}</p>
+                </div>
+              </section>
+            </div>
+          </Link>
         ))}
       </div>
     </div>
@@ -183,18 +196,22 @@ const LongStories = () => {
 export default function Portfolio() {
   return (
     <Layout>
+      <Seo
+        pageTitle="戯曲図書館オリジナル - 無料公開脚本"
+        pageDescription="戯曲図書館オリジナルの無料公開脚本。上演料は無料です。"
+        pagePath="https://gikyokutosyokan.com/diary/plot"
+        pageImg="/img/og_image.jpg"
+        pageImgWidth={1200}
+        pageImgHeight={630}
+      />
       <div className="container mx-auto ">
-        <h2>戯曲図書館オリジナル作品</h2>
-        <p>
-          これらの作品は戯曲図書館運営の森ふみ夫(旧いちのみや)のオリジナル作品です。
-        </p>
-        <p>すべて無料でご覧いただける脚本です。</p>
+        <h2>戯曲図書館オリジナル</h2>
+        <p>これらは全て無料で公開中の脚本です</p>
         <p>上演する際はお問い合わせフォームよりお願いいたします。</p>
         <p>上演料は無料です。</p>
         <Link href="/support/contact" className="hover:underline text-blue-600">
           お問い合わせフォーム
         </Link>
-        <p></p>
         <ShortStories />
         <MediumStories />
         <LongStories />
