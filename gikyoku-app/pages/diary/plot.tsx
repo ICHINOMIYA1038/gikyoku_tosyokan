@@ -1,5 +1,6 @@
 import Layout from "@/components/Layout";
 import Link from "next/link";
+import Seo from "@/components/seo";
 
 const shortStoriesData = [
   {
@@ -14,7 +15,7 @@ const shortStoriesData = [
     imgSrc: "/img/card_senaka.jpg",
     pdfSrc: "/pdf/senakani.pdf",
     description:
-      "「子供は親の背中を見て育つんだから」\n「見せられないですよ、僕の背中なんて」\n「私、死にたい」",
+      "「子供は親の背中を見て育つんだから」\n「見せられないですよ、僕の背中なんて」",
   },
   {
     title: "ゴミ箱と大人",
@@ -183,18 +184,22 @@ const LongStories = () => {
 export default function Portfolio() {
   return (
     <Layout>
+      <Seo
+        pageTitle="戯曲図書館オリジナル - 無料公開脚本"
+        pageDescription="戯曲図書館オリジナルの無料公開脚本。上演料は無料です。"
+        pagePath="https://gikyokutosyokan.com/diary/plot"
+        pageImg="/img/og_image.jpg"
+        pageImgWidth={1200}
+        pageImgHeight={630}
+      />
       <div className="container mx-auto ">
-        <h2>戯曲図書館オリジナル作品</h2>
-        <p>
-          これらの作品は戯曲図書館運営の森ふみ夫(旧いちのみや)のオリジナル作品です。
-        </p>
-        <p>すべて無料でご覧いただける脚本です。</p>
+        <h2>戯曲図書館オリジナル</h2>
+        <p>これらは全て無料で公開中の脚本です</p>
         <p>上演する際はお問い合わせフォームよりお願いいたします。</p>
         <p>上演料は無料です。</p>
         <Link href="/support/contact" className="hover:underline text-blue-600">
           お問い合わせフォーム
         </Link>
-        <p></p>
         <ShortStories />
         <MediumStories />
         <LongStories />
