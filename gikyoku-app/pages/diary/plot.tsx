@@ -97,26 +97,34 @@ const longStoriesData = [
   // 他の長編作品も同様に追加
 ];
 
+const cardStyle = "bg-white rounded-lg shadow-lg hover:shadow-xl hover:scale-105 transition-transform duration-300 relative overflow-hidden";
+const sectionStyle = "border p-4 rounded-lg flex flex-col md:flex-row";
+const imgContainerStyle = "w-full md:w-1/2 relative flex items-center justify-center";
+const imgStyle = "rounded-lg object-cover h-48 w-full";
+const textContainerStyle = "w-full md:w-1/2 p-4 flex flex-col justify-center";
+
 const ShortStories = () => {
   return (
     <div>
       <h3 className="text-3xl font-semibold my-5">短編作品</h3>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         {shortStoriesData.map((story, index) => (
-          <div
-            key={index}
-            className="bg-white rounded-lg shadow-lg hover:shadow-md hover:scale-105 transition-transform duration-300"
-          >
-            <section className="border p-4 rounded-lg">
-              <Link href={story.pdfSrc} target="_blank">
+          <div key={index} className={cardStyle}>
+            <section className={sectionStyle}>
+              <div className={imgContainerStyle}>
                 <img
-                  className="mb-4 mx-auto"
+                  className={imgStyle}
                   src={story.imgSrc}
                   alt={story.title}
+                  style={{ objectFit: 'contain' }}
                 />
-                <h2 className="text-xl font-semibold mb-2">{story.title}</h2>
-                <p className="text-gray-700">{story.description}</p>
-              </Link>
+              </div>
+              <div className={textContainerStyle}>
+                <Link href={story.pdfSrc} target="_blank">
+                  <h2 className="text-xl font-semibold mb-2">{story.title}</h2>
+                  <p className="text-gray-700">{story.description}</p>
+                </Link>
+              </div>
             </section>
           </div>
         ))}
@@ -131,20 +139,22 @@ const MediumStories = () => {
       <h3 className="text-3xl font-semibold my-5">中編作品</h3>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         {mediumStoriesData.map((story, index) => (
-          <div
-            key={index}
-            className="bg-white rounded-lg shadow-lg hover:shadow-md hover:scale-105 transition-transform duration-300"
-          >
-            <section className="border p-4 rounded-lg">
-              <Link href={story.pdfSrc} target="_blank">
+          <div key={index} className={cardStyle}>
+            <section className={sectionStyle}>
+              <div className={imgContainerStyle}>
                 <img
-                  className="mb-4 mx-auto"
+                  className={imgStyle}
                   src={story.imgSrc}
                   alt={story.title}
+                  style={{ objectFit: 'contain' }}
                 />
-                <h2 className="text-xl font-semibold mb-2">{story.title}</h2>
-                <p className="text-gray-700">{story.description}</p>
-              </Link>
+              </div>
+              <div className={textContainerStyle}>
+                <Link href={story.pdfSrc} target="_blank">
+                  <h2 className="text-xl font-semibold mb-2">{story.title}</h2>
+                  <p className="text-gray-700">{story.description}</p>
+                </Link>
+              </div>
             </section>
           </div>
         ))}
@@ -159,20 +169,22 @@ const LongStories = () => {
       <h3 className="text-3xl font-semibold my-5">長編作品</h3>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         {longStoriesData.map((story, index) => (
-          <div
-            key={index}
-            className="bg-white rounded-lg shadow-lg hover:shadow-md hover:scale-105 transition-transform duration-300"
-          >
-            <section className="border p-4 rounded-lg">
-              <Link href={story.pdfSrc} target="_blank">
+          <div key={index} className={cardStyle}>
+            <section className={sectionStyle}>
+              <div className={imgContainerStyle}>
                 <img
-                  className="mb-4 mx-auto"
+                  className={imgStyle}
                   src={story.imgSrc}
                   alt={story.title}
+                  style={{ objectFit: 'contain' }}
                 />
-                <h2 className="text-xl font-semibold mb-2">{story.title}</h2>
-                <p className="text-gray-700">{story.description}</p>
-              </Link>
+              </div>
+              <div className={textContainerStyle}>
+                <Link href={story.pdfSrc} target="_blank">
+                  <h2 className="text-xl font-semibold mb-2">{story.title}</h2>
+                  <p className="text-gray-700">{story.description}</p>
+                </Link>
+              </div>
             </section>
           </div>
         ))}
