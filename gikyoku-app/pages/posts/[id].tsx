@@ -659,6 +659,7 @@ export async function getServerSideProps(context: any) {
     };
   }
   try {
+    // 投稿データの取得処理
     const post = await prisma.post.findUnique({
       where: { id: postId },
       include: {
@@ -673,12 +674,55 @@ export async function getServerSideProps(context: any) {
       },
     });
 
+    if (!post) {
+      return {
+        notFound: true, // Return a 404 page
+      };
+    }
+
     // クライアントのIPアドレスをHTTPヘッダーから取得
     const ipAddress =
       context.req.headers["x-real-ip"] ||
       context.req.headers["x-forwarded-for"] ||
       context.req.connection.remoteAddress;
 
+    // アクセスログの記録処理を非同期で実行（await せずにバックグラウンドで処理）
+    recordAccess(ipAddress, postId).catch(error => {
+      console.error("Failed to record access:", error);
+    });
+
+    // postオブジェクト内のcommentsとchildrenのDatetimeカラムをフォーマット変換
+    const formattedPost = {
+      ...post,
+      comments: post.comments.map((comment: any) => ({
+        ...comment,
+        children: comment.children.map((child: any) => ({
+          ...child,
+          date: formatDatetime(child.date),
+        })),
+        date: formatDatetime(comment.date),
+      })),
+    };
+
+    return {
+      props: {
+        post: formattedPost,
+      },
+    };
+  } catch (error) {
+    console.error("Error fetching post:", error);
+    return {
+      notFound: true, // Return a 404 page
+    };
+  } finally {
+    await prisma.$disconnect(); // リクエスト処理の最後で接続を切断
+  }
+}
+
+// アクセスログを記録する関数
+async function recordAccess(ipAddress: string, postId: number) {
+  const prisma = new PrismaClient();
+  try {
     const currentDate = new Date();
 
     // 年月日の部分を取得
@@ -706,40 +750,10 @@ export async function getServerSideProps(context: any) {
           date,
         },
       });
-    } else {
-      // 既存のレコードが存在する場合、適切なエラー処理を行います。
-      // 例えば、一意制約違反エラーをハンドルして通知するか、別のアクションを実行するなどの処理が考えられます。
     }
-
-    if (!post) {
-      return {
-        notFound: true, // Return a 404 page
-      };
-    }
-
-    // postオブジェクト内のcommentsとchildrenのDatetimeカラムをフォーマット変換
-    const formattedPost = {
-      ...post,
-      comments: post.comments.map((comment: any) => ({
-        ...comment,
-        children: comment.children.map((child: any) => ({
-          ...child,
-          date: formatDatetime(child.date),
-        })),
-        date: formatDatetime(comment.date),
-      })),
-    };
-
-    return {
-      props: {
-        post: formattedPost,
-      },
-    };
-  } catch {
-    return {
-      notFound: true, // Return a 404 page
-    };
+  } catch (error) {
+    console.error("Error recording access:", error);
   } finally {
-    await prisma.$disconnect(); // リクエスト処理の最後で接続を切断
+    await prisma.$disconnect();
   }
 }
