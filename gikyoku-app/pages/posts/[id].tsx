@@ -655,10 +655,9 @@ export async function getServerSideProps(context: any) {
   const postId = parseInt(context.params.id);
   if (isNaN(postId)) {
     return {
-      notFound: true,
+      notFound: true, // Return a 404 page for non-numeric IDs
     };
   }
-
   try {
     const post = await prisma.post.findUnique({
       where: { id: postId },
@@ -671,19 +670,8 @@ export async function getServerSideProps(context: any) {
         author: true,
         categories: true,
         ratings: { select: { id: true } },
-        _count: {
-          select: {
-            ratings: true
-          }
-        }
       },
     });
-
-    if (!post) {
-      return {
-        notFound: true,
-      };
-    }
 
     // クライアントのIPアドレスをHTTPヘッダーから取得
     const ipAddress =
@@ -691,15 +679,47 @@ export async function getServerSideProps(context: any) {
       context.req.headers["x-forwarded-for"] ||
       context.req.connection.remoteAddress;
 
-    // アクセスログ記録を非同期で実行し、結果を待たない
-    recordAccess(ipAddress, postId).catch(error =>
-      console.error("Failed to record access:", error)
-    );
+    const currentDate = new Date();
 
-    // _countプロパティを削除する代わりに、新しいオブジェクトを作成
-    const { _count, ...postWithoutCount } = post;
+    // 年月日の部分を取得
+    const year = currentDate.getFullYear();
+    const month = currentDate.getMonth() + 1; // 月は0から始まるため+1
+    const day = currentDate.getDate();
+
+    // PostgreSQLのDate型に変換
+    const date = new Date(year, month - 1, day); // 月は0から始まるため-1
+
+    const existingAccess = await prisma.access.findFirst({
+      where: {
+        ipAddress: ipAddress,
+        postId: postId,
+        date: date,
+      },
+    });
+
+    if (!existingAccess) {
+      // 既存のレコードが見つからない場合、新しいレコードを作成
+      await prisma.access.create({
+        data: {
+          ipAddress,
+          postId,
+          date,
+        },
+      });
+    } else {
+      // 既存のレコードが存在する場合、適切なエラー処理を行います。
+      // 例えば、一意制約違反エラーをハンドルして通知するか、別のアクションを実行するなどの処理が考えられます。
+    }
+
+    if (!post) {
+      return {
+        notFound: true, // Return a 404 page
+      };
+    }
+
+    // postオブジェクト内のcommentsとchildrenのDatetimeカラムをフォーマット変換
     const formattedPost = {
-      ...postWithoutCount,
+      ...post,
       comments: post.comments.map((comment: any) => ({
         ...comment,
         children: comment.children.map((child: any) => ({
@@ -708,10 +728,6 @@ export async function getServerSideProps(context: any) {
         })),
         date: formatDatetime(comment.date),
       })),
-      // 評価数を設定
-      ratings: {
-        count: _count.ratings
-      }
     };
 
     return {
@@ -719,51 +735,11 @@ export async function getServerSideProps(context: any) {
         post: formattedPost,
       },
     };
-  } catch (error) {
-    console.error("Error fetching post:", error);
+  } catch {
     return {
-      notFound: true,
+      notFound: true, // Return a 404 page
     };
   } finally {
-    await prisma.$disconnect();
-  }
-}
-
-// アクセスログを記録する関数を分離
-async function recordAccess(ipAddress: string, postId: number) {
-  const currentDate = new Date();
-  const year = currentDate.getFullYear();
-  const month = currentDate.getMonth() + 1;
-  const day = currentDate.getDate();
-  const date = new Date(year, month - 1, day);
-
-  try {
-    // 新しいPrismaインスタンスを作成
-    const accessPrisma = new PrismaClient();
-
-    // UPSERTを使用して1回のクエリで処理
-    await accessPrisma.access.upsert({
-      where: {
-        // ユニークな複合キーがある場合はそれを使用
-        // なければ以下のように条件を指定
-        ipAddress_postId_date: {
-          ipAddress: ipAddress,
-          postId: postId,
-          date: date
-        }
-      },
-      update: {}, // 既に存在する場合は何もしない
-      create: {
-        ipAddress,
-        postId,
-        date,
-      },
-    });
-
-    await accessPrisma.$disconnect();
-  } catch (error) {
-    console.error("Error recording access:", error);
-    // エラーを上位に伝播させる
-    throw error;
+    await prisma.$disconnect(); // リクエスト処理の最後で接続を切断
   }
 }
