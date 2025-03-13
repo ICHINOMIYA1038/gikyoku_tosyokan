@@ -75,132 +75,77 @@ export default async function handler(
     const skip =
       (parseIntSafe(page as string, 1) - 1) * parseIntSafe(per as string, 8);
 
-    const totalResultsCount = await prisma.post.count({
-      where: {
-        OR: [
-          {
-            author: {
-              name: {
-                contains: keyword as string,
-              },
-            },
-          },
-          {
-            title: {
+    const whereCondition = {
+      OR: [
+        {
+          author: {
+            name: {
               contains: keyword as string,
             },
           },
-          {
-            content: {
-              contains: keyword as string,
-            },
+        },
+        {
+          title: {
+            contains: keyword as string,
           },
-          {
-            synopsis: {
-              contains: keyword as string,
-            },
+        },
+        {
+          content: {
+            contains: keyword as string,
           },
-        ],
-        man: {
-          gte: parseIntSafe(minMaleCount as string, -1),
-          lte: parseIntSafe(maxMaleCount as string, 9999),
         },
-        woman: {
-          gte: parseIntSafe(minFemaleCount as string, -1),
-          lte: parseIntSafe(maxFemaleCount as string, 9999),
+        {
+          synopsis: {
+            contains: keyword as string,
+          },
         },
-        totalNumber: {
-          gte: parseIntSafe(minTotalCount as string, -1),
-          lte: parseIntSafe(maxTotalCount as string, 9999),
-        },
-        playtime: {
-          gte: playTimeConvertToOption(parseIntSafe(minPlaytime as string, -1)),
-          lte: playTimeConvertToOption(parseIntSafe(maxPlaytime as string, 5)),
-        },
-        ...(ids.length > 0
-          ? {
-              AND: ids.map((id: any) => ({
-                categories: {
-                  some: {
-                    id: {
-                      equals: id,
-                    },
+      ],
+      man: {
+        gte: parseIntSafe(minMaleCount as string, -1),
+        lte: parseIntSafe(maxMaleCount as string, 9999),
+      },
+      woman: {
+        gte: parseIntSafe(minFemaleCount as string, -1),
+        lte: parseIntSafe(maxFemaleCount as string, 9999),
+      },
+      totalNumber: {
+        gte: parseIntSafe(minTotalCount as string, -1),
+        lte: parseIntSafe(maxTotalCount as string, 9999),
+      },
+      playtime: {
+        gte: playTimeConvertToOption(parseIntSafe(minPlaytime as string, -1)),
+        lte: playTimeConvertToOption(parseIntSafe(maxPlaytime as string, 5)),
+      },
+      ...(ids.length > 0
+        ? {
+            AND: ids.map((id: any) => ({
+              categories: {
+                some: {
+                  id: {
+                    equals: id,
                   },
                 },
-              })),
-            }
-          : {}),
-        // 他の条件もここに追加
-      },
-    });
+              },
+            })),
+          }
+        : {}),
+    };
 
-    const searchResults = await prisma.post.findMany({
-      where: {
-        OR: [
-          {
-            author: {
-              name: {
-                contains: keyword as string,
-              },
-            },
-          },
-          {
-            title: {
-              contains: keyword as string,
-            },
-          },
-          {
-            content: {
-              contains: keyword as string,
-            },
-          },
-          {
-            synopsis: {
-              contains: keyword as string,
-            },
-          },
-        ],
-        man: {
-          gte: parseIntSafe(minMaleCount as string, -1),
-          lte: parseIntSafe(maxMaleCount as string, 9999),
+    const [totalResultsCount, searchResults] = await Promise.all([
+      prisma.post.count({ where: whereCondition }),
+      prisma.post.findMany({
+        where: whereCondition,
+        orderBy: sortField,
+        take: perPage,
+        skip: skip,
+        include: {
+          author: true,
+          categories: true,
+          ratings: { select: { id: true } },
         },
-        woman: {
-          gte: parseIntSafe(minFemaleCount as string, -1),
-          lte: parseIntSafe(maxFemaleCount as string, 9999),
-        },
-        totalNumber: {
-          gte: parseIntSafe(minTotalCount as string, -1),
-          lte: parseIntSafe(maxTotalCount as string, 9999),
-        },
-        playtime: {
-          gte: playTimeConvertToOption(parseIntSafe(minPlaytime as string, -1)),
-          lte: playTimeConvertToOption(parseIntSafe(maxPlaytime as string, 5)),
-        },
-        ...(ids.length > 0
-          ? {
-              AND: ids.map((id: any) => ({
-                categories: {
-                  some: {
-                    id: {
-                      equals: id,
-                    },
-                  },
-                },
-              })),
-            }
-          : {}),
-        // Add more conditions as needed for sorting, tags, etc.
-      },
-      orderBy: sortField,
-      take: perPage,
-      skip: skip,
-      include: {
-        author: true, // Include the associated Author records
-        categories: true,
-        ratings: { select: { id: true } },
-      },
-      // Add tags filtering if needed.
-    });
+      }),
+    ]);
+
     const limit_page = Math.ceil(totalResultsCount / perPage);
     const response = {
       searchResults,
@@ -209,7 +154,7 @@ export default async function handler(
         current: page,
         per: per,
         limit_page,
-      }, // 総ページ数
+      },
     };
 
     return res.status(200).json(response);
