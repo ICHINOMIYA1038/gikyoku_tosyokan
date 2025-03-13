@@ -130,47 +130,142 @@ function PostPage({ post }: any) {
     };
   }, []);
 
-  const handleSwipe = (e: React.TouchEvent) => {
-    // モバイルの場合のみスワイプ処理を有効にする
+  // マウスとタッチの両方に対応したハンドラーを追加
+  const handleDragStart = (e: React.MouseEvent | React.TouchEvent) => {
+    // タブレット以上のサイズでは処理しない
     if (isTablet) return;
 
-    const touch = e.touches[0];
-    const startY = touch.clientY;
-    let startX = touch.clientX;
-    let isSwiping = false;
+    // タッチイベントかマウスイベントかを判定
+    let startY: number;
+    let startX: number;
 
-    const handleTouchMove = (moveEvent: TouchEvent) => {
-      const moveTouch = moveEvent.touches[0];
-      const moveY = moveTouch.clientY;
-      const moveX = moveTouch.clientX;
+    if ('touches' in e) {
+      // タッチイベントの場合
+      const touch = e.touches[0];
+      startY = touch.clientY;
+      startX = touch.clientX;
+    } else {
+      // マウスイベントの場合
+      startY = e.clientY;
+      startX = e.clientX;
+
+      // マウスイベントの場合は、マウスムーブとマウスアップのイベントを追加
+      document.addEventListener('mousemove', handleDragMove);
+      document.addEventListener('mouseup', handleDragEnd);
+    }
+
+    let isDragging = false;
+    let initialHeight = 0;
+
+    // コメント欄の初期高さを取得
+    if (commentsRef.current) {
+      initialHeight = commentsRef.current.clientHeight;
+    }
+
+    // マウスムーブハンドラー
+    function handleDragMove(moveEvent: MouseEvent | TouchEvent) {
+      if (!commentsRef.current) return;
+
+      let moveY: number;
+      let moveX: number;
+
+      if ('touches' in moveEvent) {
+        // タッチイベントの場合
+        const moveTouch = moveEvent.touches[0];
+        moveY = moveTouch.clientY;
+        moveX = moveTouch.clientX;
+      } else {
+        // マウスイベントの場合
+        moveY = (moveEvent as MouseEvent).clientY;
+        moveX = (moveEvent as MouseEvent).clientX;
+      }
 
       // 縦方向の移動が横方向より大きい場合のみ処理
       if (Math.abs(moveY - startY) > Math.abs(moveX - startX)) {
-        isSwiping = true;
-        // 下にスワイプした場合のみコメントを閉じる
-        if (startY < moveY && moveY - startY > 50) {
-          moveEvent.preventDefault();
+        // デフォルトのスクロール動作を防止
+        moveEvent.preventDefault();
+
+        isDragging = true;
+
+        // 下にドラッグした場合のみ処理
+        if (moveY > startY) {
+          // ドラッグした距離を計算
+          const dragDistance = moveY - startY;
+
+          // コメント欄を下に移動
+          commentsRef.current.style.transform = `translateY(${dragDistance}px)`;
+
+          // 透明度も調整（ドラッグ距離に応じて徐々に透明に）
+          const opacity = Math.max(1 - (dragDistance / 300), 0.5);
+          commentsRef.current.style.opacity = opacity.toString();
+
+          // ドラッグが一定距離を超えたら視覚的フィードバックを追加
+          const swipeIndicator = commentsRef.current.querySelector('.swipe-indicator');
+          if (dragDistance > 100) {
+            swipeIndicator?.classList.add('ready-to-close');
+            // カーソルも変更
+            commentsRef.current.style.cursor = 'n-resize';
+          } else {
+            swipeIndicator?.classList.remove('ready-to-close');
+            commentsRef.current.style.cursor = 'grab';
+          }
         }
       }
-    };
+    }
 
-    const handleTouchEnd = (endEvent: TouchEvent) => {
-      if (isSwiping) {
+    // マウスアップ/タッチエンドハンドラー
+    function handleDragEnd(endEvent: MouseEvent | TouchEvent) {
+      if (!commentsRef.current) return;
+
+      let endY: number;
+
+      if ('changedTouches' in endEvent) {
+        // タッチイベントの場合
         const endTouch = endEvent.changedTouches[0];
-        const endY = endTouch.clientY;
+        endY = endTouch.clientY;
+      } else {
+        // マウスイベントの場合
+        endY = (endEvent as MouseEvent).clientY;
+      }
 
-        // 下に50px以上スワイプした場合にコメントを閉じる
-        if (startY < endY && endY - startY > 50) {
-          setShowComments(false);
+      if (isDragging) {
+        const dragDistance = endY - startY;
+
+        // ドラッグが一定距離を超えたらコメント欄を閉じる
+        if (dragDistance > 100) {
+          // アニメーションを追加して閉じる
+          commentsRef.current.style.transform = 'translateY(100%)';
+          commentsRef.current.style.opacity = '0';
+
+          setTimeout(() => {
+            setShowComments(false);
+            // スタイルをリセット
+            if (commentsRef.current) {
+              commentsRef.current.style.transform = '';
+              commentsRef.current.style.opacity = '';
+              commentsRef.current.style.cursor = '';
+            }
+          }, 300);
+        } else {
+          // 閾値に達していない場合は元の状態に戻す
+          commentsRef.current.style.transform = '';
+          commentsRef.current.style.opacity = '';
+          commentsRef.current.style.cursor = '';
         }
       }
 
-      document.removeEventListener("touchmove", handleTouchMove);
-      document.removeEventListener("touchend", handleTouchEnd);
-    };
+      // イベントリスナーを削除
+      document.removeEventListener('mousemove', handleDragMove);
+      document.removeEventListener('mouseup', handleDragEnd);
+      document.removeEventListener('touchmove', handleDragMove as any);
+      document.removeEventListener('touchend', handleDragEnd as any);
+    }
 
-    document.addEventListener("touchmove", handleTouchMove, { passive: false });
-    document.addEventListener("touchend", handleTouchEnd);
+    // タッチイベントの場合
+    if ('touches' in e) {
+      document.addEventListener('touchmove', handleDragMove as any, { passive: false });
+      document.addEventListener('touchend', handleDragEnd as any);
+    }
   };
 
   // Amazonリンクと無料リンクの存在確認
@@ -197,6 +292,11 @@ function PostPage({ post }: any) {
             to { transform: translateX(0); }
           }
           
+          @keyframes slideDown {
+            from { transform: translateY(0); }
+            to { transform: translateY(100%); }
+          }
+          
           .animate-fadeIn {
             animation: fadeIn 0.3s ease-in-out;
           }
@@ -207,6 +307,10 @@ function PostPage({ post }: any) {
           
           .animate-slideIn {
             animation: slideIn 0.3s ease-out;
+          }
+          
+          .animate-slideDown {
+            animation: slideDown 0.3s ease-out;
           }
           
           .btn-amazon {
@@ -229,6 +333,56 @@ function PostPage({ post }: any) {
             background-color: #10b981;
             transform: translateY(-2px);
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+          }
+          
+          .swipe-handle {
+            width: 40px;
+            height: 5px;
+            background-color: #d1d5db;
+            border-radius: 9999px;
+            margin: 8px auto;
+            cursor: grab;
+          }
+          
+          .swipe-handle:active {
+            cursor: grabbing;
+            background-color: #9ca3af;
+          }
+          
+          .swipe-indicator {
+            color: #6b7280;
+            font-size: 0.75rem;
+            text-align: center;
+            margin-top: 2px;
+          }
+          
+          .ready-to-close {
+            color: #ef4444;
+            font-weight: bold;
+          }
+          
+          .comment-drawer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 70vh;
+            background-color: white;
+            box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.1);
+            z-index: 40;
+            border-top-left-radius: 16px;
+            border-top-right-radius: 16px;
+            overflow: hidden;
+            transition: transform 0.3s ease, height 0.3s ease, opacity 0.3s ease;
+          }
+          
+          .swipe-handle-area {
+            cursor: grab;
+            user-select: none;
+          }
+          
+          .swipe-handle-area:active {
+            cursor: grabbing;
           }
         `}</style>
 
@@ -456,10 +610,21 @@ function PostPage({ post }: any) {
             {/* コメントセクション - モバイル */}
             {showComments && !isTablet && (
               <div
-                className="fixed bottom-0 left-0 right-0 h-2/3 bg-white shadow-lg overflow-y-auto z-40 animate-slideUp"
+                className="comment-drawer"
                 ref={commentsRef}
-                onTouchStart={handleSwipe}
+                style={{ transform: 'translateY(0)' }}
               >
+                {/* スワイプ/ドラッグハンドル */}
+                <div
+                  className="swipe-handle-area pt-2 pb-1"
+                  onTouchStart={handleDragStart}
+                  onMouseDown={handleDragStart}
+                  style={{ cursor: 'grab' }}
+                >
+                  <div className="swipe-handle"></div>
+                  <p className="swipe-indicator">下にドラッグして閉じる</p>
+                </div>
+
                 <div className="sticky top-0 bg-white p-3 border-b border-gray-200 flex justify-between items-center">
                   <h2 className="text-xl font-bold">コメント</h2>
                   <button
@@ -470,12 +635,7 @@ function PostPage({ post }: any) {
                   </button>
                 </div>
 
-                {/* スワイプインジケーター */}
-                <div className="absolute top-0 left-0 right-0 flex justify-center">
-                  <div className="w-16 h-1 bg-gray-300 rounded-full my-1"></div>
-                </div>
-
-                <div className="p-4 pb-20">
+                <div className="p-4 pb-20 overflow-y-auto" style={{ height: 'calc(100% - 100px)' }}>
                   {post.comments && (
                     <Comments comments={post.comments} postid={post.id} />
                   )}
