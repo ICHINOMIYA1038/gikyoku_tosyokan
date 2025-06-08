@@ -15,15 +15,15 @@ services:
 
   front:
     build:
-      context: ./gikyoku-app
+      context: ./
       dockerfile: Dockerfile
     volumes:
-      - ./gikyoku-app:/usr/src/app
+      - ./:/usr/src/app
     command: sh -c 'apk update && apk add --no-cache openssl && npm install && yarn dev & npx prisma studio --port 5555 --schema /usr/src/app/prisma/schema.prisma'
     env_file: # ここで .env.local を指定
-      - ./gikyoku-app/.env.local
+      - ./.env.local
     ports:
-      - "8000:3000"
+      - "8001:3000"
       - 5555:5555
     depends_on:
       - db # データベースが起動してからフロントエンドを起動

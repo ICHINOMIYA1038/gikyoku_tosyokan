@@ -1,8 +1,7 @@
 import Layout from "@/components/Layout";
 import PostCard from "@/components/PostCard";
 import Seo from "@/components/seo";
-import { PrismaClient } from "@prisma/client";
-const prisma = new PrismaClient();
+import { prisma } from "@/lib/prisma";
 
 function PostListPage({ posts }: any) {
   return (
