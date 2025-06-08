@@ -205,13 +205,13 @@ export default function Portfolio() {
         pageImgHeight={630}
       />
       <div className="container mx-auto ">
-        <h2>戯曲図書館オリジナル</h2>
+        <h2>戯曲図書館オリジナル 無料公開戯曲</h2>
         <p>これらは全て無料で公開中の脚本です</p>
-        <p>上演する際はお問い合わせフォームよりお願いいたします。</p>
+
+        <p>上演やワークショップに許可は必要ありません。</p>
         <p>上演料は無料です。</p>
-        <Link href="/support/contact" className="hover:underline text-blue-600">
-          お問い合わせフォーム
-        </Link>
+        <p>ワークショップに最適な短い脚本もあります。</p>
+
         <ShortStories />
         <MediumStories />
         <LongStories />
