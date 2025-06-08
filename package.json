@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "postinstall": "npx prisma generate"
+    "postinstall": "if [ -f prisma/schema.prisma ]; then npx prisma generate; fi"
   },
   "prisma": {
     "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
@@ -21,7 +21,7 @@
     "@fortawesome/fontawesome-svg-core": "^6.4.2",
     "@fortawesome/free-solid-svg-icons": "^6.4.2",
     "@fortawesome/react-fontawesome": "^0.2.0",
-    "@prisma/client": "^5.7.1",
+    "@prisma/client": "^5.22.0",
     "@tailwindcss/line-clamp": "^0.4.4",
     "@tanstack/react-query": "^4.35.3",
     "@types/csv-parse": "^1.2.2",
@@ -57,6 +57,7 @@
   "devDependencies": {
     "@types/jsdom": "^21.1.3",
     "@types/node": "^20.5.7",
+    "prisma": "^5.22.0",
     "ts-node": "^10.9.1",
     "typescript": "^5.2.2"
   }

@@ -1,14 +1,12 @@
 import Layout from "@/components/Layout";
 import SearchForm from "@/components/SearchForm";
 import { useRef, useState } from "react";
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/lib/prisma";
 import NewsList from "@/components/NewsList";
 import TopImage from "@/components/TopImage"
 import Seo from "@/components/seo";
 import ContentSection from "@/components/ContentSection";
 import SearchResults from "@/components/SearchResults";
-
-const prisma = new PrismaClient();
 
 export default function Home({ news, authors, posts, categories }: any) {
   const [data, setData] = useState<any>(null); // 取得したデータを格納

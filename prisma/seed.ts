@@ -1,7 +1,7 @@
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "../lib/prisma";
 import fs from "fs";
 import { parse } from "csv-parse";
-const prisma = new PrismaClient();
+
 let authors: any[] = [];
 
 async function resetData() {
