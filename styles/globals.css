@@ -17,6 +17,33 @@ body {
   color: rgb(var(--foreground-rgb));
   font-family: 'Hiragino Kaku Gothic Pro', 'Meiryo', sans-serif;
   line-height: 1.6;
+  /* CLS対策: スクロールバーの表示を常に確保 */
+  overflow-y: scroll;
+  /* スムーズスクロール */
+  scroll-behavior: smooth;
+}
+
+/* CLS対策: 画像とメディアのアスペクト比を維持 */
+img, video {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* CLS対策: フォントの読み込み中のちらつきを防ぐ */
+.font-loading * {
+  visibility: hidden;
+}
+
+/* LCP最適化: 重要なテキストの可視性を確保 */
+h1, h2, h3, h4, h5, h6 {
+  font-display: swap;
+}
+
+/* FID最適化: タップターゲットのサイズを確保 */
+button, a, input, textarea, select {
+  min-height: 44px;
+  min-width: 44px;
 }
 
 /* 明るいテーマのスタイル */

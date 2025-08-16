@@ -14,6 +14,7 @@ import {
 } from "react-share";
 import Comments from "@/components/Comments";
 import Seo from "@/components/seo";
+import StructuredData from "@/components/StructuredData";
 import OtherPosts from "@/components/Widget/OtherPosts";
 import { useState, useEffect, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -400,6 +401,27 @@ function PostPage({ post }: any) {
           }
           pagePath={`/posts/${post.id}`}
           pageType="article"
+        />
+        <StructuredData
+          type="Article"
+          title={`${post.author.name}『${post.title}』`}
+          description={post.synopsis || "戯曲図書館の作品詳細ページ"}
+          url={`https://gikyokutosyokan.com/posts/${post.id}`}
+          image={post.image_url}
+          author={{
+            name: post.author.name,
+            url: `https://gikyokutosyokan.com/authors/${post.author_id}`
+          }}
+          datePublished={post.createdAt}
+          dateModified={post.updatedAt}
+        />
+        <StructuredData
+          type="BreadcrumbList"
+          breadcrumbs={[
+            { name: "ホーム", url: "https://gikyokutosyokan.com" },
+            { name: "作品一覧", url: "https://gikyokutosyokan.com/posts" },
+            { name: post.title, url: `https://gikyokutosyokan.com/posts/${post.id}` }
+          ]}
         />
         <div className="container mx-auto px-4">
           <div className={`relative mx-auto ${showComments && isTablet ? 'md:grid md:grid-cols-2 md:gap-6 md:max-w-4xl' : 'max-w-xl'}`}>

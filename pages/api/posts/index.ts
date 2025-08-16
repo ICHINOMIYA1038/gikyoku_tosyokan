@@ -10,6 +10,12 @@ export default async function handler(
 ) {
   if (req.method === "GET") {
     try {
+      // キャッシュヘッダーを設定
+      res.setHeader(
+        "Cache-Control",
+        "public, s-maxage=3600, stale-while-revalidate=7200"
+      );
+      
       const posts = await prisma.post.findMany({
         orderBy: {
           id: "asc", 
@@ -22,7 +28,7 @@ export default async function handler(
           categories: true,
         },
       });
-      res.status(201).json(posts);
+      res.status(200).json(posts);
     } catch (error) {
       res.status(500).json({ error: "An error occurred" });
     

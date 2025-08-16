@@ -25,6 +25,12 @@ export default async function handler(
     return res.status(405).json({ error: "Method not allowed" });
   }
 
+  // 検索APIにキャッシュヘッダーを設定（短めの時間）
+  res.setHeader(
+    "Cache-Control",
+    "public, s-maxage=300, stale-while-revalidate=600"
+  );
+
   try {
     const {
       keyword = "",

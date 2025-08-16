@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma";
 import NewsList from "@/components/NewsList";
 import TopImage from "@/components/TopImage"
 import Seo from "@/components/seo";
+import StructuredData from "@/components/StructuredData";
 import ContentSection from "@/components/ContentSection";
 import SearchResults from "@/components/SearchResults";
 
@@ -31,6 +32,13 @@ export default function Home({ news, authors, posts, categories }: any) {
           pageImg={"https://gikyokutosyokan.com/logo.png"}
           pagePath="/"
         />
+        <StructuredData
+          type="WebSite"
+          title="戯曲図書館"
+          description="上演する脚本を探しの方に。上演時間や人数などから検索ができます。戯曲を探す、戯曲図書館。"
+          url="https://gikyokutosyokan.com"
+        />
+        <StructuredData type="Organization" />
         <TopImage buttonClick={handleScrollToRegistrationForm} />
         <NewsList news={news} />
         <div

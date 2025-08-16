@@ -21,21 +21,27 @@ const PostCard: React.FC<PostPageProps> = ({ post }: any) => {
             <div className="absolute inset-0">
               <Image
                 src={post.image_url || "/24202513.jpg"}
-                alt="背景画像"
+                alt=""
                 layout="fill"
                 objectFit="cover"
                 objectPosition="center"
                 className="opacity-30"
+                loading="lazy"
+                placeholder="blur"
+                blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiBmaWxsPSIjY2NjIi8+PC9zdmc+"
               />
             </div>
             <div className="relative h-full w-full flex items-center justify-center">
               <Image
                 src={post.image_url || "/24202513.jpg"}
-                alt="投稿の写真"
+                alt={`${post.title}の表紙画像`}
                 layout="fill"
                 objectFit="contain"
                 objectPosition="center"
                 className=""
+                loading="lazy"
+                placeholder="blur"
+                blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiBmaWxsPSIjY2NjIi8+PC9zdmc+"
               />
             </div>
           </div>

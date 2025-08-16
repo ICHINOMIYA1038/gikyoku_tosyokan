@@ -10,9 +10,11 @@ const TopImage = ({ buttonClick }: any) => {
         <div className="w-1/2 relative">
           <Image
             src="/readbookman.svg"
-            alt="top-image-read-book-man"
+            alt="戯曲を読む人のイラスト"
             layout="fill"
             className="p-10"
+            priority={true}
+            loading="eager"
           />
         </div>
         <div className="py-16 px-10">
