@@ -398,6 +398,8 @@ function PostPage({ post }: any) {
               ? post.image_url
               : "https://gikyokutosyokan.com/logo.png"
           }
+          pagePath={`/posts/${post.id}`}
+          pageType="article"
         />
         <div className="container mx-auto px-4">
           <div className={`relative mx-auto ${showComments && isTablet ? 'md:grid md:grid-cols-2 md:gap-6 md:max-w-4xl' : 'max-w-xl'}`}>
