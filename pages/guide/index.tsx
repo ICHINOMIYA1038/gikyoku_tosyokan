@@ -27,7 +27,7 @@ export default function GuideIndex() {
           title: "脚本の読み方",
           description: "ト書きの理解と台詞の分析方法",
           href: "/guide/beginner/reading-script",
-          available: false
+          available: true
         }
       ]
     },
@@ -46,13 +46,13 @@ export default function GuideIndex() {
           title: "演劇部運営ガイド",
           description: "年間スケジュールと部員管理",
           href: "/guide/school/drama-club",
-          available: false
+          available: true
         },
         {
           title: "新入生勧誘公演",
           description: "新入部員を増やす公演の作り方",
           href: "/guide/school/recruitment",
-          available: false
+          available: true
         }
       ]
     },
@@ -65,19 +65,19 @@ export default function GuideIndex() {
           title: "演出の技法",
           description: "空間演出と演技指導のポイント",
           href: "/guide/advanced/directing",
-          available: false
+          available: true
         },
         {
           title: "脚本の翻案・潤色",
           description: "原作を現代風にアレンジする方法",
           href: "/guide/advanced/adaptation",
-          available: false
+          available: true
         },
         {
           title: "舞台美術・照明",
           description: "効果的な視覚演出の作り方",
           href: "/guide/advanced/stage-design",
-          available: false
+          available: true
         }
       ]
     }
