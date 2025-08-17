@@ -13,21 +13,19 @@ const PostCardSmall: React.FC<PostPageProps> = ({ post }: any) => {
   const primaryCategory = post.categories && post.categories.length > 0 ? post.categories[0] : null;
   
   return (
-    <Link href={`/posts/${post.id}`}>
-      <div className="group bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden w-full max-w-[160px] cursor-pointer">
-        {/* 画像部分 - 高さを小さく調整 */}
-        <div className="relative h-24 w-full bg-theater-neutral-100 flex-shrink-0">
+    <Link href={`/posts/${post.id}`} className="block">
+      <div className="group bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden w-full max-w-[160px] cursor-pointer flex flex-col h-full">
+        {/* 画像部分 - line-height: 0で余白を除去 */}
+        <div className="relative h-24 w-full bg-theater-neutral-100" style={{ lineHeight: 0 }}>
           {post.image_url ? (
-            <Image
+            <img
               src={post.image_url}
               alt={`${post.title}のサムネイル`}
-              fill
-              sizes="160px"
-              className="object-cover group-hover:scale-105 transition-transform duration-300"
-              style={{ display: 'block' }}
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+              loading="lazy"
             />
           ) : (
-            <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-theater-primary-100 to-theater-secondary-100">
+            <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-theater-primary-100 to-theater-secondary-100">
               <FaTag className="text-3xl text-theater-primary-300" />
             </div>
           )}
