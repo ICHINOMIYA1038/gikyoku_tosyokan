@@ -540,7 +540,7 @@ export default function AdaptationGuide() {
                       <h4 className="font-bold mb-3">{method.name}</h4>
                       <p className="text-sm text-gray-600 mb-3">{method.description}</p>
                       
-                      {method.examples && (
+                      {'examples' in method && method.examples && (
                         <div className="bg-purple-50 p-4 rounded mb-3">
                           <h5 className="font-semibold text-sm mb-2">例</h5>
                           <ul className="space-y-1 text-sm">
@@ -551,7 +551,7 @@ export default function AdaptationGuide() {
                         </div>
                       )}
                       
-                      {method.techniques && (
+                      {'techniques' in method && method.techniques && (
                         <div className="grid md:grid-cols-2 gap-3">
                           {method.techniques.map((technique, i) => (
                             <div key={i} className="bg-gray-50 p-3 rounded text-sm">
@@ -561,13 +561,13 @@ export default function AdaptationGuide() {
                         </div>
                       )}
                       
-                      {method.tips && (
+                      {'tips' in method && method.tips && (
                         <div className="mt-3 text-sm text-blue-600">
                           💡 {method.tips}
                         </div>
                       )}
                       
-                      {method.reasons && (
+                      {'reasons' in method && method.reasons && (
                         <div>
                           <h5 className="font-semibold text-sm mb-2">理由</h5>
                           <ul className="space-y-1 text-sm">
@@ -578,7 +578,7 @@ export default function AdaptationGuide() {
                         </div>
                       )}
                       
-                      {method.considerations && (
+                      {'considerations' in method && method.considerations && (
                         <div>
                           <h5 className="font-semibold text-sm mb-2">考慮点</h5>
                           <ul className="space-y-1 text-sm">
@@ -589,7 +589,7 @@ export default function AdaptationGuide() {
                         </div>
                       )}
                       
-                      {method.effects && (
+                      {'effects' in method && method.effects && (
                         <div>
                           <h5 className="font-semibold text-sm mb-2">影響</h5>
                           <ul className="space-y-1 text-sm">
