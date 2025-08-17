@@ -51,6 +51,8 @@ const Seo = ({
       
       <link rel="icon" href="/favicon.ico" />
       <link rel="apple-touch-icon" href="/logo.png" />
+      <link rel="alternate" type="application/rss+xml" title="戯曲図書館 RSS Feed" href="/api/feed.xml" />
+      <link rel="manifest" href="/manifest.json" />
     </Head>
   );
 };

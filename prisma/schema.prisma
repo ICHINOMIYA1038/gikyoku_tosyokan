@@ -19,6 +19,8 @@ model Author {
   posts       Post[]
   authorTwitter String?
   groupTwitter String?
+
+  @@map("Author")
 }
 
 model Post {
@@ -48,6 +50,8 @@ model Post {
   ratings   Rating[]
   author              Author          @relation(fields: [author_id], references: [id])
   categories          Category[]      @relation("PostCategory")
+
+  @@map("Post")
 }
 
 model Category {
@@ -56,6 +60,8 @@ model Category {
   posts Post[] @relation("PostCategory")
   image_url String?
   contentMarkdown String?
+
+  @@map("Category")
 }
 
 model News {
@@ -64,6 +70,8 @@ model News {
   url      String?
   category String
   title    String
+
+  @@map("News")
 }
 
 model Access {
@@ -74,6 +82,7 @@ model Access {
   post      Post     @relation(fields: [postId], references: [id])
 
   @@unique([ipAddress, postId, date])
+  @@map("Access")
 }
 
 model ParentComment {
@@ -85,6 +94,8 @@ model ParentComment {
   date     DateTime       @default(now())
   children ChildComment[]
   post     Post           @relation(fields: [post_id], references: [id])
+
+  @@map("ParentComment")
 }
 
 model ChildComment {
@@ -95,6 +106,8 @@ model ChildComment {
   author          String        @default("名無しさん")
   date            DateTime      @default(now())
   parentComment   ParentComment @relation(fields: [parentCommentId], references: [id])
+
+  @@map("ChildComment")
 }
 
 model Rating {
@@ -104,4 +117,6 @@ model Rating {
   createdAt DateTime @default(now())
   postId    Int
   Post      Post     @relation(fields: [postId], references: [id])
+
+  @@map("Rating")
 }

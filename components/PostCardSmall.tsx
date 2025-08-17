@@ -1,59 +1,75 @@
 import * as React from "react";
 import Image from "next/image";
-import Badge from "@/components/Badge";
 import { Post as PostType } from "@prisma/client";
 import Link from "next/link";
+import { FaClock, FaUsers, FaTag, FaPen } from "react-icons/fa";
 
 type PostPageProps = {
   post: PostType & { author: { id: number; name: string } };
 };
 
 const PostCardSmall: React.FC<PostPageProps> = ({ post }: any) => {
+  // カテゴリーの最初の1つを取得
+  const primaryCategory = post.categories && post.categories.length > 0 ? post.categories[0] : null;
+  
   return (
     <Link href={`/posts/${post.id}`}>
-      <div className="mb-5 bg-white h-80 w-48 border-solid border border-gray-300 link-card">
-        <div className="">
-          {post.image_url && (
-            <div className="h-48 w-full relative">
-              <Image
-                src={post.image_url}
-                alt="投稿の写真"
-                fill
-                style={{ objectFit: "contain", objectPosition: "50% 50%" }} // or className={xxx}を用いる
-                objectPosition="center center" // 画像の表示位置を中央に
-                className="p-2"
-              />
+      <div className="group bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden w-full max-w-[160px] cursor-pointer">
+        {/* 画像部分 - 高さを小さく調整 */}
+        <div className="relative h-24 w-full bg-theater-neutral-100 flex-shrink-0">
+          {post.image_url ? (
+            <Image
+              src={post.image_url}
+              alt={`${post.title}のサムネイル`}
+              fill
+              sizes="160px"
+              className="object-cover group-hover:scale-105 transition-transform duration-300"
+              style={{ display: 'block' }}
+            />
+          ) : (
+            <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-theater-primary-100 to-theater-secondary-100">
+              <FaTag className="text-3xl text-theater-primary-300" />
             </div>
           )}
-          {!post.image_url && (
-            <div className="h-48 w-full relative">
-              <Image
-                src="/24202513.jpg"
-                alt="NoImage"
-                fill
-                style={{ objectFit: "fill", objectPosition: "50% 50%" }} // or className={xxx}を用いる
-                objectPosition="center center" // 画像の表示位置を中央に
-                className="p-2"
-              />
+          
+          {/* カテゴリーバッジ - 画像の上に配置 */}
+          {primaryCategory && (
+            <div className="absolute top-1 right-1">
+              <span className="px-2 py-0.5 bg-theater-primary-500 text-white text-xs rounded-full">
+                {primaryCategory.name}
+              </span>
             </div>
           )}
-          <div className="h-32 text-center">
-            <div className="text-xs h-8">
-              {post.categories &&
-                post.categories.length !== 0 &&
-                post.categories
-                  .slice(0, 1)
-                  .map((category: any) => (
-                    <Badge key={post.id} text={category.name} />
-                  ))}
-            </div>
-            <div className="text-center">
-              <h2 className="text-base text-base font-bold">{post.title}</h2>
-              <div className=" text-xs font-bold">{post.author.name}</div>
-              {post._count && (
-                <div className="text-xs">{post._count.access} view</div>
-              )}
-            </div>
+        </div>
+        
+        {/* テキスト部分 - コンパクトに調整 */}
+        <div className="p-3">
+          {/* タイトル - 2行まで表示 */}
+          <h3 className="font-bold text-sm text-theater-neutral-900 line-clamp-2 mb-1 group-hover:text-theater-primary-600 transition-colors">
+            {post.title}
+          </h3>
+          
+          {/* 作者名 */}
+          <div className="flex items-center gap-1 text-xs text-theater-neutral-600 mb-2">
+            <FaPen className="text-theater-secondary-400" />
+            <span className="truncate">{post.author.name}</span>
+          </div>
+          
+          {/* メタ情報 - アイコンとテキストを小さく */}
+          <div className="space-y-1">
+            {post.playtime && post.playtime > 0 && (
+              <div className="flex items-center gap-1 text-xs text-theater-neutral-500">
+                <FaClock className="text-theater-secondary-400" />
+                <span>{post.playtime}分</span>
+              </div>
+            )}
+            
+            {post.totalNumber && post.totalNumber > 0 && (
+              <div className="flex items-center gap-1 text-xs text-theater-neutral-500">
+                <FaUsers className="text-theater-accent-blue" />
+                <span>{post.totalNumber}人</span>
+              </div>
+            )}
           </div>
         </div>
       </div>

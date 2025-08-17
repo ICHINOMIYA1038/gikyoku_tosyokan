@@ -8,6 +8,16 @@ import * as gtag from "@/lib/gtag";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Noto_Sans_JP } from "next/font/google";
+import MobileOptimizations from "@/components/MobileOptimizations";
+
+const notoSansJP = Noto_Sans_JP({
+  subsets: ["latin"],
+  weight: ["400", "500", "700"],
+  display: "swap",
+  preload: true,
+  fallback: ["Hiragino Kaku Gothic Pro", "Meiryo", "sans-serif"],
+});
 
 const queryClient = new QueryClient();
 
@@ -25,10 +35,17 @@ export default function App({ Component, pageProps }: AppProps) {
 
   return (
     <>
+      <MobileOptimizations />
+      <style jsx global>{`
+        html {
+          font-family: ${notoSansJP.style.fontFamily};
+        }
+      `}</style>
       <Script
         async
         src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8691137965825158"
         crossOrigin="anonymous"
+        strategy="lazyOnload"
       ></Script>
       <Script
         strategy="afterInteractive"
@@ -48,7 +65,9 @@ export default function App({ Component, pageProps }: AppProps) {
         }}
       />
       <QueryClientProvider client={queryClient}>
-        <Component {...pageProps} />
+        <main className={notoSansJP.className}>
+          <Component {...pageProps} />
+        </main>
       </QueryClientProvider>
       <Analytics />
     </>

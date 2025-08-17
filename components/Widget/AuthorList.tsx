@@ -18,8 +18,8 @@ const AuthorList = ({ authors }: any) => {
         <div className="flex gap-2 flex-wrap">
           {authors &&
             authors.map((author: any) => (
-              <Link className="cursor-pointer" href={`/authors/${author.id}`}>
-                <BadgeGreen key={author.id} text={author.name} />
+              <Link key={author.id} className="cursor-pointer" href={`/authors/${author.id}`}>
+                <BadgeGreen text={author.name} />
               </Link>
             ))}
         </div>
