@@ -20,11 +20,6 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { FaStar, FaCommentDots, FaTimes, FaShareAlt, FaBook, FaExternalLinkAlt } from "react-icons/fa";
 import { prisma } from "@/lib/prisma";
 
-// メモ化されたコンポーネント
-const MemoizedPostDetail = React.memo(PostDetailRedesigned);
-const MemoizedComments = React.memo(Comments);
-const MemoizedOtherPosts = React.memo(OtherPosts);
-
 // Datetimeを指定したフォーマットに変換する関数
 function formatDatetime(datetime: any) {
   const date = new Date(datetime);
@@ -36,6 +31,11 @@ function formatDatetime(datetime: any) {
 
   return `${year}/${month}/${day} ${hours}:${minutes}`;
 }
+
+// メモ化されたコンポーネント
+const MemoizedPostDetail = React.memo(PostDetailRedesigned);
+const MemoizedComments = React.memo(Comments);
+const MemoizedOtherPosts = React.memo(OtherPosts);
 
 function PostPage({ post }: any) {
   const URL = `https://gikyokutosyokan.com/posts/${post.id}`;
@@ -77,35 +77,22 @@ function PostPage({ post }: any) {
     }
   }, [post.id, star]);
 
-  const toggleComments = () => {
-    setShowComments(!showComments);
-
-    // コメントを表示する場合、スクロールを一番上に戻す
+  const toggleComments = useCallback(() => {
+    setShowComments(prev => !prev);
     if (!showComments && commentsRef.current) {
       setTimeout(() => {
         commentsRef.current?.scrollTo(0, 0);
       }, 100);
     }
+  }, [showComments]);
 
-    // コメントを閉じる時にアニメーションを追加
-    if (showComments) {
-      // アニメーション用のクラスを追加して、アニメーション完了後に非表示にする
-      if (commentsRef.current) {
-        commentsRef.current.classList.add('animate-slideDown');
-        setTimeout(() => {
-          setShowComments(false);
-        }, 300);
-      }
-    }
-  };
+  const toggleShareButtons = useCallback(() => {
+    setShowShareButtons(prev => !prev);
+  }, []);
 
-  const toggleShareButtons = () => {
-    setShowShareButtons(!showShareButtons);
-  };
-
-  const toggleReadButtons = () => {
-    setShowReadButtons(!showReadButtons);
-  };
+  const toggleReadButtons = useCallback(() => {
+    setShowReadButtons(prev => !prev);
+  }, []);
 
   // ウィンドウサイズの監視を最適化
   useEffect(() => {
@@ -130,39 +117,26 @@ function PostPage({ post }: any) {
     };
   }, []);
 
-  // マウスとタッチの両方に対応したハンドラーを追加
-  const handleDragStart = (e: React.MouseEvent | React.TouchEvent) => {
-    // タブレット以上のサイズでは処理しない
+  // ドラッグハンドラーの最適化
+  const handleDragStart = useCallback((e: React.MouseEvent | React.TouchEvent) => {
     if (isTablet) return;
 
-    // タッチイベントかマウスイベントかを判定
     let startY: number;
     let startX: number;
 
     if ('touches' in e) {
-      // タッチイベントの場合
       const touch = e.touches[0];
       startY = touch.clientY;
       startX = touch.clientX;
     } else {
-      // マウスイベントの場合
       startY = e.clientY;
       startX = e.clientX;
-
-      // マウスイベントの場合は、マウスムーブとマウスアップのイベントを追加
       document.addEventListener('mousemove', handleDragMove);
       document.addEventListener('mouseup', handleDragEnd);
     }
 
     let isDragging = false;
-    let initialHeight = 0;
 
-    // コメント欄の初期高さを取得
-    if (commentsRef.current) {
-      initialHeight = commentsRef.current.clientHeight;
-    }
-
-    // マウスムーブハンドラー
     function handleDragMove(moveEvent: MouseEvent | TouchEvent) {
       if (!commentsRef.current) return;
 
@@ -170,105 +144,70 @@ function PostPage({ post }: any) {
       let moveX: number;
 
       if ('touches' in moveEvent) {
-        // タッチイベントの場合
         const moveTouch = moveEvent.touches[0];
         moveY = moveTouch.clientY;
         moveX = moveTouch.clientX;
       } else {
-        // マウスイベントの場合
         moveY = (moveEvent as MouseEvent).clientY;
         moveX = (moveEvent as MouseEvent).clientX;
       }
 
-      // 縦方向の移動が横方向より大きい場合のみ処理
       if (Math.abs(moveY - startY) > Math.abs(moveX - startX)) {
-        // デフォルトのスクロール動作を防止
         moveEvent.preventDefault();
-
         isDragging = true;
 
-        // 下にドラッグした場合のみ処理
         if (moveY > startY) {
-          // ドラッグした距離を計算
           const dragDistance = moveY - startY;
-
-          // コメント欄を下に移動
           commentsRef.current.style.transform = `translateY(${dragDistance}px)`;
-
-          // 透明度も調整（ドラッグ距離に応じて徐々に透明に）
           const opacity = Math.max(1 - (dragDistance / 300), 0.5);
           commentsRef.current.style.opacity = opacity.toString();
-
-          // ドラッグが一定距離を超えたら視覚的フィードバックを追加
-          const swipeIndicator = commentsRef.current.querySelector('.swipe-indicator');
-          if (dragDistance > 100) {
-            swipeIndicator?.classList.add('ready-to-close');
-            // カーソルも変更
-            commentsRef.current.style.cursor = 'n-resize';
-          } else {
-            swipeIndicator?.classList.remove('ready-to-close');
-            commentsRef.current.style.cursor = 'grab';
-          }
         }
       }
     }
 
-    // マウスアップ/タッチエンドハンドラー
     function handleDragEnd(endEvent: MouseEvent | TouchEvent) {
       if (!commentsRef.current) return;
 
       let endY: number;
-
       if ('changedTouches' in endEvent) {
-        // タッチイベントの場合
         const endTouch = endEvent.changedTouches[0];
         endY = endTouch.clientY;
       } else {
-        // マウスイベントの場合
         endY = (endEvent as MouseEvent).clientY;
       }
 
       if (isDragging) {
         const dragDistance = endY - startY;
 
-        // ドラッグが一定距離を超えたらコメント欄を閉じる
         if (dragDistance > 100) {
-          // アニメーションを追加して閉じる
           commentsRef.current.style.transform = 'translateY(100%)';
           commentsRef.current.style.opacity = '0';
 
           setTimeout(() => {
             setShowComments(false);
-            // スタイルをリセット
             if (commentsRef.current) {
               commentsRef.current.style.transform = '';
               commentsRef.current.style.opacity = '';
-              commentsRef.current.style.cursor = '';
             }
           }, 300);
         } else {
-          // 閾値に達していない場合は元の状態に戻す
           commentsRef.current.style.transform = '';
           commentsRef.current.style.opacity = '';
-          commentsRef.current.style.cursor = '';
         }
       }
 
-      // イベントリスナーを削除
       document.removeEventListener('mousemove', handleDragMove);
       document.removeEventListener('mouseup', handleDragEnd);
       document.removeEventListener('touchmove', handleDragMove as any);
       document.removeEventListener('touchend', handleDragEnd as any);
     }
 
-    // タッチイベントの場合
     if ('touches' in e) {
       document.addEventListener('touchmove', handleDragMove as any, { passive: false });
       document.addEventListener('touchend', handleDragEnd as any);
     }
-  };
+  }, [isTablet]);
 
-  // Amazonリンクと無料リンクの存在確認
   const hasAmazonLink = !!post.amazon_text_url;
   const hasFreeLink = !!post.link_to_plot;
   const hasReadLinks = hasAmazonLink || hasFreeLink;
@@ -344,23 +283,6 @@ function PostPage({ post }: any) {
             cursor: grab;
           }
           
-          .swipe-handle:active {
-            cursor: grabbing;
-            background-color: #9ca3af;
-          }
-          
-          .swipe-indicator {
-            color: #6b7280;
-            font-size: 0.75rem;
-            text-align: center;
-            margin-top: 2px;
-          }
-          
-          .ready-to-close {
-            color: #ef4444;
-            font-weight: bold;
-          }
-          
           .comment-drawer {
             position: fixed;
             bottom: 0;
@@ -373,31 +295,16 @@ function PostPage({ post }: any) {
             border-top-left-radius: 16px;
             border-top-right-radius: 16px;
             overflow: hidden;
-            transition: transform 0.3s ease, height 0.3s ease, opacity 0.3s ease;
-          }
-          
-          .swipe-handle-area {
-            cursor: grab;
-            user-select: none;
-          }
-          
-          .swipe-handle-area:active {
-            cursor: grabbing;
+            transition: transform 0.3s ease, opacity 0.3s ease;
           }
         `}</style>
 
         <Seo
           pageTitle={`${post.author.name}『${post.title}』`}
           pageDescription={
-            post.synopsis
-              ? post.synopsis
-              : "上演する脚本を探しの方に。上演時間や人数などから検索ができます。戯曲を探す、戯曲図書館。"
+            post.synopsis || "上演する脚本を探しの方に。上演時間や人数などから検索ができます。戯曲を探す、戯曲図書館。"
           }
-          pageImg={
-            post.image_url
-              ? post.image_url
-              : "https://gikyokutosyokan.com/logo.png"
-          }
+          pageImg={post.image_url || "https://gikyokutosyokan.com/logo.png"}
           pagePath={`/posts/${post.id}`}
           pageType="article"
         />
@@ -411,6 +318,8 @@ function PostPage({ post }: any) {
             name: post.author.name,
             url: `https://gikyokutosyokan.com/authors/${post.author_id}`
           }}
+          datePublished={post.createdAt}
+          dateModified={post.updatedAt}
         />
         <StructuredData
           type="BreadcrumbList"
@@ -426,10 +335,9 @@ function PostPage({ post }: any) {
             <div className={`${showComments && isTablet ? 'md:col-span-1' : ''}`}>
               <MemoizedPostDetail post={post} />
 
-              {/* 読むボタンエリア - 本文内 */}
-              {(hasAmazonLink || hasFreeLink) && (
+              {/* 読むボタンエリア */}
+              {hasReadLinks && (
                 <div className="my-6 flex flex-col sm:flex-row justify-center gap-4">
-                  {/* Amazonで読むボタン */}
                   {hasAmazonLink && (
                     <a
                       href={post.amazon_text_url}
@@ -443,7 +351,6 @@ function PostPage({ post }: any) {
                     </a>
                   )}
 
-                  {/* 無料で読むボタン */}
                   {hasFreeLink && (
                     <a
                       href={post.link_to_plot}
@@ -530,12 +437,7 @@ function PostPage({ post }: any) {
             <div className="fixed bottom-16 right-4 z-50 flex flex-col items-end space-y-3">
               {/* 読むボタンメニュー */}
               {hasReadLinks && showReadButtons && (
-                <div className="bg-white p-3 rounded-lg shadow-lg flex flex-col space-y-2 mb-2 animate-fadeIn relative">
-                  {/* スワイプインジケーター */}
-                  <div className="absolute top-0 left-0 right-0 flex justify-center">
-                    <div className="w-10 h-1 bg-gray-300 rounded-full my-1"></div>
-                  </div>
-
+                <div className="bg-white p-3 rounded-lg shadow-lg flex flex-col space-y-2 mb-2 animate-fadeIn">
                   {hasAmazonLink && (
                     <a
                       href={post.amazon_text_url}
@@ -566,12 +468,7 @@ function PostPage({ post }: any) {
 
               {/* SNSシェアボタン */}
               {showShareButtons && (
-                <div className="bg-white p-3 rounded-lg shadow-lg flex space-x-3 mb-2 animate-fadeIn relative">
-                  {/* スワイプインジケーター */}
-                  <div className="absolute top-0 left-0 right-0 flex justify-center">
-                    <div className="w-10 h-1 bg-gray-300 rounded-full my-1"></div>
-                  </div>
-
+                <div className="bg-white p-3 rounded-lg shadow-lg flex space-x-3 mb-2 animate-fadeIn">
                   <FacebookShareButton url={URL} quote={QUOTE}>
                     <FacebookIcon size={40} round />
                   </FacebookShareButton>
@@ -592,21 +489,20 @@ function PostPage({ post }: any) {
                 </div>
               )}
 
-              {/* 読むボタン */}
+              {/* ボタン群 */}
               {hasReadLinks && (
                 <button
                   className="bg-purple-500 hover:bg-purple-600 text-white p-3 rounded-full shadow-lg flex items-center transition-colors duration-200"
                   onClick={toggleReadButtons}
                   aria-label="この戯曲を読む"
                 >
-                  <FaBook className="text-lg" />
+                  <FaBook size="lg" />
                   <span className="ml-2 bg-white text-purple-600 text-xs font-bold py-1 px-2 rounded-full">
                     {showReadButtons ? "閉じる" : "読む"}
                   </span>
                 </button>
               )}
 
-              {/* シェアボタン */}
               <button
                 className="bg-green-500 hover:bg-green-600 text-white p-3 rounded-full shadow-lg flex items-center transition-colors duration-200"
                 onClick={toggleShareButtons}
@@ -618,7 +514,6 @@ function PostPage({ post }: any) {
                 </span>
               </button>
 
-              {/* コメントボタン */}
               <button
                 className="bg-blue-500 hover:bg-blue-600 text-white p-3 rounded-full shadow-lg flex items-center transition-colors duration-200"
                 onClick={toggleComments}
@@ -638,7 +533,6 @@ function PostPage({ post }: any) {
                 ref={commentsRef}
                 style={{ transform: 'translateY(0)' }}
               >
-                {/* スワイプ/ドラッグハンドル */}
                 <div
                   className="swipe-handle-area pt-2 pb-1"
                   onTouchStart={handleDragStart}
@@ -646,7 +540,7 @@ function PostPage({ post }: any) {
                   style={{ cursor: 'grab' }}
                 >
                   <div className="swipe-handle"></div>
-                  <p className="swipe-indicator">下にドラッグして閉じる</p>
+                  <p className="text-xs text-gray-500 text-center">下にドラッグして閉じる</p>
                 </div>
 
                 <div className="sticky top-0 bg-white p-3 border-b border-gray-200 flex justify-between items-center">
@@ -668,7 +562,7 @@ function PostPage({ post }: any) {
             )}
           </div>
         </div>
-      </Layout >
+      </Layout>
     </>
   );
 }
@@ -688,30 +582,21 @@ export async function getServerSideProps(context: any) {
       select: {
         id: true,
         title: true,
-        content: true,
         synopsis: true,
         image_url: true,
         amazon_text_url: true,
-        amazon_img_url: true,
-        amazon_img_text_url: true,
         link_to_plot: true,
-        website1: true,
-        website2: true,
-        website3: true,
-        ISBN_13: true,
-        buy_link: true,
+        createdAt: true,
+        updatedAt: true,
         author_id: true,
-        man: true,
-        woman: true,
-        others: true,
-        totalNumber: true,
-        playtime: true,
-        averageRating: true,
+        min_cast: true,
+        max_cast: true,
+        min_playtime: true,
+        max_playtime: true,
         author: {
           select: {
             id: true,
             name: true,
-            group: true,
           }
         },
         categories: {
@@ -721,21 +606,22 @@ export async function getServerSideProps(context: any) {
           }
         },
         comments: {
+          where: {
+            parent_id: null // 親コメントのみ取得
+          },
           select: {
             id: true,
             content: true,
             date: true,
-            author: true,
-            deleted: true,
-            post_id: true,
+            name: true,
+            parent_id: true,
             children: {
               select: {
                 id: true,
                 content: true,
                 date: true,
-                author: true,
-                deleted: true,
-                parentCommentId: true,
+                name: true,
+                parent_id: true,
               }
             }
           },
@@ -765,17 +651,14 @@ export async function getServerSideProps(context: any) {
     // バックグラウンドでアクセスログを記録
     recordAccessOptimized(ipAddress, postId).catch(console.error);
 
-    // 日時フォーマット変換とフィールド名の調整
+    // 日時フォーマット変換（必要最小限）
     const formattedPost = {
       ...post,
       comments: post.comments.map((comment: any) => ({
         ...comment,
-        name: comment.author, // Commentsコンポーネント用にフィールド名を調整
         date: formatDatetime(comment.date),
         children: comment.children.map((child: any) => ({
           ...child,
-          name: child.author, // Commentsコンポーネント用にフィールド名を調整
-          parent_id: child.parentCommentId, // フィールド名を調整
           date: formatDatetime(child.date),
         })),
       })),
@@ -788,9 +671,7 @@ export async function getServerSideProps(context: any) {
     };
   } catch (error) {
     console.error("Error fetching post:", error);
-    return {
-      notFound: true, // Return a 404 page
-    };
+    return { notFound: true };
   }
 }
 
@@ -804,25 +685,22 @@ async function recordAccessOptimized(ipAddress: string, postId: number) {
       currentDate.getDate()
     );
 
-    // 既存のアクセスログをチェック
-    const existingAccess = await prisma.access.findFirst({
+    // upsertを使用して1クエリで処理
+    await prisma.access.upsert({
       where: {
-        ipAddress: ipAddress,
-        postId: postId,
-        date: date,
-      },
-    });
-
-    if (!existingAccess) {
-      // 既存のレコードがない場合のみ作成
-      await prisma.access.create({
-        data: {
+        ipAddress_postId_date: {
           ipAddress,
           postId,
           date,
-        },
-      });
-    }
+        }
+      },
+      update: {}, // 既存の場合は何もしない
+      create: {
+        ipAddress,
+        postId,
+        date,
+      }
+    });
   } catch (error) {
     // エラーは記録するが処理は継続
     console.error("Failed to record access:", error);

@@ -1,24 +1,25 @@
-import { faStar } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { FaStar } from "react-icons/fa";
 
-const Pagination = ({ star = 0, rateCount = 0 }: any) => {
+const Star = ({ star = 0, rateCount = 0, showCount = true }: any) => {
   return (
-    <div className="flex">
+    <div className="flex items-center">
       {[1, 2, 3, 4, 5].map((value) => (
-        <span key={value}>
-          <FontAwesomeIcon
-            icon={faStar}
-            className={
-              value <= star
-                ? "text-yellow-500 text-xs lg:text-base"
-                : "text-gray-300 text-xs lg:text-base"
-            }
-          />
-        </span>
+        <FaStar
+          key={value}
+          className={
+            value <= star
+              ? "text-yellow-500 text-sm lg:text-base"
+              : "text-gray-300 text-sm lg:text-base"
+          }
+        />
       ))}
-      <p className="ml-1">({rateCount})</p>
+      {showCount && rateCount > 0 && (
+        <span className="ml-2 text-sm text-gray-600">
+          ({rateCount}件の評価)
+        </span>
+      )}
     </div>
   );
 };
 
-export default Pagination;
+export default Star;

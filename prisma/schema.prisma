@@ -120,3 +120,20 @@ model Rating {
 
   @@map("Rating")
 }
+
+model Announcement {
+  id               Int      @id @default(autoincrement())
+  title            String
+  content          String
+  performanceDate  DateTime?
+  venue            String?
+  ticketPrice      String?
+  contactInfo      String?
+  authorName       String   @default("名無しさん")
+  ipAddress        String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  views            Int      @default(0)
+  
+  @@map("Announcement")
+}

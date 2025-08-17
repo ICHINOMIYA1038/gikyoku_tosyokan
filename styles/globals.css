@@ -75,8 +75,55 @@ h3 {
   @apply font-bold my-2 text-light-text;
 }
 
+/* h2スタイル - メインセクションの見出し（大胆なアンダーライン） */
 h2 {
-  @apply text-2xl font-bold my-2 text-light-text;
+  @apply text-2xl md:text-3xl font-bold my-8 text-gray-900;
+  position: relative;
+  padding: 0.5rem 0 1rem 0;
+  letter-spacing: 0.02em;
+}
+
+/* h2の下線 */
+h2::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 3px;
+  background: rgb(59, 130, 246);
+  border-radius: 2px;
+}
+
+/* h2の装飾的な要素 */
+h2::before {
+  content: "▎";
+  color: rgb(59, 130, 246);
+  font-weight: bold;
+  margin-right: 0.5rem;
+  font-size: 1.2em;
+  vertical-align: middle;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+
+/* 特定のコンテキスト用のh2バリエーション */
+.post-section h2,
+.content-section h2 {
+  @apply text-2xl font-bold mb-4 text-gray-800;
+}
+
+/* カード内のh2 */
+.basic-card h2,
+.support-document h2 {
+  @apply text-xl md:text-2xl;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
 }
 
 .under-line-blue {
@@ -87,17 +134,48 @@ h2 {
   @apply bg-bright-yellow text-gray-800 px-1 rounded;
 }
 
+/* h3スタイル - サブセクションの見出し（シンプル） */
 h3 {
-  font-size: 1.2em;
-  background-color: rgba(var(--secondary-color), 0.2);
-  border-left: 4px solid rgba(var(--primary-color), 1);
-  padding: 0.5em;
-  margin-top: 1em;
-  margin-bottom: 0.5em;
-  font-weight: bold;
-  color: #1f2937;
-  border-radius: 0 4px 4px 0;
+  @apply text-lg md:text-xl font-semibold my-6 text-gray-800;
+  position: relative;
+  padding: 0.5rem 0 0.5rem 2rem;
+  border-left: 4px solid rgb(147, 51, 234);
+  letter-spacing: 0.01em;
 }
+
+/* h3のアイコン */
+h3::before {
+  content: "●";
+  position: absolute;
+  left: 0.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgb(147, 51, 234);
+  font-size: 0.6em;
+}
+
+
+/* h4スタイル - より小さな見出し */
+h4 {
+  @apply text-base md:text-lg font-semibold my-3 text-gray-700;
+  position: relative;
+  padding: 0.25rem 0 0.25rem 1rem;
+}
+
+/* h4の左側アクセント - ドット */
+h4::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 6px;
+  height: 6px;
+  background: rgb(236, 72, 153);
+  border-radius: 50%;
+  box-shadow: 0 0 4px rgba(236, 72, 153, 0.3);
+}
+
 
 /* セクションスタイル */
 .post-section {

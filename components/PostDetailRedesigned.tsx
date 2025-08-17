@@ -24,9 +24,9 @@ const PostDetailRedesigned: React.FC<PostPageProps> = ({ post }: PostPageProps) 
       <div className="bg-gradient-to-r from-theater-primary-100 via-theater-secondary-50 to-theater-primary-100 py-8 px-4">
         <div className="max-w-4xl mx-auto">
           {/* 評価 */}
-          {post.ratings && (
+          {post.averageRating > 0 && (
             <div className="mb-4">
-              <Star star={post.averageRating} rateCount={post.ratings.length || 0} />
+              <Star star={post.averageRating} rateCount={post._count?.ratings || 0} />
             </div>
           )}
           
