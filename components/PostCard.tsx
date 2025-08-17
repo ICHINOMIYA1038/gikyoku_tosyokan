@@ -1,10 +1,9 @@
 import * as React from "react";
 import Image from "next/image";
-import Badge from "@/components/Badge";
 import { Post as PostType } from "@prisma/client";
 import { useRouter } from "next/router";
-import Star from "./Widget/Star";
 import Link from "next/link";
+import { FaClock, FaUsers, FaMale, FaFemale, FaTag, FaPen, FaTheaterMasks } from "react-icons/fa";
 
 type PostPageProps = {
   post: PostType & { author: { id: number; name: string } };
@@ -12,74 +11,99 @@ type PostPageProps = {
 
 const PostCard: React.FC<PostPageProps> = ({ post }: any) => {
   const router = useRouter();
+  const primaryCategory = post.categories && post.categories.length > 0 ? post.categories[0] : null;
+  const additionalCategories = post.categories && post.categories.length > 1 ? post.categories.length - 1 : 0;
 
   return (
     <Link href={`/posts/${post.id}`} target="_blank">
-      <div className="mb-2 border-solid border border-black shadow-md hover:shadow-md hover:scale-105 transition-transform duration-300 rounded-xl cursor-pointer min-h-[350px] md:min-h-0" style={{ backgroundColor: 'rgb(var(--card-bg))' }}>
-        <div className="flex flex-wrap md:flex-nowrap h-full">
-          <div className="w-full md:w-1/2 relative flex items-center justify-center" style={{ maxHeight: '100%', minHeight: '200px' }}>
-            <div className="absolute inset-0">
+      <div className="group bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden cursor-pointer border border-theater-neutral-200">
+        <div className="flex flex-col md:flex-row">
+          {/* 画像部分 */}
+          <div className="relative h-40 md:h-48 md:w-1/3 bg-theater-neutral-100">
+            {post.image_url ? (
               <Image
-                src={post.image_url || "/24202513.jpg"}
-                alt=""
+                src={post.image_url}
+                alt={`${post.title}のサムネイル`}
                 layout="fill"
                 objectFit="cover"
-                objectPosition="center"
-                className="opacity-30"
+                className="group-hover:scale-105 transition-transform duration-300"
                 loading="lazy"
-                placeholder="blur"
-                blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiBmaWxsPSIjY2NjIi8+PC9zdmc+"
               />
-            </div>
-            <div className="relative h-full w-full flex items-center justify-center">
-              <Image
-                src={post.image_url || "/24202513.jpg"}
-                alt={`${post.title}の表紙画像`}
-                layout="fill"
-                objectFit="contain"
-                objectPosition="center"
-                className=""
-                loading="lazy"
-                placeholder="blur"
-                blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiBmaWxsPSIjY2NjIi8+PC9zdmc+"
-              />
-            </div>
+            ) : (
+              <div className="flex items-center justify-center h-full bg-gradient-to-br from-theater-primary-100 to-theater-secondary-100">
+                <FaTheaterMasks className="text-5xl text-theater-primary-300" />
+              </div>
+            )}
+            
+            {/* カテゴリーバッジ */}
+            {primaryCategory && (
+              <div className="absolute top-2 left-2 flex gap-1">
+                <span className="px-2 py-1 bg-theater-primary-500 text-white text-xs rounded-full">
+                  {primaryCategory.name}
+                </span>
+                {additionalCategories > 0 && (
+                  <span className="px-2 py-1 bg-theater-neutral-600 text-white text-xs rounded-full">
+                    +{additionalCategories}
+                  </span>
+                )}
+              </div>
+            )}
           </div>
-          <div className="w-full md:w-1/2 p-2 flex flex-col">
-            <div className="text-xs flex gap-2 whitespace-nowrap overflow-x-hidden mb-2">
-              {post.categories &&
-                post.categories.map((category: any) => (
-                  <Badge key={category.id} text={category.name} />
-                ))}
+          
+          {/* テキスト部分 */}
+          <div className="flex-1 p-4 md:p-5">
+            {/* タイトルと作者 */}
+            <div className="mb-3">
+              <h3 className="text-lg md:text-xl font-bold text-theater-neutral-900 group-hover:text-theater-primary-600 transition-colors line-clamp-1">
+                {post.title}
+              </h3>
+              <div className="flex items-center gap-1 text-sm text-theater-neutral-600 mt-1">
+                <FaPen className="text-theater-secondary-400" />
+                <span>{post.author.name}</span>
+              </div>
             </div>
-            <div className="md:flex md:gap-5 items-center mb-2">
-              <h2 className="text-base md:text-xl font-bold">{post.title}</h2>
-              <p className="text-xs md:text-base font-bold">{post.author.name}</p>
-            </div>
-            <div className="flex font-bold gap-1 text-xs md:text-sm mt-1 mb-2">
-              <p>
-                <span>男:</span>
-                {post.man !== -1 ? `${post.man}` : "不明"}
-              </p>
-              <p>
-                <span>女:</span>
-                {post.woman !== -1 ? `${post.woman}` : "不明"}
-              </p>
-              <p>
-                <span>総人数:</span>
-                {post.totalNumber !== -1 ? `${post.totalNumber}` : "不明"}
-              </p>
-              <p>
-                <span>上演時間:</span>
-                {post.playtime !== -1 ? `${post.playtime}分` : "不明"}
-              </p>
-            </div>
-            <div className="mt-2">
-              {post.synopsis && (
-                <p className="line-clamp-3 mr-3 mb-3 max-h-20 lg:max-h-24">
-                  {post.synopsis}
-                </p>
+            
+            {/* メタ情報 */}
+            <div className="flex flex-wrap gap-3 mb-3 text-sm">
+              {post.playtime && post.playtime > 0 && (
+                <div className="flex items-center gap-1 text-theater-neutral-600">
+                  <FaClock className="text-theater-secondary-400" />
+                  <span className="font-medium">{post.playtime}分</span>
+                </div>
               )}
+              
+              {post.totalNumber && post.totalNumber > 0 && (
+                <div className="flex items-center gap-1 text-theater-neutral-600">
+                  <FaUsers className="text-theater-accent-blue" />
+                  <span className="font-medium">{post.totalNumber}人</span>
+                </div>
+              )}
+              
+              {post.man && post.man > 0 && (
+                <div className="flex items-center gap-1 text-theater-neutral-600">
+                  <FaMale className="text-blue-500" />
+                  <span>{post.man}</span>
+                </div>
+              )}
+              
+              {post.woman && post.woman > 0 && (
+                <div className="flex items-center gap-1 text-theater-neutral-600">
+                  <FaFemale className="text-pink-500" />
+                  <span>{post.woman}</span>
+                </div>
+              )}
+            </div>
+            
+            {/* あらすじ */}
+            {post.synopsis && (
+              <p className="text-sm text-theater-neutral-700 line-clamp-2 md:line-clamp-3">
+                {post.synopsis}
+              </p>
+            )}
+            
+            {/* もっと見るリンク */}
+            <div className="mt-3 text-theater-primary-600 text-sm font-medium group-hover:text-theater-primary-700">
+              詳細を見る →
             </div>
           </div>
         </div>

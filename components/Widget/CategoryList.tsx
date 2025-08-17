@@ -17,10 +17,11 @@ const CategoryList = ({ categories }: any) => {
           {categories &&
             categories.map((category: any) => (
               <Link
+                key={category.id}
                 className="cursor-pointer"
                 href={`/categories/${category.id}`}
               >
-                <Badge key={category.id} text={category.name} />
+                <Badge text={category.name} />
               </Link>
             ))}
         </div>

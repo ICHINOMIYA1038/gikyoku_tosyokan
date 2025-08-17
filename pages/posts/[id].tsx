@@ -1,7 +1,7 @@
 import * as React from "react";
 import { PrismaClient, Post as PostType } from "@prisma/client";
 import Layout from "@/components/Layout";
-import PostDetail from "@/components/PostDetail";
+import PostDetailRedesigned from "@/components/PostDetailRedesigned";
 import {
   FacebookShareButton,
   HatenaShareButton,
@@ -17,8 +17,7 @@ import Seo from "@/components/seo";
 import StructuredData from "@/components/StructuredData";
 import OtherPosts from "@/components/Widget/OtherPosts";
 import { useState, useEffect, useRef } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faStar, faCommentDots, faTimes, faShareAlt, faBook, faExternalLinkAlt } from "@fortawesome/free-solid-svg-icons";
+import { FaStar, FaCommentDots, FaTimes, FaShareAlt, FaBook, FaExternalLinkAlt } from "react-icons/fa";
 
 const prisma = new PrismaClient();
 
@@ -427,7 +426,7 @@ function PostPage({ post }: any) {
           <div className={`relative mx-auto ${showComments && isTablet ? 'md:grid md:grid-cols-2 md:gap-6 md:max-w-4xl' : 'max-w-xl'}`}>
             {/* 記事コンテンツ */}
             <div className={`${showComments && isTablet ? 'md:col-span-1' : ''}`}>
-              <PostDetail post={post} />
+              <PostDetailRedesigned post={post} />
 
               {/* 読むボタンエリア - 本文内 */}
               {(hasAmazonLink || hasFreeLink) && (
@@ -440,9 +439,9 @@ function PostPage({ post }: any) {
                       rel="noopener noreferrer"
                       className="btn-amazon flex items-center justify-center px-6 py-3 rounded-lg shadow-md text-white font-bold text-lg"
                     >
-                      <FontAwesomeIcon icon={faBook} className="mr-2" />
+                      <FaBook className="mr-2" />
                       この戯曲を読む (Amazon)
-                      <FontAwesomeIcon icon={faExternalLinkAlt} className="ml-2 text-sm" />
+                      <FaExternalLinkAlt className="ml-2 text-sm" />
                     </a>
                   )}
 
@@ -454,9 +453,9 @@ function PostPage({ post }: any) {
                       rel="noopener noreferrer"
                       className="btn-free flex items-center justify-center px-6 py-3 rounded-lg shadow-md text-white font-bold text-lg"
                     >
-                      <FontAwesomeIcon icon={faBook} className="mr-2" />
+                      <FaBook className="mr-2" />
                       この戯曲を無料で読む
-                      <FontAwesomeIcon icon={faExternalLinkAlt} className="ml-2 text-sm" />
+                      <FaExternalLinkAlt className="ml-2 text-sm" />
                     </a>
                   )}
                 </div>
@@ -470,20 +469,23 @@ function PostPage({ post }: any) {
                   </label>
                   <div className="flex items-center mt-2 justify-center">
                     {[1, 2, 3, 4, 5].map((value) => (
-                      <span key={value}>
-                        <FontAwesomeIcon
-                          icon={faStar}
+                      <button
+                        key={value}
+                        type="button"
+                        onClick={() => handleStarClick(value)}
+                        className="p-1 hover:scale-110 transition-transform"
+                      >
+                        <FaStar
                           className={
                             value <= star
-                              ? "text-yellow-500 text-xl"
-                              : "text-gray-300 text-xl"
+                              ? "text-yellow-500 text-2xl cursor-pointer"
+                              : "text-gray-300 text-2xl cursor-pointer hover:text-yellow-300"
                           }
-                          onClick={() => handleStarClick(value)}
                         />
-                      </span>
+                      </button>
                     ))}
                     <button
-                      className="ml-2 py-1 px-3 rounded-md bg-blue-500 text-white text-sm"
+                      className="ml-2 py-1 px-3 rounded-md bg-blue-500 hover:bg-blue-600 text-white text-sm transition-colors"
                       onClick={handleSubmit}
                     >
                       評価を送信
@@ -515,7 +517,7 @@ function PostPage({ post }: any) {
                     className="text-gray-500 hover:text-gray-700 p-2 rounded-full hover:bg-gray-100"
                     onClick={toggleComments}
                   >
-                    <FontAwesomeIcon icon={faTimes} />
+                    <FaTimes />
                   </button>
                 </div>
                 <div className="p-4 pb-20">
@@ -543,9 +545,9 @@ function PostPage({ post }: any) {
                       rel="noopener noreferrer"
                       className="btn-amazon flex items-center justify-center px-4 py-2 rounded-lg text-white font-bold"
                     >
-                      <FontAwesomeIcon icon={faBook} className="mr-2" />
+                      <FaBook className="mr-2" />
                       Amazonで読む
-                      <FontAwesomeIcon icon={faExternalLinkAlt} className="ml-2 text-xs" />
+                      <FaExternalLinkAlt className="ml-2 text-xs" />
                     </a>
                   )}
 
@@ -556,9 +558,9 @@ function PostPage({ post }: any) {
                       rel="noopener noreferrer"
                       className="btn-free flex items-center justify-center px-4 py-2 rounded-lg text-white font-bold"
                     >
-                      <FontAwesomeIcon icon={faBook} className="mr-2" />
+                      <FaBook className="mr-2" />
                       無料で読む
-                      <FontAwesomeIcon icon={faExternalLinkAlt} className="ml-2 text-xs" />
+                      <FaExternalLinkAlt className="ml-2 text-xs" />
                     </a>
                   )}
                 </div>
@@ -599,7 +601,7 @@ function PostPage({ post }: any) {
                   onClick={toggleReadButtons}
                   aria-label="この戯曲を読む"
                 >
-                  <FontAwesomeIcon icon={faBook} size="lg" />
+                  <FaBook size="lg" />
                   <span className="ml-2 bg-white text-purple-600 text-xs font-bold py-1 px-2 rounded-full">
                     {showReadButtons ? "閉じる" : "読む"}
                   </span>
@@ -612,7 +614,7 @@ function PostPage({ post }: any) {
                 onClick={toggleShareButtons}
                 aria-label="記事を共有"
               >
-                <FontAwesomeIcon icon={faShareAlt} size="lg" />
+                <FaShareAlt className="text-lg" />
                 <span className="ml-2 bg-white text-green-600 text-xs font-bold py-1 px-2 rounded-full">
                   {showShareButtons ? "閉じる" : "共有"}
                 </span>
@@ -624,7 +626,7 @@ function PostPage({ post }: any) {
                 onClick={toggleComments}
                 aria-label="コメントを表示"
               >
-                <FontAwesomeIcon icon={faCommentDots} size="lg" />
+                <FaCommentDots className="text-lg" />
                 <span className="ml-2 bg-white text-blue-600 text-xs font-bold py-1 px-2 rounded-full">
                   {showComments ? "閉じる" : "コメント"}
                 </span>
@@ -655,7 +657,7 @@ function PostPage({ post }: any) {
                     className="text-gray-500 hover:text-gray-700 p-2 rounded-full hover:bg-gray-100"
                     onClick={toggleComments}
                   >
-                    <FontAwesomeIcon icon={faTimes} />
+                    <FaTimes />
                   </button>
                 </div>
 

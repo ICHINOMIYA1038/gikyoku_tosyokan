@@ -71,6 +71,80 @@ function generateSiteMap(posts, authors, categories) {
        })
        .join("")}
      
+     <!-- オリジナル脚本ページ（重要） -->
+     <url>
+       <loc>${`${EXTERNAL_DATA_URL}/diary/plot`}</loc>
+       <lastmod>${currentDate}</lastmod>
+       <changefreq>monthly</changefreq>
+       <priority>0.9</priority>
+     </url>
+     
+     <!-- ガイドページ（SEO重要） -->
+     <url>
+       <loc>${`${EXTERNAL_DATA_URL}/guide`}</loc>
+       <lastmod>${currentDate}</lastmod>
+       <changefreq>weekly</changefreq>
+       <priority>0.8</priority>
+     </url>
+     <url>
+       <loc>${`${EXTERNAL_DATA_URL}/guide/beginner/how-to-choose-script`}</loc>
+       <lastmod>${currentDate}</lastmod>
+       <changefreq>monthly</changefreq>
+       <priority>0.8</priority>
+     </url>
+     <url>
+       <loc>${`${EXTERNAL_DATA_URL}/guide/beginner/acting-basics`}</loc>
+       <lastmod>${currentDate}</lastmod>
+       <changefreq>monthly</changefreq>
+       <priority>0.8</priority>
+     </url>
+     <url>
+       <loc>${`${EXTERNAL_DATA_URL}/guide/school/culture-festival`}</loc>
+       <lastmod>${currentDate}</lastmod>
+       <changefreq>monthly</changefreq>
+       <priority>0.8</priority>
+     </url>
+     <url>
+       <loc>${`${EXTERNAL_DATA_URL}/guide/cast-size`}</loc>
+       <lastmod>${currentDate}</lastmod>
+       <changefreq>monthly</changefreq>
+       <priority>0.8</priority>
+     </url>
+     <url>
+       <loc>${`${EXTERNAL_DATA_URL}/guide/time`}</loc>
+       <lastmod>${currentDate}</lastmod>
+       <changefreq>monthly</changefreq>
+       <priority>0.8</priority>
+     </url>
+     <url>
+       <loc>${`${EXTERNAL_DATA_URL}/guide/club-management`}</loc>
+       <lastmod>${currentDate}</lastmod>
+       <changefreq>monthly</changefreq>
+       <priority>0.8</priority>
+     </url>
+     <url>
+       <loc>${`${EXTERNAL_DATA_URL}/guide/beginner/reading-script`}</loc>
+       <lastmod>${currentDate}</lastmod>
+       <changefreq>monthly</changefreq>
+       <priority>0.8</priority>
+     </url>
+     
+     <!-- 特集ページ（SEO重要） -->
+     <url>
+       <loc>${`${EXTERNAL_DATA_URL}/special/seasonal`}</loc>
+       <lastmod>${currentDate}</lastmod>
+       <changefreq>monthly</changefreq>
+       <priority>0.8</priority>
+     </url>
+     
+     <!-- 用語集ページ（SEO重要） -->
+     <url>
+       <loc>${`${EXTERNAL_DATA_URL}/glossary`}</loc>
+       <lastmod>${currentDate}</lastmod>
+       <changefreq>monthly</changefreq>
+       <priority>0.8</priority>
+     </url>
+     
      <!-- サポートページ -->
      <url>
        <loc>${`${EXTERNAL_DATA_URL}/support/about`}</loc>

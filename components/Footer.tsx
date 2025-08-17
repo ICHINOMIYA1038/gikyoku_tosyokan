@@ -15,7 +15,7 @@ const Footer: React.FC = () => {
   };
 
   return (
-    <footer className="bg-pink-300" role="contentinfo" aria-label="サイトフッター">
+    <footer className="bg-theater-primary-300" role="contentinfo" aria-label="サイトフッター">
       <div className="container mx-auto py-8">
         <Link href="/" className="block mb-4" aria-label="戯曲図書館ホームへ">
           <img src="/logo.png" alt="戯曲図書館ロゴ" className="w-16 h-auto" width="64" height="64" />
@@ -71,10 +71,10 @@ const Footer: React.FC = () => {
       <p className="text-center py-4">© 2024 戯曲図書館 All Rights Reserved.</p>
 
       {/* Mobile Footer */}
-      <div className="sm:hidden fixed bottom-0 left-0 right-0 p-4 bg-pink-300 text-white">
+      <div className="sm:hidden fixed bottom-0 left-0 right-0 p-4 bg-theater-primary-300 text-white">
         <nav className="flex justify-around space-x-4">
           <button
-            className="hover:bg-pink-400"
+            className="hover:bg-theater-primary-400"
             onClick={() => handleNavigate("/")}
           >
             <FaSearch className="inline-block mr-2" /> FIND

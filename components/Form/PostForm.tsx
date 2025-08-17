@@ -250,10 +250,11 @@ const PostForm: React.FC<any> = ({ authors, categories }: any) => {
               <ul className="space-y-1">
                 {categories.map((category: { id: any; name: any }) => (
                   <div
+                    key={category.id}
                     className="inline-block"
                     onClick={() => handleCategorySelect(category.id)}
                   >
-                    <SelectChip key={category.id} label={category.name} />
+                    <SelectChip label={category.name} />
                   </div>
                 ))}
               </ul>

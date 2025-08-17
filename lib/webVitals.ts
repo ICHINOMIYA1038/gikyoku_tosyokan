@@ -1,4 +1,10 @@
-import { getCLS, getFCP, getFID, getLCP, getTTFB } from 'web-vitals';
+import { onCLS, onFCP, onINP, onLCP, onTTFB } from 'web-vitals';
+
+declare global {
+  interface Window {
+    gtag: (...args: any[]) => void;
+  }
+}
 
 /**
  * Web Vitalsの計測とレポート
@@ -25,9 +31,9 @@ export function reportWebVitals(metric: any) {
  * Web Vitalsの初期化
  */
 export function initWebVitals() {
-  getCLS(reportWebVitals);
-  getFCP(reportWebVitals);
-  getFID(reportWebVitals);
-  getLCP(reportWebVitals);
-  getTTFB(reportWebVitals);
+  onCLS(reportWebVitals);
+  onFCP(reportWebVitals);
+  onINP(reportWebVitals);
+  onLCP(reportWebVitals);
+  onTTFB(reportWebVitals);
 }

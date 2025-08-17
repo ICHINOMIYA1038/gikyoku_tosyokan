@@ -85,7 +85,7 @@ export default async function handler(
     const posts = await prisma.post.findMany({
       take: 30,
       orderBy: {
-        createdAt: "desc",
+        id: "desc",
       },
       include: {
         author: true,
