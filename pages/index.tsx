@@ -150,15 +150,78 @@ export default function Home({ news, authors, posts, categories }: any) {
 }
 
 export async function getStaticProps() {
-  let authors, posts, categories;
-  let formattedNews = []; // formattedNews を初期化
+  let formattedNews = [];
+  let authors = [];
+  let posts = [];
+  let categories = [];
 
   try {
-    // データベースからニュースを取得
-    const news = await prisma.news.findMany();
+    // 並列でデータを取得（最適化）
+    const [newsData, authorsData, postsData, categoriesData] = await Promise.all([
+      // ニュースは最新10件のみ
+      prisma.news.findMany({
+        take: 10,
+        orderBy: { date: 'desc' },
+        select: {
+          id: true,
+          date: true,
+          url: true,
+          category: true,
+          title: true,
+        },
+      }),
+      // 作者は必要最小限のフィールドのみ、最大50件
+      prisma.author.findMany({
+        take: 50,
+        select: {
+          id: true,
+          name: true,
+          group: true,
+        },
+        orderBy: { name: 'asc' },
+      }),
+      // 人気の投稿を20件のみ取得
+      prisma.post.findMany({
+        take: 20,
+        select: {
+          id: true,
+          title: true,
+          image_url: true,
+          averageRating: true,
+          playtime: true,
+          totalNumber: true,
+          man: true,
+          woman: true,
+          author: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+        },
+        orderBy: [
+          { averageRating: 'desc' },
+          { id: 'desc' },
+        ],
+      }),
+      // カテゴリは基本情報のみ
+      prisma.category.findMany({
+        select: {
+          id: true,
+          name: true,
+          image_url: true,
+          _count: {
+            select: {
+              posts: true,
+            },
+          },
+        },
+        orderBy: { name: 'asc' },
+      }),
+    ]);
 
-    // 日付データの変換（日本の形式）
-    formattedNews = news.map((item) => ({
+    // 日付データの変換
+    formattedNews = newsData.map((item) => ({
       ...item,
       date: item.date.toLocaleDateString("ja-JP", {
         year: "numeric",
@@ -167,26 +230,20 @@ export async function getStaticProps() {
       }),
     }));
 
-    // その他のデータを取得
-    authors = await prisma.author.findMany();
-    posts = await prisma.post.findMany({
-      include: { author: true },
-    });
-    categories = await prisma.category.findMany({
-      include: {
-        posts: {
-          include: { author: true },
-        },
-      },
-    });
+    authors = authorsData;
+    posts = postsData;
+    categories = categoriesData;
   } catch (error) {
-    // エラーハンドリング
     console.error("Error fetching data: ", error);
-    // エラーが発生した場合の処理
-    return { props: { error: "Data fetching error" } };
-  } finally {
-    // データベース接続を閉じる
-    await prisma.$disconnect();
+    return { 
+      props: { 
+        news: [],
+        authors: [],
+        posts: [],
+        categories: [],
+      },
+      revalidate: 60, // エラー時は1分後に再試行
+    };
   }
 
   return {
@@ -196,6 +253,6 @@ export async function getStaticProps() {
       posts,
       categories,
     },
-    revalidate: 3600, // 必要に応じて再検証期間を調整
+    revalidate: 3600, // 1時間キャッシュ
   };
 }
