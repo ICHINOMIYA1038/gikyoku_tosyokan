@@ -474,19 +474,56 @@ function CategoryPage({ category }: any) {
 
 export default CategoryPage;
 
-export async function getServerSideProps(context: any) {
+export async function getStaticPaths() {
+  // 全カテゴリのIDを取得
+  const categories = await prisma.category.findMany({
+    select: { id: true },
+  });
+
+  const paths = categories.map((category) => ({
+    params: { id: category.id.toString() },
+  }));
+
+  return {
+    paths,
+    fallback: 'blocking', // 新しいカテゴリが追加された場合に対応
+  };
+}
+
+export async function getStaticProps(context: any) {
   const categoryid = parseInt(context.params.id);
   if (isNaN(categoryid)) {
     return {
       notFound: true,
     };
   }
+  
   try {
     const category = await prisma.category.findUnique({
       where: { id: categoryid },
-      include: {
+      select: {
+        id: true,
+        name: true,
+        image_url: true,
+        contentMarkdown: true,
         posts: {
-          include: { author: true },
+          select: {
+            id: true,
+            title: true,
+            synopsis: true,
+            image_url: true,
+            man: true,
+            woman: true,
+            totalNumber: true,
+            playtime: true,
+            averageRating: true,
+            author: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+          },
         },
       },
     });
@@ -501,12 +538,11 @@ export async function getServerSideProps(context: any) {
       props: {
         category,
       },
+      revalidate: 3600, // 1時間ごとに再生成
     };
   } catch {
     return {
       notFound: true,
     };
-  } finally {
-    await prisma.$disconnect();
   }
 }
