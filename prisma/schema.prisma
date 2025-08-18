@@ -135,5 +135,8 @@ model Announcement {
   updatedAt        DateTime @updatedAt
   views            Int      @default(0)
   
+  @@index([createdAt(sort: Desc)])
+  @@index([performanceDate])
+  @@index([views(sort: Desc)])
   @@map("Announcement")
 }
