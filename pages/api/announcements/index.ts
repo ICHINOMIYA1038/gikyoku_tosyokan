@@ -14,6 +14,18 @@ export default async function handler(
 
       const [announcements, total] = await Promise.all([
         prisma.announcement.findMany({
+          select: {
+            id: true,
+            title: true,
+            content: true,
+            performanceDate: true,
+            venue: true,
+            ticketPrice: true,
+            contactInfo: true,
+            authorName: true,
+            createdAt: true,
+            views: true,
+          },
           orderBy: { createdAt: 'desc' },
           skip,
           take: limitNum,
@@ -21,6 +33,9 @@ export default async function handler(
         prisma.announcement.count(),
       ]);
 
+      // キャッシュヘッダーを設定（1分間キャッシュ）
+      res.setHeader('Cache-Control', 's-maxage=60, stale-while-revalidate');
+      
       res.status(200).json({
         announcements,
         total,
