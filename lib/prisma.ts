@@ -1,6 +1,10 @@
 import { PrismaClient } from "@prisma/client";
 
-// Vercelのサーバーレス環境用の最適化設定
+declare global {
+  var prisma: PrismaClient | undefined;
+}
+
+// Prismaクライアントの設定を最適化
 const prismaClientSingleton = () => {
   return new PrismaClient({
     log: process.env.NODE_ENV === "development" ? ["error", "warn"] : ["error"],
@@ -12,23 +16,12 @@ const prismaClientSingleton = () => {
   });
 };
 
-type PrismaClientSingleton = ReturnType<typeof prismaClientSingleton>;
+// グローバルインスタンスを使用（コネクションプールの枯渇を防ぐ）
+export const prisma = global.prisma || prismaClientSingleton();
 
-const globalForPrisma = globalThis as unknown as {
-  prisma: PrismaClientSingleton | undefined;
-};
-
-export const prisma = globalForPrisma.prisma ?? prismaClientSingleton();
-
-// 開発環境でのみグローバルに保持
 if (process.env.NODE_ENV !== "production") {
-  globalForPrisma.prisma = prisma;
+  global.prisma = prisma;
 }
 
-// Vercelのサーバーレス環境では接続を自動的に閉じる
-if (process.env.NODE_ENV === "production" && typeof window === "undefined") {
-  // リクエスト終了時にコネクションを閉じる
-  process.on("beforeExit", async () => {
-    await prisma.$disconnect();
-  });
-}
+// 本番環境では自動的なdisconnectを行わない
+// Vercelが自動的にプロセスを終了するため
