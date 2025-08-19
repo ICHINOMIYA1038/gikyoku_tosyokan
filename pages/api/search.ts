@@ -137,55 +137,56 @@ export default async function handler(
       };
     }
 
-    // 並列実行で高速化
-    const [totalResultsCount, searchResults] = await Promise.all([
-      prisma.post.count({ where: whereCondition }),
-      prisma.post.findMany({
-        where: whereCondition,
-        orderBy: sortField,
-        take: perPage,
-        skip: skip,
-        select: {
-          id: true,
-          title: true,
-          synopsis: true,
-          image_url: true,
-          man: true,
-          woman: true,
-          others: true,
-          totalNumber: true,
-          playtime: true,
-          averageRating: true,
-          author: {
-            select: {
-              id: true,
-              name: true,
-              group: true,
-            },
-          },
-          categories: {
-            select: {
-              id: true,
-              name: true,
-            },
-          },
-          _count: {
-            select: {
-              ratings: true,
-              access: true,
-            },
+    // 最初にデータ取得（カウントは別途）
+    const searchResults = await prisma.post.findMany({
+      where: whereCondition,
+      orderBy: sortField,
+      take: perPage,
+      skip: skip,
+      select: {
+        id: true,
+        title: true,
+        synopsis: true,
+        image_url: true,
+        man: true,
+        woman: true,
+        others: true,
+        totalNumber: true,
+        playtime: true,
+        averageRating: true,
+        author: {
+          select: {
+            id: true,
+            name: true,
+            group: true,
           },
         },
-      }),
-    ]);
+        categories: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        _count: {
+          select: {
+            ratings: true,
+          },
+        },
+      },
+    });
 
-    const limit_page = Math.ceil(totalResultsCount / perPage);
+    // カウントクエリを非同期で実行（結果待ちしない）
+    const totalResultsCountPromise = prisma.post.count({ where: whereCondition });
     
     // レスポンスフォーマットを維持
     const formattedResults = searchResults.map(post => ({
       ...post,
       ratings: post._count ? Array(post._count.ratings).fill({ id: 1 }) : [],
     }));
+
+    // カウント結果を待つ（ただし検索結果は既に取得済み）
+    const totalResultsCount = await totalResultsCountPromise;
+    const limit_page = Math.ceil(totalResultsCount / perPage);
 
     const response = {
       searchResults: formattedResults,

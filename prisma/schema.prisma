@@ -20,6 +20,7 @@ model Author {
   authorTwitter String?
   groupTwitter String?
 
+  @@index([name])
   @@map("Author")
 }
 
@@ -51,6 +52,16 @@ model Post {
   author              Author          @relation(fields: [author_id], references: [id])
   categories          Category[]      @relation("PostCategory")
 
+  @@index([title])
+  @@index([synopsis])
+  @@index([man])
+  @@index([woman])
+  @@index([totalNumber])
+  @@index([playtime])
+  @@index([averageRating])
+  @@index([author_id])
+  @@index([man, woman, totalNumber])
+  @@index([playtime, averageRating])
   @@map("Post")
 }
 
