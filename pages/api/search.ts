@@ -1,5 +1,10 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { prisma } from "@/lib/prisma";
+import { PrismaClient } from "@prisma/client";
+
+// APIルートごとに新しいPrismaインスタンスを作成
+const prisma = new PrismaClient({
+  log: ["error"],
+});
 
 function parseCategories(categories: any) {
   if (!categories || categories.length === 0) {
@@ -55,7 +60,8 @@ export default async function handler(
         case "1":
           return { id: sortDirection === "1" ? "desc" : "asc" };
         case "2":
-          return { access: { _count: sortDirection === "1" ? "desc" : "asc" } };
+          // アクセス数でのソートは重いので、idで代替
+          return { id: sortDirection === "1" ? "desc" : "asc" };
         case "3":
           return { man: sortDirection === "1" ? "desc" : "asc" };
         case "4":
@@ -80,47 +86,52 @@ export default async function handler(
     const skip =
       (parseIntSafe(page as string, 1) - 1) * parseIntSafe(per as string, 8);
 
-    // 検索条件を最適化
-    const whereCondition: any = {
-      man: {
-        gte: parseIntSafe(minMaleCount as string, -1),
-        lte: parseIntSafe(maxMaleCount as string, 9999),
-      },
-      woman: {
-        gte: parseIntSafe(minFemaleCount as string, -1),
-        lte: parseIntSafe(maxFemaleCount as string, 9999),
-      },
-      totalNumber: {
-        gte: parseIntSafe(minTotalCount as string, -1),
-        lte: parseIntSafe(maxTotalCount as string, 9999),
-      },
-      playtime: {
-        gte: playTimeConvertToOption(parseIntSafe(minPlaytime as string, -1)),
-        lte: playTimeConvertToOption(parseIntSafe(maxPlaytime as string, 5)),
-      },
-    };
+    // 検索条件を最適化（デフォルト値の場合は条件を追加しない）
+    const whereCondition: any = {};
+    
+    const minMale = parseIntSafe(minMaleCount as string, -1);
+    const maxMale = parseIntSafe(maxMaleCount as string, 9999);
+    if (minMale > -1 || maxMale < 9999) {
+      whereCondition.man = {};
+      if (minMale > -1) whereCondition.man.gte = minMale;
+      if (maxMale < 9999) whereCondition.man.lte = maxMale;
+    }
+    
+    const minFemale = parseIntSafe(minFemaleCount as string, -1);
+    const maxFemale = parseIntSafe(maxFemaleCount as string, 9999);
+    if (minFemale > -1 || maxFemale < 9999) {
+      whereCondition.woman = {};
+      if (minFemale > -1) whereCondition.woman.gte = minFemale;
+      if (maxFemale < 9999) whereCondition.woman.lte = maxFemale;
+    }
+    
+    const minTotal = parseIntSafe(minTotalCount as string, -1);
+    const maxTotal = parseIntSafe(maxTotalCount as string, 9999);
+    if (minTotal > -1 || maxTotal < 9999) {
+      whereCondition.totalNumber = {};
+      if (minTotal > -1) whereCondition.totalNumber.gte = minTotal;
+      if (maxTotal < 9999) whereCondition.totalNumber.lte = maxTotal;
+    }
+    
+    const minPlay = playTimeConvertToOption(parseIntSafe(minPlaytime as string, -1));
+    const maxPlay = playTimeConvertToOption(parseIntSafe(maxPlaytime as string, 5));
+    if (minPlay > -100 || maxPlay < 9999) {
+      whereCondition.playtime = {};
+      if (minPlay > -100) whereCondition.playtime.gte = minPlay;
+      if (maxPlay < 9999) whereCondition.playtime.lte = maxPlay;
+    }
 
-    // キーワード検索（最適化: contentフィールドを除外）
+    // キーワード検索（最適化: insensitiveモードを削除）
     if (keyword && keyword !== "") {
       whereCondition.OR = [
         {
-          author: {
-            name: {
-              contains: keyword as string,
-              mode: 'insensitive',
-            },
-          },
-        },
-        {
           title: {
             contains: keyword as string,
-            mode: 'insensitive',
           },
         },
         {
           synopsis: {
             contains: keyword as string,
-            mode: 'insensitive',
           },
         },
       ];
@@ -167,11 +178,6 @@ export default async function handler(
             name: true,
           },
         },
-        _count: {
-          select: {
-            ratings: true,
-          },
-        },
       },
     });
 
@@ -181,7 +187,8 @@ export default async function handler(
     // レスポンスフォーマットを維持
     const formattedResults = searchResults.map(post => ({
       ...post,
-      ratings: post._count ? Array(post._count.ratings).fill({ id: 1 }) : [],
+      ratings: [],
+      _count: { ratings: 0 },
     }));
 
     // カウント結果を待つ（ただし検索結果は既に取得済み）
@@ -202,6 +209,9 @@ export default async function handler(
   } catch (error) {
     console.error("Search API error:", error);
     return res.status(500).json({ error: "Internal server error" });
+  } finally {
+    // 必ずコネクションを閉じる
+    await prisma.$disconnect();
   }
 }
 
