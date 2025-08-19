@@ -475,18 +475,10 @@ function CategoryPage({ category }: any) {
 export default CategoryPage;
 
 export async function getStaticPaths() {
-  // 全カテゴリのIDを取得
-  const categories = await prisma.category.findMany({
-    select: { id: true },
-  });
-
-  const paths = categories.map((category) => ({
-    params: { id: category.id.toString() },
-  }));
-
+  // ビルド時にはパスを生成せず、全てfallbackで処理
   return {
-    paths,
-    fallback: 'blocking', // 新しいカテゴリが追加された場合に対応
+    paths: [],
+    fallback: 'blocking',
   };
 }
 
