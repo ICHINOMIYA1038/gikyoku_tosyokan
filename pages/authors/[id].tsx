@@ -151,19 +151,59 @@ function AuthorPage({ author }: any) {
 
 export default AuthorPage;
 
-export async function getServerSideProps(context: any) {
+export async function getStaticPaths() {
+  // 主要な作者のみ事前生成
+  const authors = await prisma.author.findMany({
+    select: { id: true },
+    take: 100,
+    orderBy: { posts: { _count: 'desc' } },
+  });
+
+  const paths = authors.map((author) => ({
+    params: { id: author.id.toString() },
+  }));
+
+  return {
+    paths,
+    fallback: 'blocking',
+  };
+}
+
+export async function getStaticProps(context: any) {
   const authorId = parseInt(context.params.id);
   if (isNaN(authorId)) {
     return {
       notFound: true,
     };
   }
+  
   try {
     const author = await prisma.author.findUnique({
       where: { id: authorId },
-      include: {
+      select: {
+        id: true,
+        name: true,
+        group: true,
+        profile: true,
+        website: true,
         posts: {
-          include: { author: true },
+          select: {
+            id: true,
+            title: true,
+            synopsis: true,
+            image_url: true,
+            man: true,
+            woman: true,
+            totalNumber: true,
+            playtime: true,
+            averageRating: true,
+            author: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+          },
         },
       },
     });
@@ -178,12 +218,11 @@ export async function getServerSideProps(context: any) {
       props: {
         author,
       },
+      revalidate: 3600, // 1時間ごとに再生成
     };
   } catch {
     return {
       notFound: true,
     };
-  } finally {
-    await prisma.$disconnect();
   }
 }

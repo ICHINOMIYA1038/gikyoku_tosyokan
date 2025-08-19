@@ -16,9 +16,15 @@ const prismaClientOptions: any = {
 
 // Supabase接続の場合、接続プールを最適化
 if (process.env.POSTGRES_PRISMA_URL?.includes('supabase')) {
-  // Supabase用の接続タイムアウトと再試行設定
-  prismaClientOptions.datasources.db.url = 
-    `${process.env.POSTGRES_PRISMA_URL}?pgbouncer=true&connection_limit=30&pool_timeout=20`;
+  // 既存のパラメータを保持しつつ新しいパラメータを追加
+  const baseUrl = process.env.POSTGRES_PRISMA_URL;
+  const separator = baseUrl.includes('?') ? '&' : '?';
+  
+  // 既にパラメータが含まれていない場合のみ追加
+  if (!baseUrl.includes('connection_limit') && !baseUrl.includes('pool_timeout')) {
+    prismaClientOptions.datasources.db.url = 
+      `${baseUrl}${separator}connection_limit=30&pool_timeout=20`;
+  }
 }
 
 export const prisma =
