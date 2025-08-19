@@ -1,7 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import { prisma } from "@/lib/prisma";
 
 function parseCategories(categories: any) {
   if (!categories || categories.length === 0) {
@@ -17,6 +15,7 @@ function parseCategories(categories: any) {
   // 数値に変換できた要素のみをフィルタリング
   return parsedCategories.filter((category: any) => category !== undefined);
 }
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -28,7 +27,7 @@ export default async function handler(
   // 検索APIにキャッシュヘッダーを設定（短めの時間）
   res.setHeader(
     "Cache-Control",
-    "public, s-maxage=300, stale-while-revalidate=600"
+    "public, s-maxage=60, stale-while-revalidate=300"
   );
 
   try {
@@ -81,31 +80,8 @@ export default async function handler(
     const skip =
       (parseIntSafe(page as string, 1) - 1) * parseIntSafe(per as string, 8);
 
-    const whereCondition = {
-      OR: [
-        {
-          author: {
-            name: {
-              contains: keyword as string,
-            },
-          },
-        },
-        {
-          title: {
-            contains: keyword as string,
-          },
-        },
-        {
-          content: {
-            contains: keyword as string,
-          },
-        },
-        {
-          synopsis: {
-            contains: keyword as string,
-          },
-        },
-      ],
+    // 検索条件を最適化
+    const whereCondition: any = {
       man: {
         gte: parseIntSafe(minMaleCount as string, -1),
         lte: parseIntSafe(maxMaleCount as string, 9999),
@@ -122,21 +98,46 @@ export default async function handler(
         gte: playTimeConvertToOption(parseIntSafe(minPlaytime as string, -1)),
         lte: playTimeConvertToOption(parseIntSafe(maxPlaytime as string, 5)),
       },
-      ...(ids.length > 0
-        ? {
-            AND: ids.map((id: any) => ({
-              categories: {
-                some: {
-                  id: {
-                    equals: id,
-                  },
-                },
-              },
-            })),
-          }
-        : {}),
     };
 
+    // キーワード検索（最適化: contentフィールドを除外）
+    if (keyword && keyword !== "") {
+      whereCondition.OR = [
+        {
+          author: {
+            name: {
+              contains: keyword as string,
+              mode: 'insensitive',
+            },
+          },
+        },
+        {
+          title: {
+            contains: keyword as string,
+            mode: 'insensitive',
+          },
+        },
+        {
+          synopsis: {
+            contains: keyword as string,
+            mode: 'insensitive',
+          },
+        },
+      ];
+    }
+
+    // カテゴリフィルター（最適化）
+    if (ids.length > 0) {
+      whereCondition.categories = {
+        some: {
+          id: {
+            in: ids,
+          },
+        },
+      };
+    }
+
+    // 並列実行で高速化
     const [totalResultsCount, searchResults] = await Promise.all([
       prisma.post.count({ where: whereCondition }),
       prisma.post.findMany({
@@ -144,17 +145,50 @@ export default async function handler(
         orderBy: sortField,
         take: perPage,
         skip: skip,
-        include: {
-          author: true,
-          categories: true,
-          ratings: { select: { id: true } },
+        select: {
+          id: true,
+          title: true,
+          synopsis: true,
+          image_url: true,
+          man: true,
+          woman: true,
+          others: true,
+          totalNumber: true,
+          playtime: true,
+          averageRating: true,
+          author: {
+            select: {
+              id: true,
+              name: true,
+              group: true,
+            },
+          },
+          categories: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+          _count: {
+            select: {
+              ratings: true,
+              access: true,
+            },
+          },
         },
       }),
     ]);
 
     const limit_page = Math.ceil(totalResultsCount / perPage);
+    
+    // レスポンスフォーマットを維持
+    const formattedResults = searchResults.map(post => ({
+      ...post,
+      ratings: post._count ? Array(post._count.ratings).fill({ id: 1 }) : [],
+    }));
+
     const response = {
-      searchResults,
+      searchResults: formattedResults,
       pagination: {
         count: totalResultsCount,
         current: page,
@@ -165,9 +199,8 @@ export default async function handler(
 
     return res.status(200).json(response);
   } catch (error) {
+    console.error("Search API error:", error);
     return res.status(500).json({ error: "Internal server error" });
-  } finally {
-    await prisma.$disconnect();
   }
 }
 

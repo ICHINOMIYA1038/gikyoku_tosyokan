@@ -4,10 +4,11 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "npx prisma generate && next build",
     "start": "next start",
     "lint": "next lint",
-    "postinstall": "if [ -f prisma/schema.prisma ]; then npx prisma generate; fi"
+    "postinstall": "if [ -f prisma/schema.prisma ]; then npx prisma generate; fi",
+    "migrate:deploy": "npx prisma migrate deploy"
   },
   "prisma": {
     "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"

@@ -24,6 +24,9 @@ const nextConfig = {
   experimental: {
     optimizeCss: true,
   },
+  
+  // Vercelのタイムアウト対策
+  staticPageGenerationTimeout: 120, // 静的生成のタイムアウトを120秒に延長
   async redirects() {
     return [
       // wwwありからwwwなしへリダイレクト
