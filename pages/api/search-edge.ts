@@ -1,6 +1,5 @@
 import { NextRequest } from "next/server";
-import { PrismaClient } from "@prisma/client/edge";
-import { withAccelerate } from "@prisma/extension-accelerate";
+import { PrismaClient } from "@prisma/client";
 
 export const config = {
   runtime: "edge",
@@ -8,7 +7,7 @@ export const config = {
 
 const prismaEdge = new PrismaClient({
   datasourceUrl: process.env.POSTGRES_PRISMA_URL,
-}).$extends(withAccelerate());
+});
 
 function parseCategories(categories: any) {
   if (!categories || categories.length === 0) {
@@ -129,7 +128,6 @@ export default async function handler(req: NextRequest) {
           },
         },
       },
-      cacheStrategy: { ttl: 60 }, // 1分間キャッシュ
     });
 
     const formattedResults = searchResults.map(post => ({
@@ -139,7 +137,7 @@ export default async function handler(req: NextRequest) {
     }));
 
     const totalResultsCount = page === 1 
-      ? await prismaEdge.post.count({ where: whereCondition, cacheStrategy: { ttl: 60 } })
+      ? await prismaEdge.post.count({ where: whereCondition })
       : page * per + per;
 
     const limit_page = Math.ceil(totalResultsCount / per);
