@@ -1,6 +1,5 @@
 import { NextRequest } from "next/server";
-import { PrismaClient } from "@prisma/client/edge";
-import { withAccelerate } from "@prisma/extension-accelerate";
+import { PrismaClient } from "@prisma/client";
 
 export const config = {
   runtime: "edge",
@@ -8,7 +7,7 @@ export const config = {
 
 const prismaEdge = new PrismaClient({
   datasourceUrl: process.env.POSTGRES_PRISMA_URL,
-}).$extends(withAccelerate());
+});
 
 function parseCategories(categories: any) {
   if (!categories || categories.length === 0) {
@@ -59,15 +58,16 @@ export default async function handler(req: NextRequest) {
 
   const ids = parseCategories(categories);
 
-  const getSortField = (sortValue: any) => {
+  const getSortField = (sortValue: any): any => {
+    const direction = sortDirection === "1" ? "desc" : "asc";
     switch (sortValue) {
-      case "1": return { id: sortDirection === "1" ? "desc" : "asc" };
-      case "2": return { access: { _count: sortDirection === "1" ? "desc" : "asc" } };
-      case "3": return { man: sortDirection === "1" ? "desc" : "asc" };
-      case "4": return { woman: sortDirection === "1" ? "desc" : "asc" };
-      case "5": return { totalNumber: sortDirection === "1" ? "desc" : "asc" };
-      case "6": return { playtime: sortDirection === "1" ? "desc" : "asc" };
-      default: return { id: sortDirection === "1" ? "desc" : "asc" };
+      case "1": return { id: direction };
+      case "2": return { id: direction }; // アクセス数ソートは重いのでidで代替
+      case "3": return { man: direction };
+      case "4": return { woman: direction };
+      case "5": return { totalNumber: direction };
+      case "6": return { playtime: direction };
+      default: return { id: direction };
     }
   };
 
@@ -129,7 +129,6 @@ export default async function handler(req: NextRequest) {
           },
         },
       },
-      cacheStrategy: { ttl: 60 }, // 1分間キャッシュ
     });
 
     const formattedResults = searchResults.map(post => ({
@@ -139,7 +138,7 @@ export default async function handler(req: NextRequest) {
     }));
 
     const totalResultsCount = page === 1 
-      ? await prismaEdge.post.count({ where: whereCondition, cacheStrategy: { ttl: 60 } })
+      ? await prismaEdge.post.count({ where: whereCondition })
       : page * per + per;
 
     const limit_page = Math.ceil(totalResultsCount / per);
