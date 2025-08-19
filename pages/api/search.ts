@@ -1,10 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { PrismaClient } from "@prisma/client";
-
-// APIルートごとに新しいPrismaインスタンスを作成
-const prisma = new PrismaClient({
-  log: ["error"],
-});
+import { prisma } from "@/lib/prisma";
 
 function parseCategories(categories: any) {
   if (!categories || categories.length === 0) {
@@ -209,9 +204,6 @@ export default async function handler(
   } catch (error) {
     console.error("Search API error:", error);
     return res.status(500).json({ error: "Internal server error" });
-  } finally {
-    // 必ずコネクションを閉じる
-    await prisma.$disconnect();
   }
 }
 
