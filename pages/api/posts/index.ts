@@ -18,12 +18,33 @@ export default async function handler(
         orderBy: {
           id: "asc", 
         },
-        include: {
+        select: {
+          id: true,
+          title: true,
+          playtime: true,
+          man: true,
+          woman: true,
+          others: true,
+          totalNumber: true,
+          synopsis: true,
+          image_url: true,
+          author_id: true,
           _count: {
             select: { access: true },
           },
-          author: true, // Include the associated Author records
-          categories: true,
+          author: {
+            select: {
+              id: true,
+              name: true,
+              group: true
+            }
+          },
+          categories: {
+            select: {
+              id: true,
+              name: true
+            }
+          },
         },
       });
       res.status(200).json(posts);

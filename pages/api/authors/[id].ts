@@ -8,18 +8,44 @@ export default async function handler(
 ) {
   if (req.method === "GET") {
     const { id } = req.query;
+    const startTime = Date.now();
 
     try {
+      // キャッシュヘッダーを設定（1時間キャッシュ）
+      res.setHeader(
+        "Cache-Control",
+        "public, s-maxage=3600, stale-while-revalidate=7200"
+      );
+      
+      const queryStart = Date.now();
       const author = await prisma.author.findUnique({
         where: {
           id: Number(id),
         },
-        include: { posts: { include: { author: true } } },
+        include: { 
+          posts: {
+            select: {
+              id: true,
+              title: true,
+              playtime: true,
+              man: true,
+              woman: true,
+              totalNumber: true,
+              synopsis: true,
+              image_url: true
+            }
+          } 
+        },
       });
 
+      const queryTime = Date.now() - queryStart;
+      
       if (!author) {
         res.status(404).json({ error: "Author not found" });
       } else {
+        const totalTime = Date.now() - startTime;
+        res.setHeader("X-Query-Time", queryTime.toString());
+        res.setHeader("X-Total-Time", totalTime.toString());
         res.status(200).json(author);
       }
     } catch (error) {
