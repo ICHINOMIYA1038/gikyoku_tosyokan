@@ -1,6 +1,4 @@
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import { prisma } from "@/lib/prisma";
 
 export default async (req: any, res: any) => {
   if (req.method === "POST") {
@@ -60,6 +58,4 @@ export default async (req: any, res: any) => {
   } else {
     res.status(405).end();
   }
-
-  await prisma.$disconnect();
 };

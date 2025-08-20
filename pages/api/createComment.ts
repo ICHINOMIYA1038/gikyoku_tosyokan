@@ -1,11 +1,10 @@
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/lib/prisma";
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const prisma = new PrismaClient();
   if (req.method === "POST") {
     const { author, content, isParent, targetid } = req.body;
 
@@ -38,8 +37,6 @@ export default async function handler(
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: "コメントの投稿中にエラーが発生しました" });
-    } finally {
-      await prisma.$disconnect(); // リクエスト処理の最後で接続を切断
     }
   } else {
     // POST以外のHTTPメソッドに対する処理を追加する場合はここに記述

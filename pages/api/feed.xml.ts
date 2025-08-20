@@ -1,7 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import { prisma } from "@/lib/prisma";
 
 function escapeXml(text: string): string {
   if (!text) return "";
@@ -106,7 +104,5 @@ export default async function handler(
   } catch (error) {
     console.error("RSS feed generation error:", error);
     res.status(500).json({ error: "Failed to generate RSS feed" });
-  } finally {
-    await prisma.$disconnect();
   }
 }
