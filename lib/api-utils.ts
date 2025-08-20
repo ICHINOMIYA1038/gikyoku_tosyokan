@@ -11,14 +11,14 @@ export function withTiming(
     const originalEnd = res.end;
     
     // end関数をオーバーライド
-    res.end = function(...args: any[]) {
+    (res as any).end = function(...args: any[]) {
       const duration = Date.now() - start;
       res.setHeader('X-Response-Time', `${duration}ms`);
       console.log(`[${req.method}] ${req.url} - ${duration}ms`);
       
       // 元のend関数を呼び出す
-      return originalEnd.apply(res, args);
-    } as any;
+      return originalEnd.apply(res, args as any);
+    };
     
     try {
       await handler(req, res);
