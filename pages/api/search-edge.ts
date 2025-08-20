@@ -1,13 +1,9 @@
 import { NextRequest } from "next/server";
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/lib/prisma";
 
 export const config = {
   runtime: "edge",
 };
-
-const prismaEdge = new PrismaClient({
-  datasourceUrl: process.env.POSTGRES_PRISMA_URL,
-});
 
 function parseCategories(categories: any) {
   if (!categories || categories.length === 0) {
@@ -98,7 +94,7 @@ export default async function handler(req: NextRequest) {
       };
     }
 
-    const searchResults = await prismaEdge.post.findMany({
+    const searchResults = await prisma.post.findMany({
       where: whereCondition,
       orderBy: sortField,
       take: per,
@@ -138,7 +134,7 @@ export default async function handler(req: NextRequest) {
     }));
 
     const totalResultsCount = page === 1 
-      ? await prismaEdge.post.count({ where: whereCondition })
+      ? await prisma.post.count({ where: whereCondition })
       : page * per + per;
 
     const limit_page = Math.ceil(totalResultsCount / per);
