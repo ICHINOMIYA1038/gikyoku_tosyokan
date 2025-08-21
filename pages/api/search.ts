@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/lib/prisma";
+import { withRetry } from "@/lib/db-utils";
 
 function parseCategories(categories: any) {
   if (!categories || categories.length === 0) {
@@ -143,41 +144,47 @@ export default async function handler(
       };
     }
 
-    // 最初にデータ取得（カウントは別途）
-    const searchResults = await prisma.post.findMany({
-      where: whereCondition,
-      orderBy: sortField,
-      take: perPage,
-      skip: skip,
-      select: {
-        id: true,
-        title: true,
-        synopsis: true,
-        image_url: true,
-        man: true,
-        woman: true,
-        others: true,
-        totalNumber: true,
-        playtime: true,
-        averageRating: true,
-        author: {
-          select: {
-            id: true,
-            name: true,
-            group: true,
+    // リトライ機能付きでデータ取得
+    const searchResults = await withRetry(async () => {
+      return await prisma.post.findMany({
+        where: whereCondition,
+        orderBy: sortField,
+        take: perPage,
+        skip: skip,
+        select: {
+          id: true,
+          title: true,
+          synopsis: true,
+          image_url: true,
+          man: true,
+          woman: true,
+          others: true,
+          totalNumber: true,
+          playtime: true,
+          averageRating: true,
+          author: {
+            select: {
+              id: true,
+              name: true,
+              group: true,
+            },
+          },
+          categories: {
+            select: {
+              id: true,
+              name: true,
+            },
           },
         },
-        categories: {
-          select: {
-            id: true,
-            name: true,
-          },
-        },
-      },
-    });
+      });
+    }, 3, 500);
 
-    // カウントクエリを非同期で実行（結果待ちしない）
-    const totalResultsCountPromise = prisma.post.count({ where: whereCondition });
+    // カウントクエリを非同期で実行（リトライ付き）
+    const totalResultsCountPromise = withRetry(
+      async () => prisma.post.count({ where: whereCondition }),
+      2, 
+      300
+    );
     
     // レスポンスフォーマットを維持
     const formattedResults = searchResults.map(post => ({
