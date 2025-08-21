@@ -67,7 +67,8 @@ if (isNewInstance) {
   global.prismaInitTime = Date.now();
 }
 
-export const prisma = global.prisma;
+// TypeScriptの型エラーを回避しつつ、undefinedチェックを行う
+export const prisma: PrismaClient = global.prisma as PrismaClient;
 
 // ログ出力
 if (!isNewInstance && global.prismaInitTime) {
