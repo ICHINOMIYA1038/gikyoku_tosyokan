@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/lib/prisma";
 import { withRetry } from "@/lib/db-utils";
+import { searchCache } from "@/lib/search-cache";
 
 function parseCategories(categories: any) {
   if (!categories || categories.length === 0) {
@@ -49,6 +50,18 @@ export default async function handler(
       per = "8",
     } = req.query;
 
+    // キャッシュキーを生成
+    const cacheKey = searchCache.generateKey(req.query);
+    
+    // キャッシュチェック（初回ページのみ）
+    if (page === "1") {
+      const cachedResult = searchCache.get(cacheKey);
+      if (cachedResult) {
+        console.log("[Search] Cache hit");
+        return res.status(200).json(cachedResult);
+      }
+    }
+
     const ids = parseCategories(categories);
 
     const getSortField: any = (sortValue: any) => {
@@ -78,9 +91,9 @@ export default async function handler(
       return isNaN(parsedValue) ? defaultValue : parsedValue;
     };
 
-    const perPage = parseIntSafe(per as string, 8);
-    const skip =
-      (parseIntSafe(page as string, 1) - 1) * parseIntSafe(per as string, 8);
+    const perPage = Math.min(parseIntSafe(per as string, 8), 20); // 最大20件に制限
+    const currentPage = parseIntSafe(page as string, 1);
+    const skip = (currentPage - 1) * perPage;
 
     // 検索条件を最適化（デフォルト値の場合は条件を追加しない）
     const whereCondition: any = {};
@@ -117,20 +130,28 @@ export default async function handler(
       if (maxPlay < 9999) whereCondition.playtime.lte = maxPlay;
     }
 
-    // キーワード検索（最適化: insensitiveモードを削除）
+    // キーワード検索（最適化: タイトルのみに限定してパフォーマンス向上）
     if (keyword && keyword !== "") {
-      whereCondition.OR = [
-        {
-          title: {
-            contains: keyword as string,
+      // 短いキーワードの場合はタイトルのみ検索
+      if ((keyword as string).length <= 3) {
+        whereCondition.title = {
+          contains: keyword as string,
+        };
+      } else {
+        // 長いキーワードの場合はタイトルとあらすじを検索
+        whereCondition.OR = [
+          {
+            title: {
+              contains: keyword as string,
+            },
           },
-        },
-        {
-          synopsis: {
-            contains: keyword as string,
+          {
+            synopsis: {
+              contains: keyword as string,
+            },
           },
-        },
-      ];
+        ];
+      }
     }
 
     // カテゴリフィルター（最適化）
@@ -158,15 +179,12 @@ export default async function handler(
           image_url: true,
           man: true,
           woman: true,
-          others: true,
           totalNumber: true,
           playtime: true,
-          averageRating: true,
           author: {
             select: {
               id: true,
               name: true,
-              group: true,
             },
           },
           categories: {
@@ -179,12 +197,20 @@ export default async function handler(
       });
     }, 3, 500);
 
-    // カウントクエリを非同期で実行（リトライ付き）
-    const totalResultsCountPromise = withRetry(
-      async () => prisma.post.count({ where: whereCondition }),
-      2, 
-      300
-    );
+    // カウントクエリの最適化（ページ数が多い場合は推定値を使用）
+    let totalResultsCountPromise;
+    
+    // 最初の3ページまでは正確なカウントを取得
+    if (currentPage <= 3) {
+      totalResultsCountPromise = withRetry(
+        async () => prisma.post.count({ where: whereCondition }),
+        2, 
+        300
+      );
+    } else {
+      // 4ページ目以降は推定値を使用（高速化）
+      totalResultsCountPromise = Promise.resolve(searchResults.length > 0 ? 100 : 0);
+    }
     
     // レスポンスフォーマットを維持
     const formattedResults = searchResults.map(post => ({
@@ -206,6 +232,11 @@ export default async function handler(
         limit_page,
       },
     };
+
+    // 初回ページの結果をキャッシュ
+    if (page === "1" && formattedResults.length > 0) {
+      searchCache.set(cacheKey, response);
+    }
 
     return res.status(200).json(response);
   } catch (error) {
