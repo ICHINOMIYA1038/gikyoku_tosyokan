@@ -53,7 +53,9 @@ class SearchCache {
       let minHits = Infinity;
       let keyToDelete = '';
       
-      for (const [k, v] of this.cache.entries()) {
+      // Array.from()を使用してIteratorを配列に変換
+      const entries = Array.from(this.cache.entries());
+      for (const [k, v] of entries) {
         if (v.hits < minHits) {
           minHits = v.hits;
           keyToDelete = k;
@@ -80,7 +82,9 @@ class SearchCache {
   // 統計情報を取得
   getStats(): { size: number; hitRate: number } {
     let totalHits = 0;
-    for (const entry of this.cache.values()) {
+    // Array.from()を使用してIteratorを配列に変換
+    const values = Array.from(this.cache.values());
+    for (const entry of values) {
       totalHits += entry.hits;
     }
     
