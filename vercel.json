@@ -1,11 +1,12 @@
 {
   "functions": {
     "pages/api/search.ts": {
-      "maxDuration": 30
+      "maxDuration": 30,
+      "regions": ["nrt1"]
     },
-    "pages/api/*.ts": {
-      "maxDuration": 10
+    "pages/api/**/*.ts": {
+      "maxDuration": 10,
+      "regions": ["nrt1"]
     }
-  },
-  "regions": ["iad1"]
+  }
 }
