@@ -188,15 +188,15 @@ export default function MobileSearchForm({
     setMaxFemaleCount("");
     setMinTotalCount("");
     setMaxTotalCount("");
-    setMinPlaytime(0);
-    setMaxPlaytime(5);
+    setMinPlaytime("");
+    setMaxPlaytime("");
     setSelectedTags([]);
   };
 
   const hasActiveFilters = () => {
     return keyword || minMaleCount || maxMaleCount || minFemaleCount || 
            maxFemaleCount || minTotalCount || maxTotalCount || 
-           minPlaytime !== 0 || maxPlaytime !== 5 || selectedTags.length > 0;
+           minPlaytime !== "" || maxPlaytime !== "" || selectedTags.length > 0;
   };
 
   return (
