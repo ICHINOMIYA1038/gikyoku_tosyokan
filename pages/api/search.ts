@@ -41,8 +41,8 @@ export default async function handler(
       maxFemaleCount = "9999",
       minTotalCount = "-1",
       maxTotalCount = "9999",
-      minPlaytime = "-1",
-      maxPlaytime = "5",
+      minPlaytime = "0",
+      maxPlaytime = "999",
       sort_by,
       sortDirection,
       categories,
@@ -122,12 +122,12 @@ export default async function handler(
       if (maxTotal < 9999) whereCondition.totalNumber.lte = maxTotal;
     }
     
-    const minPlay = playTimeConvertToOption(parseIntSafe(minPlaytime as string, -1));
-    const maxPlay = playTimeConvertToOption(parseIntSafe(maxPlaytime as string, 5));
-    if (minPlay > -100 || maxPlay < 9999) {
+    const minPlay = parseIntSafe(minPlaytime as string, 0);
+    const maxPlay = parseIntSafe(maxPlaytime as string, 999);
+    if (minPlay > 0 || maxPlay < 999) {
       whereCondition.playtime = {};
-      if (minPlay > -100) whereCondition.playtime.gte = minPlay;
-      if (maxPlay < 9999) whereCondition.playtime.lte = maxPlay;
+      if (minPlay > 0) whereCondition.playtime.gte = minPlay;
+      if (maxPlay < 999) whereCondition.playtime.lte = maxPlay;
     }
 
     // キーワード検索（最適化: タイトルのみに限定してパフォーマンス向上）
@@ -245,22 +245,3 @@ export default async function handler(
   }
 }
 
-function playTimeConvertToOption(option: number) {
-  if (option == -1) {
-    return -100;
-  } else if (option == 0) {
-    return 0;
-  } else if (option == 1) {
-    return 30;
-  } else if (option == 2) {
-    return 60;
-  } else if (option == 3) {
-    return 90;
-  } else if (option == 4) {
-    return 120;
-  } else if (option == 5) {
-    return 9999;
-  } else {
-    return 9999;
-  }
-}

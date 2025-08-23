@@ -1,12 +1,22 @@
-import Layout from "@/components/Layout";
+import BlogLayout from "@/components/BlogLayout";
 import Seo from "@/components/seo";
 import StructuredData from "@/components/StructuredData";
 import Link from "next/link";
 import { FaUsers, FaClock, FaTheaterMasks, FaLightbulb } from "react-icons/fa";
 
 export default function HowToChooseScript() {
+  const breadcrumbs = [
+    { name: 'ガイド', url: '/guide' },
+    { name: '初心者向け', url: '/guide#beginner' },
+    { name: '脚本の選び方' }
+  ];
+
   return (
-    <Layout>
+    <BlogLayout 
+      breadcrumbs={breadcrumbs}
+      category="guide"
+      currentPath="/guide/beginner/how-to-choose-script"
+    >
       <Seo
         pageTitle="演劇脚本の選び方完全ガイド | 上演成功のための5つのポイント"
         pageDescription="文化祭や演劇部の公演で失敗しない脚本選びのコツを解説。上演時間、人数、難易度など、具体的な選定基準を演劇経験者が詳しく説明します。"
@@ -31,7 +41,7 @@ export default function HowToChooseScript() {
         ]}
       />
       
-      <article className="max-w-4xl mx-auto px-4 py-8">
+      <div>
         <header className="mb-8">
           <h1 className="text-3xl md:text-4xl font-bold mb-4">
             演劇脚本の選び方完全ガイド
@@ -289,7 +299,7 @@ export default function HowToChooseScript() {
             </li>
           </ul>
         </section>
-      </article>
-    </Layout>
+      </div>
+    </BlogLayout>
   );
 }

@@ -2,6 +2,7 @@ import React, { SetStateAction, useState, useEffect } from "react";
 import { FaSearch, FaTimes, FaFilter, FaChevronDown, FaChevronUp } from "react-icons/fa";
 import TagSelector from "./TagSelecter";
 import { useQuery } from "@tanstack/react-query";
+import { useRouter } from "next/router";
 
 interface QuickPreset {
   label: string;
@@ -9,8 +10,8 @@ interface QuickPreset {
   params: {
     minTotalCount?: string;
     maxTotalCount?: string;
-    minPlaytime?: number;
-    maxPlaytime?: number;
+    minPlaytime?: string;
+    maxPlaytime?: string;
   };
 }
 
@@ -28,12 +29,12 @@ const quickPresets: QuickPreset[] = [
   {
     label: "短時間\n(〜30分)",
     icon: "⏱️",
-    params: { minPlaytime: 0, maxPlaytime: 1 }
+    params: { minPlaytime: "0", maxPlaytime: "30" }
   },
   {
     label: "標準時間\n(30〜60分)",
     icon: "⏰",
-    params: { minPlaytime: 1, maxPlaytime: 2 }
+    params: { minPlaytime: "30", maxPlaytime: "60" }
   }
 ];
 
@@ -53,6 +54,7 @@ export default function MobileSearchForm({
   sortDirection,
   onSearch,
 }: any) {
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const [keyword, setKeyword] = useState<string>("");
   const [minMaleCount, setMinMaleCount] = useState<string>("");
@@ -61,9 +63,10 @@ export default function MobileSearchForm({
   const [maxFemaleCount, setMaxFemaleCount] = useState<string>("");
   const [minTotalCount, setMinTotalCount] = useState<string>("");
   const [maxTotalCount, setMaxTotalCount] = useState<string>("");
-  const [minPlaytime, setMinPlaytime] = useState<number>(0);
-  const [maxPlaytime, setMaxPlaytime] = useState<number>(5);
+  const [minPlaytime, setMinPlaytime] = useState<string>("");
+  const [maxPlaytime, setMaxPlaytime] = useState<string>("");
   const [selectedTags, setSelectedTags] = useState<number[]>([]);
+  const [isInitialized, setIsInitialized] = useState(false);
   
   // アコーディオン状態管理
   const [expandedSections, setExpandedSections] = useState<string[]>([]);
@@ -83,14 +86,54 @@ export default function MobileSearchForm({
     maxFemaleCount: maxFemaleCount,
     minTotalCount: minTotalCount,
     maxTotalCount: maxTotalCount,
-    minPlaytime: minPlaytime.toString(),
-    maxPlaytime: maxPlaytime.toString(),
+    minPlaytime: minPlaytime || "0",
+    maxPlaytime: maxPlaytime || "999",
     page: page.toString(),
     per: per.toString(),
     categories: Array.isArray(selectedTags) ? selectedTags.join(",") : selectedTags,
     sortDirection,
     sort_by,
   };
+
+  // URLパラメータから初期値を設定
+  useEffect(() => {
+    if (!router.isReady) return;
+    
+    let hasParams = false;
+    
+    if (router.query.minPlaytime) {
+      setMinPlaytime(router.query.minPlaytime as string);
+      hasParams = true;
+    }
+    if (router.query.maxPlaytime) {
+      setMaxPlaytime(router.query.maxPlaytime as string);
+      hasParams = true;
+    }
+    if (router.query.keyword) {
+      setKeyword(router.query.keyword as string);
+      hasParams = true;
+    }
+    if (router.query.category) {
+      const categoryId = parseInt(router.query.category as string);
+      setSelectedTags([categoryId]);
+      hasParams = true;
+    }
+    
+    // パラメータがある場合は初期化完了として検索実行
+    if (hasParams && !isInitialized) {
+      setIsInitialized(true);
+      setTimeout(() => {
+        handleSubmit();
+      }, 100);
+    }
+  }, [router.isReady, router.query, isInitialized]);
+
+  useEffect(() => {
+    // URLパラメータがない場合のみ初回検索を実行
+    if (!router.query.minPlaytime && !router.query.maxPlaytime && !router.query.keyword && !router.query.category) {
+      handleSubmit();
+    }
+  }, []);
 
   useEffect(() => {
     handleSubmit();
@@ -319,29 +362,25 @@ export default function MobileSearchForm({
               {expandedSections.includes("time") && (
                 <div className="mt-3 p-3 bg-white rounded-lg border border-theater-neutral-200">
                   <div className="flex items-center gap-2">
-                    <select
+                    <input
+                      type="number"
+                      min="0"
+                      max="999"
+                      placeholder="0分"
                       value={minPlaytime}
-                      onChange={(e) => setMinPlaytime(parseInt(e.target.value))}
+                      onChange={(e) => setMinPlaytime(e.target.value)}
                       className="flex-1 p-2 border rounded"
-                    >
-                      <option value={0}>0分</option>
-                      <option value={1}>30分</option>
-                      <option value={2}>60分</option>
-                      <option value={3}>90分</option>
-                      <option value={4}>120分</option>
-                    </select>
+                    />
                     <span>〜</span>
-                    <select
+                    <input
+                      type="number"
+                      min="0"
+                      max="999"
+                      placeholder="上限なし"
                       value={maxPlaytime}
-                      onChange={(e) => setMaxPlaytime(parseInt(e.target.value))}
+                      onChange={(e) => setMaxPlaytime(e.target.value)}
                       className="flex-1 p-2 border rounded"
-                    >
-                      <option value={1}>30分</option>
-                      <option value={2}>60分</option>
-                      <option value={3}>90分</option>
-                      <option value={4}>120分</option>
-                      <option value={5}>∞</option>
-                    </select>
+                    />
                   </div>
                 </div>
               )}
