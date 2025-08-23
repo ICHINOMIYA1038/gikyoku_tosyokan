@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Post as PostType } from "@prisma/client";
 import Layout from "@/components/Layout";
-import PostDetailRedesigned from "@/components/PostDetailRedesigned";
+import PostDetailIntegrated from "@/components/PostDetailIntegrated";
 import {
   FacebookShareButton,
   HatenaShareButton,
@@ -21,7 +21,7 @@ import { FaStar, FaCommentDots, FaTimes, FaShareAlt, FaBook, FaExternalLinkAlt }
 import { prisma } from "@/lib/prisma";
 
 // メモ化されたコンポーネント
-const MemoizedPostDetail = React.memo(PostDetailRedesigned);
+const MemoizedPostDetail = React.memo(PostDetailIntegrated);
 const MemoizedComments = React.memo(Comments);
 const MemoizedOtherPosts = React.memo(OtherPosts);
 
@@ -277,25 +277,25 @@ function PostPage({ post }: any) {
     <>
       <Layout>
         <style jsx global>{`
-          @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-          }
-          
-          @keyframes slideUp {
-            from { transform: translateY(100%); }
-            to { transform: translateY(0); }
-          }
-          
-          @keyframes slideIn {
-            from { transform: translateX(100%); }
-            to { transform: translateX(0); }
-          }
-          
-          @keyframes slideDown {
-            from { transform: translateY(0); }
-            to { transform: translateY(100%); }
-          }
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        
+        @keyframes slideUp {
+          from { transform: translateY(100%); }
+          to { transform: translateY(0); }
+        }
+        
+        @keyframes slideIn {
+          from { transform: translateX(100%); }
+          to { transform: translateX(0); }
+        }
+        
+        @keyframes slideDown {
+          from { transform: translateY(0); }
+          to { transform: translateY(100%); }
+        }
           
           .animate-fadeIn {
             animation: fadeIn 0.3s ease-in-out;
@@ -420,15 +420,18 @@ function PostPage({ post }: any) {
             { name: post.title, url: `https://gikyokutosyokan.com/posts/${post.id}` }
           ]}
         />
-        <div className="container mx-auto px-4">
-          <div className={`relative mx-auto ${showComments && isTablet ? 'md:grid md:grid-cols-2 md:gap-6 md:max-w-4xl' : 'max-w-xl'}`}>
-            {/* 記事コンテンツ */}
-            <div className={`${showComments && isTablet ? 'md:col-span-1' : ''}`}>
-              <MemoizedPostDetail post={post} />
+        <div className="w-full">
+          <MemoizedPostDetail post={post} />
+          
+          {/* 下部コンテンツエリア - 本文と同じレイアウト構造 */}
+          <div className="container mx-auto px-4 pb-12">
+            <div className="flex flex-col lg:flex-row gap-8">
+              {/* メインカラム - 本文と同じ幅 */}
+              <div className="flex-1 min-w-0">
 
-              {/* 読むボタンエリア - 本文内 */}
-              {(hasAmazonLink || hasFreeLink) && (
-                <div className="my-6 flex flex-col sm:flex-row justify-center gap-4">
+                {/* 読むボタンエリア */}
+                {(hasAmazonLink || hasFreeLink) && (
+                  <div className="mb-8 flex flex-col sm:flex-row justify-center gap-4">
                   {/* Amazonで読むボタン */}
                   {hasAmazonLink && (
                     <a
@@ -456,16 +459,20 @@ function PostPage({ post }: any) {
                       <FaExternalLinkAlt className="ml-2 text-sm" />
                     </a>
                   )}
-                </div>
-              )}
+                  </div>
+                )}
 
-              {/* 評価セクション */}
-              <div className="px-4 py-4 items-center max-w-md mx-auto flex bg-white shadow-lg my-4 rounded-lg">
-                <div>
-                  <label className="text-sm font-bold">
-                    あなたの声を聞かせてください!
-                  </label>
-                  <div className="flex items-center mt-2 justify-center">
+                {/* 評価セクション */}
+                <div className="mb-8">
+                  <div className="bg-white rounded-xl shadow-lg p-6 md:p-8 lg:p-10 border border-gray-100">
+                  <div>
+                    <h3 className="text-lg md:text-xl font-bold text-center mb-4 text-gray-800">
+                      この作品を評価
+                    </h3>
+                    <p className="text-sm text-gray-600 text-center mb-4">
+                      あなたの声を聞かせてください
+                    </p>
+                    <div className="flex items-center justify-center gap-1">
                     {[1, 2, 3, 4, 5].map((value) => (
                       <button
                         key={value}
@@ -476,35 +483,56 @@ function PostPage({ post }: any) {
                         <FaStar
                           className={
                             value <= star
-                              ? "text-yellow-500 text-2xl cursor-pointer"
-                              : "text-gray-300 text-2xl cursor-pointer hover:text-yellow-300"
+                              ? "text-yellow-500 text-3xl md:text-4xl cursor-pointer"
+                              : "text-gray-300 text-3xl md:text-4xl cursor-pointer hover:text-yellow-300"
                           }
                         />
                       </button>
                     ))}
+                    </div>
                     <button
-                      className="ml-2 py-1 px-3 rounded-md bg-blue-500 hover:bg-blue-600 text-white text-sm transition-colors"
+                      className="mt-4 w-full py-3 px-6 rounded-lg bg-gradient-to-r from-theater-primary-500 to-theater-primary-600 hover:from-theater-primary-600 hover:to-theater-primary-700 text-white font-bold transition-all transform hover:-translate-y-0.5 hover:shadow-lg"
                       onClick={handleSubmit}
                     >
                       評価を送信
                     </button>
+                    <div className="mt-4">
+                      {error && (
+                        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-center">
+                          {error}
+                        </div>
+                      )}
+                      {success && (
+                        <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg text-center">
+                          {success}
+                        </div>
+                      )}
+                    </div>
                   </div>
-                  <div className="mt-2">
-                    {error && <p className="text-red-600">{error}</p>}
-                    {success && <p className="text-green-600">{success}</p>}
+                  </div>
+                </div>
+
+                {/* 関連記事 */}
+                <div className="mb-8">
+                  <div className="bg-white rounded-xl shadow-lg p-6 md:p-8 lg:p-10 border border-gray-100">
+                    <h2 className="text-xl md:text-2xl font-bold mb-6 text-center text-gray-800">
+                      関連作品
+                    </h2>
+                    <MemoizedOtherPosts
+                      authorId={post.author_id}
+                      postId={post.id}
+                      authorName={post.author.name}
+                    />
                   </div>
                 </div>
               </div>
-
-              {/* 関連記事 */}
-              <div className="flex justify-center max-w-md mx-auto">
-                <MemoizedOtherPosts
-                  authorId={post.author_id}
-                  postId={post.id}
-                  authorName={post.author.name}
-                />
-              </div>
+              
+              {/* サイドバースペース - 本文のサイドバーと同じ幅を確保 */}
+              <aside className="hidden xl:block xl:w-80 2xl:w-96 flex-shrink-0">
+                {/* 空のスペースを保持してレイアウトを揃える */}
+              </aside>
             </div>
+          </div>
 
             {/* コメントセクション - タブレット以上 */}
             {showComments && isTablet && (
@@ -667,8 +695,7 @@ function PostPage({ post }: any) {
               </div>
             )}
           </div>
-        </div>
-      </Layout >
+      </Layout>
     </>
   );
 }

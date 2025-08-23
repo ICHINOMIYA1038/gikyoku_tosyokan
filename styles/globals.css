@@ -53,7 +53,7 @@ button, a, input, textarea, select {
 }
 
 .link-card {
-  @apply shadow-md cursor-pointer hover:shadow-lg hover:scale-105 transition-all duration-300 rounded-lg bg-white hover:bg-light-primary;
+  @apply shadow-md cursor-pointer hover:shadow-lg hover:scale-105 transition-all duration-300 rounded-lg bg-white hover:bg-gray-50;
 }
 
 .support-document {
@@ -68,11 +68,11 @@ h3 {
 }
 
 .support-document h3 {
-  @apply text-xl font-bold my-3 text-light-text;
+  @apply text-xl font-bold my-3 text-gray-800;
 }
 
 .support-document h4 {
-  @apply font-bold my-2 text-light-text;
+  @apply font-bold my-2 text-gray-700;
 }
 
 /* h2スタイル - メインセクションの見出し（大胆なアンダーライン） */
@@ -127,11 +127,11 @@ h2::before {
 }
 
 .under-line-blue {
-  @apply border-b-4 border-bright-blue;
+  @apply border-b-4 border-blue-500;
 }
 
 .marker-yellow {
-  @apply bg-bright-yellow text-gray-800 px-1 rounded;
+  @apply bg-yellow-300 text-gray-800 px-1 rounded;
 }
 
 /* h3スタイル - サブセクションの見出し（シンプル） */
@@ -183,7 +183,7 @@ h4::before {
 }
 
 .section-title {
-  @apply text-xl font-bold mb-4 pb-2 border-b border-gray-200 flex items-center text-light-text;
+  @apply text-xl font-bold mb-4 pb-2 border-b border-gray-200 flex items-center text-gray-800;
 }
 
 .section-title::before {
@@ -197,21 +197,21 @@ h4::before {
 }
 
 .info-badge {
-  @apply bg-light-surface px-4 py-2 rounded-md shadow-sm border border-gray-100 flex items-center gap-2 hover:bg-light-primary transition-colors duration-200;
+  @apply bg-gray-50 px-4 py-2 rounded-md shadow-sm border border-gray-100 flex items-center gap-2 hover:bg-gray-100 transition-colors duration-200;
 }
 
 .info-badge-label {
-  @apply text-light-text-light font-medium;
+  @apply text-gray-600 font-medium;
 }
 
 .info-badge-value {
-  @apply font-bold text-light-text;
+  @apply font-bold text-gray-800;
 }
 
 .author-link {
-  @apply text-light-text hover:text-blue-600 transition-colors duration-200 flex items-center gap-1 hover:underline;
+  @apply text-gray-800 hover:text-blue-600 transition-colors duration-200 flex items-center gap-1 hover:underline;
 }
 
 .category-badge {
-  @apply transition-all duration-200 hover:scale-105 bg-light-surface border border-gray-100 rounded-md px-3 py-1 text-sm font-medium text-light-text hover:bg-light-primary;
+  @apply transition-all duration-200 hover:scale-105 bg-gray-50 border border-gray-100 rounded-md px-3 py-1 text-sm font-medium text-gray-800 hover:bg-gray-100;
 }
