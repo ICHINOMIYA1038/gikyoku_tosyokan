@@ -9,6 +9,7 @@ const Seo = ({
   pageImgHeight,
   pageType = "website",
   twitterCardType = "summary_large_image",
+  pageKeywords,
 }: any) => {
   const defaultTitle = "戯曲図書館";
   const defaultDescription =
@@ -22,13 +23,17 @@ const Seo = ({
   const imgUrl = pageImg ? pageImg : defaultImg;
   const imgWidth = pageImgWidth ? pageImgWidth : 1280;
   const imgHeight = pageImgHeight ? pageImgHeight : 640;
+  
+  // キーワードの生成
+  const defaultKeywords = ["戯曲", "脚本", "演劇", "上演時間", "人数検索", "戯曲図書館", "演劇台本", "舞台脚本"];
+  const keywords = pageKeywords ? [...pageKeywords, ...defaultKeywords].join(",") : defaultKeywords.join(",");
 
   return (
     <Head>
       <title>{title}</title>
       <meta name="viewport" content="width=device-width,initial-scale=1.0" />
       <meta name="description" content={description} />
-      <meta name="keywords" content="戯曲,脚本,演劇,上演時間,人数検索,戯曲図書館,演劇台本,舞台脚本" />
+      <meta name="keywords" content={keywords} />
       <meta name="author" content="戯曲図書館" />
       <link rel="canonical" href={url} />
       

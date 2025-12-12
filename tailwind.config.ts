@@ -52,6 +52,10 @@ const config: Config = {
       },
       "link-card":
         "shadow-md cursor-pointer hover:shadow-md hover:scale-105 transition-transform duration-300 rounded-lg",
+      fontFamily: {
+        sans: ['"Noto Sans JP"', "sans-serif"],
+        serif: ['"Shippori Mincho"', "serif"],
+      },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic":

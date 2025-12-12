@@ -2,14 +2,7 @@ import React, { SetStateAction, useState, useEffect } from "react";
 import TagSelector from "./TagSelecter";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/router";
-
-const getPosts = async ({ queryKey }: any): Promise<any> => {
-  if (queryKey === undefined || queryKey === null) {
-    throw new Error("queryKey is undefined or null");
-  }
-  const res = await fetch(`/api/search/?${queryKey}`);
-  return res.json();
-};
+import { FaSearch, FaTag, FaUsers, FaClock, FaFilter } from "react-icons/fa";
 
 const getCategories = async (): Promise<any> => {
   const res = await fetch("/api/categories");
@@ -59,8 +52,6 @@ export default function SearchForm({
     sortDirection,
     sort_by,
   };
-
-  const query = new URLSearchParams(searchParams).toString();
 
   const { data: categories, isLoading: categoriesLoading, error: categoriesError } = useQuery(
     ["categories"],
@@ -144,135 +135,142 @@ export default function SearchForm({
   };
 
   return (
-    <div className="search-form mb-6">
-      <div className="tabs flex">
+    <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden mb-8">
+      {/* タブヘッダー */}
+      <div className="flex border-b border-gray-100">
         <button
-          className={`tab ${activeTab === "search" ? "active" : ""}`}
+          className={`flex-1 py-4 px-6 text-sm font-bold flex items-center justify-center gap-2 transition-all ${
+            activeTab === "search"
+              ? "text-pink-600 bg-white border-b-2 border-pink-500"
+              : "text-gray-500 bg-gray-50 hover:bg-gray-100 hover:text-gray-700"
+          }`}
           onClick={() => setActiveTab("search")}
-          style={{
-            backgroundColor: activeTab === "search" ? "#4a9e5c" : "#e8f5e9",
-            color: activeTab === "search" ? "white" : "#2e7d32",
-            border: "1px solid #2e7d32",
-            borderBottom: activeTab === "search" ? "none" : "1px solid #2e7d32",
-            borderRadius: "8px 8px 0 0",
-            padding: "12px 24px",
-            marginRight: "5px",
-            cursor: "pointer",
-            position: "relative",
-            zIndex: 1,
-            fontWeight: "bold",
-            transition: "all 0.3s ease",
-          }}
         >
-          検索
+          <FaSearch />
+          詳細検索
         </button>
         <button
-          className={`tab ${activeTab === "categories" ? "active" : ""}`}
+          className={`flex-1 py-4 px-6 text-sm font-bold flex items-center justify-center gap-2 transition-all ${
+            activeTab === "categories"
+              ? "text-pink-600 bg-white border-b-2 border-pink-500"
+              : "text-gray-500 bg-gray-50 hover:bg-gray-100 hover:text-gray-700"
+          }`}
           onClick={() => setActiveTab("categories")}
-          style={{
-            backgroundColor: activeTab === "categories" ? "#4a9e5c" : "#e8f5e9",
-            color: activeTab === "categories" ? "white" : "#2e7d32",
-            border: "1px solid #2e7d32",
-            borderBottom: activeTab === "categories" ? "none" : "1px solid #2e7d32",
-            borderRadius: "8px 8px 0 0",
-            padding: "12px 24px",
-            cursor: "pointer",
-            position: "relative",
-            zIndex: 1,
-            fontWeight: "bold",
-            transition: "all 0.3s ease",
-          }}
         >
-          カテゴリー
+          <FaTag />
+          カテゴリーから探す
         </button>
       </div>
 
-      <div
-        className="tab-content p-5 bg-white shadow-md"
-        style={{
-          border: "1px solid #2e7d32",
-          borderRadius: "0 8px 8px 8px",
-          borderTop: activeTab === "search" ? "4px solid #4a9e5c" : "4px solid #4a9e5c",
-          marginTop: "-1px"
-        }}
-      >
+      <div className="p-6">
         {activeTab === "search" && (
-          <div>
+          <div className="space-y-6">
+            {/* キーワード検索 */}
             <div>
-              <div className="text-lg font-bold mb-1">キーワード</div>
+              <label className="block text-sm font-bold text-gray-700 mb-2">キーワード</label>
+              <div className="relative">
+                <input
+                  className="w-full p-3 pl-10 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-pink-100 focus:border-pink-300 transition-all outline-none"
+                  placeholder="作品名、作者名など..."
+                  value={keyword}
+                  onChange={(e) => setKeyword(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                        if (page != 1) {
+                            setPage(1);
+                          } else {
+                            handleSubmit();
+                            onSearch();
+                          }
+                    }
+                  }}
+                />
+                <FaSearch className="absolute left-3 top-3.5 text-gray-400" />
+              </div>
             </div>
-            <div className="pb-3">
-              <input
-                className="w-full p-3 bg-gray-50 rounded-md border border-solid border-black"
-                value={keyword}
-                onChange={(e: { target: { value: SetStateAction<string> } }) =>
-                  setKeyword(e.target.value)
-                }
-              />
-            </div>
-            <div className="flex flex-col md:flex-col">
-              <div className="w-full">
-                <div>
-                  <div className="text-lg font-bold mb-1">男性人数</div>
+
+            <div className="grid md:grid-cols-2 gap-6">
+              {/* 人数条件 */}
+              <div className="space-y-4 p-4 bg-gray-50 rounded-lg border border-gray-100">
+                <div className="flex items-center gap-2 text-gray-700 font-bold border-b border-gray-200 pb-2 mb-2">
+                  <FaUsers className="text-blue-500" />
+                  <span>人数条件</span>
                 </div>
-                <div className="pb-3 flex items-center">
-                  <input
-                    className="w-1/2 bg-gray-50 rounded-md border border-solid border-black mr-1"
-                    type="number"
-                    value={minMaleCount}
-                    onChange={(e) => setMinMaleCount(e.target.value)}
-                  />
-                  <span>〜</span>
-                  <input
-                    className="w-1/2 bg-gray-50 rounded-md border border-solid border-black ml-1"
-                    type="number"
-                    value={maxMaleCount}
-                    onChange={(e) => setMaxMaleCount(e.target.value)}
-                  />
+                
+                <div>
+                  <label className="text-xs font-bold text-gray-500 mb-1 block">総人数</label>
+                  <div className="flex items-center gap-2">
+                    <input
+                      className="w-full p-2 bg-white border border-gray-200 rounded text-center focus:border-pink-300 outline-none"
+                      type="number"
+                      placeholder="下限"
+                      value={minTotalCount}
+                      onChange={(e) => setMinTotalCount(e.target.value)}
+                    />
+                    <span className="text-gray-400">〜</span>
+                    <input
+                      className="w-full p-2 bg-white border border-gray-200 rounded text-center focus:border-pink-300 outline-none"
+                      type="number"
+                      placeholder="上限"
+                      value={maxTotalCount}
+                      onChange={(e) => setMaxTotalCount(e.target.value)}
+                    />
+                  </div>
                 </div>
 
                 <div>
-                  <div className="text-lg font-bold mb-1">女性人数</div>
+                  <label className="text-xs font-bold text-gray-500 mb-1 block">男性</label>
+                  <div className="flex items-center gap-2">
+                    <input
+                      className="w-full p-2 bg-white border border-gray-200 rounded text-center focus:border-pink-300 outline-none"
+                      type="number"
+                      placeholder="0"
+                      value={minMaleCount}
+                      onChange={(e) => setMinMaleCount(e.target.value)}
+                    />
+                    <span className="text-gray-400">〜</span>
+                    <input
+                      className="w-full p-2 bg-white border border-gray-200 rounded text-center focus:border-pink-300 outline-none"
+                      type="number"
+                      placeholder="上限なし"
+                      value={maxMaleCount}
+                      onChange={(e) => setMaxMaleCount(e.target.value)}
+                    />
+                  </div>
                 </div>
-                <div className="pb-3 flex items-center">
-                  <input
-                    className="w-1/2 bg-gray-50 rounded-md border border-solid border-black mr-1"
-                    type="number"
-                    value={minFemaleCount}
-                    onChange={(e) => setMinFemaleCount(e.target.value)}
-                  />
-                  <span>〜</span>
-                  <input
-                    className="w-1/2 bg-gray-50 rounded-md border border-solid border-black ml-1"
-                    type="number"
-                    value={maxFemaleCount}
-                    onChange={(e) => setMaxFemaleCount(e.target.value)}
-                  />
-                </div>
+
                 <div>
-                  <div className="text-lg font-bold mb-1">総人数</div>
+                  <label className="text-xs font-bold text-gray-500 mb-1 block">女性</label>
+                  <div className="flex items-center gap-2">
+                    <input
+                      className="w-full p-2 bg-white border border-gray-200 rounded text-center focus:border-pink-300 outline-none"
+                      type="number"
+                      placeholder="0"
+                      value={minFemaleCount}
+                      onChange={(e) => setMinFemaleCount(e.target.value)}
+                    />
+                    <span className="text-gray-400">〜</span>
+                    <input
+                      className="w-full p-2 bg-white border border-gray-200 rounded text-center focus:border-pink-300 outline-none"
+                      type="number"
+                      placeholder="上限なし"
+                      value={maxFemaleCount}
+                      onChange={(e) => setMaxFemaleCount(e.target.value)}
+                    />
+                  </div>
                 </div>
-                <div className="pb-3 flex items-center">
-                  <input
-                    className="w-1/2 bg-gray-50 rounded-md border border-solid border-black mr-1"
-                    type="number"
-                    value={minTotalCount}
-                    onChange={(e) => setMinTotalCount(e.target.value)}
-                  />
-                  <span>〜</span>
-                  <input
-                    className="w-1/2 bg-gray-50 rounded-md border border-solid border-black ml-1"
-                    type="number"
-                    value={maxTotalCount}
-                    onChange={(e) => setMaxTotalCount(e.target.value)}
-                  />
+              </div>
+
+              {/* 上演時間 */}
+              <div className="space-y-4 p-4 bg-gray-50 rounded-lg border border-gray-100 h-fit">
+                <div className="flex items-center gap-2 text-gray-700 font-bold border-b border-gray-200 pb-2 mb-2">
+                  <FaClock className="text-green-500" />
+                  <span>上演時間（分）</span>
                 </div>
-                <div>
-                  <div className="text-lg font-bold mb-1">上演時間（分）</div>
-                </div>
-                <div className="pb-3 flex items-center">
+                
+                <div className="flex items-center gap-2">
                   <input
-                    className="w-1/2 bg-gray-50 rounded-md border border-solid border-black mr-1 px-2 py-1"
+                    className="w-full p-2 bg-white border border-gray-200 rounded text-center focus:border-pink-300 outline-none"
                     type="number"
                     min="0"
                     max="999"
@@ -280,9 +278,9 @@ export default function SearchForm({
                     value={minPlaytime}
                     onChange={(e) => setMinPlaytime(e.target.value)}
                   />
-                  <span>〜</span>
+                  <span className="text-gray-400">〜</span>
                   <input
-                    className="w-1/2 bg-gray-50 rounded-md border border-solid border-black ml-1 px-2 py-1"
+                    className="w-full p-2 bg-white border border-gray-200 rounded text-center focus:border-pink-300 outline-none"
                     type="number"
                     min="0"
                     max="999"
@@ -291,9 +289,10 @@ export default function SearchForm({
                     onChange={(e) => setMaxPlaytime(e.target.value)}
                   />
                 </div>
-                <div className="font-bold text-white bg-green-600 mb-3">
+                
+                <div className="pt-4">
                   <button
-                    className="w-full"
+                    className="w-full py-3 bg-gray-800 text-white font-bold rounded-lg shadow-md hover:bg-gray-900 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-center gap-2"
                     onClick={() => {
                       if (page != 1) {
                         setPage(1);
@@ -303,7 +302,8 @@ export default function SearchForm({
                       }
                     }}
                   >
-                    検索
+                    <FaSearch />
+                    この条件で検索する
                   </button>
                 </div>
               </div>
@@ -312,11 +312,11 @@ export default function SearchForm({
         )}
 
         {activeTab === "categories" && (
-          <div className="w-full category-selector">
+          <div className="w-full">
             {categoriesLoading ? (
-              <p>Loading categories...</p>
+              <div className="text-center py-8 text-gray-500">カテゴリーを読み込み中...</div>
             ) : categoriesError ? (
-              <p>Error loading categories</p>
+              <div className="text-center py-8 text-red-500">カテゴリーの読み込みに失敗しました</div>
             ) : (
               <TagSelector
                 category_ids={categories}
@@ -326,6 +326,23 @@ export default function SearchForm({
                 }}
               />
             )}
+            
+            <div className="mt-6 pt-6 border-t border-gray-100">
+               <button
+                  className="w-full py-3 bg-gray-800 text-white font-bold rounded-lg shadow-md hover:bg-gray-900 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-center gap-2"
+                  onClick={() => {
+                    if (page != 1) {
+                      setPage(1);
+                    } else {
+                      handleSubmit();
+                      onSearch();
+                    }
+                  }}
+                >
+                  <FaSearch />
+                  選択したカテゴリーで検索
+                </button>
+            </div>
           </div>
         )}
       </div>
