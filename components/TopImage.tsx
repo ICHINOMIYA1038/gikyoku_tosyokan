@@ -27,7 +27,7 @@ const TopImage = ({ buttonClick }: any) => {
             <div className="space-y-4">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-pink-50 border border-pink-100 text-pink-700 text-sm font-medium mb-2">
                 <span className="flex h-2 w-2 rounded-full bg-pink-500"></span>
-                日本最大級の戯曲検索データベース
+                戯曲・脚本の検索サービス
               </div>
               
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-gray-900 leading-tight tracking-tight">
