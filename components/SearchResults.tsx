@@ -22,10 +22,10 @@ const SearchResults: React.FC<SearchResultsProps> = ({
     setPage,
 }) => {
     return (
-        <div className="bg-white rounded-lg shadow-md p-6">
+        <div className="bg-transparent">
             {data ? (
                 <>
-                    <div className="mb-6 border-b border-green-200 pb-4">
+                    <div className="mb-6 bg-white rounded-lg shadow-sm border border-gray-100 p-4">
                         <DropBox
                             sort_by={sort_by}
                             setSortIndex={setSortIndex}

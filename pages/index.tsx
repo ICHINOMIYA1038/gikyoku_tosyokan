@@ -65,6 +65,7 @@ export default function Home({ news, authors, posts, categories }: any) {
           url="https://gikyokutosyokan.com"
         />
         <StructuredData type="Organization" />
+        <StructuredData type="FAQPage" faqItems={faqItems} />
         <TopImage buttonClick={handleScrollToRegistrationForm} />
         <NewsList news={news} />
         <div

@@ -400,16 +400,36 @@ function PostPage({ post }: any) {
           }
           pagePath={`/posts/${post.id}`}
           pageType="article"
+          pageKeywords={[
+            post.author.name,
+            ...(post.categories?.map((c: any) => c.name) || []),
+            "上演時間" + post.playtime + "分",
+            "人数" + post.totalNumber + "人"
+          ]}
         />
         <StructuredData
-          type="Article"
-          title={`${post.author.name}『${post.title}』`}
-          description={post.synopsis || "戯曲図書館の作品詳細ページ"}
-          url={`https://gikyokutosyokan.com/posts/${post.id}`}
-          image={post.image_url}
-          author={{
-            name: post.author.name,
-            url: `https://gikyokutosyokan.com/authors/${post.author_id}`
+          type="Play"
+          playInfo={{
+            title: post.title,
+            author: {
+              name: post.author.name,
+              url: `https://gikyokutosyokan.com/authors/${post.author_id}`
+            },
+            description: post.synopsis || `${post.author.name}作の戯曲「${post.title}」`,
+            url: `https://gikyokutosyokan.com/posts/${post.id}`,
+            image: post.image_url,
+            duration: post.playtime,
+            castSize: {
+              man: post.man,
+              woman: post.woman,
+              others: post.others,
+              total: post.totalNumber
+            },
+            rating: post.averageRating && post._count?.ratings ? {
+              ratingValue: post.averageRating,
+              ratingCount: post._count.ratings
+            } : undefined,
+            categories: post.categories?.map((cat: any) => cat.name)
           }}
         />
         <StructuredData
@@ -438,7 +458,7 @@ function PostPage({ post }: any) {
                       href={post.amazon_text_url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="btn-amazon flex items-center justify-center px-6 py-3 rounded-lg shadow-md text-white font-bold text-lg"
+                      className="btn-amazon flex items-center justify-center px-6 py-3 rounded-lg shadow-md text-white font-bold text-lg w-full sm:w-auto"
                     >
                       <FaBook className="mr-2" />
                       この戯曲を読む (Amazon)
@@ -452,7 +472,7 @@ function PostPage({ post }: any) {
                       href={post.link_to_plot}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="btn-free flex items-center justify-center px-6 py-3 rounded-lg shadow-md text-white font-bold text-lg"
+                      className="btn-free flex items-center justify-center px-6 py-3 rounded-lg shadow-md text-white font-bold text-lg w-full sm:w-auto"
                     >
                       <FaBook className="mr-2" />
                       この戯曲を無料で読む
@@ -464,9 +484,9 @@ function PostPage({ post }: any) {
 
                 {/* 評価セクション */}
                 <div className="mb-8">
-                  <div className="bg-white rounded-xl shadow-lg p-6 md:p-8 lg:p-10 border border-gray-100">
+                  <div className="bg-white rounded-xl shadow-sm p-6 md:p-8 lg:p-10 border border-gray-100">
                   <div>
-                    <h3 className="text-lg md:text-xl font-bold text-center mb-4 text-gray-800">
+                    <h3 className="text-lg md:text-xl font-bold text-center mb-4 text-gray-800 font-serif">
                       この作品を評価
                     </h3>
                     <p className="text-sm text-gray-600 text-center mb-4">
@@ -490,12 +510,14 @@ function PostPage({ post }: any) {
                       </button>
                     ))}
                     </div>
-                    <button
-                      className="mt-4 w-full py-3 px-6 rounded-lg bg-gradient-to-r from-theater-primary-500 to-theater-primary-600 hover:from-theater-primary-600 hover:to-theater-primary-700 text-white font-bold transition-all transform hover:-translate-y-0.5 hover:shadow-lg"
-                      onClick={handleSubmit}
-                    >
-                      評価を送信
-                    </button>
+                    <div className="text-center mt-6">
+                      <button
+                        className="w-full md:w-auto py-3 px-12 rounded-lg bg-gray-900 text-white font-bold hover:bg-gray-800 transition-all transform hover:-translate-y-0.5 shadow-md"
+                        onClick={handleSubmit}
+                      >
+                        評価を送信
+                      </button>
+                    </div>
                     <div className="mt-4">
                       {error && (
                         <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-center">
@@ -514,8 +536,8 @@ function PostPage({ post }: any) {
 
                 {/* 関連記事 */}
                 <div className="mb-8">
-                  <div className="bg-white rounded-xl shadow-lg p-6 md:p-8 lg:p-10 border border-gray-100">
-                    <h2 className="text-xl md:text-2xl font-bold mb-6 text-center text-gray-800">
+                  <div className="bg-white rounded-xl shadow-sm p-6 md:p-8 lg:p-10 border border-gray-100">
+                    <h2 className="text-xl md:text-2xl font-bold mb-6 text-center text-gray-800 font-serif">
                       関連作品
                     </h2>
                     <MemoizedOtherPosts
@@ -538,7 +560,7 @@ function PostPage({ post }: any) {
             {showComments && isTablet && (
               <div className="md:col-span-1 bg-white rounded-lg shadow-lg overflow-y-auto md:h-screen md:sticky md:top-0 animate-slideIn">
                 <div className="sticky top-0 bg-white p-3 border-b border-gray-200 flex justify-between items-center z-10">
-                  <p className="text-xl font-bold">コメント</p>
+                  <p className="text-xl font-bold font-serif">コメント</p>
                   <button
                     className="text-gray-500 hover:text-gray-700 p-2 rounded-full hover:bg-gray-100"
                     onClick={toggleComments}
@@ -555,25 +577,19 @@ function PostPage({ post }: any) {
             )}
 
             {/* 固定ボタンエリア */}
-            <div className="fixed bottom-16 right-4 z-50 flex flex-col items-end space-y-3">
+            <div className="fixed bottom-6 right-4 z-50 flex flex-col items-end space-y-3">
               {/* 読むボタンメニュー */}
               {hasReadLinks && showReadButtons && (
-                <div className="bg-white p-3 rounded-lg shadow-lg flex flex-col space-y-2 mb-2 animate-fadeIn relative">
-                  {/* スワイプインジケーター */}
-                  <div className="absolute top-0 left-0 right-0 flex justify-center">
-                    <div className="w-10 h-1 bg-gray-300 rounded-full my-1"></div>
-                  </div>
-
+                <div className="bg-white p-3 rounded-lg shadow-xl border border-gray-100 flex flex-col space-y-2 mb-2 animate-fadeIn relative w-48">
                   {hasAmazonLink && (
                     <a
                       href={post.amazon_text_url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="btn-amazon flex items-center justify-center px-4 py-2 rounded-lg text-white font-bold"
+                      className="flex items-center px-4 py-3 rounded-lg text-gray-800 hover:bg-gray-50 font-bold text-sm transition-colors border border-gray-100"
                     >
-                      <FaBook className="mr-2" />
+                      <FaBook className="mr-3 text-orange-500" />
                       Amazonで読む
-                      <FaExternalLinkAlt className="ml-2 text-xs" />
                     </a>
                   )}
 
@@ -582,11 +598,10 @@ function PostPage({ post }: any) {
                       href={post.link_to_plot}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="btn-free flex items-center justify-center px-4 py-2 rounded-lg text-white font-bold"
+                      className="flex items-center px-4 py-3 rounded-lg text-gray-800 hover:bg-gray-50 font-bold text-sm transition-colors border border-gray-100"
                     >
-                      <FaBook className="mr-2" />
+                      <FaBook className="mr-3 text-green-500" />
                       無料で読む
-                      <FaExternalLinkAlt className="ml-2 text-xs" />
                     </a>
                   )}
                 </div>
@@ -594,12 +609,7 @@ function PostPage({ post }: any) {
 
               {/* SNSシェアボタン */}
               {showShareButtons && (
-                <div className="bg-white p-3 rounded-lg shadow-lg flex space-x-3 mb-2 animate-fadeIn relative">
-                  {/* スワイプインジケーター */}
-                  <div className="absolute top-0 left-0 right-0 flex justify-center">
-                    <div className="w-10 h-1 bg-gray-300 rounded-full my-1"></div>
-                  </div>
-
+                <div className="bg-white p-3 rounded-lg shadow-xl border border-gray-100 flex space-x-3 mb-2 animate-fadeIn relative">
                   <FacebookShareButton url={URL} quote={QUOTE}>
                     <FacebookIcon size={40} round />
                   </FacebookShareButton>
@@ -620,43 +630,37 @@ function PostPage({ post }: any) {
                 </div>
               )}
 
-              {/* 読むボタン */}
-              {hasReadLinks && (
+              {/* フローティングアクションボタン群 */}
+              <div className="flex flex-col gap-3">
+                {/* 読むボタン */}
+                {hasReadLinks && (
+                  <button
+                    className="bg-pink-600 hover:bg-pink-700 text-white w-14 h-14 rounded-full shadow-lg flex items-center justify-center transition-all duration-200 hover:scale-105"
+                    onClick={toggleReadButtons}
+                    aria-label="この戯曲を読む"
+                  >
+                    {showReadButtons ? <FaTimes className="text-xl" /> : <FaBook className="text-xl" />}
+                  </button>
+                )}
+
+                {/* シェアボタン */}
                 <button
-                  className="bg-purple-500 hover:bg-purple-600 text-white p-3 rounded-full shadow-lg flex items-center transition-colors duration-200"
-                  onClick={toggleReadButtons}
-                  aria-label="この戯曲を読む"
+                  className="bg-gray-800 hover:bg-gray-900 text-white w-12 h-12 rounded-full shadow-lg flex items-center justify-center transition-all duration-200 hover:scale-105"
+                  onClick={toggleShareButtons}
+                  aria-label="記事を共有"
                 >
-                  <FaBook className="text-lg" />
-                  <span className="ml-2 bg-white text-purple-600 text-xs font-bold py-1 px-2 rounded-full">
-                    {showReadButtons ? "閉じる" : "読む"}
-                  </span>
+                  <FaShareAlt className="text-lg" />
                 </button>
-              )}
 
-              {/* シェアボタン */}
-              <button
-                className="bg-green-500 hover:bg-green-600 text-white p-3 rounded-full shadow-lg flex items-center transition-colors duration-200"
-                onClick={toggleShareButtons}
-                aria-label="記事を共有"
-              >
-                <FaShareAlt className="text-lg" />
-                <span className="ml-2 bg-white text-green-600 text-xs font-bold py-1 px-2 rounded-full">
-                  {showShareButtons ? "閉じる" : "共有"}
-                </span>
-              </button>
-
-              {/* コメントボタン */}
-              <button
-                className="bg-blue-500 hover:bg-blue-600 text-white p-3 rounded-full shadow-lg flex items-center transition-colors duration-200"
-                onClick={toggleComments}
-                aria-label="コメントを表示"
-              >
-                <FaCommentDots className="text-lg" />
-                <span className="ml-2 bg-white text-blue-600 text-xs font-bold py-1 px-2 rounded-full">
-                  {showComments ? "閉じる" : "コメント"}
-                </span>
-              </button>
+                {/* コメントボタン */}
+                <button
+                  className="bg-white hover:bg-gray-50 text-gray-600 w-12 h-12 rounded-full shadow-lg flex items-center justify-center transition-all duration-200 hover:scale-105 border border-gray-200"
+                  onClick={toggleComments}
+                  aria-label="コメントを表示"
+                >
+                  <FaCommentDots className="text-lg" />
+                </button>
+              </div>
             </div>
 
             {/* コメントセクション - モバイル */}
@@ -678,7 +682,7 @@ function PostPage({ post }: any) {
                 </div>
 
                 <div className="sticky top-0 bg-white p-3 border-b border-gray-200 flex justify-between items-center">
-                  <h2 className="text-xl font-bold">コメント</h2>
+                  <h2 className="text-xl font-bold font-serif">コメント</h2>
                   <button
                     className="text-gray-500 hover:text-gray-700 p-2 rounded-full hover:bg-gray-100"
                     onClick={toggleComments}

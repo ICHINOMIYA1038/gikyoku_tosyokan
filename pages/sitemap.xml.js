@@ -144,7 +144,27 @@ function generateSiteMap(posts, authors, categories) {
        <changefreq>monthly</changefreq>
        <priority>0.8</priority>
      </url>
-     
+
+     <!-- 検索ランディングページ（SEO重要） -->
+     <url>
+       <loc>${`${EXTERNAL_DATA_URL}/search/comedy`}</loc>
+       <lastmod>${currentDate}</lastmod>
+       <changefreq>weekly</changefreq>
+       <priority>0.8</priority>
+     </url>
+     <url>
+       <loc>${`${EXTERNAL_DATA_URL}/search/short`}</loc>
+       <lastmod>${currentDate}</lastmod>
+       <changefreq>weekly</changefreq>
+       <priority>0.8</priority>
+     </url>
+     <url>
+       <loc>${`${EXTERNAL_DATA_URL}/search/school`}</loc>
+       <lastmod>${currentDate}</lastmod>
+       <changefreq>weekly</changefreq>
+       <priority>0.8</priority>
+     </url>
+
      <!-- サポートページ -->
      <url>
        <loc>${`${EXTERNAL_DATA_URL}/support/about`}</loc>
