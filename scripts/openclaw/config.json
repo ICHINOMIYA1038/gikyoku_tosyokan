@@ -1,0 +1,71 @@
+{
+  "name": "gikyoku-performance-writer",
+  "description": "戯曲図書館 - 公演情報まとめ記事自動生成タスク",
+  "version": "1.0.0",
+
+  "tasks": {
+    "weekly-performance-article": {
+      "description": "週間公演情報まとめ記事を生成",
+      "schedule": "0 9 * * 1",
+      "timezone": "Asia/Tokyo",
+      "enabled": true,
+
+      "steps": [
+        {
+          "id": "fetch-performances",
+          "type": "script",
+          "script": "./fetch-performances.ts",
+          "output": "performances"
+        },
+        {
+          "id": "generate-article",
+          "type": "ai",
+          "model": "claude-3-5-sonnet",
+          "prompt_file": "./prompts/article-generator.md",
+          "input": {
+            "performances": "{{steps.fetch-performances.output}}",
+            "weekInfo": {
+              "year": "{{date.year}}",
+              "month": "{{date.month}}",
+              "week": "{{date.weekOfMonth}}"
+            }
+          },
+          "output": "article_content"
+        },
+        {
+          "id": "save-article",
+          "type": "file",
+          "action": "write",
+          "path": "../../../blog/posts/{{date.format('YYYY-MM-DD')}}-weekly-performances.md",
+          "content": "{{steps.generate-article.output}}"
+        },
+        {
+          "id": "notify",
+          "type": "notification",
+          "channel": "slack",
+          "message": "新しい公演情報記事を生成しました: {{date.format('YYYY年M月第W週')}}"
+        }
+      ],
+
+      "error_handling": {
+        "on_fetch_error": "skip_and_notify",
+        "on_ai_error": "retry_3_times",
+        "on_save_error": "notify_admin"
+      }
+    }
+  },
+
+  "settings": {
+    "working_directory": "/path/to/gikyoku_tosyokan",
+    "log_level": "info",
+    "dry_run": false,
+    "review_before_publish": true
+  },
+
+  "notifications": {
+    "slack": {
+      "webhook_url": "${SLACK_WEBHOOK_URL}",
+      "channel": "#blog-updates"
+    }
+  }
+}
