@@ -41,10 +41,19 @@ export function getPostBySlug(slug: string): BlogPost | null {
   const fileContents = fs.readFileSync(fullPath, 'utf8');
   const { data, content } = matter(fileContents);
 
+  // gray-matter may parse date as Date object, convert to string for serialization
+  let dateStr = '';
+  if (data.date) {
+    dateStr =
+      data.date instanceof Date
+        ? data.date.toISOString().split('T')[0]
+        : String(data.date);
+  }
+
   return {
     slug,
     title: data.title || '',
-    date: data.date || '',
+    date: dateStr,
     description: data.description || '',
     tags: data.tags || [],
     content,
