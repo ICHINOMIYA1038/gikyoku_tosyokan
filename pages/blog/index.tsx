@@ -58,11 +58,12 @@ export default function BlogIndex({ posts }: BlogIndexProps) {
 }
 
 export const getStaticProps: GetStaticProps<BlogIndexProps> = async () => {
-  const posts = getAllPosts();
+  const posts = await getAllPosts();
 
   return {
     props: {
       posts,
     },
+    revalidate: 60,
   };
 };

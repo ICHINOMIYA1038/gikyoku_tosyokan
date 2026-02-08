@@ -132,6 +132,21 @@ model Rating {
   @@map("Rating")
 }
 
+model BlogPost {
+  id          Int      @id @default(autoincrement())
+  slug        String   @unique
+  title       String
+  description String?
+  content     String
+  tags        String[]
+  publishedAt DateTime
+  published   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("BlogPost")
+}
+
 model Announcement {
   id               Int      @id @default(autoincrement())
   title            String

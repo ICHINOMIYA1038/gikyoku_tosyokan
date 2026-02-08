@@ -1,8 +1,4 @@
-import fs from 'fs';
-import path from 'path';
-import matter from 'gray-matter';
-
-const postsDirectory = path.join(process.cwd(), 'blog/posts');
+import { prisma } from '@/lib/prisma';
 
 export interface BlogPost {
   slug: string;
@@ -21,74 +17,92 @@ export interface BlogPostMeta {
   tags: string[];
 }
 
-export function getAllPostSlugs(): string[] {
-  if (!fs.existsSync(postsDirectory)) {
-    return [];
-  }
-  const fileNames = fs.readdirSync(postsDirectory);
-  return fileNames
-    .filter((fileName) => fileName.endsWith('.md'))
-    .map((fileName) => fileName.replace(/\.md$/, ''));
+function formatDate(d: Date): string {
+  return d.toISOString().split('T')[0];
 }
 
-export function getPostBySlug(slug: string): BlogPost | null {
-  const fullPath = path.join(postsDirectory, `${slug}.md`);
+export async function getAllPostSlugs(): Promise<string[]> {
+  const posts = await prisma.blogPost.findMany({
+    where: { published: true },
+    select: { slug: true },
+  });
+  return posts.map((p) => p.slug);
+}
 
-  if (!fs.existsSync(fullPath)) {
+export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
+  const post = await prisma.blogPost.findUnique({
+    where: { slug },
+  });
+
+  if (!post || !post.published) {
     return null;
   }
 
-  const fileContents = fs.readFileSync(fullPath, 'utf8');
-  const { data, content } = matter(fileContents);
-
-  // gray-matter may parse date as Date object, convert to string for serialization
-  let dateStr = '';
-  if (data.date) {
-    dateStr =
-      data.date instanceof Date
-        ? data.date.toISOString().split('T')[0]
-        : String(data.date);
-  }
-
   return {
-    slug,
-    title: data.title || '',
-    date: dateStr,
-    description: data.description || '',
-    tags: data.tags || [],
-    content,
+    slug: post.slug,
+    title: post.title,
+    date: formatDate(post.publishedAt),
+    description: post.description || '',
+    tags: post.tags,
+    content: post.content,
   };
 }
 
-export function getAllPosts(): BlogPostMeta[] {
-  const slugs = getAllPostSlugs();
-  const posts = slugs
-    .map((slug) => {
-      const post = getPostBySlug(slug);
-      if (!post) return null;
-      return {
-        slug: post.slug,
-        title: post.title,
-        date: post.date,
-        description: post.description,
-        tags: post.tags,
-      };
-    })
-    .filter((post): post is BlogPostMeta => post !== null)
-    .sort((a, b) => (a.date > b.date ? -1 : 1));
+export async function getAllPosts(): Promise<BlogPostMeta[]> {
+  const posts = await prisma.blogPost.findMany({
+    where: { published: true },
+    orderBy: { publishedAt: 'desc' },
+    select: {
+      slug: true,
+      title: true,
+      publishedAt: true,
+      description: true,
+      tags: true,
+    },
+  });
 
-  return posts;
+  return posts.map((post) => ({
+    slug: post.slug,
+    title: post.title,
+    date: formatDate(post.publishedAt),
+    description: post.description || '',
+    tags: post.tags,
+  }));
 }
 
-export function getPostsByTag(tag: string): BlogPostMeta[] {
-  const allPosts = getAllPosts();
-  return allPosts.filter((post) => post.tags.includes(tag));
+export async function getPostsByTag(tag: string): Promise<BlogPostMeta[]> {
+  const posts = await prisma.blogPost.findMany({
+    where: {
+      published: true,
+      tags: { has: tag },
+    },
+    orderBy: { publishedAt: 'desc' },
+    select: {
+      slug: true,
+      title: true,
+      publishedAt: true,
+      description: true,
+      tags: true,
+    },
+  });
+
+  return posts.map((post) => ({
+    slug: post.slug,
+    title: post.title,
+    date: formatDate(post.publishedAt),
+    description: post.description || '',
+    tags: post.tags,
+  }));
 }
 
-export function getAllTags(): string[] {
-  const allPosts = getAllPosts();
+export async function getAllTags(): Promise<string[]> {
+  const posts = await prisma.blogPost.findMany({
+    where: { published: true },
+    select: { tags: true },
+  });
+
   const tagSet = new Set<string>();
-  allPosts.forEach((post) => {
+  posts.forEach((post) => {
     post.tags.forEach((tag) => tagSet.add(tag));
   });
   return Array.from(tagSet).sort();

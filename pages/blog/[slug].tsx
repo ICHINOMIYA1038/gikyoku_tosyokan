@@ -96,13 +96,13 @@ export default function BlogPostPage({ post }: BlogPostPageProps) {
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const slugs = getAllPostSlugs();
+  const slugs = await getAllPostSlugs();
 
   return {
     paths: slugs.map((slug) => ({
       params: { slug },
     })),
-    fallback: false,
+    fallback: 'blocking',
   };
 };
 
@@ -110,7 +110,7 @@ export const getStaticProps: GetStaticProps<BlogPostPageProps> = async ({
   params,
 }) => {
   const slug = params?.slug as string;
-  const post = getPostBySlug(slug);
+  const post = await getPostBySlug(slug);
 
   if (!post) {
     return {
@@ -122,5 +122,6 @@ export const getStaticProps: GetStaticProps<BlogPostPageProps> = async ({
     props: {
       post,
     },
+    revalidate: 60,
   };
 };
