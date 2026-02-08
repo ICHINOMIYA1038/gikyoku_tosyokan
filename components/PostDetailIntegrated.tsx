@@ -80,7 +80,7 @@ export const PostDetails: React.FC<PostPageProps> = ({ post }) => {
             <FaClock className="text-lg md:text-xl text-gray-400 mx-auto mb-1" />
             <p className="text-xs font-medium text-gray-500">上演時間</p>
             <p className="font-bold text-base md:text-lg text-gray-900 mt-1">
-              {post.playtime !== -1 ? `${post.playtime}分` : "不明"}
+              {post.playtime != null && post.playtime !== -1 ? `${post.playtime}分` : "不明"}
             </p>
           </div>
 
@@ -89,7 +89,7 @@ export const PostDetails: React.FC<PostPageProps> = ({ post }) => {
             <FaUsers className="text-lg md:text-xl text-gray-400 mx-auto mb-1" />
             <p className="text-xs font-medium text-gray-500">総人数</p>
             <p className="font-bold text-base md:text-lg text-gray-900 mt-1">
-              {post.totalNumber !== -1 ? `${post.totalNumber}人` : "不明"}
+              {post.totalNumber != null && post.totalNumber !== -1 ? `${post.totalNumber}人` : "不明"}
             </p>
           </div>
 
@@ -98,7 +98,7 @@ export const PostDetails: React.FC<PostPageProps> = ({ post }) => {
             <FaMale className="text-lg md:text-xl text-gray-400 mx-auto mb-1" />
             <p className="text-xs font-medium text-gray-500">男性</p>
             <p className="font-bold text-base md:text-lg text-gray-900 mt-1">
-              {post.man !== -1 ? `${post.man}人` : "不明"}
+              {post.man != null && post.man !== -1 ? `${post.man}人` : "不明"}
             </p>
           </div>
 
@@ -107,7 +107,7 @@ export const PostDetails: React.FC<PostPageProps> = ({ post }) => {
             <FaFemale className="text-lg md:text-xl text-gray-400 mx-auto mb-1" />
             <p className="text-xs font-medium text-gray-500">女性</p>
             <p className="font-bold text-base md:text-lg text-gray-900 mt-1">
-              {post.woman !== -1 ? `${post.woman}人` : "不明"}
+              {post.woman != null && post.woman !== -1 ? `${post.woman}人` : "不明"}
             </p>
           </div>
 
@@ -116,7 +116,7 @@ export const PostDetails: React.FC<PostPageProps> = ({ post }) => {
             <FaTheaterMasks className="text-lg md:text-xl text-gray-400 mx-auto mb-1" />
             <p className="text-xs font-medium text-gray-500">どちらでも</p>
             <p className="font-bold text-base md:text-lg text-gray-900 mt-1">
-              {(post.others !== undefined && post.others !== -1) ? `${post.others}人` : (post.either !== -1 ? `${post.either}人` : "不明")}
+              {(post.others != null && post.others !== -1) ? `${post.others}人` : (post.either != null && post.either !== -1 ? `${post.either}人` : "不明")}
             </p>
           </div>
         </div>
