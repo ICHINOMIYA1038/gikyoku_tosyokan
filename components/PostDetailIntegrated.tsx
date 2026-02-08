@@ -76,43 +76,79 @@ export const PostDetails: React.FC<PostPageProps> = ({ post }) => {
 
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
           {/* 上演時間 */}
-          <div className="bg-gradient-to-br from-gray-50 to-white rounded-lg p-3 md:p-4 text-center border border-gray-200 hover:shadow-md transition-shadow">
-            <FaClock className="text-lg md:text-xl text-gray-400 mx-auto mb-1" />
-            <p className="text-xs font-medium text-gray-500">上演時間</p>
-            <p className="font-bold text-base md:text-lg text-gray-900 mt-1">
-              {post.playtime != null && post.playtime !== -1 ? `${post.playtime}分` : "不明"}
-            </p>
-          </div>
+          {post.playtime != null && post.playtime !== -1 ? (
+            <Link
+              href={`/?minPlaytime=${Math.max(0, post.playtime - 10)}&maxPlaytime=${post.playtime + 10}`}
+              className="bg-gradient-to-br from-gray-50 to-white rounded-lg p-3 md:p-4 text-center border border-gray-200 hover:shadow-md hover:border-theater-primary-300 transition-all cursor-pointer group"
+            >
+              <FaClock className="text-lg md:text-xl text-gray-400 group-hover:text-theater-primary-500 mx-auto mb-1 transition-colors" />
+              <p className="text-xs font-medium text-gray-500">上演時間</p>
+              <p className="font-bold text-base md:text-lg text-gray-900 mt-1">{post.playtime}分</p>
+            </Link>
+          ) : (
+            <div className="bg-gradient-to-br from-gray-50 to-white rounded-lg p-3 md:p-4 text-center border border-gray-200">
+              <FaClock className="text-lg md:text-xl text-gray-400 mx-auto mb-1" />
+              <p className="text-xs font-medium text-gray-500">上演時間</p>
+              <p className="font-bold text-base md:text-lg text-gray-900 mt-1">不明</p>
+            </div>
+          )}
 
           {/* 総人数 */}
-          <div className="bg-gradient-to-br from-gray-50 to-white rounded-lg p-3 md:p-4 text-center border border-gray-200 hover:shadow-md transition-shadow">
-            <FaUsers className="text-lg md:text-xl text-gray-400 mx-auto mb-1" />
-            <p className="text-xs font-medium text-gray-500">総人数</p>
-            <p className="font-bold text-base md:text-lg text-gray-900 mt-1">
-              {post.totalNumber != null && post.totalNumber !== -1 ? `${post.totalNumber}人` : "不明"}
-            </p>
-          </div>
+          {post.totalNumber != null && post.totalNumber !== -1 ? (
+            <Link
+              href={`/?minTotalCount=${post.totalNumber}&maxTotalCount=${post.totalNumber}`}
+              className="bg-gradient-to-br from-gray-50 to-white rounded-lg p-3 md:p-4 text-center border border-gray-200 hover:shadow-md hover:border-theater-primary-300 transition-all cursor-pointer group"
+            >
+              <FaUsers className="text-lg md:text-xl text-gray-400 group-hover:text-theater-primary-500 mx-auto mb-1 transition-colors" />
+              <p className="text-xs font-medium text-gray-500">総人数</p>
+              <p className="font-bold text-base md:text-lg text-gray-900 mt-1">{post.totalNumber}人</p>
+            </Link>
+          ) : (
+            <div className="bg-gradient-to-br from-gray-50 to-white rounded-lg p-3 md:p-4 text-center border border-gray-200">
+              <FaUsers className="text-lg md:text-xl text-gray-400 mx-auto mb-1" />
+              <p className="text-xs font-medium text-gray-500">総人数</p>
+              <p className="font-bold text-base md:text-lg text-gray-900 mt-1">不明</p>
+            </div>
+          )}
 
           {/* 男性 */}
-          <div className="bg-gradient-to-br from-gray-50 to-white rounded-lg p-3 md:p-4 text-center border border-gray-200 hover:shadow-md transition-shadow">
-            <FaMale className="text-lg md:text-xl text-gray-400 mx-auto mb-1" />
-            <p className="text-xs font-medium text-gray-500">男性</p>
-            <p className="font-bold text-base md:text-lg text-gray-900 mt-1">
-              {post.man != null && post.man !== -1 ? `${post.man}人` : "不明"}
-            </p>
-          </div>
+          {post.man != null && post.man !== -1 ? (
+            <Link
+              href={`/?minMaleCount=${post.man}&maxMaleCount=${post.man}`}
+              className="bg-gradient-to-br from-gray-50 to-white rounded-lg p-3 md:p-4 text-center border border-gray-200 hover:shadow-md hover:border-theater-primary-300 transition-all cursor-pointer group"
+            >
+              <FaMale className="text-lg md:text-xl text-gray-400 group-hover:text-theater-primary-500 mx-auto mb-1 transition-colors" />
+              <p className="text-xs font-medium text-gray-500">男性</p>
+              <p className="font-bold text-base md:text-lg text-gray-900 mt-1">{post.man}人</p>
+            </Link>
+          ) : (
+            <div className="bg-gradient-to-br from-gray-50 to-white rounded-lg p-3 md:p-4 text-center border border-gray-200">
+              <FaMale className="text-lg md:text-xl text-gray-400 mx-auto mb-1" />
+              <p className="text-xs font-medium text-gray-500">男性</p>
+              <p className="font-bold text-base md:text-lg text-gray-900 mt-1">不明</p>
+            </div>
+          )}
 
           {/* 女性 */}
-          <div className="bg-gradient-to-br from-gray-50 to-white rounded-lg p-3 md:p-4 text-center border border-gray-200 hover:shadow-md transition-shadow">
-            <FaFemale className="text-lg md:text-xl text-gray-400 mx-auto mb-1" />
-            <p className="text-xs font-medium text-gray-500">女性</p>
-            <p className="font-bold text-base md:text-lg text-gray-900 mt-1">
-              {post.woman != null && post.woman !== -1 ? `${post.woman}人` : "不明"}
-            </p>
-          </div>
+          {post.woman != null && post.woman !== -1 ? (
+            <Link
+              href={`/?minFemaleCount=${post.woman}&maxFemaleCount=${post.woman}`}
+              className="bg-gradient-to-br from-gray-50 to-white rounded-lg p-3 md:p-4 text-center border border-gray-200 hover:shadow-md hover:border-theater-primary-300 transition-all cursor-pointer group"
+            >
+              <FaFemale className="text-lg md:text-xl text-gray-400 group-hover:text-theater-primary-500 mx-auto mb-1 transition-colors" />
+              <p className="text-xs font-medium text-gray-500">女性</p>
+              <p className="font-bold text-base md:text-lg text-gray-900 mt-1">{post.woman}人</p>
+            </Link>
+          ) : (
+            <div className="bg-gradient-to-br from-gray-50 to-white rounded-lg p-3 md:p-4 text-center border border-gray-200">
+              <FaFemale className="text-lg md:text-xl text-gray-400 mx-auto mb-1" />
+              <p className="text-xs font-medium text-gray-500">女性</p>
+              <p className="font-bold text-base md:text-lg text-gray-900 mt-1">不明</p>
+            </div>
+          )}
 
           {/* どちらでも */}
-          <div className="bg-gradient-to-br from-gray-50 to-white rounded-lg p-3 md:p-4 text-center border border-gray-200 hover:shadow-md transition-shadow col-span-2 md:col-span-1">
+          <div className="bg-gradient-to-br from-gray-50 to-white rounded-lg p-3 md:p-4 text-center border border-gray-200 col-span-2 md:col-span-1">
             <FaTheaterMasks className="text-lg md:text-xl text-gray-400 mx-auto mb-1" />
             <p className="text-xs font-medium text-gray-500">どちらでも</p>
             <p className="font-bold text-base md:text-lg text-gray-900 mt-1">
