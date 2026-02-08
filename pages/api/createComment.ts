@@ -6,7 +6,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   if (req.method === "POST") {
-    const { author, content, isParent, targetid } = req.body;
+    const { author, content, isParent, targetid, commentType } = req.body;
 
     try {
       let comment;
@@ -17,6 +17,7 @@ export default async function handler(
             author,
             deleted: false,
             content,
+            commentType: commentType || null,
             post: { connect: { id: targetid } },
           },
         });
@@ -39,7 +40,6 @@ export default async function handler(
       res.status(500).json({ error: "コメントの投稿中にエラーが発生しました" });
     }
   } else {
-    // POST以外のHTTPメソッドに対する処理を追加する場合はここに記述
     res.status(405).json({ error: "このメソッドは許可されていません" });
   }
 }

@@ -97,14 +97,16 @@ model Access {
 }
 
 model ParentComment {
-  id       Int            @id @default(autoincrement())
-  content  String
-  deleted  Boolean        @default(false)
-  post_id  Int
-  author   String         @default("名無しさん")
-  date     DateTime       @default(now())
-  children ChildComment[]
-  post     Post           @relation(fields: [post_id], references: [id])
+  id          Int            @id @default(autoincrement())
+  content     String
+  deleted     Boolean        @default(false)
+  post_id     Int
+  author      String         @default("名無しさん")
+  date        DateTime       @default(now())
+  likes       Int            @default(0)
+  commentType String?
+  children    ChildComment[]
+  post        Post           @relation(fields: [post_id], references: [id])
 
   @@map("ParentComment")
 }
@@ -116,6 +118,7 @@ model ChildComment {
   parentCommentId Int
   author          String        @default("名無しさん")
   date            DateTime      @default(now())
+  likes           Int           @default(0)
   parentComment   ParentComment @relation(fields: [parentCommentId], references: [id])
 
   @@map("ChildComment")
