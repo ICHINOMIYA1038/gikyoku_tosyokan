@@ -109,6 +109,30 @@ export default function MobileSearchForm({
       setMaxPlaytime(router.query.maxPlaytime as string);
       hasParams = true;
     }
+    if (router.query.minTotalCount) {
+      setMinTotalCount(router.query.minTotalCount as string);
+      hasParams = true;
+    }
+    if (router.query.maxTotalCount) {
+      setMaxTotalCount(router.query.maxTotalCount as string);
+      hasParams = true;
+    }
+    if (router.query.minMaleCount) {
+      setMinMaleCount(router.query.minMaleCount as string);
+      hasParams = true;
+    }
+    if (router.query.maxMaleCount) {
+      setMaxMaleCount(router.query.maxMaleCount as string);
+      hasParams = true;
+    }
+    if (router.query.minFemaleCount) {
+      setMinFemaleCount(router.query.minFemaleCount as string);
+      hasParams = true;
+    }
+    if (router.query.maxFemaleCount) {
+      setMaxFemaleCount(router.query.maxFemaleCount as string);
+      hasParams = true;
+    }
     if (router.query.keyword) {
       setKeyword(router.query.keyword as string);
       hasParams = true;
@@ -118,7 +142,7 @@ export default function MobileSearchForm({
       setSelectedTags([categoryId]);
       hasParams = true;
     }
-    
+
     // パラメータがある場合は初期化完了として検索実行
     if (hasParams && !isInitialized) {
       setIsInitialized(true);
@@ -130,7 +154,7 @@ export default function MobileSearchForm({
 
   useEffect(() => {
     // URLパラメータがない場合のみ初回検索を実行
-    if (!router.query.minPlaytime && !router.query.maxPlaytime && !router.query.keyword && !router.query.category) {
+    if (!router.query.minPlaytime && !router.query.maxPlaytime && !router.query.keyword && !router.query.category && !router.query.minTotalCount && !router.query.maxTotalCount && !router.query.minMaleCount && !router.query.maxMaleCount && !router.query.minFemaleCount && !router.query.maxFemaleCount) {
       handleSubmit();
     }
   }, []);
