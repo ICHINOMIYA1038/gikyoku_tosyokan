@@ -16,8 +16,8 @@ import Comments from "@/components/Comments";
 import Seo from "@/components/seo";
 import StructuredData from "@/components/StructuredData";
 import OtherPosts from "@/components/Widget/OtherPosts";
-import { useState, useEffect, useRef, useCallback } from "react";
-import { FaStar, FaCommentDots, FaTimes, FaShareAlt, FaBook, FaExternalLinkAlt } from "react-icons/fa";
+import { useState, useCallback } from "react";
+import { FaStar, FaCommentDots, FaShareAlt, FaBook, FaExternalLinkAlt } from "react-icons/fa";
 import { prisma } from "@/lib/prisma";
 
 // メモ化されたコンポーネント
@@ -43,14 +43,9 @@ function PostPage({ post }: any) {
   const [star, setStar] = useState(0);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-  const [showComments, setShowComments] = useState(false);
   const [showShareButtons, setShowShareButtons] = useState(false);
   const [showReadButtons, setShowReadButtons] = useState(false);
-  const commentsRef = useRef<HTMLDivElement>(null);
-  const [isDesktop, setIsDesktop] = useState(false);
-  const [isTablet, setIsTablet] = useState(false);
 
-  // メモ化されたハンドラー
   const handleStarClick = useCallback((value: number) => {
     setStar(value);
   }, []);
@@ -77,25 +72,10 @@ function PostPage({ post }: any) {
     }
   }, [post.id, star]);
 
-  const toggleComments = () => {
-    setShowComments(!showComments);
-
-    // コメントを表示する場合、スクロールを一番上に戻す
-    if (!showComments && commentsRef.current) {
-      setTimeout(() => {
-        commentsRef.current?.scrollTo(0, 0);
-      }, 100);
-    }
-
-    // コメントを閉じる時にアニメーションを追加
-    if (showComments) {
-      // アニメーション用のクラスを追加して、アニメーション完了後に非表示にする
-      if (commentsRef.current) {
-        commentsRef.current.classList.add('animate-slideDown');
-        setTimeout(() => {
-          setShowComments(false);
-        }, 300);
-      }
+  const scrollToComments = () => {
+    const el = document.getElementById("comments-section");
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   };
 
@@ -107,171 +87,11 @@ function PostPage({ post }: any) {
     setShowReadButtons(!showReadButtons);
   };
 
-  // ウィンドウサイズの監視を最適化
-  useEffect(() => {
-    const checkScreenSize = () => {
-      setIsDesktop(window.innerWidth >= 1024);
-      setIsTablet(window.innerWidth >= 768);
-    };
-
-    checkScreenSize();
-
-    // デバウンスされたリサイズハンドラー
-    let timeoutId: NodeJS.Timeout;
-    const debouncedCheckScreenSize = () => {
-      clearTimeout(timeoutId);
-      timeoutId = setTimeout(checkScreenSize, 150);
-    };
-
-    window.addEventListener('resize', debouncedCheckScreenSize);
-    return () => {
-      window.removeEventListener('resize', debouncedCheckScreenSize);
-      clearTimeout(timeoutId);
-    };
-  }, []);
-
-  // マウスとタッチの両方に対応したハンドラーを追加
-  const handleDragStart = (e: React.MouseEvent | React.TouchEvent) => {
-    // タブレット以上のサイズでは処理しない
-    if (isTablet) return;
-
-    // タッチイベントかマウスイベントかを判定
-    let startY: number;
-    let startX: number;
-
-    if ('touches' in e) {
-      // タッチイベントの場合
-      const touch = e.touches[0];
-      startY = touch.clientY;
-      startX = touch.clientX;
-    } else {
-      // マウスイベントの場合
-      startY = e.clientY;
-      startX = e.clientX;
-
-      // マウスイベントの場合は、マウスムーブとマウスアップのイベントを追加
-      document.addEventListener('mousemove', handleDragMove);
-      document.addEventListener('mouseup', handleDragEnd);
-    }
-
-    let isDragging = false;
-    let initialHeight = 0;
-
-    // コメント欄の初期高さを取得
-    if (commentsRef.current) {
-      initialHeight = commentsRef.current.clientHeight;
-    }
-
-    // マウスムーブハンドラー
-    function handleDragMove(moveEvent: MouseEvent | TouchEvent) {
-      if (!commentsRef.current) return;
-
-      let moveY: number;
-      let moveX: number;
-
-      if ('touches' in moveEvent) {
-        // タッチイベントの場合
-        const moveTouch = moveEvent.touches[0];
-        moveY = moveTouch.clientY;
-        moveX = moveTouch.clientX;
-      } else {
-        // マウスイベントの場合
-        moveY = (moveEvent as MouseEvent).clientY;
-        moveX = (moveEvent as MouseEvent).clientX;
-      }
-
-      // 縦方向の移動が横方向より大きい場合のみ処理
-      if (Math.abs(moveY - startY) > Math.abs(moveX - startX)) {
-        // デフォルトのスクロール動作を防止
-        moveEvent.preventDefault();
-
-        isDragging = true;
-
-        // 下にドラッグした場合のみ処理
-        if (moveY > startY) {
-          // ドラッグした距離を計算
-          const dragDistance = moveY - startY;
-
-          // コメント欄を下に移動
-          commentsRef.current.style.transform = `translateY(${dragDistance}px)`;
-
-          // 透明度も調整（ドラッグ距離に応じて徐々に透明に）
-          const opacity = Math.max(1 - (dragDistance / 300), 0.5);
-          commentsRef.current.style.opacity = opacity.toString();
-
-          // ドラッグが一定距離を超えたら視覚的フィードバックを追加
-          const swipeIndicator = commentsRef.current.querySelector('.swipe-indicator');
-          if (dragDistance > 100) {
-            swipeIndicator?.classList.add('ready-to-close');
-            // カーソルも変更
-            commentsRef.current.style.cursor = 'n-resize';
-          } else {
-            swipeIndicator?.classList.remove('ready-to-close');
-            commentsRef.current.style.cursor = 'grab';
-          }
-        }
-      }
-    }
-
-    // マウスアップ/タッチエンドハンドラー
-    function handleDragEnd(endEvent: MouseEvent | TouchEvent) {
-      if (!commentsRef.current) return;
-
-      let endY: number;
-
-      if ('changedTouches' in endEvent) {
-        // タッチイベントの場合
-        const endTouch = endEvent.changedTouches[0];
-        endY = endTouch.clientY;
-      } else {
-        // マウスイベントの場合
-        endY = (endEvent as MouseEvent).clientY;
-      }
-
-      if (isDragging) {
-        const dragDistance = endY - startY;
-
-        // ドラッグが一定距離を超えたらコメント欄を閉じる
-        if (dragDistance > 100) {
-          // アニメーションを追加して閉じる
-          commentsRef.current.style.transform = 'translateY(100%)';
-          commentsRef.current.style.opacity = '0';
-
-          setTimeout(() => {
-            setShowComments(false);
-            // スタイルをリセット
-            if (commentsRef.current) {
-              commentsRef.current.style.transform = '';
-              commentsRef.current.style.opacity = '';
-              commentsRef.current.style.cursor = '';
-            }
-          }, 300);
-        } else {
-          // 閾値に達していない場合は元の状態に戻す
-          commentsRef.current.style.transform = '';
-          commentsRef.current.style.opacity = '';
-          commentsRef.current.style.cursor = '';
-        }
-      }
-
-      // イベントリスナーを削除
-      document.removeEventListener('mousemove', handleDragMove);
-      document.removeEventListener('mouseup', handleDragEnd);
-      document.removeEventListener('touchmove', handleDragMove as any);
-      document.removeEventListener('touchend', handleDragEnd as any);
-    }
-
-    // タッチイベントの場合
-    if ('touches' in e) {
-      document.addEventListener('touchmove', handleDragMove as any, { passive: false });
-      document.addEventListener('touchend', handleDragEnd as any);
-    }
-  };
-
   // Amazonリンクと無料リンクの存在確認
   const hasAmazonLink = !!post.amazon_text_url;
   const hasFreeLink = !!post.link_to_plot;
   const hasReadLinks = hasAmazonLink || hasFreeLink;
+  const commentCount = post.comments?.length || 0;
 
   return (
     <>
@@ -281,109 +101,32 @@ function PostPage({ post }: any) {
           from { opacity: 0; }
           to { opacity: 1; }
         }
-        
-        @keyframes slideUp {
-          from { transform: translateY(100%); }
-          to { transform: translateY(0); }
+
+        .animate-fadeIn {
+          animation: fadeIn 0.3s ease-in-out;
         }
-        
-        @keyframes slideIn {
-          from { transform: translateX(100%); }
-          to { transform: translateX(0); }
+
+        .btn-amazon {
+          background-color: #ff9900;
+          transition: all 0.3s ease;
         }
-        
-        @keyframes slideDown {
-          from { transform: translateY(0); }
-          to { transform: translateY(100%); }
+
+        .btn-amazon:hover {
+          background-color: #e68a00;
+          transform: translateY(-2px);
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
-          
-          .animate-fadeIn {
-            animation: fadeIn 0.3s ease-in-out;
-          }
-          
-          .animate-slideUp {
-            animation: slideUp 0.3s ease-out;
-          }
-          
-          .animate-slideIn {
-            animation: slideIn 0.3s ease-out;
-          }
-          
-          .animate-slideDown {
-            animation: slideDown 0.3s ease-out;
-          }
-          
-          .btn-amazon {
-            background-color: #ff9900;
-            transition: all 0.3s ease;
-          }
-          
-          .btn-amazon:hover {
-            background-color: #e68a00;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-          }
-          
-          .btn-free {
-            background-color: #34d399;
-            transition: all 0.3s ease;
-          }
-          
-          .btn-free:hover {
-            background-color: #10b981;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-          }
-          
-          .swipe-handle {
-            width: 40px;
-            height: 5px;
-            background-color: #d1d5db;
-            border-radius: 9999px;
-            margin: 8px auto;
-            cursor: grab;
-          }
-          
-          .swipe-handle:active {
-            cursor: grabbing;
-            background-color: #9ca3af;
-          }
-          
-          .swipe-indicator {
-            color: #6b7280;
-            font-size: 0.75rem;
-            text-align: center;
-            margin-top: 2px;
-          }
-          
-          .ready-to-close {
-            color: #ef4444;
-            font-weight: bold;
-          }
-          
-          .comment-drawer {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 70vh;
-            background-color: white;
-            box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.1);
-            z-index: 40;
-            border-top-left-radius: 16px;
-            border-top-right-radius: 16px;
-            overflow: hidden;
-            transition: transform 0.3s ease, height 0.3s ease, opacity 0.3s ease;
-          }
-          
-          .swipe-handle-area {
-            cursor: grab;
-            user-select: none;
-          }
-          
-          .swipe-handle-area:active {
-            cursor: grabbing;
-          }
+
+        .btn-free {
+          background-color: #34d399;
+          transition: all 0.3s ease;
+        }
+
+        .btn-free:hover {
+          background-color: #10b981;
+          transform: translateY(-2px);
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
         `}</style>
 
         <Seo
@@ -442,17 +185,16 @@ function PostPage({ post }: any) {
         />
         <div className="w-full">
           <MemoizedPostDetail post={post} />
-          
-          {/* 下部コンテンツエリア - 本文と同じレイアウト構造 */}
+
+          {/* 下部コンテンツエリア */}
           <div className="container mx-auto px-4 pb-12">
             <div className="flex flex-col lg:flex-row gap-8">
-              {/* メインカラム - 本文と同じ幅 */}
+              {/* メインカラム */}
               <div className="flex-1 min-w-0">
 
                 {/* 読むボタンエリア */}
                 {(hasAmazonLink || hasFreeLink) && (
                   <div className="mb-8 flex flex-col sm:flex-row justify-center gap-4">
-                  {/* Amazonで読むボタン */}
                   {hasAmazonLink && (
                     <a
                       href={post.amazon_text_url}
@@ -466,7 +208,6 @@ function PostPage({ post }: any) {
                     </a>
                   )}
 
-                  {/* 無料で読むボタン */}
                   {hasFreeLink && (
                     <a
                       href={post.link_to_plot}
@@ -534,6 +275,15 @@ function PostPage({ post }: any) {
                   </div>
                 </div>
 
+                {/* コメントセクション（インライン表示） */}
+                <div className="mb-8">
+                  <div className="bg-white rounded-xl shadow-sm p-6 md:p-8 lg:p-10 border border-gray-100">
+                    {post.comments && (
+                      <MemoizedComments comments={post.comments} postid={post.id} inline={true} />
+                    )}
+                  </div>
+                </div>
+
                 {/* 関連記事 */}
                 <div className="mb-8">
                   <div className="bg-white rounded-xl shadow-sm p-6 md:p-8 lg:p-10 border border-gray-100">
@@ -548,33 +298,12 @@ function PostPage({ post }: any) {
                   </div>
                 </div>
               </div>
-              
-              {/* サイドバースペース - 本文のサイドバーと同じ幅を確保 */}
+
+              {/* サイドバースペース */}
               <aside className="hidden xl:block xl:w-80 2xl:w-96 flex-shrink-0">
-                {/* 空のスペースを保持してレイアウトを揃える */}
               </aside>
             </div>
           </div>
-
-            {/* コメントセクション - タブレット以上 */}
-            {showComments && isTablet && (
-              <div className="md:col-span-1 bg-white rounded-lg shadow-lg overflow-y-auto md:h-screen md:sticky md:top-0 animate-slideIn">
-                <div className="sticky top-0 bg-white p-3 border-b border-gray-200 flex justify-between items-center z-10">
-                  <p className="text-xl font-bold font-serif">コメント</p>
-                  <button
-                    className="text-gray-500 hover:text-gray-700 p-2 rounded-full hover:bg-gray-100"
-                    onClick={toggleComments}
-                  >
-                    <FaTimes />
-                  </button>
-                </div>
-                <div className="p-4 pb-20">
-                  {post.comments && (
-                    <MemoizedComments comments={post.comments} postid={post.id} />
-                  )}
-                </div>
-              </div>
-            )}
 
             {/* 固定ボタンエリア */}
             <div className="fixed bottom-6 right-4 z-50 flex flex-col items-end space-y-3">
@@ -639,7 +368,7 @@ function PostPage({ post }: any) {
                     onClick={toggleReadButtons}
                     aria-label="この戯曲を読む"
                   >
-                    {showReadButtons ? <FaTimes className="text-xl" /> : <FaBook className="text-xl" />}
+                    {showReadButtons ? <FaExternalLinkAlt className="text-xl" /> : <FaBook className="text-xl" />}
                   </button>
                 )}
 
@@ -652,52 +381,21 @@ function PostPage({ post }: any) {
                   <FaShareAlt className="text-lg" />
                 </button>
 
-                {/* コメントボタン */}
+                {/* コメントボタン（スクロール先へ） */}
                 <button
-                  className="bg-white hover:bg-gray-50 text-gray-600 w-12 h-12 rounded-full shadow-lg flex items-center justify-center transition-all duration-200 hover:scale-105 border border-gray-200"
-                  onClick={toggleComments}
-                  aria-label="コメントを表示"
+                  className="bg-white hover:bg-gray-50 text-gray-600 w-12 h-12 rounded-full shadow-lg flex items-center justify-center transition-all duration-200 hover:scale-105 border border-gray-200 relative"
+                  onClick={scrollToComments}
+                  aria-label="コメントへ移動"
                 >
                   <FaCommentDots className="text-lg" />
+                  {commentCount > 0 && (
+                    <span className="absolute -top-1 -right-1 bg-pink-600 text-white text-xs font-bold rounded-full min-w-[20px] h-5 flex items-center justify-center px-1">
+                      {commentCount}
+                    </span>
+                  )}
                 </button>
               </div>
             </div>
-
-            {/* コメントセクション - モバイル */}
-            {showComments && !isTablet && (
-              <div
-                className="comment-drawer"
-                ref={commentsRef}
-                style={{ transform: 'translateY(0)' }}
-              >
-                {/* スワイプ/ドラッグハンドル */}
-                <div
-                  className="swipe-handle-area pt-2 pb-1"
-                  onTouchStart={handleDragStart}
-                  onMouseDown={handleDragStart}
-                  style={{ cursor: 'grab' }}
-                >
-                  <div className="swipe-handle"></div>
-                  <p className="swipe-indicator">下にドラッグして閉じる</p>
-                </div>
-
-                <div className="sticky top-0 bg-white p-3 border-b border-gray-200 flex justify-between items-center">
-                  <h2 className="text-xl font-bold font-serif">コメント</h2>
-                  <button
-                    className="text-gray-500 hover:text-gray-700 p-2 rounded-full hover:bg-gray-100"
-                    onClick={toggleComments}
-                  >
-                    <FaTimes />
-                  </button>
-                </div>
-
-                <div className="p-4 pb-20 overflow-y-auto" style={{ height: 'calc(100% - 100px)' }}>
-                  {post.comments && (
-                    <MemoizedComments comments={post.comments} postid={post.id} />
-                  )}
-                </div>
-              </div>
-            )}
           </div>
       </Layout>
     </>
@@ -713,7 +411,6 @@ export async function getServerSideProps(context: any) {
   }
 
   try {
-    // 最適化されたクエリ - 必要なフィールドのみ選択
     const post = await prisma.post.findUnique({
       where: { id: postId },
       select: {
@@ -759,6 +456,8 @@ export async function getServerSideProps(context: any) {
             author: true,
             deleted: true,
             post_id: true,
+            likes: true,
+            commentType: true,
             children: {
               select: {
                 id: true,
@@ -767,17 +466,17 @@ export async function getServerSideProps(context: any) {
                 author: true,
                 deleted: true,
                 parentCommentId: true,
+                likes: true,
               }
             }
           },
           orderBy: {
             date: 'desc'
           },
-          take: 50 // 最新50件のみ取得
         },
         _count: {
           select: {
-            ratings: true // カウントのみ取得
+            ratings: true
           }
         }
       }
@@ -787,26 +486,25 @@ export async function getServerSideProps(context: any) {
       return { notFound: true };
     }
 
-    // アクセスログを非同期で記録（Promiseを待たない）
+    // アクセスログを非同期で記録
     const ipAddress =
       context.req.headers["x-real-ip"] ||
       context.req.headers["x-forwarded-for"] ||
       context.req.connection.remoteAddress;
 
-    // バックグラウンドでアクセスログを記録
     recordAccessOptimized(ipAddress, postId).catch(console.error);
 
-    // 日時フォーマット変換とフィールド名の調整
+    // 日時フォーマット変換
     const formattedPost = {
       ...post,
       comments: post.comments.map((comment: any) => ({
         ...comment,
-        name: comment.author, // Commentsコンポーネント用にフィールド名を調整
+        name: comment.author,
         date: formatDatetime(comment.date),
         children: comment.children.map((child: any) => ({
           ...child,
-          name: child.author, // Commentsコンポーネント用にフィールド名を調整
-          parent_id: child.parentCommentId, // フィールド名を調整
+          name: child.author,
+          parent_id: child.parentCommentId,
           date: formatDatetime(child.date),
         })),
       })),
@@ -820,7 +518,7 @@ export async function getServerSideProps(context: any) {
   } catch (error) {
     console.error("Error fetching post:", error);
     return {
-      notFound: true, // Return a 404 page
+      notFound: true,
     };
   }
 }
@@ -835,7 +533,6 @@ async function recordAccessOptimized(ipAddress: string, postId: number) {
       currentDate.getDate()
     );
 
-    // 既存のアクセスログをチェック
     const existingAccess = await prisma.access.findFirst({
       where: {
         ipAddress: ipAddress,
@@ -845,7 +542,6 @@ async function recordAccessOptimized(ipAddress: string, postId: number) {
     });
 
     if (!existingAccess) {
-      // 既存のレコードがない場合のみ作成
       await prisma.access.create({
         data: {
           ipAddress,
@@ -855,7 +551,6 @@ async function recordAccessOptimized(ipAddress: string, postId: number) {
       });
     }
   } catch (error) {
-    // エラーは記録するが処理は継続
     console.error("Failed to record access:", error);
   }
 }
