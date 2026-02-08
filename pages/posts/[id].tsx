@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Post as PostType } from "@prisma/client";
 import Layout from "@/components/Layout";
-import PostDetailIntegrated from "@/components/PostDetailIntegrated";
+import { PostHero, PostDetails, PostSidebar } from "@/components/PostDetailIntegrated";
 import {
   FacebookShareButton,
   HatenaShareButton,
@@ -21,18 +21,21 @@ import { FaStar, FaCommentDots, FaShareAlt, FaBook, FaExternalLinkAlt } from "re
 import { prisma } from "@/lib/prisma";
 
 // メモ化されたコンポーネント
-const MemoizedPostDetail = React.memo(PostDetailIntegrated);
+const MemoizedPostHero = React.memo(PostHero);
+const MemoizedPostDetails = React.memo(PostDetails);
+const MemoizedPostSidebar = React.memo(PostSidebar);
 const MemoizedComments = React.memo(Comments);
 const MemoizedOtherPosts = React.memo(OtherPosts);
 
-// Datetimeを指定したフォーマットに変換する関数
+// Datetimeを指定したフォーマットに変換する関数（JST固定）
 function formatDatetime(datetime: any) {
   const date = new Date(datetime);
-  const year = date.getFullYear();
-  const month = date.getMonth() + 1;
-  const day = date.getDate();
-  const hours = date.getHours();
-  const minutes = date.getMinutes();
+  const jst = new Date(date.toLocaleString("en-US", { timeZone: "Asia/Tokyo" }));
+  const year = jst.getFullYear();
+  const month = jst.getMonth() + 1;
+  const day = jst.getDate();
+  const hours = jst.getHours();
+  const minutes = jst.getMinutes();
 
   return `${year}/${month}/${day} ${hours}:${minutes}`;
 }
@@ -106,27 +109,6 @@ function PostPage({ post }: any) {
           animation: fadeIn 0.3s ease-in-out;
         }
 
-        .btn-amazon {
-          background-color: #ff9900;
-          transition: all 0.3s ease;
-        }
-
-        .btn-amazon:hover {
-          background-color: #e68a00;
-          transform: translateY(-2px);
-          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .btn-free {
-          background-color: #34d399;
-          transition: all 0.3s ease;
-        }
-
-        .btn-free:hover {
-          background-color: #10b981;
-          transform: translateY(-2px);
-          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
         `}</style>
 
         <Seo
@@ -184,23 +166,22 @@ function PostPage({ post }: any) {
           ]}
         />
         <div className="w-full">
-          <MemoizedPostDetail post={post} />
-
-          {/* 下部コンテンツエリア */}
-          <div className="container mx-auto px-4 pb-12">
+          <div className="container mx-auto px-4 pt-8 pb-12">
             <div className="flex flex-col lg:flex-row gap-8">
               {/* メインカラム */}
-              <div className="flex-1 min-w-0">
+              <main className="flex-1 min-w-0">
+                {/* 1. ヒーロー */}
+                <MemoizedPostHero post={post} />
 
-                {/* 読むボタンエリア */}
+                {/* 2. 読むボタンエリア */}
                 {(hasAmazonLink || hasFreeLink) && (
-                  <div className="mb-8 flex flex-col sm:flex-row justify-center gap-4">
+                  <div className="mt-6 flex flex-col sm:flex-row justify-center gap-4">
                   {hasAmazonLink && (
                     <a
                       href={post.amazon_text_url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="btn-amazon flex items-center justify-center px-6 py-3 rounded-lg shadow-md text-white font-bold text-lg w-full sm:w-auto"
+                      className="flex items-center justify-center px-6 py-3 rounded-lg shadow-md text-white font-bold text-lg w-full sm:w-auto bg-gray-900 hover:bg-gray-800 transition-all hover:-translate-y-0.5"
                     >
                       <FaBook className="mr-2" />
                       この戯曲を読む (Amazon)
@@ -213,7 +194,7 @@ function PostPage({ post }: any) {
                       href={post.link_to_plot}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="btn-free flex items-center justify-center px-6 py-3 rounded-lg shadow-md text-white font-bold text-lg w-full sm:w-auto"
+                      className="flex items-center justify-center px-6 py-3 rounded-lg shadow-md font-bold text-lg w-full sm:w-auto bg-white text-gray-900 border-2 border-gray-900 hover:bg-gray-50 transition-all hover:-translate-y-0.5"
                     >
                       <FaBook className="mr-2" />
                       この戯曲を無料で読む
@@ -223,69 +204,61 @@ function PostPage({ post }: any) {
                   </div>
                 )}
 
-                {/* 評価セクション */}
-                <div className="mb-8">
-                  <div className="bg-white rounded-xl shadow-sm p-6 md:p-8 lg:p-10 border border-gray-100">
-                  <div>
-                    <h3 className="text-lg md:text-xl font-bold text-center mb-4 text-gray-800 font-serif">
-                      この作品を評価
-                    </h3>
-                    <p className="text-sm text-gray-600 text-center mb-4">
-                      あなたの声を聞かせてください
-                    </p>
-                    <div className="flex items-center justify-center gap-1">
-                    {[1, 2, 3, 4, 5].map((value) => (
+                {/* 3. 評価セクション */}
+                <div className="mt-6">
+                  <div className="bg-white rounded-xl shadow-sm px-4 py-4 md:px-6 md:py-4 border border-gray-100">
+                    <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
+                      <span className="text-sm font-bold text-gray-700 whitespace-nowrap">この作品を評価</span>
+                      <div className="flex items-center gap-0.5">
+                        {[1, 2, 3, 4, 5].map((value) => (
+                          <button
+                            key={value}
+                            type="button"
+                            onClick={() => handleStarClick(value)}
+                            className="p-0.5 hover:scale-110 transition-transform"
+                          >
+                            <FaStar
+                              className={
+                                value <= star
+                                  ? "text-yellow-500 text-2xl md:text-3xl cursor-pointer"
+                                  : "text-gray-300 text-2xl md:text-3xl cursor-pointer hover:text-yellow-300"
+                              }
+                            />
+                          </button>
+                        ))}
+                      </div>
                       <button
-                        key={value}
-                        type="button"
-                        onClick={() => handleStarClick(value)}
-                        className="p-1 hover:scale-110 transition-transform"
-                      >
-                        <FaStar
-                          className={
-                            value <= star
-                              ? "text-yellow-500 text-3xl md:text-4xl cursor-pointer"
-                              : "text-gray-300 text-3xl md:text-4xl cursor-pointer hover:text-yellow-300"
-                          }
-                        />
-                      </button>
-                    ))}
-                    </div>
-                    <div className="text-center mt-6">
-                      <button
-                        className="w-full md:w-auto py-3 px-12 rounded-lg bg-gray-900 text-white font-bold hover:bg-gray-800 transition-all transform hover:-translate-y-0.5 shadow-md"
+                        className="py-2 px-6 rounded-lg bg-gray-900 text-white font-bold text-sm hover:bg-gray-800 transition-all shadow-sm whitespace-nowrap"
                         onClick={handleSubmit}
                       >
-                        評価を送信
+                        送信
                       </button>
                     </div>
-                    <div className="mt-4">
-                      {error && (
-                        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-center">
-                          {error}
-                        </div>
-                      )}
-                      {success && (
-                        <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg text-center">
-                          {success}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                  </div>
-                </div>
-
-                {/* コメントセクション（インライン表示） */}
-                <div className="mb-8">
-                  <div className="bg-white rounded-xl shadow-sm p-6 md:p-8 lg:p-10 border border-gray-100">
-                    {post.comments && (
-                      <MemoizedComments comments={post.comments} postid={post.id} inline={true} />
+                    {(error || success) && (
+                      <div className="mt-3 text-center text-sm">
+                        {error && <span className="text-red-600">{error}</span>}
+                        {success && <span className="text-green-600">{success}</span>}
+                      </div>
                     )}
                   </div>
                 </div>
 
-                {/* 関連記事 */}
-                <div className="mb-8">
+                {/* 4. コメントセクション */}
+                <div className="mt-6">
+                  <div className="bg-pink-50/60 rounded-xl shadow-sm p-4 md:p-6 border border-pink-100">
+                    {post.comments && (
+                      <MemoizedComments key={post.id} comments={post.comments} postid={post.id} inline={true} />
+                    )}
+                  </div>
+                </div>
+
+                {/* 5. 作品詳細（作品情報、あらすじ、詳細説明、作者について） */}
+                <div className="mt-6">
+                  <MemoizedPostDetails post={post} />
+                </div>
+
+                {/* 6. 関連作品 */}
+                <div className="mt-6">
                   <div className="bg-white rounded-xl shadow-sm p-6 md:p-8 lg:p-10 border border-gray-100">
                     <h2 className="text-xl md:text-2xl font-bold mb-6 text-center text-gray-800 font-serif">
                       関連作品
@@ -297,11 +270,10 @@ function PostPage({ post }: any) {
                     />
                   </div>
                 </div>
-              </div>
+              </main>
 
-              {/* サイドバースペース */}
-              <aside className="hidden xl:block xl:w-80 2xl:w-96 flex-shrink-0">
-              </aside>
+              {/* サイドバー */}
+              <MemoizedPostSidebar post={post} />
             </div>
           </div>
 
@@ -309,15 +281,15 @@ function PostPage({ post }: any) {
             <div className="fixed bottom-6 right-4 z-50 flex flex-col items-end space-y-3">
               {/* 読むボタンメニュー */}
               {hasReadLinks && showReadButtons && (
-                <div className="bg-white p-3 rounded-lg shadow-xl border border-gray-100 flex flex-col space-y-2 mb-2 animate-fadeIn relative w-48">
+                <div className="bg-white p-3 rounded-lg shadow-xl border border-gray-200 flex flex-col space-y-2 mb-2 animate-fadeIn relative w-48">
                   {hasAmazonLink && (
                     <a
                       href={post.amazon_text_url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center px-4 py-3 rounded-lg text-gray-800 hover:bg-gray-50 font-bold text-sm transition-colors border border-gray-100"
+                      className="flex items-center px-4 py-3 rounded-lg text-gray-800 hover:bg-gray-50 font-bold text-sm transition-colors border border-gray-200"
                     >
-                      <FaBook className="mr-3 text-orange-500" />
+                      <FaBook className="mr-3 text-gray-400" />
                       Amazonで読む
                     </a>
                   )}
@@ -327,9 +299,9 @@ function PostPage({ post }: any) {
                       href={post.link_to_plot}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center px-4 py-3 rounded-lg text-gray-800 hover:bg-gray-50 font-bold text-sm transition-colors border border-gray-100"
+                      className="flex items-center px-4 py-3 rounded-lg text-gray-800 hover:bg-gray-50 font-bold text-sm transition-colors border border-gray-200"
                     >
-                      <FaBook className="mr-3 text-green-500" />
+                      <FaBook className="mr-3 text-gray-400" />
                       無料で読む
                     </a>
                   )}
@@ -364,7 +336,7 @@ function PostPage({ post }: any) {
                 {/* 読むボタン */}
                 {hasReadLinks && (
                   <button
-                    className="bg-pink-600 hover:bg-pink-700 text-white w-14 h-14 rounded-full shadow-lg flex items-center justify-center transition-all duration-200 hover:scale-105"
+                    className="bg-gray-900 hover:bg-gray-800 text-white w-14 h-14 rounded-full shadow-lg flex items-center justify-center transition-all duration-200 hover:scale-105"
                     onClick={toggleReadButtons}
                     aria-label="この戯曲を読む"
                   >
@@ -383,13 +355,13 @@ function PostPage({ post }: any) {
 
                 {/* コメントボタン（スクロール先へ） */}
                 <button
-                  className="bg-white hover:bg-gray-50 text-gray-600 w-12 h-12 rounded-full shadow-lg flex items-center justify-center transition-all duration-200 hover:scale-105 border border-gray-200 relative"
+                  className="bg-pink-600 hover:bg-pink-700 text-white w-12 h-12 rounded-full shadow-lg flex items-center justify-center transition-all duration-200 hover:scale-105 relative"
                   onClick={scrollToComments}
                   aria-label="コメントへ移動"
                 >
                   <FaCommentDots className="text-lg" />
                   {commentCount > 0 && (
-                    <span className="absolute -top-1 -right-1 bg-pink-600 text-white text-xs font-bold rounded-full min-w-[20px] h-5 flex items-center justify-center px-1">
+                    <span className="absolute -top-1 -right-1 bg-gray-900 text-white text-xs font-bold rounded-full min-w-[20px] h-5 flex items-center justify-center px-1">
                       {commentCount}
                     </span>
                   )}

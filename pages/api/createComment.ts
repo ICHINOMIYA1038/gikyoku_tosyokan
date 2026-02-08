@@ -33,8 +33,10 @@ export default async function handler(
         });
       }
 
-      // 新しいコメントの詳細を返す
-      res.status(201).json(comment);
+      // 日時をJSTフォーマットして返す
+      const jst = new Date((comment as any).date.toLocaleString("en-US", { timeZone: "Asia/Tokyo" }));
+      const formatted = `${jst.getFullYear()}/${jst.getMonth() + 1}/${jst.getDate()} ${jst.getHours()}:${jst.getMinutes()}`;
+      res.status(201).json({ ...comment, date: formatted });
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: "コメントの投稿中にエラーが発生しました" });
