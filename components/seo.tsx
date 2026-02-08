@@ -10,6 +10,7 @@ const Seo = ({
   pageType = "website",
   twitterCardType = "summary_large_image",
   pageKeywords,
+  hreflang,
 }: any) => {
   const defaultTitle = "戯曲図書館";
   const defaultDescription =
@@ -54,6 +55,9 @@ const Seo = ({
       <meta name="twitter:description" content={description} />
       <meta name="twitter:image" content={imgUrl} />
       
+      {hreflang && hreflang.map((h: { lang: string; path: string }) => (
+        <link key={h.lang} rel="alternate" hrefLang={h.lang} href={`${siteUrl}${h.path}`} />
+      ))}
       <link rel="icon" href="/favicon.ico" />
       <link rel="apple-touch-icon" href="/logo.png" />
       <link rel="alternate" type="application/rss+xml" title="戯曲図書館 RSS Feed" href="/api/feed.xml" />

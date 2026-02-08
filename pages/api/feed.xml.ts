@@ -11,19 +11,19 @@ function escapeXml(text: string): string {
     .replace(/'/g, "&apos;");
 }
 
-function generateRssFeed(posts: any[]): string {
+function generateRssFeed(posts: any[], blogPosts: any[]): string {
   const siteUrl = "https://gikyokutosyokan.com";
   const buildDate = new Date().toUTCString();
 
   return `<?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0" 
+<rss version="2.0"
   xmlns:content="http://purl.org/rss/1.0/modules/content/"
   xmlns:dc="http://purl.org/dc/elements/1.1/"
   xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>戯曲図書館 - 最新作品</title>
+    <title>戯曲図書館 - 最新作品・ブログ</title>
     <link>${siteUrl}</link>
-    <description>戯曲図書館の最新作品情報をお届けします。上演時間や人数などから脚本を検索できます。</description>
+    <description>戯曲図書館の最新作品情報とブログ記事をお届けします。上演時間や人数などから脚本を検索できます。</description>
     <language>ja</language>
     <lastBuildDate>${buildDate}</lastBuildDate>
     <atom:link href="${siteUrl}/api/feed.xml" rel="self" type="application/rss+xml" />
@@ -31,13 +31,13 @@ function generateRssFeed(posts: any[]): string {
       .map((post) => {
         const postUrl = `${siteUrl}/posts/${post.id}`;
         const pubDate = post.createdAt ? new Date(post.createdAt).toUTCString() : buildDate;
-        
+
         // 作品情報の詳細な説明を生成
         let description = "";
         if (post.synopsis) {
           description = escapeXml(post.synopsis.substring(0, 200));
         }
-        
+
         // 追加情報
         const details = [];
         if (post.playtime && post.playtime !== -1) {
@@ -49,7 +49,7 @@ function generateRssFeed(posts: any[]): string {
         if (post.woman && post.woman !== -1) {
           details.push(`女性: ${post.woman}人`);
         }
-        
+
         if (details.length > 0) {
           description += ` [${details.join(", ")}]`;
         }
@@ -63,6 +63,24 @@ function generateRssFeed(posts: any[]): string {
       <pubDate>${pubDate}</pubDate>
       <dc:creator>${escapeXml(post.author?.name || "作者不明")}</dc:creator>
       ${post.categories?.map((cat: any) => `<category>${escapeXml(cat.name)}</category>`).join("\n      ") || ""}
+    </item>`;
+      })
+      .join("")}
+    ${blogPosts
+      .map((bp) => {
+        const bpUrl = `${siteUrl}/blog/${bp.language}/${bp.slug}`;
+        const pubDate = bp.publishedAt ? new Date(bp.publishedAt).toUTCString() : buildDate;
+        const description = bp.description ? escapeXml(bp.description.substring(0, 200)) : "";
+
+        return `
+    <item>
+      <title>${escapeXml(bp.title)}</title>
+      <link>${bpUrl}</link>
+      <guid isPermaLink="true">${bpUrl}</guid>
+      <description>${description}</description>
+      <pubDate>${pubDate}</pubDate>
+      <dc:creator>戯曲図書館</dc:creator>
+      ${bp.tags?.map((tag: string) => `<category>${escapeXml(tag)}</category>`).join("\n      ") || ""}
     </item>`;
       })
       .join("")}
@@ -91,7 +109,22 @@ export default async function handler(
       },
     });
 
-    const rssFeed = generateRssFeed(posts);
+    // 最新30件のブログ記事を取得
+    const blogPosts = await prisma.blogPost.findMany({
+      where: { published: true },
+      take: 30,
+      orderBy: { publishedAt: "desc" },
+      select: {
+        slug: true,
+        title: true,
+        description: true,
+        language: true,
+        publishedAt: true,
+        tags: true,
+      },
+    });
+
+    const rssFeed = generateRssFeed(posts, blogPosts);
 
     // キャッシュヘッダーを設定
     res.setHeader("Content-Type", "application/xml; charset=utf-8");

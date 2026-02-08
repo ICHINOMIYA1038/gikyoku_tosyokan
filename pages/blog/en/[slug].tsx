@@ -20,6 +20,10 @@ export default function BlogEnPost({ post }: Props) {
         pagePath={`/blog/en/${post.slug}`}
         pageKeywords={post.tags}
         pageType="article"
+        hreflang={[
+          { lang: 'en', path: `/blog/en/${post.slug}` },
+          { lang: 'x-default', path: `/blog/en/${post.slug}` },
+        ]}
       />
       <div className="container mx-auto px-4 py-8">
         <nav className="mb-6">
