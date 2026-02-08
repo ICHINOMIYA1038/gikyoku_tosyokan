@@ -20,6 +20,10 @@ export default function BlogJaPost({ post }: Props) {
         pagePath={`/blog/ja/${post.slug}`}
         pageKeywords={post.tags}
         pageType="article"
+        hreflang={[
+          { lang: 'ja', path: `/blog/ja/${post.slug}` },
+          { lang: 'x-default', path: `/blog/ja/${post.slug}` },
+        ]}
       />
       <div className="container mx-auto px-4 py-8">
         <nav className="mb-6">

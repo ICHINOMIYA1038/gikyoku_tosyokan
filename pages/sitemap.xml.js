@@ -2,7 +2,7 @@ import { PrismaClient } from "@prisma/client";
 
 const EXTERNAL_DATA_URL = "https://gikyokutosyokan.com";
 const prisma = new PrismaClient();
-function generateSiteMap(posts, authors, categories) {
+function generateSiteMap(posts, authors, categories, blogPosts) {
   const currentDate = new Date().toISOString();
   
   return `<?xml version="1.0" encoding="UTF-8"?>
@@ -165,6 +165,40 @@ function generateSiteMap(posts, authors, categories) {
        <priority>0.8</priority>
      </url>
 
+     <!-- ブログ一覧ページ -->
+     <url>
+       <loc>${EXTERNAL_DATA_URL}/blog</loc>
+       <lastmod>${currentDate}</lastmod>
+       <changefreq>daily</changefreq>
+       <priority>0.8</priority>
+     </url>
+     <url>
+       <loc>${EXTERNAL_DATA_URL}/blog/ja</loc>
+       <lastmod>${currentDate}</lastmod>
+       <changefreq>daily</changefreq>
+       <priority>0.8</priority>
+     </url>
+     <url>
+       <loc>${EXTERNAL_DATA_URL}/blog/en</loc>
+       <lastmod>${currentDate}</lastmod>
+       <changefreq>daily</changefreq>
+       <priority>0.8</priority>
+     </url>
+
+     <!-- ブログ記事 -->
+     ${blogPosts
+       .map(({ slug, language, updatedAt }) => {
+         return `
+       <url>
+           <loc>${EXTERNAL_DATA_URL}/blog/${language}/${slug}</loc>
+           <lastmod>${updatedAt ? new Date(updatedAt).toISOString() : currentDate}</lastmod>
+           <changefreq>weekly</changefreq>
+           <priority>0.7</priority>
+       </url>
+     `;
+       })
+       .join("")}
+
      <!-- サポートページ -->
      <url>
        <loc>${`${EXTERNAL_DATA_URL}/support/about`}</loc>
@@ -234,9 +268,13 @@ export async function getServerSideProps({ res }) {
   const posts = await prisma.post.findMany();
   const authors = await prisma.author.findMany();
   const categories = await prisma.category.findMany();
+  const blogPosts = await prisma.blogPost.findMany({
+    where: { published: true },
+    select: { slug: true, language: true, updatedAt: true },
+  });
 
   // We generate the XML sitemap with the data
-  const sitemap = generateSiteMap(posts, authors, categories);
+  const sitemap = generateSiteMap(posts, authors, categories, blogPosts);
   res.statusCode = 200;
   res.setHeader("Cache-Control", "s-maxage=86400, stale-while-revalidate"); // 24時間のキャッシュ
   res.setHeader("Content-Type", "text/xml");

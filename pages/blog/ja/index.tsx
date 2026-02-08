@@ -17,6 +17,11 @@ export default function BlogJaIndex({ posts }: Props) {
         pageDescription="戯曲図書館のブログ記事一覧。公演情報・演劇ガイド・戯曲の読み方など。"
         pagePath="/blog/ja"
         pageKeywords={['ブログ', '公演情報', '演劇ニュース', '戯曲']}
+        hreflang={[
+          { lang: 'ja', path: '/blog/ja' },
+          { lang: 'en', path: '/blog/en' },
+          { lang: 'x-default', path: '/blog' },
+        ]}
       />
       <div className="container mx-auto px-4 py-8">
         <div className="flex flex-col lg:flex-row gap-8">

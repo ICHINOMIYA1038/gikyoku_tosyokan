@@ -17,6 +17,11 @@ export default function BlogEnIndex({ posts }: Props) {
         pageDescription="Explore Japanese theater through Kishida Prize playwright profiles, play analyses, and theater guides for international audiences."
         pagePath="/blog/en"
         pageKeywords={['Japanese Theater', 'Kishida Prize', 'Playwrights', 'Blog']}
+        hreflang={[
+          { lang: 'ja', path: '/blog/ja' },
+          { lang: 'en', path: '/blog/en' },
+          { lang: 'x-default', path: '/blog' },
+        ]}
       />
       <div className="container mx-auto px-4 py-8">
         <div className="flex flex-col lg:flex-row gap-8">
