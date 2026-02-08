@@ -106,9 +106,7 @@ export default function BlogIndex({ jaPosts, enPosts }: BlogIndexProps) {
 
           {/* サイドバー */}
           <aside className="lg:w-80">
-            <div className="sticky top-20">
-              <BlogSidebar />
-            </div>
+            <BlogSidebar />
           </aside>
         </div>
       </div>
