@@ -4,6 +4,7 @@ import ReactMarkdown from 'react-markdown';
 import Layout from '@/components/Layout';
 import BlogSidebar from '@/components/BlogSidebar';
 import Seo from '@/components/seo';
+import StructuredData from '@/components/StructuredData';
 import { getPostBySlug, getPostSlugsByLanguage, BlogPost } from '@/lib/blog';
 import { FaHome, FaChevronRight } from 'react-icons/fa';
 
@@ -12,6 +13,7 @@ interface Props {
 }
 
 export default function BlogJaPost({ post }: Props) {
+  const siteUrl = 'https://gikyokutosyokan.com';
   return (
     <Layout>
       <Seo
@@ -23,6 +25,23 @@ export default function BlogJaPost({ post }: Props) {
         hreflang={[
           { lang: 'ja', path: `/blog/ja/${post.slug}` },
           { lang: 'x-default', path: `/blog/ja/${post.slug}` },
+        ]}
+      />
+      <StructuredData
+        type="Article"
+        title={post.title}
+        description={post.description}
+        url={`${siteUrl}/blog/ja/${post.slug}`}
+        datePublished={post.date}
+        dateModified={post.date}
+        author={{ name: '戯曲図書館' }}
+      />
+      <StructuredData
+        type="BreadcrumbList"
+        breadcrumbs={[
+          { name: 'ホーム', url: siteUrl },
+          { name: 'ブログ', url: `${siteUrl}/blog/ja` },
+          { name: post.title, url: `${siteUrl}/blog/ja/${post.slug}` },
         ]}
       />
       <div className="container mx-auto px-4 py-8">
