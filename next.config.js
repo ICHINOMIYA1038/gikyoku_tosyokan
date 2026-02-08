@@ -47,6 +47,22 @@ const nextConfig = {
         destination: '/posts/:id',
         permanent: true,
       },
+      // ブログ旧URL → 新サブディレクトリへリダイレクト
+      {
+        source: '/blog/:slug(kishida-.*)',
+        destination: '/blog/en/:slug',
+        permanent: true,
+      },
+      {
+        source: '/blog/:slug(guide-.*)',
+        destination: '/blog/en/:slug',
+        permanent: true,
+      },
+      {
+        source: '/blog/:slug((?!ja|en|index)\\w.*)',
+        destination: '/blog/ja/:slug',
+        permanent: true,
+      },
       // トレイリングスラッシュの統一
       {
         source: '/posts/:id/',

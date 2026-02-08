@@ -1,13 +1,21 @@
 import React from 'react';
 import Link from 'next/link';
-import { FaBook, FaGraduationCap, FaTheaterMasks, FaUsers, FaClock, FaQuestionCircle, FaNewspaper, FaEnvelope, FaShieldAlt, FaHandshake, FaChevronRight, FaSearch, FaHotjar } from 'react-icons/fa';
+import { FaBook, FaGraduationCap, FaTheaterMasks, FaUsers, FaQuestionCircle, FaEnvelope, FaShieldAlt, FaHandshake, FaChevronRight, FaSearch, FaHotjar, FaGlobeAmericas, FaAward, FaMapMarkerAlt } from 'react-icons/fa';
 
 interface BlogSidebarProps {
   category?: 'guide' | 'support' | 'news';
+  language?: 'ja' | 'en';
   currentPath?: string;
 }
 
-export default function BlogSidebar({ category = 'guide', currentPath }: BlogSidebarProps) {
+export default function BlogSidebar({ category = 'guide', language = 'ja', currentPath }: BlogSidebarProps) {
+  if (language === 'en') {
+    return <EnglishSidebar currentPath={currentPath} />;
+  }
+  return <JapaneseSidebar category={category} currentPath={currentPath} />;
+}
+
+function JapaneseSidebar({ category, currentPath }: { category?: string; currentPath?: string }) {
   const guideMenuItems = [
     {
       title: '初心者向け',
@@ -88,19 +96,13 @@ export default function BlogSidebar({ category = 'guide', currentPath }: BlogSid
 
   return (
     <div className="space-y-6">
-      {/* 検索ボックス */}
       <div className="bg-white rounded-lg shadow-sm p-4">
         <div className="relative">
-          <input
-            type="text"
-            placeholder="記事を検索..."
-            className="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
+          <input type="text" placeholder="記事を検索..." className="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
           <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
         </div>
       </div>
 
-      {/* カテゴリメニュー */}
       <div className="bg-white rounded-lg shadow-sm p-4">
         <h3 className="font-bold text-lg mb-4">
           {category === 'support' ? 'サポート' : 'ガイド'}カテゴリ
@@ -115,12 +117,7 @@ export default function BlogSidebar({ category = 'guide', currentPath }: BlogSid
               <ul className="ml-6 space-y-1">
                 {section.items.map((item, itemIndex) => (
                   <li key={itemIndex}>
-                    <Link
-                      href={item.href}
-                      className={`flex items-center gap-2 text-sm py-1 hover:text-blue-600 transition-colors ${
-                        currentPath === item.href ? 'text-blue-600 font-medium' : 'text-gray-600'
-                      }`}
-                    >
+                    <Link href={item.href} className={`flex items-center gap-2 text-sm py-1 hover:text-blue-600 transition-colors ${currentPath === item.href ? 'text-blue-600 font-medium' : 'text-gray-600'}`}>
                       <FaChevronRight size={10} />
                       {item.title}
                     </Link>
@@ -132,7 +129,6 @@ export default function BlogSidebar({ category = 'guide', currentPath }: BlogSid
         </nav>
       </div>
 
-      {/* 人気記事 */}
       <div className="bg-white rounded-lg shadow-sm p-4">
         <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
           <FaHotjar className="text-orange-500" />
@@ -142,54 +138,128 @@ export default function BlogSidebar({ category = 'guide', currentPath }: BlogSid
           {popularPosts.map((post, index) => (
             <li key={index}>
               <Link href={post.href} className="block hover:bg-gray-50 p-2 rounded transition-colors">
-                <p className="text-sm font-medium text-gray-700 mb-1 line-clamp-2">
-                  {post.title}
-                </p>
-                <p className="text-xs text-gray-500">
-                  {post.views.toLocaleString()}回閲覧
-                </p>
+                <p className="text-sm font-medium text-gray-700 mb-1 line-clamp-2">{post.title}</p>
+                <p className="text-xs text-gray-500">{post.views.toLocaleString()}回閲覧</p>
               </Link>
             </li>
           ))}
         </ul>
       </div>
 
-      {/* CTA */}
       <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg shadow-sm p-4 text-white">
         <h3 className="font-bold mb-2">脚本をお探しですか？</h3>
-        <p className="text-sm mb-3">
-          条件に合った作品を簡単検索
-        </p>
-        <Link
-          href="/"
-          className="inline-block bg-white text-blue-600 px-4 py-2 rounded-lg font-medium text-sm hover:bg-gray-100 transition-colors"
-        >
+        <p className="text-sm mb-3">条件に合った作品を簡単検索</p>
+        <Link href="/" className="inline-block bg-white text-blue-600 px-4 py-2 rounded-lg font-medium text-sm hover:bg-gray-100 transition-colors">
           作品を探す →
         </Link>
       </div>
+    </div>
+  );
+}
 
-      {/* ニュースレター */}
+function EnglishSidebar({ currentPath }: { currentPath?: string }) {
+  const menuItems = [
+    {
+      title: 'Kishida Prize',
+      icon: <FaAward />,
+      items: [
+        { title: 'What Is the Kishida Prize?', href: '/blog/en/guide-kishida-prize-explained' },
+        { title: 'Women Playwrights', href: '/blog/en/kishida-women-playwrights' },
+        { title: 'Kishida vs Akutagawa', href: '/blog/en/guide-kishida-vs-akutagawa' },
+      ]
+    },
+    {
+      title: 'Theater Guides',
+      icon: <FaTheaterMasks />,
+      items: [
+        { title: 'Beginner\'s Guide', href: '/blog/en/guide-japanese-contemporary-theater' },
+        { title: 'Watching as Non-Japanese', href: '/blog/en/guide-watching-japanese-theater' },
+        { title: 'Plays in English Translation', href: '/blog/en/guide-japanese-plays-in-english' },
+        { title: 'Your First 5 Plays', href: '/blog/en/guide-first-five-japanese-plays' },
+      ]
+    },
+    {
+      title: 'Theater History',
+      icon: <FaBook />,
+      items: [
+        { title: 'Angura Movement', href: '/blog/en/guide-angura-underground-theater' },
+        { title: 'Modern Theater History', href: '/blog/en/guide-history-modern-japanese-theater' },
+        { title: 'Small Theater Movement', href: '/blog/en/guide-small-theater-movement' },
+      ]
+    },
+    {
+      title: 'Culture & Places',
+      icon: <FaMapMarkerAlt />,
+      items: [
+        { title: 'Shimokitazawa Guide', href: '/blog/en/guide-shimokitazawa-theater-district' },
+        { title: 'Theater Festivals', href: '/blog/en/guide-japanese-theater-festivals' },
+        { title: 'Theater Companies', href: '/blog/en/guide-japanese-theater-companies' },
+      ]
+    },
+  ];
+
+  const popularPosts = [
+    { title: 'What Is the Kishida Prize?', href: '/blog/en/guide-kishida-prize-explained' },
+    { title: 'Beginner\'s Guide to Japanese Theater', href: '/blog/en/guide-japanese-contemporary-theater' },
+    { title: '10 Must-Read Japanese Plays in English', href: '/blog/en/guide-japanese-plays-in-english' },
+    { title: 'Butoh: Japan\'s Dance of Darkness', href: '/blog/en/guide-butoh-dance-of-darkness' },
+  ];
+
+  return (
+    <div className="space-y-6">
       <div className="bg-white rounded-lg shadow-sm p-4">
-        <h3 className="font-bold text-lg mb-2 flex items-center gap-2">
-          <FaEnvelope className="text-green-500" />
-          更新情報を受け取る
+        <div className="relative">
+          <input type="text" placeholder="Search articles..." className="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+          <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+        </div>
+      </div>
+
+      <div className="bg-white rounded-lg shadow-sm p-4">
+        <h3 className="font-bold text-lg mb-4">Categories</h3>
+        <nav className="space-y-4">
+          {menuItems.map((section, index) => (
+            <div key={index}>
+              <h4 className="flex items-center gap-2 font-semibold text-gray-700 mb-2">
+                <span className="text-blue-500">{section.icon}</span>
+                {section.title}
+              </h4>
+              <ul className="ml-6 space-y-1">
+                {section.items.map((item, itemIndex) => (
+                  <li key={itemIndex}>
+                    <Link href={item.href} className={`flex items-center gap-2 text-sm py-1 hover:text-blue-600 transition-colors ${currentPath === item.href ? 'text-blue-600 font-medium' : 'text-gray-600'}`}>
+                      <FaChevronRight size={10} />
+                      {item.title}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </nav>
+      </div>
+
+      <div className="bg-white rounded-lg shadow-sm p-4">
+        <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
+          <FaHotjar className="text-orange-500" />
+          Popular Articles
         </h3>
-        <p className="text-sm text-gray-600 mb-3">
-          新着脚本や演劇情報をメールでお届け
-        </p>
-        <form className="space-y-2">
-          <input
-            type="email"
-            placeholder="メールアドレス"
-            className="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
-          />
-          <button
-            type="submit"
-            className="w-full bg-green-500 text-white py-2 rounded-lg font-medium text-sm hover:bg-green-600 transition-colors"
-          >
-            登録する
-          </button>
-        </form>
+        <ul className="space-y-3">
+          {popularPosts.map((post, index) => (
+            <li key={index}>
+              <Link href={post.href} className="block hover:bg-gray-50 p-2 rounded transition-colors">
+                <p className="text-sm font-medium text-gray-700 line-clamp-2">{post.title}</p>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-lg shadow-sm p-4 text-white">
+        <h3 className="font-bold mb-2">Explore Japanese Scripts</h3>
+        <p className="text-sm mb-3">Search our library of theatrical scripts by cast size, duration, and more.</p>
+        <Link href="/" className="inline-block bg-white text-gray-800 px-4 py-2 rounded-lg font-medium text-sm hover:bg-gray-100 transition-colors">
+          Browse Scripts →
+        </Link>
       </div>
     </div>
   );
