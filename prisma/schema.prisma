@@ -139,11 +139,13 @@ model BlogPost {
   description String?
   content     String
   tags        String[]
+  language    String   @default("ja")
   publishedAt DateTime
   published   Boolean  @default(true)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
+  @@index([language])
   @@map("BlogPost")
 }
 
