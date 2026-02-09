@@ -1,26 +1,12 @@
 import { GetStaticProps } from 'next';
 import { useState, useMemo } from 'react';
+import Link from 'next/link';
 import Layout from '@/components/Layout';
 import Seo from '@/components/seo';
 import TheaterGroupCard from '@/components/TheaterGroupCard';
 import { prisma } from '@/lib/prisma';
-import { FaSearch, FaFilter } from 'react-icons/fa';
-
-const regionLabels: Record<string, string> = {
-  HOKKAIDO: '北海道',
-  TOHOKU: '東北',
-  KANTO: '関東',
-  CHUBU: '中部',
-  KANSAI: '関西',
-  CHUGOKU_SHIKOKU: '中国・四国',
-  KYUSHU_OKINAWA: '九州・沖縄',
-};
-
-const groupTypeLabels: Record<string, string> = {
-  STUDENT: '学生劇団',
-  INTERCOLLEGE: 'インカレ',
-  ACADEMIC: '大学学科',
-};
+import { regionLabels, groupTypeLabels } from '@/lib/university-theater-constants';
+import { FaSearch, FaFilter, FaChevronRight } from 'react-icons/fa';
 
 type Props = {
   theaterGroups: any[];
@@ -64,6 +50,15 @@ export default function TheaterGroupsIndex({ theaterGroups, regions, prefectures
       />
 
       <div className="px-4 py-6">
+        {/* パンくず */}
+        <nav className="flex items-center gap-1 text-xs text-gray-500 mb-4">
+          <Link href="/" className="hover:text-pink-600">ホーム</Link>
+          <FaChevronRight className="text-[8px]" />
+          <Link href="/university-theater" className="hover:text-pink-600">大学演劇</Link>
+          <FaChevronRight className="text-[8px]" />
+          <span className="text-gray-700">劇団一覧</span>
+        </nav>
+
         {/* ヒーロー */}
         <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl p-6 md:p-8 mb-6">
           <h1 className="font-serif text-2xl md:text-3xl font-bold text-gray-800 mb-2">
@@ -118,7 +113,7 @@ export default function TheaterGroupsIndex({ theaterGroups, regions, prefectures
             >
               <option value="">全種別</option>
               {Object.entries(groupTypeLabels).map(([k, v]) => (
-                <option key={k} value={k}>{v}</option>
+                <option key={k} value={k}>{v.label}</option>
               ))}
             </select>
           </div>

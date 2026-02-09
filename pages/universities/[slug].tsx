@@ -48,7 +48,7 @@ export default function UniversityDetail({ university }: Props) {
         <nav className="flex items-center gap-1 text-xs text-gray-500 mb-4 flex-wrap">
           <Link href="/" className="hover:text-pink-700">ホーム</Link>
           <FaChevronRight className="text-[8px]" />
-          <Link href="/universities" className="hover:text-pink-700">大学一覧</Link>
+          <Link href="/university-theater" className="hover:text-pink-700">大学演劇</Link>
           <FaChevronRight className="text-[8px]" />
           <span className="text-gray-800">{university.name}</span>
         </nav>

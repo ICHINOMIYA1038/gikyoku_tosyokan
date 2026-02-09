@@ -14,8 +14,11 @@ export default function Header() {
         <Link href="/" className="text-theater-neutral-800 hover:text-theater-neutral-600">
           検索する
         </Link>
-        <Link href="/theater-groups" className="text-theater-neutral-800 hover:text-theater-neutral-600">
+        <Link href="/university-theater" className="text-theater-neutral-800 hover:text-theater-neutral-600">
           大学演劇
+        </Link>
+        <Link href="/shogekijo" className="text-theater-neutral-800 hover:text-theater-neutral-600">
+          小劇場
         </Link>
         <Link
           href="/support/about"

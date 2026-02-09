@@ -1,5 +1,6 @@
 import * as React from "react";
 import { Post as PostType } from "@prisma/client";
+import Link from "next/link";
 import Layout from "@/components/Layout";
 import { PostHero, PostDetails, PostSidebar } from "@/components/PostDetailIntegrated";
 import {
@@ -17,7 +18,7 @@ import Seo from "@/components/seo";
 import StructuredData from "@/components/StructuredData";
 import OtherPosts from "@/components/Widget/OtherPosts";
 import { useState, useCallback } from "react";
-import { FaStar, FaCommentDots, FaShareAlt, FaBook, FaExternalLinkAlt } from "react-icons/fa";
+import { FaStar, FaCommentDots, FaShareAlt, FaBook, FaExternalLinkAlt, FaTheaterMasks } from "react-icons/fa";
 import { prisma } from "@/lib/prisma";
 
 // メモ化されたコンポーネント
@@ -289,6 +290,31 @@ function PostPage({ post }: any) {
                       postId={post.id}
                       authorName={post.author.name}
                     />
+                  </div>
+                </div>
+
+                {/* 7. 劇団データベースへの誘導 */}
+                <div className="mt-6 bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl p-5 border border-gray-100">
+                  <div className="flex items-center gap-2 mb-2">
+                    <FaTheaterMasks className="text-gray-500" />
+                    <h3 className="font-bold text-sm text-gray-700">劇団を探す</h3>
+                  </div>
+                  <p className="text-xs text-gray-500 mb-3">
+                    この脚本を上演する劇団をお探しですか？全国の劇団情報を検索できます。
+                  </p>
+                  <div className="flex flex-wrap gap-3">
+                    <Link
+                      href="/university-theater"
+                      className="text-xs text-pink-600 hover:text-pink-800 font-medium transition-colors"
+                    >
+                      大学演劇データベース →
+                    </Link>
+                    <Link
+                      href="/shogekijo"
+                      className="text-xs text-orange-600 hover:text-orange-800 font-medium transition-colors"
+                    >
+                      小劇場データベース →
+                    </Link>
                   </div>
                 </div>
               </main>

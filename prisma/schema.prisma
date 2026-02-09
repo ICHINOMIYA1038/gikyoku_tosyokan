@@ -205,6 +205,8 @@ model TheaterGroup {
   description   String?
   memberCount   Int?
   foundedYear   Int?
+  prefecture    String?
+  region        Region?
   website       String?
   twitter       String?
   instagram     String?
@@ -218,6 +220,8 @@ model TheaterGroup {
 
   @@index([groupType])
   @@index([isActive])
+  @@index([prefecture])
+  @@index([region])
   @@map("TheaterGroup")
 }
 

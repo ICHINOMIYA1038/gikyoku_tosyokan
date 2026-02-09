@@ -1,6 +1,7 @@
 import Link from 'next/link';
-import { FaUsers, FaUniversity, FaTheaterMasks } from 'react-icons/fa';
+import { FaUsers, FaUniversity, FaTheaterMasks, FaMapMarkerAlt } from 'react-icons/fa';
 import SocialLinks from './SocialLinks';
+import { groupTypeLabels } from '@/lib/university-theater-constants';
 
 type TheaterGroupCardProps = {
   group: {
@@ -9,6 +10,7 @@ type TheaterGroupCardProps = {
     groupType: string;
     description?: string | null;
     memberCount?: number | null;
+    prefecture?: string | null;
     website?: string | null;
     twitter?: string | null;
     instagram?: string | null;
@@ -17,26 +19,21 @@ type TheaterGroupCardProps = {
       university: { name: string; slug: string; prefecture: string };
     }[];
   };
+  linkPrefix?: string;
 };
 
-const groupTypeLabels: Record<string, { label: string; color: string }> = {
-  STUDENT: { label: '学生劇団', color: 'bg-blue-100 text-blue-800' },
-  INTERCOLLEGE: { label: 'インカレ', color: 'bg-purple-100 text-purple-800' },
-  ACADEMIC: { label: '大学学科', color: 'bg-green-100 text-green-800' },
-  AMATEUR: { label: '社会人', color: 'bg-orange-100 text-orange-800' },
-  PROFESSIONAL: { label: 'プロ', color: 'bg-red-100 text-red-800' },
-  YOUTH: { label: 'ユース', color: 'bg-teal-100 text-teal-800' },
-};
-
-export default function TheaterGroupCard({ group }: TheaterGroupCardProps) {
-  const typeInfo = groupTypeLabels[group.groupType] || { label: group.groupType, color: 'bg-gray-100 text-gray-800' };
+export default function TheaterGroupCard({ group, linkPrefix = '/theater-groups' }: TheaterGroupCardProps) {
+  const typeInfo = groupTypeLabels[group.groupType] || { label: group.groupType, color: 'bg-gray-100 text-gray-800', border: 'border-gray-300' };
+  const prefectures = group.universities && group.universities.length > 0
+    ? Array.from(new Set(group.universities.map((u) => u.university.prefecture)))
+    : group.prefecture ? [group.prefecture] : [];
 
   return (
-    <div className="group bg-white rounded-lg border border-gray-100 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 overflow-hidden flex flex-col">
+    <div className={`group bg-white rounded-lg border border-gray-100 border-l-[3px] ${typeInfo.border} shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 overflow-hidden flex flex-col`}>
       <div className="p-4 flex flex-col flex-1">
         <div className="flex items-start justify-between gap-2 mb-2">
-          <Link href={`/theater-groups/${group.slug}`} className="flex-1">
-            <h3 className="font-serif font-bold text-base text-gray-800 line-clamp-2 group-hover:text-pink-700 transition-colors">
+          <Link href={`${linkPrefix}/${group.slug}`} className="flex-1">
+            <h3 className={`font-serif font-bold text-base text-gray-800 line-clamp-2 transition-colors ${linkPrefix === '/shogekijo' ? 'group-hover:text-orange-700' : 'group-hover:text-pink-700'}`}>
               {group.name}
             </h3>
           </Link>
@@ -46,11 +43,18 @@ export default function TheaterGroupCard({ group }: TheaterGroupCardProps) {
         </div>
 
         {group.universities && group.universities.length > 0 && (
-          <div className="flex items-center gap-1 text-xs text-gray-500 mb-2">
+          <div className="flex items-center gap-1 text-xs text-gray-500 mb-1">
             <FaUniversity className="text-gray-400 shrink-0" />
             <span className="truncate">
               {group.universities.map((u) => u.university.name).join('、')}
             </span>
+          </div>
+        )}
+
+        {prefectures.length > 0 && (
+          <div className="flex items-center gap-1 text-xs text-gray-400 mb-2">
+            <FaMapMarkerAlt className="text-pink-400/60 shrink-0" />
+            <span>{prefectures.join('・')}</span>
           </div>
         )}
 

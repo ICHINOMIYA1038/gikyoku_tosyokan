@@ -141,6 +141,48 @@ export default function Home({ news, authors, posts, categories }: any) {
           </div>
         </section>
 
+        {/* 劇団データベースセクション */}
+        <section className="py-12 px-4">
+          <div className="max-w-6xl mx-auto">
+            <h2 className="text-2xl md:text-3xl font-bold text-center mb-3">
+              劇団データベース
+            </h2>
+            <p className="text-gray-600 text-center mb-8 text-sm">
+              全国の劇団・演劇団体の情報を検索できます
+            </p>
+            <div className="grid md:grid-cols-2 gap-6">
+              <Link href="/university-theater" className="block group">
+                <div className="bg-gradient-to-r from-purple-50 to-pink-50 p-6 rounded-xl border border-purple-100 hover:shadow-lg transition-all hover:-translate-y-1">
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
+                      <span className="text-lg">🎓</span>
+                    </div>
+                    <h3 className="text-xl font-bold text-gray-800 group-hover:text-pink-700 transition-colors">大学演劇データベース</h3>
+                  </div>
+                  <p className="text-sm text-gray-600 mb-3">
+                    全国の大学学生劇団・演劇サークルを地図から検索。大学別・地域別に探せます。
+                  </p>
+                  <span className="text-sm text-pink-600 font-medium">詳しく見る →</span>
+                </div>
+              </Link>
+              <Link href="/shogekijo" className="block group">
+                <div className="bg-gradient-to-r from-orange-50 to-amber-50 p-6 rounded-xl border border-orange-100 hover:shadow-lg transition-all hover:-translate-y-1">
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center">
+                      <span className="text-lg">🎭</span>
+                    </div>
+                    <h3 className="text-xl font-bold text-gray-800 group-hover:text-orange-700 transition-colors">小劇場データベース</h3>
+                  </div>
+                  <p className="text-sm text-gray-600 mb-3">
+                    プロ劇団・アマチュア劇団・ユース劇団など、全国の小劇場・演劇団体を検索できます。
+                  </p>
+                  <span className="text-sm text-orange-600 font-medium">詳しく見る →</span>
+                </div>
+              </Link>
+            </div>
+          </div>
+        </section>
+
         <ContentSection posts={posts} authors={authors} categories={categories} />
         
         {/* FAQセクション */}

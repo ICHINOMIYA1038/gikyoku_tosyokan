@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { FaUniversity, FaTheaterMasks, FaMapMarkerAlt } from 'react-icons/fa';
+import { universityTypeLabels } from '@/lib/university-theater-constants';
 
 type UniversityCardProps = {
   university: {
@@ -12,19 +13,13 @@ type UniversityCardProps = {
   };
 };
 
-const typeLabels: Record<string, { label: string; color: string }> = {
-  NATIONAL: { label: '国立', color: 'bg-blue-100 text-blue-800' },
-  PUBLIC: { label: '公立', color: 'bg-green-100 text-green-800' },
-  PRIVATE: { label: '私立', color: 'bg-orange-100 text-orange-800' },
-};
-
 export default function UniversityCard({ university }: UniversityCardProps) {
-  const typeInfo = typeLabels[university.universityType] || { label: university.universityType, color: 'bg-gray-100 text-gray-800' };
+  const typeInfo = universityTypeLabels[university.universityType] || { label: university.universityType, color: 'bg-gray-100 text-gray-800', border: 'border-gray-300' };
   const groupCount = university._count?.theaterGroups ?? 0;
 
   return (
     <Link href={`/universities/${university.slug}`} className="block h-full">
-      <div className="group h-full bg-white rounded-lg border border-gray-100 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 overflow-hidden flex flex-col">
+      <div className={`group h-full bg-white rounded-lg border border-gray-100 border-t-[3px] ${typeInfo.border} shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 overflow-hidden flex flex-col`}>
         <div className="p-4 flex flex-col flex-1">
           <div className="flex items-start justify-between gap-2 mb-3">
             <h3 className="font-serif font-bold text-base text-gray-800 line-clamp-2 group-hover:text-pink-700 transition-colors">
@@ -41,9 +36,9 @@ export default function UniversityCard({ university }: UniversityCardProps) {
               <span>{university.prefecture}</span>
             </div>
             {groupCount > 0 && (
-              <div className="flex items-center gap-1">
-                <FaTheaterMasks className="text-purple-500/60" />
-                <span>{groupCount}団体</span>
+              <div className="flex items-center gap-1 bg-purple-50 px-2 py-0.5 rounded-full">
+                <FaTheaterMasks className="text-purple-500" />
+                <span className="font-medium text-purple-700">{groupCount}団体</span>
               </div>
             )}
           </div>
