@@ -109,6 +109,27 @@ function PostPage({ post }: any) {
           animation: fadeIn 0.3s ease-in-out;
         }
 
+        .btn-amazon {
+          background-color: #ff9900;
+          transition: all 0.3s ease;
+        }
+
+        .btn-amazon:hover {
+          background-color: #e68a00;
+          transform: translateY(-2px);
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-free {
+          background-color: #34d399;
+          transition: all 0.3s ease;
+        }
+
+        .btn-free:hover {
+          background-color: #10b981;
+          transform: translateY(-2px);
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
         `}</style>
 
         <Seo

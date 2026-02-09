@@ -3,10 +3,16 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faReply, faTimes, faInfoCircle, faThumbsUp, faTheaterMasks, faCommentDots, faQuestionCircle, faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 
 const COMMENT_TYPES = [
-  { value: "感想", label: "感想", icon: faCommentDots, bg: "bg-gray-100", text: "text-gray-600", border: "border-gray-200" },
-  { value: "上演報告", label: "上演報告", icon: faTheaterMasks, bg: "bg-amber-50", text: "text-amber-700", border: "border-amber-200" },
-  { value: "質問", label: "質問", icon: faQuestionCircle, bg: "bg-sky-50", text: "text-sky-700", border: "border-sky-200" },
+  { value: "感想", label: "感想", icon: faCommentDots, color: "blue", bg: "bg-gray-100", text: "text-gray-600", border: "border-gray-200" },
+  { value: "上演報告", label: "上演報告", icon: faTheaterMasks, color: "green", bg: "bg-amber-50", text: "text-amber-700", border: "border-amber-200" },
+  { value: "質問", label: "質問", icon: faQuestionCircle, color: "orange", bg: "bg-sky-50", text: "text-sky-700", border: "border-sky-200" },
 ];
+
+const COMMENT_TYPE_STYLES: Record<string, { bg: string; text: string; border: string }> = {
+  "感想": { bg: "bg-blue-50", text: "text-blue-700", border: "border-blue-200" },
+  "上演報告": { bg: "bg-green-50", text: "text-green-700", border: "border-green-200" },
+  "質問": { bg: "bg-orange-50", text: "text-orange-700", border: "border-orange-200" },
+};
 
 const MAX_CHARS = 500;
 const INITIAL_DISPLAY_COUNT = 3;
@@ -148,12 +154,12 @@ const Comments = ({ comments: initialComments, postid, inline = false }: any) =>
   const hasMore = inline && !showAllComments && comments.length > INITIAL_DISPLAY_COUNT;
 
   const renderCommentTypeTag = (commentType: string | null) => {
-    if (!commentType) return null;
+    if (!commentType || !COMMENT_TYPE_STYLES[commentType]) return null;
+    const style = COMMENT_TYPE_STYLES[commentType];
     const typeConfig = COMMENT_TYPES.find(t => t.value === commentType);
-    if (!typeConfig) return null;
     return (
-      <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-medium whitespace-nowrap ${typeConfig.bg} ${typeConfig.text} border ${typeConfig.border}`}>
-        <FontAwesomeIcon icon={typeConfig.icon} className="text-[10px]" />
+      <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-medium whitespace-nowrap ${style.bg} ${style.text} border ${style.border}`}>
+        {typeConfig && <FontAwesomeIcon icon={typeConfig.icon} className="text-[10px]" />}
         {commentType}
       </span>
     );
@@ -198,15 +204,15 @@ const Comments = ({ comments: initialComments, postid, inline = false }: any) =>
 
       {/* CTA: コメントがない場合 */}
       {comments.length === 0 && !showForm && (
-        <div className="text-center py-6 px-4 rounded-xl border-2 border-dashed border-gray-200 bg-white">
-          <p className="text-sm font-bold text-gray-700 mb-1">
+        <div className="text-center py-10 px-4 bg-gradient-to-b from-gray-50 to-white rounded-xl border-2 border-dashed border-gray-200">
+          <p className="text-lg font-bold text-gray-800 mb-2">
             最初の感想を書いてみませんか？
           </p>
-          <p className="text-xs text-gray-500 mb-4">
-            上演した感想や、読んだ印象など
+          <p className="text-sm text-gray-500 mb-6">
+            上演した感想や、読んだ印象など、自由にお書きください
           </p>
           <button
-            className="px-5 py-2 bg-pink-600 hover:bg-pink-700 text-white rounded-full font-bold text-sm transition-all"
+            className="px-6 py-3 bg-pink-600 hover:bg-pink-700 text-white rounded-full font-bold transition-all hover:scale-105 shadow-md"
             onClick={() => setShowForm(true)}
           >
             コメントを書く
@@ -231,107 +237,136 @@ const Comments = ({ comments: initialComments, postid, inline = false }: any) =>
 
       {/* コメント入力フォーム */}
       {showForm && (
-        <div className="bg-white rounded-xl p-3 md:p-4 mb-4 border border-gray-200">
+        <div className="bg-white shadow-md rounded-xl p-4 md:p-6 mb-6 border border-gray-100">
           {/* 返信先表示 */}
           {replyTo && (
-            <div className="mb-3 px-3 py-2 bg-gray-50 border-l-3 border-gray-400 rounded-r-lg flex justify-between items-center text-sm">
-              <span className="text-gray-600 truncate">
-                <span className="font-bold text-gray-700">返信: </span>
-                {replyTo.author}: {replyTo.content.substring(0, 30)}{replyTo.content.length > 30 ? "..." : ""}
-              </span>
+            <div className="mb-4 p-3 bg-blue-50 border-l-4 border-blue-500 rounded-r-lg flex justify-between items-center">
+              <div className="flex items-center min-w-0">
+                <FontAwesomeIcon icon={faReply} className="text-blue-500 mr-2 flex-shrink-0" />
+                <div className="min-w-0">
+                  <span className="text-sm font-bold text-gray-700">返信先: </span>
+                  <span className="text-sm text-gray-600 truncate">
+                    {replyTo.author}: {replyTo.content.substring(0, 30)}{replyTo.content.length > 30 ? "..." : ""}
+                  </span>
+                </div>
+              </div>
               <button
-                className="text-gray-400 hover:text-red-500 ml-2 flex-shrink-0 w-4 h-4"
+                className="text-gray-400 hover:text-red-500 transition-colors ml-2 flex-shrink-0"
                 onClick={cancelReply}
+                aria-label="返信をキャンセル"
               >
-                <FontAwesomeIcon icon={faTimes} className="w-3 h-3" />
+                <FontAwesomeIcon icon={faTimes} />
               </button>
             </div>
           )}
 
-          {/* コメントタイプ選択 + 名前入力を横並び */}
+          {/* コメントタイプ選択（返信でない場合のみ） */}
           {!replyTo && (
-            <div className="mb-2 flex flex-wrap items-center gap-2">
-              {COMMENT_TYPES.map((type) => (
-                <button
-                  key={type.value}
-                  className={`flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-medium transition-all border whitespace-nowrap ${
-                    selectedType === type.value
-                      ? `${type.bg} ${type.text} ${type.border} ring-1 ring-offset-1 ring-gray-300`
-                      : "bg-white text-gray-500 border-gray-200 hover:border-gray-400"
-                  }`}
-                  onClick={() => setSelectedType(selectedType === type.value ? null : type.value)}
-                >
-                  <FontAwesomeIcon icon={type.icon} className="w-3 h-3" />
-                  {type.label}
-                </button>
-              ))}
+            <div className="mb-4">
+              <div className="flex flex-wrap gap-2">
+                {COMMENT_TYPES.map((type) => (
+                  <button
+                    key={type.value}
+                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium transition-all border ${
+                      selectedType === type.value
+                        ? `${COMMENT_TYPE_STYLES[type.value].bg} ${COMMENT_TYPE_STYLES[type.value].text} ${COMMENT_TYPE_STYLES[type.value].border} ring-2 ring-offset-1 ring-${type.color}-300`
+                        : "bg-white text-gray-500 border-gray-200 hover:border-gray-300 hover:bg-gray-50"
+                    }`}
+                    onClick={() => setSelectedType(selectedType === type.value ? null : type.value)}
+                  >
+                    <FontAwesomeIcon icon={type.icon} className="text-xs" />
+                    {type.label}
+                  </button>
+                ))}
+              </div>
             </div>
           )}
 
           {/* 名前入力 */}
-          <input
-            type="text"
-            placeholder="名無しさん"
-            className="w-full px-3 py-2 mb-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-300 text-sm"
-            value={authorName}
-            onChange={(e) => setAuthorName(e.target.value)}
-          />
+          <div className="mb-3">
+            <input
+              type="text"
+              placeholder="名無しさん"
+              className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-300 focus:border-pink-300 transition text-sm"
+              value={authorName}
+              onChange={(e) => setAuthorName(e.target.value)}
+            />
+          </div>
 
           {/* コメント入力 */}
-          <div className="relative mb-2">
+          <div className="mb-3 relative">
             <textarea
               id="comment-input"
-              placeholder={replyTo ? `${replyTo.author}さんに返信...` : "感想や体験談など自由にお書きください"}
-              className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-300 min-h-[80px] text-sm resize-y"
+              placeholder={replyTo ? `${replyTo.author}さんに返信...` : "この作品の感想、上演した際の体験談など、自由にお書きください"}
+              className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-300 focus:border-pink-300 transition min-h-[120px] text-sm resize-y"
               value={newComment}
               onChange={(e) => setNewComment(e.target.value)}
               maxLength={MAX_CHARS}
             />
-            <div className={`absolute bottom-1.5 right-2 text-[10px] ${
+            <div className={`absolute bottom-2 right-3 text-xs ${
               newComment.length > MAX_CHARS * 0.9 ? "text-red-500" : "text-gray-400"
             }`}>
               {newComment.length}/{MAX_CHARS}
             </div>
           </div>
 
-          {/* 送信・キャンセル・結果 */}
-          <div className="flex items-center gap-2">
-            <button
-              className={`px-4 py-1.5 rounded-full text-white font-bold text-xs transition-all ${
-                isSendingComment || !newComment.trim()
-                  ? "bg-gray-300 cursor-not-allowed"
-                  : "bg-gray-900 hover:bg-gray-800"
-              }`}
-              onClick={handleCommentSubmit}
-              disabled={isSendingComment || !newComment.trim()}
-            >
-              {isSendingComment ? "送信中..." : (replyTo ? "返信" : "送信")}
-            </button>
-            <button
-              className="px-3 py-1.5 text-gray-500 hover:text-gray-700 text-xs transition-colors"
-              onClick={() => { setShowForm(false); setReplyTo(null); }}
-            >
-              キャンセル
-            </button>
+          {/* 送信ボタン */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <button
+                className={`flex items-center gap-2 px-5 py-2.5 rounded-full text-white font-bold text-sm transition-all ${
+                  isSendingComment || !newComment.trim()
+                    ? "bg-gray-300 cursor-not-allowed"
+                    : "bg-pink-600 hover:bg-pink-700 hover:scale-105 shadow-md"
+                }`}
+                onClick={handleCommentSubmit}
+                disabled={isSendingComment || !newComment.trim()}
+              >
+                <FontAwesomeIcon icon={faPaperPlane} />
+                {isSendingComment ? "送信中..." : (replyTo ? "返信を送信" : "コメントを送信")}
+              </button>
+              <button
+                className="px-4 py-2.5 rounded-full text-gray-500 hover:text-gray-700 hover:bg-gray-100 text-sm transition-colors"
+                onClick={() => { setShowForm(false); setReplyTo(null); }}
+              >
+                キャンセル
+              </button>
+            </div>
+
             {commentResult && (
-              <span className={`text-xs ${
+              <p className={`text-sm font-medium ${
                 commentResult.includes("失敗") || commentResult.includes("エラー") || commentResult.includes("不正")
-                  ? "text-red-500" : "text-green-600"
-              }`}>{commentResult}</span>
+                  ? "text-red-500"
+                  : "text-green-600"
+              }`}>
+                {commentResult}
+              </p>
             )}
           </div>
 
-          {/* 注意事項（折りたたみ） */}
-          <div className="mt-2 pt-2 border-t border-gray-100">
+          {/* 注意事項 */}
+          <div className="mt-4 pt-3 border-t border-gray-100">
             <button
               onClick={() => setShowGuidelines(!showGuidelines)}
-              className="text-[10px] text-gray-400 hover:text-gray-600"
+              className="flex items-center text-xs text-gray-400 hover:text-gray-600 transition-colors"
             >
-              注意事項 {showGuidelines ? "▲" : "▼"}
+              <FontAwesomeIcon icon={faInfoCircle} className="mr-1" />
+              コメント投稿時の注意事項 {showGuidelines ? "▲" : "▼"}
             </button>
+
             {showGuidelines && (
-              <div className="mt-1 p-2 bg-gray-50 rounded text-[10px] text-gray-500 leading-relaxed">
-                誹謗中傷・なりすまし・スパム・個人情報の投稿は禁止です。削除希望はお問い合わせフォームへ。
+              <div className="mt-2 p-3 bg-gray-50 rounded-lg text-xs text-gray-600 border border-gray-100">
+                <ul className="list-disc pl-4 space-y-1">
+                  <li>誹謗中傷、他人へのなりすましの禁止</li>
+                  <li>本記事と関係のない投稿、事実に反する投稿の禁止</li>
+                  <li>重複投稿やスパム行為の禁止</li>
+                  <li>個人情報を含む投稿の禁止</li>
+                  <li>削除を希望される場合はお問い合わせフォームよりご連絡ください</li>
+                </ul>
+                <p className="mt-2">
+                  <span className="font-medium">面白かった！上演します！上演しました！</span>
+                  などご自由にお書きください。公演の宣伝も大歓迎です！
+                </p>
               </div>
             )}
           </div>
@@ -367,7 +402,7 @@ const Comments = ({ comments: initialComments, postid, inline = false }: any) =>
                       <div className="flex items-center gap-3">
                         {renderLikeButton(comment.id, comment.likes || 0, true)}
                         <button
-                          className="flex items-center gap-1 text-sm text-gray-400 hover:text-gray-700 transition-colors"
+                          className="flex items-center gap-1 text-sm text-gray-400 hover:text-pink-500 transition-colors"
                           onClick={() => handleReplyClick(comment)}
                         >
                           <FontAwesomeIcon icon={faReply} className="text-xs" />
@@ -416,7 +451,7 @@ const Comments = ({ comments: initialComments, postid, inline = false }: any) =>
           {/* もっと見る */}
           {hasMore && (
             <button
-              className="w-full py-3 text-center text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-xl transition-colors border border-gray-200"
+              className="w-full py-3 text-center text-sm font-medium text-pink-600 hover:text-pink-700 hover:bg-pink-50 rounded-xl transition-colors border border-gray-200"
               onClick={() => setShowAllComments(true)}
             >
               すべてのコメントを表示（{comments.length}件）
