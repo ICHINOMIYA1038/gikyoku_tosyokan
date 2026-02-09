@@ -59,7 +59,6 @@ tags: ["大学演劇", "学生劇団", "演劇サークル", "関西", "まと�
 関西大学高槻キャンパスにて活動する演劇サークルです。
 
 **公式情報**
-- 公式サイト: [劇団万絵巻](http://www.yoroweb.com/)
 - X（Twitter）: [@yoroduwemaki](https://x.com/yoroduwemaki)
 - CoRich舞台芸術: [劇団万絵巻](https://stage.corich.jp/troupe/8324)
 
@@ -100,13 +99,26 @@ tags: ["大学演劇", "学生劇団", "演劇サークル", "関西", "まと�
 
 ### 大阪芸術大学
 
+大阪芸術大学には舞台芸術学科（演技演出・ミュージカル・ダンス・ポピュラーダンス・舞台デザイン・舞台音響効果・舞台照明の7コース）があるほか、学生サークルも活動しています。
+
 #### 小劇場劇団「群」（むれ）
 
 演劇未経験の人から経験者まで、様々な学科の学生が参加しています。毎週月・水・金に活動し、年に3回ほど舞台公演を実施。
 
 **公式情報**
+- 大学公式ページ（舞台芸術学科）: [舞台芸術学科](https://www.osaka-geidai.ac.jp/departments/theatricalarts)
 - X（Twitter）: [@s_mure_koho](https://x.com/s_mure_koho)
-- 大学公式ページ: [小劇場劇団「群」](https://www.osaka-geidai.ac.jp/campuslife/circle/culture/mure)
+- 大学公式ページ（サークル）: [小劇場劇団「群」](https://www.osaka-geidai.ac.jp/campuslife/circle/culture/mure)
+
+### 大阪経済大学
+
+#### 演劇研究部
+
+従来の演劇にとどまらず、新しい演劇の形を模索しながら活動しています。
+
+**公式情報**
+- X（Twitter）: [@oue_gekiken](https://x.com/oue_gekiken)
+- 大学公式ページ: [演劇研究部](https://www.osaka-ue.ac.jp/campus/club/club02/theater.html)
 
 ---
 
@@ -156,6 +168,13 @@ tags: ["大学演劇", "学生劇団", "演劇サークル", "関西", "まと�
 
 ### 京都産業大学
 
+#### 演劇部
+
+1966年創部。月〜金の16:30〜20:00に活動しています。年間を通じて複数の公演（4月新歓公演、6月新人公演、9月京都学生演劇祭、11月神山公演、2月冬公演）を実施。2015年京都学生演劇祭で審査員特別賞を受賞、全国学生演劇祭にも出場実績があります。
+
+**公式情報**
+- 大学公式ページ: [演劇部](https://www.kyoto-su.ac.jp/wr-campuslife/club/intro/0068.html)
+
 #### 劇団ACT
 
 「あなたにちょっとしたエンタメを。」をモットーに活動する演劇団体です。
@@ -185,6 +204,24 @@ tags: ["大学演劇", "学生劇団", "演劇サークル", "関西", "まと�
 - 公式サイト: [劇団未踏座](https://mitouza.jimdofree.com/)
 - X（Twitter）: [@gekidanmitouza6](https://x.com/gekidanmitouza6)
 - Instagram: [@gekidanmitouza](https://www.instagram.com/gekidanmitouza)
+
+### 京都芸術大学
+
+#### 舞台芸術学科 演技・演出コース / 舞台デザインコース
+
+京都芸術大学には舞台芸術学科があり、演技・演出・ダンス・ミュージカル・声優・殺陣・戯曲・舞台制作・日本舞踊など幅広い分野を学べます。京都芸術劇場（春秋座・studio21）を拠点に活動しています。
+
+**公式情報**
+- 大学公式ページ: [舞台芸術学科](https://www.kyoto-art.ac.jp/department/performance/)
+
+### 京都精華大学
+
+#### 演劇部
+
+年2回の本公演（春公演・秋公演）と冬公演を実施。学部・性別・経験を問わず参加可能で、多くの部員が初心者から始めています。
+
+**公式情報**
+- 大学公式ページ: [演劇部](https://www.kyoto-seika.ac.jp/campuslife/club/c14.html)
 
 ### 京都橘大学
 
@@ -224,6 +261,19 @@ tags: ["大学演劇", "学生劇団", "演劇サークル", "関西", "まと�
 - X（Twitter）: [@tanuki_twi](https://x.com/tanuki_twi)
 - Instagram: [@tanuki_insta](https://www.instagram.com/tanuki_insta/)
 
+### 神戸学院大学
+
+#### 演劇部 劇団EXCLAMATION【！】
+
+27名の部員が在籍。年4回の公演（4月新入生歓迎公演、6月ダイヤモンドフェスティバル、10月新人公演、12月卒業公演）を実施しています。月・水・金の19:00〜21:00に活動。
+
+**公式情報**
+- X（Twitter）: [@Excla_kgu119](https://x.com/Excla_kgu119)
+- Instagram: [@excla_kgu119](https://www.instagram.com/excla_kgu119/)
+- 大学公式ページ: [演劇部](https://www.kobegakuin.ac.jp/activity/culture/club050.html)
+
+### 関西学院大学
+
 #### 演劇グループSomething
 
 関西学院大学を活動拠点とする演劇サークルです。劇団鹿殺し、劇団レトルト内閣、突劇金魚などを輩出しています。
@@ -240,10 +290,11 @@ tags: ["大学演劇", "学生劇団", "演劇サークル", "関西", "まと�
 
 #### 演劇部 劇団いちご大福
 
-23名が在籍。年4回の公演（新歓公演、新人公演、恋都祭公演、卒業公演）を実施しています。役者・裏方問わず参加可能です。
+16名が在籍。年4回の公演（新歓公演、新人公演、恋都祭公演、卒業公演）を実施しています。役者・照明・音響などの裏方も含め、幅広い役割で参加可能です。
 
 **公式情報**
-- ブログ: [劇団いちご大福 稽古日誌](https://blog.goo.ne.jp/gekidanitigodaihuku)
+- X（Twitter）: [@icigodaifku](https://x.com/icigodaifku)
+- 学生自治会ページ: [演劇部 劇団いちご大福](https://narajojichikai.jimdofree.com/%E3%82%B5%E3%83%BC%E3%82%AF%E3%83%AB%E7%B4%B9%E4%BB%8B/%E6%96%87%E7%B3%BB%E5%9B%A3%E4%BD%93/%E6%BC%94%E5%8A%87%E9%83%A8-%E5%8A%87%E5%9B%A3%E3%81%84%E3%81%A1%E3%81%94%E5%A4%A7%E7%A6%8F/)
 
 ---
 
@@ -277,10 +328,13 @@ tags: ["大学演劇", "学生劇団", "演劇サークル", "関西", "まと�
 
 ### 和歌山大学 -- 演劇部
 
-新入部員を随時募集しており、学年・年齢・演劇経験を問わず参加可能です。
+文化部連合会所属の演劇部です。新入部員を随時募集しており、学年・年齢・演劇経験を問わず参加可能です。
 
 **公式情報**
-- 大学サークル情報は大学公式サイトをご確認ください
+- 公式サイト: [和歌山大学演劇部](https://wadaiengeki0.wixsite.com/mysite)
+- X（Twitter）: [@wadaiengeki](https://x.com/wadaiengeki)
+- Instagram: [@wadaiengeki](https://www.instagram.com/wadaiengeki/)
+- CoRich舞台芸術: [和歌山大学演劇部](https://stage.corich.jp/troupe/16366)
 
 ---
 

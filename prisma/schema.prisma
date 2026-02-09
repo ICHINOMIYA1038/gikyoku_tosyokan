@@ -152,6 +152,89 @@ model BlogPost {
   @@map("BlogPost")
 }
 
+// === 大学演劇 ===
+
+enum UniversityType {
+  NATIONAL    // 国立
+  PUBLIC      // 公立
+  PRIVATE     // 私立
+}
+
+enum Region {
+  HOKKAIDO
+  TOHOKU
+  KANTO
+  CHUBU
+  KANSAI
+  CHUGOKU_SHIKOKU
+  KYUSHU_OKINAWA
+}
+
+enum TheaterGroupType {
+  STUDENT       // 学生劇団
+  INTERCOLLEGE  // インカレ
+  ACADEMIC      // 大学学科
+  AMATEUR       // アマチュア・社会人
+  PROFESSIONAL  // プロ
+  YOUTH         // ユース
+}
+
+model University {
+  id              Int              @id @default(autoincrement())
+  name            String           @unique
+  slug            String           @unique
+  universityType  UniversityType
+  prefecture      String
+  region          Region
+  website         String?
+  theaterGroups   TheaterGroupUniversity[]
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  @@index([region])
+  @@index([prefecture])
+  @@index([universityType])
+  @@map("University")
+}
+
+model TheaterGroup {
+  id            Int                      @id @default(autoincrement())
+  name          String
+  slug          String                   @unique
+  groupType     TheaterGroupType         @default(STUDENT)
+  description   String?
+  memberCount   Int?
+  foundedYear   Int?
+  website       String?
+  twitter       String?
+  instagram     String?
+  corich        String?
+  otherLinks    String[]
+  isActive      Boolean                  @default(true)
+  blogPostSlug  String?
+  universities  TheaterGroupUniversity[]
+  createdAt     DateTime                 @default(now())
+  updatedAt     DateTime                 @updatedAt
+
+  @@index([groupType])
+  @@index([isActive])
+  @@map("TheaterGroup")
+}
+
+model TheaterGroupUniversity {
+  id              Int          @id @default(autoincrement())
+  theaterGroupId  Int
+  universityId    Int
+  campus          String?
+  theaterGroup    TheaterGroup @relation(fields: [theaterGroupId], references: [id])
+  university      University   @relation(fields: [universityId], references: [id])
+
+  @@unique([theaterGroupId, universityId])
+  @@index([theaterGroupId])
+  @@index([universityId])
+  @@map("TheaterGroupUniversity")
+}
+
 model Announcement {
   id               Int      @id @default(autoincrement())
   title            String

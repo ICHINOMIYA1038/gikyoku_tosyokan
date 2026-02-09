@@ -16,6 +16,7 @@ export default function MobileHeader() {
 
   const menuItems = [
     { href: "/", label: "検索する" },
+    { href: "/theater-groups", label: "大学演劇" },
     { href: "/support/about", label: "概要" },
     { href: "/diary/plot", label: "オリジナル作品" },
     { href: "/support/posting-request", label: "掲載依頼" },

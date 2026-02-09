@@ -64,12 +64,9 @@ tags: ["大学演劇", "学生劇団", "演劇サークル", "中部", "まと�
 - X（Twitter）: [@kurage_fukuiact](https://x.com/kurage_fukuiact)
 - Instagram: [@gekidan.kurage](https://www.instagram.com/gekidan.kurage/)
 
-### 福井県立大学 -- 劇団極楽とんぼ
+※福井県立大学の劇団極楽とんぼは、現在は上記の「劇団くらげ」として福井大学医学部と合同で活動しています。
 
-福井県立大学の演劇部です。年に3〜4回の公演を実施しています。
-
-**公式情報**
-- 公式サイト: [劇団極楽とんぼ](https://www.s.fpu.ac.jp/club-engeki/)
+- 大学公式クラブ一覧: [福井県立大学 クラブ・サークル](https://www.fpu.ac.jp/campus_life/prospective_students/clubs.html)
 
 ---
 
@@ -145,7 +142,7 @@ tags: ["大学演劇", "学生劇団", "演劇サークル", "中部", "まと�
 約50名の部員が活動する南山大学の演劇部です。毎週水・土に南山大学内の教室で活動し、年4回（4月春公演、8月夏公演、11月学祭公演、2月卒業公演）の公演を開催しています。全国学生演劇祭への参加実績もあります。
 
 **公式情報**
-- 公式サイト: [HI-SECO](https://www.hi-seco.com/)
+- 大学公式ページ: [演劇部](https://office.nanzan-u.ac.jp/student-services/clubs/clublist/bunkakai-geijutsu/000133.html)
 - X（Twitter）: [@hi_seco](https://x.com/hi_seco)
 - Instagram: [@hiseco2024](https://www.instagram.com/hiseco2024/)
 - CoRich舞台芸術: [HI-SECO](https://stage.corich.jp/troupe/14962)

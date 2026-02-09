@@ -45,12 +45,14 @@ tags: ["大学演劇", "学生劇団", "演劇サークル", "東京", "まと�
 
 慶應義塾大学にも複数の演劇サークルがあります。
 
-### 慶應義塾大学演劇研究会
+### 慶應義塾演劇研究会
 
-慶應を代表する演劇サークルです。
+1907年に永井荷風によって創設された、慶應義塾で最も歴史のある演劇サークルです。約90名の部員が在籍し、年5〜6回の公演を実施。喜劇・シリアス・ファンタジー・ホームドラマなど幅広いジャンルを上演しています。日吉キャンパスを拠点に活動。
 
 **公式情報**
-- 大学の課外活動ページをご確認ください
+- 公式サイト: [慶應義塾演劇研究会](https://sites.google.com/keio.jp/gekiken)
+- X（Twitter）: [@keio_gekiken](https://x.com/keio_gekiken)
+- CoRich舞台芸術: [慶應義塾演劇研究会](https://stage.corich.jp/troupe/1955)
 
 ---
 
@@ -74,7 +76,27 @@ tags: ["大学演劇", "学生劇団", "演劇サークル", "東京", "まと�
 
 ## 明治大学
 
-明治大学にも演劇サークルが活動しています。大学の課外活動ページをご確認ください。
+明治大学には複数の演劇サークルがあります。
+
+### 明治大学演劇研究部（劇研）
+
+約58名の部員が在籍し、年3回の公演を実施。駿河台キャンパス猿楽町校舎のアートスタジオを拠点に活動しています。
+
+**公式情報**
+- 公式サイト: [明治大学演劇研究部](http://meidaigekiken.strikingly.com/)
+- X（Twitter）: [@meidaigekiken](https://x.com/meidaigekiken)
+- Instagram: [@meidaigekiken](https://www.instagram.com/meidaigekiken/)
+- CoRich舞台芸術: [明治大学演劇研究部](https://stage.corich.jp/troupe/1650)
+
+### 活劇工房（かつげきこうぼう）
+
+40名以上の部員が在籍する公認サークルです。年3回の本公演（春・夏・新人）とユニット公演を実施。和泉キャンパスを拠点とし、他大学の学生も参加可能です。
+
+**公式情報**
+- 公式サイト: [活劇工房](https://katsugekikoubou.jimdosite.com/)
+- X（Twitter）: [@katsugekikoubou](https://x.com/katsugekikoubou)
+- Instagram: [@katsugekikoubou](https://www.instagram.com/katsugekikoubou/)
+- CoRich舞台芸術: [活劇工房](https://stage.corich.jp/troupe/1979)
 
 ---
 
@@ -194,7 +216,7 @@ tags: ["大学演劇", "学生劇団", "演劇サークル", "東京", "まと�
 - 大学公式ページ: [演劇部](https://www.univ.gakushuin.ac.jp/active/club/theatrical.html)
 - X（Twitter）: [@dramaisamu](https://x.com/dramaisamu)
 - note: [学習院大学演劇部少年イサム堂](https://note.com/dramaisamu)
-- 新歓ページ: [演劇部少年イサム堂](https://gakushuin-shinkan.com/culture_department/isamu-dou/)
+- CoRich舞台芸術: [学習院大学演劇部 少年イサム堂](https://stage.corich.jp/troupe/9696)
 
 ---
 

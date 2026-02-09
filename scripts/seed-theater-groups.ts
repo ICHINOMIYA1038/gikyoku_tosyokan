@@ -1,0 +1,1328 @@
+/**
+ * 大学・劇団シードスクリプト
+ * ブログ記事から抽出した学生劇団・大学データをDBに投入
+ *
+ * 使い方:
+ *   set -a && source .env.local && set +a && npx tsx scripts/seed-theater-groups.ts
+ */
+
+import { PrismaClient, UniversityType, Region, TheaterGroupType } from '@prisma/client';
+
+const prisma = new PrismaClient();
+
+// ========== 大学データ ==========
+
+type UniData = {
+  name: string;
+  slug: string;
+  universityType: UniversityType;
+  prefecture: string;
+  region: Region;
+  website?: string;
+};
+
+const universities: UniData[] = [
+  // === 北海道 ===
+  { name: '北海道大学', slug: 'hokkaido-univ', universityType: 'NATIONAL', prefecture: '北海道', region: 'HOKKAIDO' },
+  { name: '北海学園大学', slug: 'hokkai-gakuen-univ', universityType: 'PRIVATE', prefecture: '北海道', region: 'HOKKAIDO', website: 'https://www.hgu.jp/' },
+  { name: '北翔大学', slug: 'hokusho-univ', universityType: 'PRIVATE', prefecture: '北海道', region: 'HOKKAIDO', website: 'https://www.hokusho-u.ac.jp/' },
+  { name: '北海道教育大学', slug: 'hokkaido-kyoiku-univ', universityType: 'NATIONAL', prefecture: '北海道', region: 'HOKKAIDO', website: 'https://www.hokkyodai.ac.jp/' },
+  { name: '札幌大学', slug: 'sapporo-univ', universityType: 'PRIVATE', prefecture: '北海道', region: 'HOKKAIDO' },
+  { name: '藤女子大学', slug: 'fuji-joshi-univ', universityType: 'PRIVATE', prefecture: '北海道', region: 'HOKKAIDO' },
+
+  // === 東北 ===
+  { name: '弘前大学', slug: 'hirosaki-univ', universityType: 'NATIONAL', prefecture: '青森県', region: 'TOHOKU' },
+  { name: '岩手大学', slug: 'iwate-univ', universityType: 'NATIONAL', prefecture: '岩手県', region: 'TOHOKU' },
+  { name: '東北大学', slug: 'tohoku-univ', universityType: 'NATIONAL', prefecture: '宮城県', region: 'TOHOKU' },
+  { name: '東北学院大学', slug: 'tohoku-gakuin-univ', universityType: 'PRIVATE', prefecture: '宮城県', region: 'TOHOKU' },
+  { name: '宮城学院女子大学', slug: 'miyagi-gakuin-univ', universityType: 'PRIVATE', prefecture: '宮城県', region: 'TOHOKU' },
+  { name: '秋田大学', slug: 'akita-univ', universityType: 'NATIONAL', prefecture: '秋田県', region: 'TOHOKU' },
+  { name: '秋田県立大学', slug: 'akita-kenritsu-univ', universityType: 'PUBLIC', prefecture: '秋田県', region: 'TOHOKU' },
+  { name: '山形大学', slug: 'yamagata-univ', universityType: 'NATIONAL', prefecture: '山形県', region: 'TOHOKU' },
+  { name: '福島大学', slug: 'fukushima-univ', universityType: 'NATIONAL', prefecture: '福島県', region: 'TOHOKU' },
+
+  // === 関東（東京） ===
+  { name: '早稲田大学', slug: 'waseda-univ', universityType: 'PRIVATE', prefecture: '東京都', region: 'KANTO' },
+  { name: '慶應義塾大学', slug: 'keio-univ', universityType: 'PRIVATE', prefecture: '東京都', region: 'KANTO' },
+  { name: '東京大学', slug: 'tokyo-univ', universityType: 'NATIONAL', prefecture: '東京都', region: 'KANTO' },
+  { name: '明治大学', slug: 'meiji-univ', universityType: 'PRIVATE', prefecture: '東京都', region: 'KANTO' },
+  { name: '法政大学', slug: 'hosei-univ', universityType: 'PRIVATE', prefecture: '東京都', region: 'KANTO' },
+  { name: '中央大学', slug: 'chuo-univ', universityType: 'PRIVATE', prefecture: '東京都', region: 'KANTO' },
+  { name: '日本大学', slug: 'nihon-univ', universityType: 'PRIVATE', prefecture: '東京都', region: 'KANTO' },
+  { name: '立教大学', slug: 'rikkyo-univ', universityType: 'PRIVATE', prefecture: '東京都', region: 'KANTO' },
+  { name: '上智大学', slug: 'sophia-univ', universityType: 'PRIVATE', prefecture: '東京都', region: 'KANTO' },
+  { name: '青山学院大学', slug: 'aoyama-gakuin-univ', universityType: 'PRIVATE', prefecture: '東京都', region: 'KANTO' },
+  { name: '学習院大学', slug: 'gakushuin-univ', universityType: 'PRIVATE', prefecture: '東京都', region: 'KANTO' },
+  { name: '一橋大学', slug: 'hitotsubashi-univ', universityType: 'NATIONAL', prefecture: '東京都', region: 'KANTO' },
+  { name: '津田塾大学', slug: 'tsuda-univ', universityType: 'PRIVATE', prefecture: '東京都', region: 'KANTO' },
+  { name: '東京都立大学', slug: 'tokyo-toritsu-univ', universityType: 'PUBLIC', prefecture: '東京都', region: 'KANTO' },
+  { name: '東洋大学', slug: 'toyo-univ', universityType: 'PRIVATE', prefecture: '東京都', region: 'KANTO' },
+  { name: '専修大学', slug: 'senshu-univ', universityType: 'PRIVATE', prefecture: '東京都', region: 'KANTO' },
+  { name: '東京藝術大学', slug: 'tokyo-geidai', universityType: 'NATIONAL', prefecture: '東京都', region: 'KANTO' },
+  { name: '玉川大学', slug: 'tamagawa-univ', universityType: 'PRIVATE', prefecture: '東京都', region: 'KANTO' },
+  { name: '國學院大學', slug: 'kokugakuin-univ', universityType: 'PRIVATE', prefecture: '東京都', region: 'KANTO' },
+  { name: '国際基督教大学', slug: 'icu', universityType: 'PRIVATE', prefecture: '東京都', region: 'KANTO' },
+  { name: '成蹊大学', slug: 'seikei-univ', universityType: 'PRIVATE', prefecture: '東京都', region: 'KANTO' },
+  { name: '成城大学', slug: 'seijo-univ', universityType: 'PRIVATE', prefecture: '東京都', region: 'KANTO' },
+  { name: '拓殖大学', slug: 'takushoku-univ', universityType: 'PRIVATE', prefecture: '東京都', region: 'KANTO' },
+  { name: '東京農業大学', slug: 'tokyo-nodai', universityType: 'PRIVATE', prefecture: '東京都', region: 'KANTO' },
+  { name: '大東文化大学', slug: 'daito-bunka-univ', universityType: 'PRIVATE', prefecture: '東京都', region: 'KANTO' },
+  { name: '武蔵野美術大学', slug: 'musashino-art-univ', universityType: 'PRIVATE', prefecture: '東京都', region: 'KANTO' },
+  { name: '東京理科大学', slug: 'tokyo-rika-univ', universityType: 'PRIVATE', prefecture: '東京都', region: 'KANTO' },
+  { name: '東京科学大学', slug: 'tokyo-kagaku-univ', universityType: 'NATIONAL', prefecture: '東京都', region: 'KANTO' },
+  { name: '桜美林大学', slug: 'obirin-univ', universityType: 'PRIVATE', prefecture: '東京都', region: 'KANTO' },
+  { name: 'お茶の水女子大学', slug: 'ochanomizu-univ', universityType: 'NATIONAL', prefecture: '東京都', region: 'KANTO' },
+  { name: '多摩美術大学', slug: 'tama-art-univ', universityType: 'PRIVATE', prefecture: '東京都', region: 'KANTO' },
+
+  // === 関東（東京以外） ===
+  { name: '横浜国立大学', slug: 'yokohama-national-univ', universityType: 'NATIONAL', prefecture: '神奈川県', region: 'KANTO' },
+  { name: '明治学院大学', slug: 'meiji-gakuin-univ', universityType: 'PRIVATE', prefecture: '神奈川県', region: 'KANTO' },
+  { name: '横浜市立大学', slug: 'yokohama-shiritsu-univ', universityType: 'PUBLIC', prefecture: '神奈川県', region: 'KANTO' },
+  { name: '東海大学', slug: 'tokai-univ', universityType: 'PRIVATE', prefecture: '神奈川県', region: 'KANTO' },
+  { name: '千葉大学', slug: 'chiba-univ', universityType: 'NATIONAL', prefecture: '千葉県', region: 'KANTO' },
+  { name: '筑波大学', slug: 'tsukuba-univ', universityType: 'NATIONAL', prefecture: '茨城県', region: 'KANTO' },
+  { name: '茨城大学', slug: 'ibaraki-univ', universityType: 'NATIONAL', prefecture: '茨城県', region: 'KANTO' },
+  { name: '群馬大学', slug: 'gunma-univ', universityType: 'NATIONAL', prefecture: '群馬県', region: 'KANTO' },
+  { name: '高崎経済大学', slug: 'takasaki-keizai-univ', universityType: 'PUBLIC', prefecture: '群馬県', region: 'KANTO' },
+  { name: '埼玉大学', slug: 'saitama-univ', universityType: 'NATIONAL', prefecture: '埼玉県', region: 'KANTO' },
+  { name: '獨協大学', slug: 'dokkyo-univ', universityType: 'PRIVATE', prefecture: '埼玉県', region: 'KANTO' },
+  { name: '宇都宮大学', slug: 'utsunomiya-univ', universityType: 'NATIONAL', prefecture: '栃木県', region: 'KANTO' },
+  { name: '白鷗大学', slug: 'hakuoh-univ', universityType: 'PRIVATE', prefecture: '栃木県', region: 'KANTO' },
+
+  // === 中部 ===
+  { name: '新潟大学', slug: 'niigata-univ', universityType: 'NATIONAL', prefecture: '新潟県', region: 'CHUBU' },
+  { name: '富山大学', slug: 'toyama-univ', universityType: 'NATIONAL', prefecture: '富山県', region: 'CHUBU' },
+  { name: '金沢大学', slug: 'kanazawa-univ', universityType: 'NATIONAL', prefecture: '石川県', region: 'CHUBU' },
+  { name: '福井県立大学', slug: 'fukui-kenritsu-univ', universityType: 'PUBLIC', prefecture: '福井県', region: 'CHUBU' },
+  { name: '福井大学', slug: 'fukui-univ', universityType: 'NATIONAL', prefecture: '福井県', region: 'CHUBU' },
+  { name: '山梨大学', slug: 'yamanashi-univ', universityType: 'NATIONAL', prefecture: '山梨県', region: 'CHUBU' },
+  { name: '信州大学', slug: 'shinshu-univ', universityType: 'NATIONAL', prefecture: '長野県', region: 'CHUBU' },
+  { name: '岐阜大学', slug: 'gifu-univ', universityType: 'NATIONAL', prefecture: '岐阜県', region: 'CHUBU' },
+  { name: '静岡大学', slug: 'shizuoka-univ', universityType: 'NATIONAL', prefecture: '静岡県', region: 'CHUBU' },
+  { name: '名古屋大学', slug: 'nagoya-univ', universityType: 'NATIONAL', prefecture: '愛知県', region: 'CHUBU' },
+  { name: '南山大学', slug: 'nanzan-univ', universityType: 'PRIVATE', prefecture: '愛知県', region: 'CHUBU' },
+  { name: '愛知淑徳大学', slug: 'aichi-shukutoku-univ', universityType: 'PRIVATE', prefecture: '愛知県', region: 'CHUBU' },
+  { name: '愛知教育大学', slug: 'aichi-kyoiku-univ', universityType: 'NATIONAL', prefecture: '愛知県', region: 'CHUBU' },
+  { name: '愛知大学', slug: 'aichi-univ', universityType: 'PRIVATE', prefecture: '愛知県', region: 'CHUBU' },
+
+  // === 関西 ===
+  { name: '大阪大学', slug: 'osaka-univ', universityType: 'NATIONAL', prefecture: '大阪府', region: 'KANSAI' },
+  { name: '関西大学', slug: 'kansai-univ', universityType: 'PRIVATE', prefecture: '大阪府', region: 'KANSAI' },
+  { name: '大阪公立大学', slug: 'osaka-kooritsu-univ', universityType: 'PUBLIC', prefecture: '大阪府', region: 'KANSAI' },
+  { name: '近畿大学', slug: 'kinki-univ', universityType: 'PRIVATE', prefecture: '大阪府', region: 'KANSAI' },
+  { name: '関西外国語大学', slug: 'kansai-gaidai', universityType: 'PRIVATE', prefecture: '大阪府', region: 'KANSAI' },
+  { name: '大阪芸術大学', slug: 'osaka-geidai', universityType: 'PRIVATE', prefecture: '大阪府', region: 'KANSAI' },
+  { name: '大阪経済大学', slug: 'osaka-keizai-univ', universityType: 'PRIVATE', prefecture: '大阪府', region: 'KANSAI' },
+  { name: '京都大学', slug: 'kyoto-univ', universityType: 'NATIONAL', prefecture: '京都府', region: 'KANSAI' },
+  { name: '同志社大学', slug: 'doshisha-univ', universityType: 'PRIVATE', prefecture: '京都府', region: 'KANSAI' },
+  { name: '立命館大学', slug: 'ritsumeikan-univ', universityType: 'PRIVATE', prefecture: '京都府', region: 'KANSAI' },
+  { name: '京都産業大学', slug: 'kyoto-sangyo-univ', universityType: 'PRIVATE', prefecture: '京都府', region: 'KANSAI' },
+  { name: '京都女子大学', slug: 'kyoto-joshi-univ', universityType: 'PRIVATE', prefecture: '京都府', region: 'KANSAI' },
+  { name: '龍谷大学', slug: 'ryukoku-univ', universityType: 'PRIVATE', prefecture: '京都府', region: 'KANSAI' },
+  { name: '京都芸術大学', slug: 'kyoto-geijutsu-univ', universityType: 'PRIVATE', prefecture: '京都府', region: 'KANSAI' },
+  { name: '京都精華大学', slug: 'kyoto-seika-univ', universityType: 'PRIVATE', prefecture: '京都府', region: 'KANSAI' },
+  { name: '京都橘大学', slug: 'kyoto-tachibana-univ', universityType: 'PRIVATE', prefecture: '京都府', region: 'KANSAI' },
+  { name: '神戸大学', slug: 'kobe-univ', universityType: 'NATIONAL', prefecture: '兵庫県', region: 'KANSAI' },
+  { name: '関西学院大学', slug: 'kwansei-gakuin-univ', universityType: 'PRIVATE', prefecture: '兵庫県', region: 'KANSAI' },
+  { name: '神戸学院大学', slug: 'kobe-gakuin-univ', universityType: 'PRIVATE', prefecture: '兵庫県', region: 'KANSAI' },
+  { name: '奈良女子大学', slug: 'nara-joshi-univ', universityType: 'NATIONAL', prefecture: '奈良県', region: 'KANSAI' },
+  { name: '滋賀大学', slug: 'shiga-univ', universityType: 'NATIONAL', prefecture: '滋賀県', region: 'KANSAI' },
+  { name: '滋賀県立大学', slug: 'shiga-kenritsu-univ', universityType: 'PUBLIC', prefecture: '滋賀県', region: 'KANSAI' },
+  { name: '三重大学', slug: 'mie-univ', universityType: 'NATIONAL', prefecture: '三重県', region: 'KANSAI' },
+  { name: '和歌山大学', slug: 'wakayama-univ', universityType: 'NATIONAL', prefecture: '和歌山県', region: 'KANSAI' },
+
+  // === 中国・四国 ===
+  { name: '鳥取大学', slug: 'tottori-univ', universityType: 'NATIONAL', prefecture: '鳥取県', region: 'CHUGOKU_SHIKOKU' },
+  { name: '島根大学', slug: 'shimane-univ', universityType: 'NATIONAL', prefecture: '島根県', region: 'CHUGOKU_SHIKOKU' },
+  { name: '岡山大学', slug: 'okayama-univ', universityType: 'NATIONAL', prefecture: '岡山県', region: 'CHUGOKU_SHIKOKU' },
+  { name: '広島大学', slug: 'hiroshima-univ', universityType: 'NATIONAL', prefecture: '広島県', region: 'CHUGOKU_SHIKOKU' },
+  { name: '山口大学', slug: 'yamaguchi-univ', universityType: 'NATIONAL', prefecture: '山口県', region: 'CHUGOKU_SHIKOKU' },
+  { name: '徳島大学', slug: 'tokushima-univ', universityType: 'NATIONAL', prefecture: '徳島県', region: 'CHUGOKU_SHIKOKU' },
+  { name: '香川大学', slug: 'kagawa-univ', universityType: 'NATIONAL', prefecture: '香川県', region: 'CHUGOKU_SHIKOKU' },
+  { name: '愛媛大学', slug: 'ehime-univ', universityType: 'NATIONAL', prefecture: '愛媛県', region: 'CHUGOKU_SHIKOKU' },
+  { name: '高知大学', slug: 'kochi-univ', universityType: 'NATIONAL', prefecture: '高知県', region: 'CHUGOKU_SHIKOKU' },
+  { name: '高知工科大学', slug: 'kochi-koka-univ', universityType: 'PUBLIC', prefecture: '高知県', region: 'CHUGOKU_SHIKOKU' },
+
+  // === 九州・沖縄 ===
+  { name: '九州大学', slug: 'kyushu-univ', universityType: 'NATIONAL', prefecture: '福岡県', region: 'KYUSHU_OKINAWA' },
+  { name: '福岡大学', slug: 'fukuoka-univ', universityType: 'PRIVATE', prefecture: '福岡県', region: 'KYUSHU_OKINAWA' },
+  { name: '西南学院大学', slug: 'seinan-gakuin-univ', universityType: 'PRIVATE', prefecture: '福岡県', region: 'KYUSHU_OKINAWA' },
+  { name: '産業医科大学', slug: 'sangyoika-univ', universityType: 'PRIVATE', prefecture: '福岡県', region: 'KYUSHU_OKINAWA' },
+  { name: '北九州市立大学', slug: 'kitakyushu-shiritsu-univ', universityType: 'PUBLIC', prefecture: '福岡県', region: 'KYUSHU_OKINAWA' },
+  { name: '佐賀大学', slug: 'saga-univ', universityType: 'NATIONAL', prefecture: '佐賀県', region: 'KYUSHU_OKINAWA' },
+  { name: '長崎大学', slug: 'nagasaki-univ', universityType: 'NATIONAL', prefecture: '長崎県', region: 'KYUSHU_OKINAWA' },
+  { name: '長崎県立大学', slug: 'nagasaki-kenritsu-univ', universityType: 'PUBLIC', prefecture: '長崎県', region: 'KYUSHU_OKINAWA' },
+  { name: '熊本大学', slug: 'kumamoto-univ', universityType: 'NATIONAL', prefecture: '熊本県', region: 'KYUSHU_OKINAWA' },
+  { name: '大分大学', slug: 'oita-univ', universityType: 'NATIONAL', prefecture: '大分県', region: 'KYUSHU_OKINAWA' },
+  { name: '立命館アジア太平洋大学', slug: 'ritsumeikan-apu', universityType: 'PRIVATE', prefecture: '大分県', region: 'KYUSHU_OKINAWA' },
+  { name: '宮崎大学', slug: 'miyazaki-univ', universityType: 'NATIONAL', prefecture: '宮崎県', region: 'KYUSHU_OKINAWA' },
+  { name: '鹿児島大学', slug: 'kagoshima-univ', universityType: 'NATIONAL', prefecture: '鹿児島県', region: 'KYUSHU_OKINAWA' },
+  { name: '琉球大学', slug: 'ryukyu-univ', universityType: 'NATIONAL', prefecture: '沖縄県', region: 'KYUSHU_OKINAWA' },
+];
+
+// ========== 劇団データ ==========
+
+type GroupData = {
+  name: string;
+  slug: string;
+  groupType: TheaterGroupType;
+  description?: string;
+  memberCount?: number;
+  foundedYear?: number;
+  website?: string;
+  twitter?: string;
+  instagram?: string;
+  corich?: string;
+  otherLinks?: string[];
+  blogPostSlug?: string;
+  unis: { slug: string; campus?: string }[];
+};
+
+const theaterGroups: GroupData[] = [
+  // ==================== 北海道 ====================
+  {
+    name: '劇団しろちゃん', slug: 'hokudai-shirochan', groupType: 'INTERCOLLEGE',
+    description: '北海道大学公認の演劇サークル。約140名の部員が所属し、年3回の定期公演を中心に活動。北海道学生演劇祭で最優秀賞・審査員賞を受賞。',
+    memberCount: 140, foundedYear: 1995,
+    website: 'https://gekidanshirochan.com/', twitter: 'shiro_hokudai',
+    otherLinks: ['https://teket.jp/g/oiyvxkwsnb'],
+    blogPostSlug: '2026-02-09-hokkaido-university-theater',
+    unis: [{ slug: 'hokkaido-univ' }, { slug: 'hokkaido-kyoiku-univ' }, { slug: 'fuji-joshi-univ' }],
+  },
+  {
+    name: '演劇研究会', slug: 'hgu-enken', groupType: 'STUDENT',
+    description: '通称「演研」。約50名の部員が所属し、年4回の公演を行っている。',
+    memberCount: 50,
+    twitter: 'hgu_enken', instagram: 'hgu__enken',
+    blogPostSlug: '2026-02-09-hokkaido-university-theater',
+    unis: [{ slug: 'hokkai-gakuen-univ' }],
+  },
+  {
+    name: '北翔舞台芸術', slug: 'hokusho-butage', groupType: 'ACADEMIC',
+    description: '北海道で唯一、大学で演劇を中心とした舞台芸術を体系的に学べる教育プログラム。',
+    twitter: 'butageofficial', instagram: 'butageofficial',
+    otherLinks: ['https://ameblo.jp/butageofficial/'],
+    blogPostSlug: '2026-02-09-hokkaido-university-theater',
+    unis: [{ slug: 'hokusho-univ' }],
+  },
+  {
+    name: '演劇集団空の魚', slug: 'hokkyodai-soranosakana', groupType: 'STUDENT',
+    description: '北海道教育大学札幌校を拠点に活動する演劇サークル。',
+    blogPostSlug: '2026-02-09-hokkaido-university-theater',
+    unis: [{ slug: 'hokkaido-kyoiku-univ', campus: '札幌校' }],
+  },
+  {
+    name: '劇団PaP', slug: 'hokkyodai-pap', groupType: 'STUDENT',
+    description: '北海道教育大学函館校で活動する演劇サークル。',
+    blogPostSlug: '2026-02-09-hokkaido-university-theater',
+    unis: [{ slug: 'hokkaido-kyoiku-univ', campus: '函館校' }],
+  },
+  {
+    name: '劇団ダイナマイト', slug: 'sapporo-dynamite', groupType: 'STUDENT',
+    description: '札幌大学の文化系サークル。',
+    blogPostSlug: '2026-02-09-hokkaido-university-theater',
+    unis: [{ slug: 'sapporo-univ' }],
+  },
+
+  // ==================== 東北 ====================
+  {
+    name: '劇研マップレス', slug: 'hirosaki-mapless', groupType: 'STUDENT',
+    description: '弘前大学の公認文化系サークル。',
+    blogPostSlug: '2026-02-09-tohoku-university-theater',
+    unis: [{ slug: 'hirosaki-univ' }],
+  },
+  {
+    name: '劇団プランクスター', slug: 'hirosaki-prankster', groupType: 'STUDENT',
+    description: '弘前大学の公認文化系サークルで、10年以上の歴史を持つ。',
+    twitter: 'tubuyakiprank',
+    blogPostSlug: '2026-02-09-tohoku-university-theater',
+    unis: [{ slug: 'hirosaki-univ' }],
+  },
+  {
+    name: '劇団かっぱ', slug: 'iwate-kappa', groupType: 'STUDENT',
+    description: '1981年設立の岩手大学の演劇サークル。夏・秋・冬に盛岡市内のホールで定期公演を実施。',
+    foundedYear: 1981,
+    website: 'https://kappahome.1web.jp/', twitter: 'gekidankappa', instagram: 'gekidan_kappa',
+    corich: 'https://stage.corich.jp/troupe/2979',
+    blogPostSlug: '2026-02-09-tohoku-university-theater',
+    unis: [{ slug: 'iwate-univ' }],
+  },
+  {
+    name: '学友会演劇部', slug: 'tohoku-engekibu', groupType: 'STUDENT',
+    description: '東北大学学友会に所属する公認演劇部。約50名の部員が在籍。',
+    memberCount: 50,
+    website: 'https://tohokuudrama.kitunebi.com/',
+    corich: 'https://stage.corich.jp/troupe/4634',
+    blogPostSlug: '2026-02-09-tohoku-university-theater',
+    unis: [{ slug: 'tohoku-univ' }],
+  },
+  {
+    name: '演劇部', slug: 'tohoku-gakuin-engeki', groupType: 'STUDENT',
+    description: '東北学院大学の文化団体連合会に所属する公認サークル。年間4〜5回の公演を実施。',
+    blogPostSlug: '2026-02-09-tohoku-university-theater',
+    unis: [{ slug: 'tohoku-gakuin-univ' }],
+  },
+  {
+    name: '演劇部', slug: 'miyagi-gakuin-engeki', groupType: 'STUDENT',
+    description: '宮城学院女子大学の学友会に所属する演劇部。',
+    blogPostSlug: '2026-02-09-tohoku-university-theater',
+    unis: [{ slug: 'miyagi-gakuin-univ' }],
+  },
+  {
+    name: 'きたのかい', slug: 'akita-kitanokai', groupType: 'STUDENT',
+    description: '66年以上の歴史を持つ秋田大学の演劇サークル。約40名の部員が在籍。',
+    memberCount: 40,
+    website: 'https://kitanokai.web.fc2.com/', instagram: 'kitanokai_official',
+    blogPostSlug: '2026-02-09-tohoku-university-theater',
+    unis: [{ slug: 'akita-univ' }],
+  },
+  {
+    name: '劇団半円ぶたい', slug: 'akita-kenritsu-hannen', groupType: 'STUDENT',
+    description: '秋田県立大学の演劇サークル。',
+    twitter: 'engeki_apu',
+    blogPostSlug: '2026-02-09-tohoku-university-theater',
+    unis: [{ slug: 'akita-kenritsu-univ' }],
+  },
+  {
+    name: '演劇集団舞台工房', slug: 'yamagata-butaikobo', groupType: 'STUDENT',
+    description: '山形大学小白川キャンパスで活動する演劇サークル。旧称「山形大学演劇研究会」。',
+    twitter: 'StagestudioBk', instagram: 'stagestudiobk',
+    corich: 'https://stage.corich.jp/troupe/2763',
+    blogPostSlug: '2026-02-09-tohoku-university-theater',
+    unis: [{ slug: 'yamagata-univ' }],
+  },
+  {
+    name: '劇団めざましどけい', slug: 'yamagata-mezamashi', groupType: 'STUDENT',
+    description: '年間3回の定期公演を中心に活動する山形大学の演劇サークル。',
+    blogPostSlug: '2026-02-09-tohoku-university-theater',
+    unis: [{ slug: 'yamagata-univ' }],
+  },
+  {
+    name: '演劇研究会', slug: 'fukushima-engekiken', groupType: 'STUDENT',
+    description: '福島大学の演劇研究会。メンバーを中心に「劇団120◯EN」が設立された。',
+    website: 'https://120en.com/',
+    blogPostSlug: '2026-02-09-tohoku-university-theater',
+    unis: [{ slug: 'fukushima-univ' }],
+  },
+
+  // ==================== 東京（主要大学） ====================
+  {
+    name: '早稲田大学演劇研究会', slug: 'waseda-gekiken', groupType: 'STUDENT',
+    description: '通称「早大劇研」。大隈講堂裏の専有アトリエを拠点に活動。',
+    website: 'https://sodaigekiken.com/', twitter: 'sodaigekiken',
+    blogPostSlug: '2026-02-09-tokyo-university-theater-1',
+    unis: [{ slug: 'waseda-univ' }],
+  },
+  {
+    name: '早稲田大学演劇倶楽部', slug: 'waseda-enkura', groupType: 'STUDENT',
+    description: '早稲田大学の演劇サークル。',
+    website: 'https://enkura.jimdofree.com/',
+    blogPostSlug: '2026-02-09-tokyo-university-theater-1',
+    unis: [{ slug: 'waseda-univ' }],
+  },
+  {
+    name: '慶應義塾演劇研究会', slug: 'keio-gekiken', groupType: 'STUDENT',
+    description: '1907年に永井荷風によって創設。約90名の部員が在籍し、年5〜6回の公演を実施。',
+    memberCount: 90, foundedYear: 1907,
+    website: 'https://sites.google.com/keio.jp/gekiken', twitter: 'keio_gekiken',
+    corich: 'https://stage.corich.jp/troupe/1955',
+    blogPostSlug: '2026-02-09-tokyo-university-theater-1',
+    unis: [{ slug: 'keio-univ' }],
+  },
+  {
+    name: '劇工舎プリズム', slug: 'todai-prism', groupType: 'STUDENT',
+    description: '東京大学の演劇サークル。',
+    blogPostSlug: '2026-02-09-tokyo-university-theater-1',
+    unis: [{ slug: 'tokyo-univ' }],
+  },
+  {
+    name: '東京大学ESSドラマセクション', slug: 'todai-ess-drama', groupType: 'STUDENT',
+    description: '英語での演劇・ミュージカルを行うサークル。',
+    website: 'https://ut-ess.com/drama/',
+    blogPostSlug: '2026-02-09-tokyo-university-theater-1',
+    unis: [{ slug: 'tokyo-univ' }],
+  },
+  {
+    name: '明治大学演劇研究部', slug: 'meiji-gekiken', groupType: 'STUDENT',
+    description: '約58名の部員が在籍。駿河台キャンパスのアートスタジオを拠点に活動。',
+    memberCount: 58,
+    website: 'http://meidaigekiken.strikingly.com/', twitter: 'meidaigekiken', instagram: 'meidaigekiken',
+    corich: 'https://stage.corich.jp/troupe/1650',
+    blogPostSlug: '2026-02-09-tokyo-university-theater-1',
+    unis: [{ slug: 'meiji-univ' }],
+  },
+  {
+    name: '活劇工房', slug: 'meiji-katsugeki', groupType: 'STUDENT',
+    description: '40名以上の部員が在籍する公認サークル。和泉キャンパスを拠点。',
+    memberCount: 40,
+    website: 'https://katsugekikoubou.jimdosite.com/', twitter: 'katsugekikoubou', instagram: 'katsugekikoubou',
+    corich: 'https://stage.corich.jp/troupe/1979',
+    blogPostSlug: '2026-02-09-tokyo-university-theater-1',
+    unis: [{ slug: 'meiji-univ' }],
+  },
+  {
+    name: 'Ⅰ部演劇研究会', slug: 'hosei-ichigeki', groupType: 'STUDENT',
+    description: '通称「一劇」。戦前から続く歴史ある演劇サークル。約60名のメンバーが在籍。',
+    memberCount: 60,
+    twitter: 'hosei_ichigeki', corich: 'https://stage.corich.jp/troupe/9123',
+    blogPostSlug: '2026-02-09-tokyo-university-theater-1',
+    unis: [{ slug: 'hosei-univ' }],
+  },
+  {
+    name: '劇団The座', slug: 'chuo-theza', groupType: 'STUDENT',
+    description: '中央大学の演劇サークル。ミュージカル作品なども上演。',
+    twitter: 'gekidantheza',
+    blogPostSlug: '2026-02-09-tokyo-university-theater-1',
+    unis: [{ slug: 'chuo-univ' }],
+  },
+  {
+    name: '第二演劇研究会', slug: 'chuo-nigeki', groupType: 'STUDENT',
+    description: '中央大学唯一のストレートプレイ専門サークル。約60名の部員が在籍。',
+    memberCount: 60,
+    website: 'https://nigeki.jp/', corich: 'https://stage.corich.jp/troupe/1557',
+    blogPostSlug: '2026-02-09-tokyo-university-theater-1',
+    unis: [{ slug: 'chuo-univ' }],
+  },
+  {
+    name: '日本大学芸術学部演劇学科', slug: 'nichidai-engeki-gakka', groupType: 'ACADEMIC',
+    description: '演出・演技・舞台デザイン・舞踊の4コース10専攻を設置。',
+    website: 'https://nichigei-engeki.com/', instagram: 'nichigei_engeki',
+    blogPostSlug: '2026-02-09-tokyo-university-theater-1',
+    unis: [{ slug: 'nihon-univ' }],
+  },
+  {
+    name: '演劇部（生物資源科学部）', slug: 'nichidai-brs-engeki', groupType: 'STUDENT',
+    description: '日本大学生物資源科学部の演劇部。',
+    blogPostSlug: '2026-02-09-tokyo-university-theater-1',
+    unis: [{ slug: 'nihon-univ' }],
+  },
+  {
+    name: '演劇研究会', slug: 'rikkyo-gekiken', groupType: 'STUDENT',
+    description: '立教大学最大の日本語劇サークル。通称「ゲキケン」。',
+    website: 'https://rikkyo-gekiken.jimdofree.com/', instagram: 'rikkyo_gekiken',
+    corich: 'https://stage.corich.jp/troupe/1755',
+    blogPostSlug: '2026-02-09-tokyo-university-theater-1',
+    unis: [{ slug: 'rikkyo-univ' }],
+  },
+  {
+    name: '劇団テアトルジュンヌ', slug: 'rikkyo-jeune', groupType: 'STUDENT',
+    description: '1954年創部の立教大学公認の演劇団体。',
+    foundedYear: 1954, instagram: 'theatre_jeune',
+    blogPostSlug: '2026-02-09-tokyo-university-theater-1',
+    unis: [{ slug: 'rikkyo-univ' }],
+  },
+  {
+    name: '劇団リトルスクエア', slug: 'sophia-littlesquare', groupType: 'STUDENT',
+    description: 'コメディとシリアスを織り交ぜた作品を創ることをモットーに活動。',
+    website: 'https://littlesquare.wixsite.com/homepage',
+    blogPostSlug: '2026-02-09-tokyo-university-theater-1',
+    unis: [{ slug: 'sophia-univ' }],
+  },
+  {
+    name: '上智大学演劇研究会', slug: 'sophia-gekiken', groupType: 'STUDENT',
+    description: '上智大学の演劇研究会。',
+    twitter: 'gekiken_sophia', corich: 'https://stage.corich.jp/troupe/2544',
+    blogPostSlug: '2026-02-09-tokyo-university-theater-1',
+    unis: [{ slug: 'sophia-univ' }],
+  },
+  {
+    name: '演劇研究会', slug: 'aoyama-gekiken', groupType: 'STUDENT',
+    description: '年3回の定期公演を実施。週4回練習。',
+    blogPostSlug: '2026-02-09-tokyo-university-theater-1',
+    unis: [{ slug: 'aoyama-gakuin-univ' }],
+  },
+  {
+    name: '少年イサム堂', slug: 'gakushuin-isamu', groupType: 'STUDENT',
+    description: '約50名の部員が在籍。年6回の公演を中心に活動。',
+    memberCount: 50,
+    twitter: 'dramaisamu', corich: 'https://stage.corich.jp/troupe/9696',
+    blogPostSlug: '2026-02-09-tokyo-university-theater-1',
+    unis: [{ slug: 'gakushuin-univ' }],
+  },
+  {
+    name: '劇団コギト', slug: 'hitotsubashi-cogito', groupType: 'INTERCOLLEGE',
+    description: '一橋大学・津田塾大学などの学生で構成される演劇サークル。',
+    twitter: 'cogitomember',
+    blogPostSlug: '2026-02-09-tokyo-university-theater-1',
+    unis: [{ slug: 'hitotsubashi-univ' }, { slug: 'tsuda-univ' }],
+  },
+  {
+    name: '劇団WICK', slug: 'hitotsubashi-wick', groupType: 'INTERCOLLEGE',
+    description: '一橋大学・津田塾大学の学生を中心としたインカレミュージカルサークル。',
+    instagram: 'gekidan_wick',
+    blogPostSlug: '2026-02-09-tokyo-university-theater-1',
+    unis: [{ slug: 'hitotsubashi-univ' }, { slug: 'tsuda-univ' }],
+  },
+
+  // ==================== 東京（その他の大学） ====================
+  {
+    name: '劇団時計', slug: 'toritsu-tokei', groupType: 'STUDENT',
+    description: '東京都立大学唯一の演劇サークル。年5〜6回の公演を実施。',
+    website: 'https://gekidantokei.wordpress.com/', twitter: 'gekidan_tokei',
+    blogPostSlug: '2026-02-09-tokyo-university-theater-2',
+    unis: [{ slug: 'tokyo-toritsu-univ' }],
+  },
+  {
+    name: '劇団白芸', slug: 'toyo-hakugei', groupType: 'STUDENT',
+    description: '東洋大学第1部公認の演劇サークル。白山キャンパスを拠点に活動。',
+    website: 'https://theatrehakugei4451.wixsite.com/hakugei-hp', twitter: 'TheatreHakugei',
+    blogPostSlug: '2026-02-09-tokyo-university-theater-2',
+    unis: [{ slug: 'toyo-univ' }],
+  },
+  {
+    name: '劇団「曙」', slug: 'toyo-akebono', groupType: 'STUDENT',
+    description: '東洋大学第2部の演劇サークルで、70年以上の歴史を持つ。',
+    website: 'https://akebono-toyo.jimdofree.com/', twitter: 'akebono_toyo',
+    corich: 'https://stage.corich.jp/troupe/10835',
+    blogPostSlug: '2026-02-09-tokyo-university-theater-2',
+    unis: [{ slug: 'toyo-univ' }],
+  },
+  {
+    name: '劇団畝傍座', slug: 'senshu-unebiza', groupType: 'STUDENT',
+    description: '専修大学生田キャンパスの公認演劇サークル。',
+    website: 'https://sunebi.wixsite.com/unebiza-senshu', twitter: 'unebiza',
+    blogPostSlug: '2026-02-09-tokyo-university-theater-2',
+    unis: [{ slug: 'senshu-univ' }],
+  },
+  {
+    name: '劇団23:00', slug: 'geidai-2300', groupType: 'STUDENT',
+    description: '2022年10月に活動を開始した東京藝術大学の演劇団体。',
+    foundedYear: 2022, twitter: 'Geidai_engeki_',
+    blogPostSlug: '2026-02-09-tokyo-university-theater-2',
+    unis: [{ slug: 'tokyo-geidai' }],
+  },
+  {
+    name: '文化会演劇部', slug: 'tamagawa-engeki', groupType: 'STUDENT',
+    description: '年3回の公演を実施。月・水・金に活動。',
+    twitter: 'tamagawa_engeki',
+    blogPostSlug: '2026-02-09-tokyo-university-theater-2',
+    unis: [{ slug: 'tamagawa-univ' }],
+  },
+  {
+    name: '劇団娥夢', slug: 'kokugakuin-gamu', groupType: 'STUDENT',
+    description: '約27名の部員が在籍。渋谷キャンパスを拠点に活動。',
+    memberCount: 27,
+    website: 'https://gekidan-gamu.jimdofree.com/', twitter: 'gekidan_gamu',
+    blogPostSlug: '2026-02-09-tokyo-university-theater-2',
+    unis: [{ slug: 'kokugakuin-univ' }],
+  },
+  {
+    name: '劇団黄河砂', slug: 'icu-kokasha', groupType: 'STUDENT',
+    description: 'ICUの演劇サークル。既成作品・映画や小説の翻案・オリジナル作品など多彩に上演。',
+    website: 'https://gekidankokashaicu.wixsite.com/kokasha', twitter: 'icu_kokasha',
+    blogPostSlug: '2026-02-09-tokyo-university-theater-2',
+    unis: [{ slug: 'icu' }],
+  },
+  {
+    name: '劇団円想者', slug: 'seikei-yensosha', groupType: 'STUDENT',
+    description: '年3回の公演を実施。9月には番外公演も開催。',
+    website: 'https://yensosha.jimdofree.com/', twitter: 'yensosha', instagram: 'yensosha',
+    blogPostSlug: '2026-02-09-tokyo-university-theater-2',
+    unis: [{ slug: 'seikei-univ' }],
+  },
+  {
+    name: '演劇部', slug: 'seijo-engeki', groupType: 'STUDENT',
+    description: '成城大学公認の演劇部。福田雄一を輩出。',
+    twitter: 'seijodramaclub', instagram: 'seijodramaclub',
+    blogPostSlug: '2026-02-09-tokyo-university-theater-2',
+    unis: [{ slug: 'seijo-univ' }],
+  },
+  {
+    name: '劇団紙飛行機', slug: 'takushoku-kamihikouki', groupType: 'STUDENT',
+    description: '約13名で活動。年4回の公演を実施。',
+    memberCount: 13,
+    website: 'http://tukamihikouki.web.fc2.com/', twitter: 'kamihikouki0000', instagram: 'gekidan_kamihikouki',
+    blogPostSlug: '2026-02-09-tokyo-university-theater-2',
+    unis: [{ slug: 'takushoku-univ' }],
+  },
+  {
+    name: '農友会 演劇研究部', slug: 'nodai-gekiken', groupType: 'STUDENT',
+    description: '年4回の定期公演を実施。世田谷キャンパスに部室。',
+    twitter: 'nodaigekiken', instagram: 'nodaigekiken',
+    blogPostSlug: '2026-02-09-tokyo-university-theater-2',
+    unis: [{ slug: 'tokyo-nodai' }],
+  },
+  {
+    name: '劇団虚構', slug: 'daito-kyokou', groupType: 'STUDENT',
+    description: '大東文化大学唯一の演劇部。約30名の部員が在籍。',
+    memberCount: 30,
+    twitter: 'Gekidankyokou', corich: 'https://stage.corich.jp/troupe/10285',
+    blogPostSlug: '2026-02-09-tokyo-university-theater-2',
+    unis: [{ slug: 'daito-bunka-univ' }],
+  },
+  {
+    name: '劇団むさび', slug: 'musabi-gekimusa', groupType: 'STUDENT',
+    description: '武蔵野美術大学鷹の台キャンパスを拠点に活動。',
+    website: 'https://gekimusa.com/', twitter: 'gekimusa', instagram: 'gekimusaofficial',
+    blogPostSlug: '2026-02-09-tokyo-university-theater-2',
+    unis: [{ slug: 'musashino-art-univ' }],
+  },
+  {
+    name: '劇団羅夢駝', slug: 'rikadai-lambda', groupType: 'STUDENT',
+    description: '1981年設立。約21名で活動。部員の半数以上が大学から演劇を始めた初心者。',
+    memberCount: 21, foundedYear: 1981,
+    twitter: 'gekidan_lambda',
+    blogPostSlug: '2026-02-09-tokyo-university-theater-2',
+    unis: [{ slug: 'tokyo-rika-univ' }],
+  },
+  {
+    name: '劇団娘の予感', slug: 'tokagaku-musumenoyokan', groupType: 'STUDENT',
+    description: '東京科学大学唯一の公認舞台芸術サークル。約20名の部員。',
+    memberCount: 20,
+    twitter: 'musumenoyokan',
+    blogPostSlug: '2026-02-09-tokyo-university-theater-2',
+    unis: [{ slug: 'tokyo-kagaku-univ' }],
+  },
+  {
+    name: 'ミュージカルカンパニーMMG', slug: 'ochanomizu-mmg', groupType: 'INTERCOLLEGE',
+    description: '1992年設立。女性のみのキャスト。宝塚歌劇作品を中心に年2回公演。',
+    foundedYear: 1992,
+    website: 'https://www.musical-mmg.org/',
+    blogPostSlug: '2026-02-09-tokyo-university-theater-2',
+    unis: [{ slug: 'ochanomizu-univ' }],
+  },
+  {
+    name: '演劇舞踊デザイン学科', slug: 'tamabi-sdd', groupType: 'ACADEMIC',
+    description: '演劇舞踊コースと劇場デザインコースを設置。',
+    website: 'https://www.sdd.tamabi.ac.jp/', twitter: 'SDD_TAMABI',
+    blogPostSlug: '2026-02-09-tokyo-university-theater-2',
+    unis: [{ slug: 'tama-art-univ' }],
+  },
+
+  // ==================== 関東（東京以外） ====================
+  {
+    name: '劇団三日月座', slug: 'yokohama-mikadukiza', groupType: 'STUDENT',
+    description: '横浜国立大学唯一の公認演劇サークル。年5回程度の公演を実施。',
+    website: 'https://gekidanmikadukiza.wixsite.com/crescent', twitter: 'ynumikadukiza',
+    corich: 'https://stage.corich.jp/troupe/11361',
+    blogPostSlug: '2026-02-09-kanto-university-theater',
+    unis: [{ slug: 'yokohama-national-univ' }],
+  },
+  {
+    name: '演劇研究部', slug: 'meigaku-gekiken', groupType: 'STUDENT',
+    description: '約38名の部員が在籍。横浜キャンパスを拠点に活動。',
+    memberCount: 38,
+    twitter: 'meigakugekiken',
+    blogPostSlug: '2026-02-09-kanto-university-theater',
+    unis: [{ slug: 'meiji-gakuin-univ', campus: '横浜キャンパス' }],
+  },
+  {
+    name: '劇団海星館', slug: 'yokoichi-kaiseikan', groupType: 'STUDENT',
+    description: '横浜市立大学の演劇研究部。年4〜5回の公演を実施。',
+    website: 'https://gekidan-ksk.amebaownd.com/', twitter: 'gekidan_ksk',
+    blogPostSlug: '2026-02-09-kanto-university-theater',
+    unis: [{ slug: 'yokohama-shiritsu-univ' }],
+  },
+  {
+    name: '演劇研究会', slug: 'tokai-gekiken', groupType: 'STUDENT',
+    description: '東海大学湘南キャンパスで活動。年3回の正規公演を実施。',
+    website: 'https://tokai-25.github.io/gekiken-website/index.html', twitter: 'TokaiGekiken',
+    blogPostSlug: '2026-02-09-kanto-university-theater',
+    unis: [{ slug: 'tokai-univ', campus: '湘南キャンパス' }],
+  },
+  {
+    name: '劇団個人主義', slug: 'chiba-kojinshugi', groupType: 'STUDENT',
+    description: '千葉大学公認の演劇部。年3回の本公演と大学祭公演を実施。',
+    website: 'https://kojinism.wixsite.com/gekidankojinshugi', twitter: 'kojinism',
+    corich: 'https://stage.corich.jp/troupe/8673',
+    blogPostSlug: '2026-02-09-kanto-university-theater',
+    unis: [{ slug: 'chiba-univ' }],
+  },
+  {
+    name: '劇団NONNY', slug: 'chiba-nonny', groupType: 'STUDENT',
+    description: '千葉大学公認の演劇サークル。',
+    website: 'http://nonny.sensyuuraku.com/', twitter: 'gekidan_nonny',
+    blogPostSlug: '2026-02-09-kanto-university-theater',
+    unis: [{ slug: 'chiba-univ' }],
+  },
+  {
+    name: '劇団筑波小劇場', slug: 'tsukuba-tsukusho', groupType: 'STUDENT',
+    description: '筑波大学最大規模の演劇サークル。約30名の団員が在籍。',
+    memberCount: 30,
+    website: 'https://www.stb.tsukuba.ac.jp/~tsukusho/', twitter: 'tsukusho', instagram: 'tsukusho_official',
+    blogPostSlug: '2026-02-09-kanto-university-theater',
+    unis: [{ slug: 'tsukuba-univ' }],
+  },
+  {
+    name: '人形劇団NEU', slug: 'tsukuba-neu', groupType: 'STUDENT',
+    description: '1976年設立。大人も子どもも楽しめる人形劇を上演。',
+    foundedYear: 1976,
+    website: 'https://www.tkbneu.net/', twitter: 'tsukuba_neu',
+    blogPostSlug: '2026-02-09-kanto-university-theater',
+    unis: [{ slug: 'tsukuba-univ' }],
+  },
+  {
+    name: 'ミュージカル集団ESSASSA', slug: 'tsukuba-essassa', groupType: 'STUDENT',
+    description: '筑波大学唯一のミュージカルサークル。',
+    website: 'https://essassa.jimdofree.com/', twitter: 'essassa_musical', instagram: 'essassa_musicalcompany',
+    blogPostSlug: '2026-02-09-kanto-university-theater',
+    unis: [{ slug: 'tsukuba-univ' }],
+  },
+  {
+    name: '演劇研究会', slug: 'ibaraki-enken', groupType: 'STUDENT',
+    description: '茨城大学の演劇研究会。通称「えんけん」。',
+    website: 'https://ibadaienken.wixsite.com/mainpage', twitter: 'enken_i', instagram: 'ibadai.enken',
+    blogPostSlug: '2026-02-09-kanto-university-theater',
+    unis: [{ slug: 'ibaraki-univ' }],
+  },
+  {
+    name: 'テアトル・ヒューメ', slug: 'gunma-fumee', groupType: 'STUDENT',
+    description: '群馬大学公認の演劇部。年2回の定期公演。',
+    website: 'https://theatrefumee.wixsite.com/theatrefumee', twitter: 'theatrefumee',
+    blogPostSlug: '2026-02-09-kanto-university-theater',
+    unis: [{ slug: 'gunma-univ' }],
+  },
+  {
+    name: '演劇研究会', slug: 'takakei-gekiken', groupType: 'STUDENT',
+    description: '高崎経済大学の文化サークル協議会に所属する演劇研究会。通称「高劇」。',
+    website: 'https://takakeigekiken.jimdofree.com/', twitter: 'takakei_gekiken',
+    blogPostSlug: '2026-02-09-kanto-university-theater',
+    unis: [{ slug: 'takasaki-keizai-univ' }],
+  },
+  {
+    name: 'Petit French Kiss', slug: 'saitama-pfk', groupType: 'STUDENT',
+    description: '埼玉大学唯一の演劇サークル。',
+    twitter: 'PFKsaidai', instagram: 'pfk_su',
+    blogPostSlug: '2026-02-09-kanto-university-theater',
+    unis: [{ slug: 'saitama-univ' }],
+  },
+  {
+    name: '劇団あかつき', slug: 'dokkyo-akatsuki', groupType: 'STUDENT',
+    description: '獨協大学公認の演劇サークル。',
+    website: 'https://dokkyodramaclub.wixsite.com/dokkyodramaclub', twitter: 'MKRYMY',
+    blogPostSlug: '2026-02-09-kanto-university-theater',
+    unis: [{ slug: 'dokkyo-univ' }],
+  },
+  {
+    name: '演劇研究会', slug: 'utsunomiya-engekiken', groupType: 'STUDENT',
+    description: '宇都宮大学の認定文化系サークル。',
+    blogPostSlug: '2026-02-09-kanto-university-theater',
+    unis: [{ slug: 'utsunomiya-univ' }],
+  },
+  {
+    name: '演劇部', slug: 'hakuoh-engeki', groupType: 'STUDENT',
+    description: '白鷗大学学友会の文化系サークル。',
+    blogPostSlug: '2026-02-09-kanto-university-theater',
+    unis: [{ slug: 'hakuoh-univ' }],
+  },
+
+  // ==================== 中部 ====================
+  {
+    name: '演劇研究部', slug: 'niigata-gekiken', groupType: 'STUDENT',
+    description: '1950年から活動。約12名で活動。',
+    memberCount: 12, foundedYear: 1950,
+    website: 'https://sites.google.com/view/gekiken/', twitter: 'shindai_gekiken', instagram: 'shindai_gekiken',
+    blogPostSlug: '2026-02-09-chubu-university-theater',
+    unis: [{ slug: 'niigata-univ' }],
+  },
+  {
+    name: '劇団ふだい', slug: 'toyama-fudai', groupType: 'STUDENT',
+    description: '富山大学五福キャンパスで活動する演劇サークル。',
+    website: 'https://gekidanfudai.amebaownd.com/', twitter: 'gekidan_fudai', instagram: 'gekidanfudai',
+    blogPostSlug: '2026-02-09-chubu-university-theater',
+    unis: [{ slug: 'toyama-univ' }],
+  },
+  {
+    name: '劇団らくだ', slug: 'kanazawa-rakuda', groupType: 'STUDENT',
+    description: '金沢大学サークル棟を拠点に活動する演劇サークル。',
+    twitter: 'drama_camel',
+    blogPostSlug: '2026-02-09-chubu-university-theater',
+    unis: [{ slug: 'kanazawa-univ' }],
+  },
+  {
+    name: '劇団くらげ', slug: 'fukui-kurage', groupType: 'INTERCOLLEGE',
+    description: '福井県立大学と福井大学医学部の合同演劇部。',
+    twitter: 'kurage_fukuiact', instagram: 'gekidan.kurage',
+    blogPostSlug: '2026-02-09-chubu-university-theater',
+    unis: [{ slug: 'fukui-kenritsu-univ' }, { slug: 'fukui-univ' }],
+  },
+  {
+    name: '劇団十三番創庫', slug: 'yamanashi-13bansouko', groupType: 'STUDENT',
+    description: '山梨大学の演劇部。',
+    blogPostSlug: '2026-02-09-chubu-university-theater',
+    unis: [{ slug: 'yamanashi-univ' }],
+  },
+  {
+    name: '劇団山脈', slug: 'shinshu-yamanami', groupType: 'STUDENT',
+    description: '1949年創設。信州大学松本キャンパスの山脈スタジオを拠点に活動。',
+    foundedYear: 1949,
+    website: 'https://sites.google.com/view/shindaiyamanami', twitter: 'shindaiyamanami', instagram: 'shindaiyamanami',
+    blogPostSlug: '2026-02-09-chubu-university-theater',
+    unis: [{ slug: 'shinshu-univ', campus: '松本キャンパス' }],
+  },
+  {
+    name: '劇団六連銭', slug: 'shinshu-mutsurensen', groupType: 'STUDENT',
+    description: '信州大学繊維学部（上田キャンパス）を拠点に活動。',
+    website: 'https://sites.google.com/view/mutsurensen/', twitter: 'shindaimutsuren',
+    blogPostSlug: '2026-02-09-chubu-university-theater',
+    unis: [{ slug: 'shinshu-univ', campus: '上田キャンパス' }],
+  },
+  {
+    name: '演劇研究会', slug: 'gifu-engekiken', groupType: 'STUDENT',
+    description: '岐阜大学の公認課外活動団体。',
+    blogPostSlug: '2026-02-09-chubu-university-theater',
+    unis: [{ slug: 'gifu-univ' }],
+  },
+  {
+    name: '演劇部', slug: 'shizuoka-engekibu', groupType: 'STUDENT',
+    description: '静岡大学公認の文化系サークル。',
+    website: 'http://suact.michikusa.jp/',
+    blogPostSlug: '2026-02-09-chubu-university-theater',
+    unis: [{ slug: 'shizuoka-univ' }],
+  },
+  {
+    name: '劇団新生', slug: 'nagoya-shinnsei', groupType: 'INTERCOLLEGE',
+    description: '1964年旗揚げ、60周年を迎えた伝統ある学生劇団。名大生を中心に複数大学の学生が所属。',
+    foundedYear: 1964,
+    website: 'https://nushinnsei.wixsite.com/newstar', twitter: 'NU_Shinnsei', instagram: 'nu_shinnsei',
+    corich: 'https://stage.corich.jp/troupe/16750',
+    blogPostSlug: '2026-02-09-chubu-university-theater',
+    unis: [{ slug: 'nagoya-univ' }],
+  },
+  {
+    name: 'HI-SECO', slug: 'nanzan-hiseco', groupType: 'STUDENT',
+    description: '約50名の部員。年4回の公演を開催。全国学生演劇祭への参加実績あり。',
+    memberCount: 50,
+    twitter: 'hi_seco', instagram: 'hiseco2024',
+    corich: 'https://stage.corich.jp/troupe/14962',
+    blogPostSlug: '2026-02-09-chubu-university-theater',
+    unis: [{ slug: 'nanzan-univ' }],
+  },
+  {
+    name: '月とカニ', slug: 'aichi-shukutoku-tsukikani', groupType: 'STUDENT',
+    description: '約20名の部員が在籍。年4回の公演を実施。',
+    memberCount: 20,
+    twitter: 'tsukikani', corich: 'https://stage.corich.jp/troupe/16332',
+    blogPostSlug: '2026-02-09-chubu-university-theater',
+    unis: [{ slug: 'aichi-shukutoku-univ' }],
+  },
+  {
+    name: '劇団把夢', slug: 'aichi-kyoiku-pamu', groupType: 'STUDENT',
+    description: '1979年創設。年に3回の公演を実施。',
+    foundedYear: 1979,
+    twitter: 'pamu_maidm',
+    blogPostSlug: '2026-02-09-chubu-university-theater',
+    unis: [{ slug: 'aichi-kyoiku-univ' }],
+  },
+  {
+    name: '劇団空飛ぶペンギン', slug: 'aichi-nagoya-penguin', groupType: 'STUDENT',
+    description: '名古屋キャンパスで活動する演劇サークル。',
+    blogPostSlug: '2026-02-09-chubu-university-theater',
+    unis: [{ slug: 'aichi-univ', campus: '名古屋キャンパス' }],
+  },
+  {
+    name: '演劇研究会', slug: 'aichi-toyohashi-engekiken', groupType: 'STUDENT',
+    description: '愛知大学豊橋キャンパスで活動。年2回公演。',
+    blogPostSlug: '2026-02-09-chubu-university-theater',
+    unis: [{ slug: 'aichi-univ', campus: '豊橋キャンパス' }],
+  },
+
+  // ==================== 関西 ====================
+  {
+    name: '劇団ちゃうかちゃわん', slug: 'osaka-chaukachawan', groupType: 'STUDENT',
+    description: '大阪大学公認演劇サークル。豊中キャンパスを中心に活動。',
+    twitter: 'chaukachawan', instagram: 'chauka_chawan',
+    blogPostSlug: '2026-02-09-kansai-university-theater',
+    unis: [{ slug: 'osaka-univ' }],
+  },
+  {
+    name: '劇団六風館', slug: 'osaka-mufukan', groupType: 'STUDENT',
+    description: '大阪大学公認の学生劇団。約12名が在籍。',
+    memberCount: 12,
+    corich: 'https://stage.corich.jp/troupe/6683',
+    blogPostSlug: '2026-02-09-kansai-university-theater',
+    unis: [{ slug: 'osaka-univ' }],
+  },
+  {
+    name: '学園座', slug: 'kansai-gakuenza', groupType: 'STUDENT',
+    description: '1946年創部。関西大学最大の演劇団体で、60名超の部員を擁する。',
+    memberCount: 60, foundedYear: 1946,
+    website: 'https://gakuenza.jimdofree.com/', twitter: 'gakuenza1946', instagram: 'gakuenza1946',
+    blogPostSlug: '2026-02-09-kansai-university-theater',
+    unis: [{ slug: 'kansai-univ' }],
+  },
+  {
+    name: '学窓座', slug: 'kansai-gakusouza', groupType: 'STUDENT',
+    description: '70年以上の歴史を持つ演劇部。年4回公演。',
+    website: 'https://gakusouza.wixsite.com/gakusouza', twitter: 'gakusouza',
+    corich: 'https://stage.corich.jp/troupe/13980',
+    blogPostSlug: '2026-02-09-kansai-university-theater',
+    unis: [{ slug: 'kansai-univ' }],
+  },
+  {
+    name: '劇団万絵巻', slug: 'kansai-manemaki', groupType: 'STUDENT',
+    description: '関西大学高槻キャンパスにて活動する演劇サークル。',
+    twitter: 'yoroduwemaki', corich: 'https://stage.corich.jp/troupe/8324',
+    blogPostSlug: '2026-02-09-kansai-university-theater',
+    unis: [{ slug: 'kansai-univ', campus: '高槻キャンパス' }],
+  },
+  {
+    name: '劇団カオス', slug: 'osaka-kooritsu-chaos', groupType: 'STUDENT',
+    description: '34名が在籍。主に会話劇を得意とし、年4〜5回の公演を実施。',
+    memberCount: 34,
+    website: 'https://sites.google.com/view/gekidanchaos/top', twitter: 'gekidanchaos', instagram: 'gekidan.chaos',
+    corich: 'https://stage.corich.jp/troupe/14884',
+    blogPostSlug: '2026-02-09-kansai-university-theater',
+    unis: [{ slug: 'osaka-kooritsu-univ' }],
+  },
+  {
+    name: '覇王樹座', slug: 'kinki-sabotenza', groupType: 'STUDENT',
+    description: '近畿大学東大阪キャンパスで活動。年約7回の公演を実施。',
+    website: 'https://engekisabotenza.wixsite.com/saboteza', twitter: 'sabotenza', instagram: 'sabotenza',
+    corich: 'https://stage.corich.jp/troupe/16311',
+    blogPostSlug: '2026-02-09-kansai-university-theater',
+    unis: [{ slug: 'kinki-univ' }],
+  },
+  {
+    name: '劇団しん', slug: 'kansai-gaidai-shin', groupType: 'STUDENT',
+    description: '関西外国語大学の演劇部。',
+    twitter: 'kgu_gekishin', instagram: 'gekishingram',
+    blogPostSlug: '2026-02-09-kansai-university-theater',
+    unis: [{ slug: 'kansai-gaidai' }],
+  },
+  {
+    name: '小劇場劇団「群」', slug: 'osaka-geidai-mure', groupType: 'STUDENT',
+    description: '様々な学科の学生が参加。年に3回ほど舞台公演を実施。',
+    twitter: 's_mure_koho',
+    blogPostSlug: '2026-02-09-kansai-university-theater',
+    unis: [{ slug: 'osaka-geidai' }],
+  },
+  {
+    name: '演劇研究部', slug: 'osaka-keizai-gekiken', groupType: 'STUDENT',
+    description: '新しい演劇の形を模索しながら活動。',
+    twitter: 'oue_gekiken',
+    blogPostSlug: '2026-02-09-kansai-university-theater',
+    unis: [{ slug: 'osaka-keizai-univ' }],
+  },
+  {
+    name: '劇団ケッペキ', slug: 'kyoto-keppeki', groupType: 'INTERCOLLEGE',
+    description: '京都大学唯一の公認演劇サークル。1993年結成。約80名の団員が在籍。',
+    memberCount: 80, foundedYear: 1993,
+    website: 'https://keppeki.github.io/', twitter: 'g_keppeki', instagram: 'g_keppeki',
+    corich: 'https://stage.corich.jp/troupe/2298',
+    blogPostSlug: '2026-02-09-kansai-university-theater',
+    unis: [{ slug: 'kyoto-univ' }],
+  },
+  {
+    name: '劇団愉快犯', slug: 'kyoto-yukaihan', groupType: 'INTERCOLLEGE',
+    description: '京都大学に拠点を置く演劇集団。喜劇・コメディを制作・上演。',
+    twitter: 'yukaihann', instagram: 'gekidan_yukaihan',
+    blogPostSlug: '2026-02-09-kansai-university-theater',
+    unis: [{ slug: 'kyoto-univ' }],
+  },
+  {
+    name: '同志社小劇場', slug: 'doshisha-shogeki', groupType: 'STUDENT',
+    description: '1921年設立の公認演劇サークル。年5回公演を実施。',
+    foundedYear: 1921,
+    website: 'https://dshogeki.wixsite.com/dsgj', twitter: 'Dshogeki', instagram: 'dshogeki',
+    blogPostSlug: '2026-02-09-kansai-university-theater',
+    unis: [{ slug: 'doshisha-univ' }],
+  },
+  {
+    name: '劇団月光斜', slug: 'ritsumeikan-gekkosya', groupType: 'STUDENT',
+    description: '立命館大学衣笠キャンパスで活動する関西最大規模の学生劇団。',
+    website: 'https://gekkosya.info/', twitter: 'gekkosya', instagram: 'gekkosya',
+    blogPostSlug: '2026-02-09-kansai-university-theater',
+    unis: [{ slug: 'ritsumeikan-univ' }],
+  },
+  {
+    name: '演劇部', slug: 'kyoto-sangyo-engekibu', groupType: 'STUDENT',
+    description: '1966年創部。京都学生演劇祭で審査員特別賞を受賞、全国大会出場実績あり。',
+    foundedYear: 1966,
+    blogPostSlug: '2026-02-09-kansai-university-theater',
+    unis: [{ slug: 'kyoto-sangyo-univ' }],
+  },
+  {
+    name: '劇団ACT', slug: 'kyoto-sangyo-act', groupType: 'STUDENT',
+    description: '「あなたにちょっとしたエンタメを。」をモットーに活動。',
+    website: 'https://gekidanact.wixsite.com/gekidan-act', twitter: 'ACT_ksd', instagram: 'act_ksd',
+    blogPostSlug: '2026-02-09-kansai-university-theater',
+    unis: [{ slug: 'kyoto-sangyo-univ' }],
+  },
+  {
+    name: '劇団〈未定〉', slug: 'kyoto-joshi-mitei', groupType: 'STUDENT',
+    description: '年3〜4回の公演を実施。部員が自由にユニットを組んで活動。',
+    twitter: 'gekidan_mitei',
+    blogPostSlug: '2026-02-09-kansai-university-theater',
+    unis: [{ slug: 'kyoto-joshi-univ' }],
+  },
+  {
+    name: '劇団未踏座', slug: 'ryukoku-mitouza', groupType: 'STUDENT',
+    description: '70年以上の歴史を持つ劇団。約25名在籍、年4〜5回公演。',
+    memberCount: 25,
+    website: 'https://mitouza.jimdofree.com/', twitter: 'gekidanmitouza6', instagram: 'gekidanmitouza',
+    blogPostSlug: '2026-02-09-kansai-university-theater',
+    unis: [{ slug: 'ryukoku-univ' }],
+  },
+  {
+    name: '舞台芸術学科', slug: 'kyoto-geijutsu-butai', groupType: 'ACADEMIC',
+    description: '演技・演出・ダンス・ミュージカル・声優・殺陣・舞台制作など幅広い分野を学べる。',
+    blogPostSlug: '2026-02-09-kansai-university-theater',
+    unis: [{ slug: 'kyoto-geijutsu-univ' }],
+  },
+  {
+    name: '演劇部', slug: 'kyoto-seika-engekibu', groupType: 'STUDENT',
+    description: '年2回の本公演と冬公演を実施。',
+    blogPostSlug: '2026-02-09-kansai-university-theater',
+    unis: [{ slug: 'kyoto-seika-univ' }],
+  },
+  {
+    name: '劇団洗濯氣', slug: 'kyoto-tachibana-sentakuki', groupType: 'STUDENT',
+    description: '1990年創設。京都橘大学演劇部。',
+    foundedYear: 1990,
+    twitter: 'sentakuki_ta',
+    blogPostSlug: '2026-02-09-kansai-university-theater',
+    unis: [{ slug: 'kyoto-tachibana-univ' }],
+  },
+  {
+    name: '自由劇場', slug: 'kobe-jigeki', groupType: 'STUDENT',
+    description: '創部40年以上の歴史を持つ神戸大学公認の学生劇団。',
+    website: 'https://jigeki.amebaownd.com/', twitter: 'JIGEKI', instagram: 'jigeki_official',
+    corich: 'https://stage.corich.jp/troupe/4773',
+    blogPostSlug: '2026-02-09-kansai-university-theater',
+    unis: [{ slug: 'kobe-univ' }],
+  },
+  {
+    name: '劇団狸寝入', slug: 'kwansei-tanukineiri', groupType: 'STUDENT',
+    description: '95年以上の歴史を持つ関西学院大学の演劇団体。年4回の公演を実施。',
+    website: 'https://tanukineiri.jimdofree.com/', twitter: 'tanuki_twi', instagram: 'tanuki_insta',
+    blogPostSlug: '2026-02-09-kansai-university-theater',
+    unis: [{ slug: 'kwansei-gakuin-univ' }],
+  },
+  {
+    name: '劇団EXCLAMATION', slug: 'kobe-gakuin-exclamation', groupType: 'STUDENT',
+    description: '27名の部員が在籍。年4回の公演を実施。',
+    memberCount: 27,
+    twitter: 'Excla_kgu119', instagram: 'excla_kgu119',
+    blogPostSlug: '2026-02-09-kansai-university-theater',
+    unis: [{ slug: 'kobe-gakuin-univ' }],
+  },
+  {
+    name: '演劇グループSomething', slug: 'kwansei-something', groupType: 'STUDENT',
+    description: '劇団鹿殺し、劇団レトルト内閣、突劇金魚などを輩出。',
+    website: 'https://somethingweb1.amebaownd.com/', twitter: 'Something_Twi',
+    blogPostSlug: '2026-02-09-kansai-university-theater',
+    unis: [{ slug: 'kwansei-gakuin-univ' }],
+  },
+  {
+    name: '劇団いちご大福', slug: 'nara-joshi-ichigo', groupType: 'STUDENT',
+    description: '16名が在籍。年4回の公演を実施。',
+    memberCount: 16,
+    twitter: 'icigodaifku',
+    blogPostSlug: '2026-02-09-kansai-university-theater',
+    unis: [{ slug: 'nara-joshi-univ' }],
+  },
+  {
+    name: '劇団ZERO & 劇団深夜特急', slug: 'shiga-zero-shinyatokkyu', groupType: 'INTERCOLLEGE',
+    description: '滋賀大学・滋賀県立大学合同で活動。年3回の本公演に加え学祭コント公演を実施。',
+    website: 'https://newacecrew101.wixsite.com/mysite', twitter: 'NewAceCrew101', instagram: 'zero_shinyatokkyu',
+    blogPostSlug: '2026-02-09-kansai-university-theater',
+    unis: [{ slug: 'shiga-univ' }, { slug: 'shiga-kenritsu-univ' }],
+  },
+  {
+    name: '劇団アディスト', slug: 'mie-adist', groupType: 'STUDENT',
+    description: '三重大学唯一の演劇サークル。年3回の公演を実施。',
+    twitter: 'AdistMie', instagram: 'adist_engeki',
+    blogPostSlug: '2026-02-09-kansai-university-theater',
+    unis: [{ slug: 'mie-univ' }],
+  },
+  {
+    name: '和歌山大学演劇部', slug: 'wakayama-engekibu', groupType: 'STUDENT',
+    description: '文化部連合会所属の演劇部。',
+    website: 'https://wadaiengeki0.wixsite.com/mysite', twitter: 'wadaiengeki', instagram: 'wadaiengeki',
+    corich: 'https://stage.corich.jp/troupe/16366',
+    blogPostSlug: '2026-02-09-kansai-university-theater',
+    unis: [{ slug: 'wakayama-univ' }],
+  },
+
+  // ==================== 中国・四国 ====================
+  {
+    name: '劇団あしあと', slug: 'tottori-ashiato', groupType: 'STUDENT',
+    description: '約27名の団員が在籍し、年4回の公演を実施。全国学生演劇祭出場実績あり。',
+    memberCount: 27,
+    website: 'https://tottori-asiato.sakura.ne.jp/', twitter: 'gekiasi', instagram: 'asiatoridai',
+    blogPostSlug: '2026-02-09-chugoku-shikoku-university-theater',
+    unis: [{ slug: 'tottori-univ' }],
+  },
+  {
+    name: 'シアターちょこざい', slug: 'shimane-chokozai', groupType: 'STUDENT',
+    description: '島根大学の演劇部。',
+    instagram: 'theaterchokozai',
+    blogPostSlug: '2026-02-09-chugoku-shikoku-university-theater',
+    unis: [{ slug: 'shimane-univ' }],
+  },
+  {
+    name: '演劇部', slug: 'okayama-engekibu', groupType: 'STUDENT',
+    description: '岡山大学校友会公認の演劇部。約44名の部員が在籍。',
+    memberCount: 44,
+    website: 'https://okadaiengekibu.wixsite.com/engeki', twitter: 'okadaiengekibu',
+    blogPostSlug: '2026-02-09-chugoku-shikoku-university-theater',
+    unis: [{ slug: 'okayama-univ' }],
+  },
+  {
+    name: '演劇団', slug: 'hiroshima-engekidan', groupType: 'STUDENT',
+    description: '約50名の部員が在籍。「劇団ブルーハワイ」「劇団25m」などのサブグループを含む。',
+    memberCount: 50,
+    website: 'https://hirogeki.wixsite.com/start-from-scratch', twitter: 'hirogekidan',
+    blogPostSlug: '2026-02-09-chugoku-shikoku-university-theater',
+    unis: [{ slug: 'hiroshima-univ' }],
+  },
+  {
+    name: '劇団笛', slug: 'yamaguchi-fue', groupType: 'STUDENT',
+    description: '年3回の公演を実施している山口大学の演劇サークル。',
+    website: 'https://gekidan-fue.amebaownd.com/', twitter: 'gekidan_fue', instagram: 'gekidanfue',
+    blogPostSlug: '2026-02-09-chugoku-shikoku-university-theater',
+    unis: [{ slug: 'yamaguchi-univ' }],
+  },
+  {
+    name: '劇団あまおと', slug: 'tokushima-amaoto', groupType: 'STUDENT',
+    description: '徳島大学常三島地区の文化系サークルとして活動する演劇部。',
+    blogPostSlug: '2026-02-09-chugoku-shikoku-university-theater',
+    unis: [{ slug: 'tokushima-univ' }],
+  },
+  {
+    name: '劇団EMPTY', slug: 'kagawa-empty', groupType: 'STUDENT',
+    description: '1975年設立。年3〜4回の公演を実施。約10名の部員が在籍。',
+    memberCount: 10, foundedYear: 1975,
+    blogPostSlug: '2026-02-09-chugoku-shikoku-university-theater',
+    unis: [{ slug: 'kagawa-univ' }],
+  },
+  {
+    name: '演劇部', slug: 'ehime-engekibu', groupType: 'STUDENT',
+    description: '愛媛大学公認の演劇部。年4回の本公演を実施。',
+    website: 'https://ehime-uni-engeki.blush.jp/', twitter: 'engeki_euni', instagram: 'e.uni.engeki',
+    blogPostSlug: '2026-02-09-chugoku-shikoku-university-theater',
+    unis: [{ slug: 'ehime-univ' }],
+  },
+  {
+    name: '演劇研究会', slug: 'kochi-enken', groupType: 'STUDENT',
+    description: '1972年設立。約44名の部員が在籍。年3回の公演を目指して活動。',
+    memberCount: 44, foundedYear: 1972,
+    twitter: 'kochi_enken3',
+    blogPostSlug: '2026-02-09-chugoku-shikoku-university-theater',
+    unis: [{ slug: 'kochi-univ' }],
+  },
+  {
+    name: '劇団ドラマティックタイム', slug: 'kochi-koka-dramatic', groupType: 'STUDENT',
+    description: '2010年設立の文化系サークル。',
+    foundedYear: 2010,
+    blogPostSlug: '2026-02-09-chugoku-shikoku-university-theater',
+    unis: [{ slug: 'kochi-koka-univ' }],
+  },
+
+  // ==================== 九州・沖縄 ====================
+  {
+    name: '演劇部（きゅーえん）', slug: 'kyushu-engekibu', groupType: 'STUDENT',
+    description: '年間を通じて複数公演を実施。ポンプラザホール等で上演。',
+    twitter: 'kyu_en', instagram: 'kyushu_engeki',
+    corich: 'https://stage.corich.jp/troupe/810',
+    blogPostSlug: '2026-02-09-kyushu-okinawa-university-theater',
+    unis: [{ slug: 'kyushu-univ' }],
+  },
+  {
+    name: '演劇部（大橋キャンパス）', slug: 'kyushu-ohashi-engeki', groupType: 'STUDENT',
+    description: '大橋キャンパスで活動。福岡学生演劇祭にも参加。',
+    twitter: 'gek_i_d',
+    blogPostSlug: '2026-02-09-kyushu-okinawa-university-theater',
+    unis: [{ slug: 'kyushu-univ', campus: '大橋キャンパス' }],
+  },
+  {
+    name: 'FUACT', slug: 'fukuoka-fuact', groupType: 'STUDENT',
+    description: '福岡大学の演劇部。',
+    website: 'https://fuact.jimdofree.com/', twitter: 'fuact', instagram: 'fu_act',
+    blogPostSlug: '2026-02-09-kyushu-okinawa-university-theater',
+    unis: [{ slug: 'fukuoka-univ' }],
+  },
+  {
+    name: '演劇部', slug: 'seinan-engeki', groupType: 'STUDENT',
+    description: '西南学院大学の演劇部。「ふんわりパジャマズ」名義で福岡学生演劇祭にも参加。',
+    instagram: 'seinan_drama_club',
+    blogPostSlug: '2026-02-09-kyushu-okinawa-university-theater',
+    unis: [{ slug: 'seinan-gakuin-univ' }],
+  },
+  {
+    name: '演劇部', slug: 'sangyoika-engeki', groupType: 'STUDENT',
+    description: '年間定期公演のほか外部公演にも積極参加。全国学生演劇祭への出場実績あり。',
+    website: 'https://sites.google.com/view/uoehep/home', twitter: 'uoeh_EP', instagram: 'uoeh_ep',
+    blogPostSlug: '2026-02-09-kyushu-okinawa-university-theater',
+    unis: [{ slug: 'sangyoika-univ' }],
+  },
+  {
+    name: '演劇研究会', slug: 'kitakyushu-engekiken', groupType: 'STUDENT',
+    description: '北九州市立大学の演劇研究会。',
+    website: 'https://kitakyugekikan.jimdofree.com/',
+    blogPostSlug: '2026-02-09-kyushu-okinawa-university-theater',
+    unis: [{ slug: 'kitakyushu-shiritsu-univ' }],
+  },
+  {
+    name: 'drama!!', slug: 'saga-drama', groupType: 'STUDENT',
+    description: '佐賀大学公認の演劇サークル。福岡学生演劇祭にも参加。',
+    twitter: 'drama_sagauniv', instagram: 'drama_sagauniv',
+    blogPostSlug: '2026-02-09-kyushu-okinawa-university-theater',
+    unis: [{ slug: 'saga-univ' }],
+  },
+  {
+    name: 'いろは団', slug: 'nagasaki-iroha', groupType: 'INTERCOLLEGE',
+    description: '1977年設立で約45年以上の歴史。長崎大学・長崎県立大学の学生が参加。',
+    foundedYear: 1977,
+    twitter: 'NuenIroha', instagram: 'irohatuan',
+    blogPostSlug: '2026-02-09-kyushu-okinawa-university-theater',
+    unis: [{ slug: 'nagasaki-univ' }, { slug: 'nagasaki-kenritsu-univ' }],
+  },
+  {
+    name: '演劇部（クマエン）', slug: 'kumamoto-engekibu', groupType: 'STUDENT',
+    description: '熊本大学を中心に活動。13名の部員で構成。',
+    memberCount: 13,
+    blogPostSlug: '2026-02-09-kyushu-okinawa-university-theater',
+    unis: [{ slug: 'kumamoto-univ' }],
+  },
+  {
+    name: '演劇部', slug: 'oita-engekibu', groupType: 'STUDENT',
+    description: '大分大学旦野原キャンパスの文化系サークル。',
+    blogPostSlug: '2026-02-09-kyushu-okinawa-university-theater',
+    unis: [{ slug: 'oita-univ' }],
+  },
+  {
+    name: '劇団\'絆\'', slug: 'apu-kizuna', groupType: 'STUDENT',
+    description: '立命館アジア太平洋大学で活動する演劇団体。',
+    blogPostSlug: '2026-02-09-kyushu-okinawa-university-theater',
+    unis: [{ slug: 'ritsumeikan-apu' }],
+  },
+  {
+    name: '演劇部', slug: 'miyazaki-engekibu', groupType: 'STUDENT',
+    description: '宮崎大学の文化系サークル。',
+    blogPostSlug: '2026-02-09-kyushu-okinawa-university-theater',
+    unis: [{ slug: 'miyazaki-univ' }],
+  },
+  {
+    name: 'テアトル火山団', slug: 'kagoshima-kazandan', groupType: 'STUDENT',
+    description: '1988年設立。年3回程度の公演を実施。「いまいちばんやりたい芝居をつくる」がモットー。',
+    foundedYear: 1988,
+    twitter: 'KadaiTeatre',
+    blogPostSlug: '2026-02-09-kyushu-okinawa-university-theater',
+    unis: [{ slug: 'kagoshima-univ' }],
+  },
+  {
+    name: '劇団テトラ', slug: 'ryukyu-tetra', groupType: 'STUDENT',
+    description: '琉球大学で活動する演劇サークル。',
+    twitter: 'gekidantetora',
+    blogPostSlug: '2026-02-09-kyushu-okinawa-university-theater',
+    unis: [{ slug: 'ryukyu-univ' }],
+  },
+  {
+    name: '琉大ミュージカル', slug: 'ryukyu-musical', groupType: 'ACADEMIC',
+    description: '教育学部の授業と連携し、学生が企画・演出・出演するミュージカルを毎年制作。',
+    website: 'https://www.ryudaimusical.com/', twitter: 'ryudaimusical',
+    blogPostSlug: '2026-02-09-kyushu-okinawa-university-theater',
+    unis: [{ slug: 'ryukyu-univ' }],
+  },
+];
+
+// ========== メイン処理 ==========
+
+async function main() {
+  console.log('=== 大学・劇団シード開始 ===\n');
+
+  // 1. 大学をupsert
+  console.log(`大学: ${universities.length}校を処理中...`);
+  for (const uni of universities) {
+    await prisma.university.upsert({
+      where: { slug: uni.slug },
+      update: {
+        name: uni.name,
+        universityType: uni.universityType,
+        prefecture: uni.prefecture,
+        region: uni.region,
+        website: uni.website ?? null,
+      },
+      create: {
+        name: uni.name,
+        slug: uni.slug,
+        universityType: uni.universityType,
+        prefecture: uni.prefecture,
+        region: uni.region,
+        website: uni.website ?? null,
+      },
+    });
+  }
+  console.log(`  完了: ${universities.length}校\n`);
+
+  // 2. 劇団をupsert + 大学リレーション作成
+  console.log(`劇団: ${theaterGroups.length}団体を処理中...`);
+  for (const group of theaterGroups) {
+    const { unis, ...data } = group;
+
+    const theaterGroup = await prisma.theaterGroup.upsert({
+      where: { slug: data.slug },
+      update: {
+        name: data.name,
+        groupType: data.groupType,
+        description: data.description ?? null,
+        memberCount: data.memberCount ?? null,
+        foundedYear: data.foundedYear ?? null,
+        website: data.website ?? null,
+        twitter: data.twitter ?? null,
+        instagram: data.instagram ?? null,
+        corich: data.corich ?? null,
+        otherLinks: data.otherLinks ?? [],
+        blogPostSlug: data.blogPostSlug ?? null,
+      },
+      create: {
+        name: data.name,
+        slug: data.slug,
+        groupType: data.groupType,
+        description: data.description ?? null,
+        memberCount: data.memberCount ?? null,
+        foundedYear: data.foundedYear ?? null,
+        website: data.website ?? null,
+        twitter: data.twitter ?? null,
+        instagram: data.instagram ?? null,
+        corich: data.corich ?? null,
+        otherLinks: data.otherLinks ?? [],
+        blogPostSlug: data.blogPostSlug ?? null,
+      },
+    });
+
+    // 大学リレーション
+    for (const uni of unis) {
+      const university = await prisma.university.findUnique({ where: { slug: uni.slug } });
+      if (!university) {
+        console.warn(`  警告: 大学 ${uni.slug} が見つかりません（劇団: ${data.name}）`);
+        continue;
+      }
+      await prisma.theaterGroupUniversity.upsert({
+        where: {
+          theaterGroupId_universityId: {
+            theaterGroupId: theaterGroup.id,
+            universityId: university.id,
+          },
+        },
+        update: { campus: uni.campus ?? null },
+        create: {
+          theaterGroupId: theaterGroup.id,
+          universityId: university.id,
+          campus: uni.campus ?? null,
+        },
+      });
+    }
+  }
+  console.log(`  完了: ${theaterGroups.length}団体\n`);
+
+  // 3. 結果サマリ
+  const [uniCount, groupCount, relCount] = await Promise.all([
+    prisma.university.count(),
+    prisma.theaterGroup.count(),
+    prisma.theaterGroupUniversity.count(),
+  ]);
+  console.log('=== 結果 ===');
+  console.log(`  大学: ${uniCount}校`);
+  console.log(`  劇団: ${groupCount}団体`);
+  console.log(`  リレーション: ${relCount}件`);
+}
+
+main()
+  .catch((e) => {
+    console.error(e);
+    process.exit(1);
+  })
+  .finally(() => prisma.$disconnect());

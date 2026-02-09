@@ -40,9 +40,15 @@ tags: ["大学演劇", "学生劇団", "演劇サークル", "東北", "まと�
 
 ### 岩手大学
 
-岩手大学にも演劇サークルが存在しています。詳細は大学の課外活動ページをご確認ください。
+#### 劇団かっぱ
 
-- 大学公式サイト: [岩手大学](https://www.iwate-u.ac.jp/)
+1981年設立の岩手大学の演劇サークルです。夏・秋・冬に盛岡市内のホールで定期公演を実施。既存の脚本とオリジナル脚本の両方を上演しています。
+
+**公式情報**
+- 公式サイト: [劇団かっぱ](https://kappahome.1web.jp/)
+- X（Twitter）: [@gekidankappa](https://x.com/gekidankappa)
+- Instagram: [@gekidan_kappa](https://www.instagram.com/gekidan_kappa/)
+- CoRich舞台芸術: [劇団かっぱ](https://stage.corich.jp/troupe/2979)
 
 ---
 
