@@ -1,6 +1,7 @@
 import { GetStaticPaths, GetStaticProps } from 'next';
 import Link from 'next/link';
 import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import Layout from '@/components/Layout';
 import BlogSidebar from '@/components/BlogSidebar';
 import Seo from '@/components/seo';
@@ -82,6 +83,7 @@ export default function BlogEnPost({ post }: Props) {
 
               <div className="prose prose-lg max-w-none">
                 <ReactMarkdown
+                  remarkPlugins={[remarkGfm]}
                   components={{
                     h2: ({ children }) => <h2 className="text-2xl font-bold mt-8 mb-4 pb-2 border-b border-gray-200">{children}</h2>,
                     h3: ({ children }) => <h3 className="text-xl font-bold mt-6 mb-3">{children}</h3>,
@@ -93,6 +95,14 @@ export default function BlogEnPost({ post }: Props) {
                     ),
                     hr: () => <hr className="my-8 border-gray-300" />,
                     strong: ({ children }) => <strong className="font-bold">{children}</strong>,
+                    table: ({ children }) => (
+                      <div className="overflow-x-auto my-6">
+                        <table className="min-w-full border-collapse border border-gray-300 text-sm">{children}</table>
+                      </div>
+                    ),
+                    thead: ({ children }) => <thead className="bg-gray-50">{children}</thead>,
+                    th: ({ children }) => <th className="border border-gray-300 px-4 py-2 text-left font-semibold">{children}</th>,
+                    td: ({ children }) => <td className="border border-gray-300 px-4 py-2">{children}</td>,
                   }}
                 >
                   {post.content}
