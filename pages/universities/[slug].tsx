@@ -143,6 +143,5 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 
   return {
     props: { university: JSON.parse(JSON.stringify(university)) },
-    revalidate: 3600,
   };
 };

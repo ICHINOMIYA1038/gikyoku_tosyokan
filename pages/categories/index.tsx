@@ -61,7 +61,6 @@ export async function getStaticProps() {
       props: {
         categories,
       },
-      revalidate: 3600,
     };
   } catch {
     return {

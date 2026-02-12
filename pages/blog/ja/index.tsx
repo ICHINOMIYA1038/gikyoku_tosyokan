@@ -78,5 +78,5 @@ export default function BlogJaIndex({ posts }: Props) {
 
 export const getStaticProps: GetStaticProps<Props> = async () => {
   const posts = await getPostsByLanguage('ja');
-  return { props: { posts }, revalidate: 60 };
+  return { props: { posts } };
 };

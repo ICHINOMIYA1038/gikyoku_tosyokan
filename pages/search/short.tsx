@@ -249,7 +249,6 @@ export const getStaticProps: GetStaticProps = async () => {
         posts: JSON.parse(JSON.stringify(posts)),
         totalCount: posts.length
       },
-      revalidate: 3600 // 1時間ごとに再生成
     };
   } catch (error) {
     console.error("Error fetching short posts:", error);
@@ -258,7 +257,6 @@ export const getStaticProps: GetStaticProps = async () => {
         posts: [],
         totalCount: 0
       },
-      revalidate: 3600
     };
   }
 };

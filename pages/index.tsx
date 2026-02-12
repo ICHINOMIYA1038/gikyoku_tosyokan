@@ -285,7 +285,6 @@ export async function getStaticProps() {
         posts: [],
         categories: [],
       },
-      revalidate: 60, // エラー時は1分後に再試行
     };
   }
 
@@ -296,6 +295,5 @@ export async function getStaticProps() {
       posts,
       categories,
     },
-    revalidate: 3600, // 1時間キャッシュ
   };
 }

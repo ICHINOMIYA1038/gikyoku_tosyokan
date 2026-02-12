@@ -195,7 +195,6 @@ export async function getStaticProps() {
       props: {
         posts,
       },
-      revalidate: 3600, // You can adjust the revalidation period as needed
     };
   } catch {
     return {

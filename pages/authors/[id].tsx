@@ -208,7 +208,6 @@ export async function getStaticProps(context: any) {
       props: {
         author,
       },
-      revalidate: 3600, // 1時間ごとに再生成
     };
   } catch {
     return {

@@ -60,7 +60,6 @@ export async function getStaticProps() {
       props: {
         authors,
       },
-      revalidate: 3600, // You can adjust the revalidation period as needed
     };
   } catch {
     return {

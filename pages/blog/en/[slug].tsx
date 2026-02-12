@@ -137,5 +137,5 @@ export const getStaticPaths: GetStaticPaths = async () => {
 export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
   const post = await getPostBySlug(params?.slug as string);
   if (!post) return { notFound: true };
-  return { props: { post }, revalidate: 60 };
+  return { props: { post } };
 };

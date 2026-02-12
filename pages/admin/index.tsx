@@ -38,6 +38,5 @@ export async function getStaticProps() {
       authors,
       categories,
     },
-    revalidate: 3600, // 再検証の期間を必要に応じて調整
   };
 }

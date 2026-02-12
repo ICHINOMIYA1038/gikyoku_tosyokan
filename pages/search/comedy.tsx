@@ -201,7 +201,6 @@ export const getStaticProps: GetStaticProps = async () => {
         posts: JSON.parse(JSON.stringify(posts)),
         totalCount
       },
-      revalidate: 3600 // 1時間ごとに再生成
     };
   } catch (error) {
     console.error("Error fetching comedy posts:", error);
@@ -210,7 +209,6 @@ export const getStaticProps: GetStaticProps = async () => {
         posts: [],
         totalCount: 0
       },
-      revalidate: 3600
     };
   }
 };
