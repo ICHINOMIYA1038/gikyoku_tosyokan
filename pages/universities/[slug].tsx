@@ -2,6 +2,7 @@ import { GetStaticProps, GetStaticPaths } from 'next';
 import Link from 'next/link';
 import Layout from '@/components/Layout';
 import Seo from '@/components/seo';
+import StructuredData from '@/components/StructuredData';
 import TheaterGroupCard from '@/components/TheaterGroupCard';
 import { prisma } from '@/lib/prisma';
 import { FaChevronRight, FaMapMarkerAlt, FaGlobe } from 'react-icons/fa';
@@ -41,6 +42,14 @@ export default function UniversityDetail({ university }: Props) {
         pageDescription={`${university.name}の学生劇団・演劇サークル一覧`}
         pagePath={`/universities/${university.slug}`}
         pageKeywords={['大学演劇', university.name, '学生劇団']}
+      />
+      <StructuredData
+        type="BreadcrumbList"
+        breadcrumbs={[
+          { name: 'ホーム', url: 'https://gikyokutosyokan.com' },
+          { name: '大学演劇', url: 'https://gikyokutosyokan.com/university-theater' },
+          { name: university.name, url: `https://gikyokutosyokan.com/universities/${university.slug}` },
+        ]}
       />
 
       <div className="px-4 py-6 max-w-4xl mx-auto">
@@ -102,12 +111,8 @@ export default function UniversityDetail({ university }: Props) {
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const universities = await prisma.university.findMany({
-    select: { slug: true },
-  });
-
   return {
-    paths: universities.map((u) => ({ params: { slug: u.slug } })),
+    paths: [],
     fallback: 'blocking',
   };
 };

@@ -6,27 +6,34 @@ import Layout from '@/components/Layout';
 import BlogSidebar from '@/components/BlogSidebar';
 import Seo from '@/components/seo';
 import StructuredData from '@/components/StructuredData';
-import { getPostBySlug, getPostSlugsByLanguage, BlogPost } from '@/lib/blog';
+import { getPostBySlug, getPostSlugsByLanguage, getAlternateLanguageSlug, BlogPost } from '@/lib/blog';
 import { FaHome, FaChevronRight } from 'react-icons/fa';
 
 interface Props {
   post: BlogPost;
+  alternateSlug: string | null;
 }
 
-export default function BlogJaPost({ post }: Props) {
+export default function BlogJaPost({ post, alternateSlug }: Props) {
   const siteUrl = 'https://gikyokutosyokan.com';
+  const ogImageUrl = `${siteUrl}/api/og?title=${encodeURIComponent(post.title)}&date=${encodeURIComponent(post.date)}&tags=${encodeURIComponent(post.tags.slice(0, 3).join(','))}`;
+  const hreflangList = [
+    { lang: 'ja', path: `/blog/ja/${post.slug}` },
+    { lang: 'x-default', path: `/blog/ja/${post.slug}` },
+    ...(alternateSlug ? [{ lang: 'en', path: `/blog/en/${alternateSlug}` }] : []),
+  ];
   return (
     <Layout>
       <Seo
         pageTitle={post.title}
         pageDescription={post.description}
         pagePath={`/blog/ja/${post.slug}`}
+        pageImg={ogImageUrl}
+        pageImgWidth={1200}
+        pageImgHeight={630}
         pageKeywords={post.tags}
         pageType="article"
-        hreflang={[
-          { lang: 'ja', path: `/blog/ja/${post.slug}` },
-          { lang: 'x-default', path: `/blog/ja/${post.slug}` },
-        ]}
+        hreflang={hreflangList}
       />
       <StructuredData
         type="Article"
@@ -127,15 +134,16 @@ export default function BlogJaPost({ post }: Props) {
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const slugs = await getPostSlugsByLanguage('ja');
   return {
-    paths: slugs.map((slug) => ({ params: { slug } })),
+    paths: [],
     fallback: 'blocking',
   };
 };
 
 export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
-  const post = await getPostBySlug(params?.slug as string);
+  const slug = params?.slug as string;
+  const post = await getPostBySlug(slug);
   if (!post) return { notFound: true };
-  return { props: { post } };
+  const alternateSlug = await getAlternateLanguageSlug(slug, 'ja');
+  return { props: { post, alternateSlug } };
 };

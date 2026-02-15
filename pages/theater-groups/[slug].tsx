@@ -2,6 +2,7 @@ import { GetStaticProps, GetStaticPaths } from 'next';
 import Link from 'next/link';
 import Layout from '@/components/Layout';
 import Seo from '@/components/seo';
+import StructuredData from '@/components/StructuredData';
 import SocialLinks from '@/components/SocialLinks';
 import { prisma } from '@/lib/prisma';
 import { FaUniversity, FaUsers, FaCalendarAlt, FaChevronRight, FaBook, FaTheaterMasks, FaMapMarkerAlt } from 'react-icons/fa';
@@ -38,6 +39,15 @@ export default function TheaterGroupDetail({ group, relatedShogekijoGroups }: Pr
         pageDescription={group.description || `${group.name}の情報ページ`}
         pagePath={`/theater-groups/${group.slug}`}
         pageKeywords={['大学演劇', '学生劇団', group.name]}
+      />
+      <StructuredData
+        type="BreadcrumbList"
+        breadcrumbs={[
+          { name: 'ホーム', url: 'https://gikyokutosyokan.com' },
+          { name: '大学演劇', url: 'https://gikyokutosyokan.com/university-theater' },
+          { name: '劇団一覧', url: 'https://gikyokutosyokan.com/theater-groups' },
+          { name: group.name, url: `https://gikyokutosyokan.com/theater-groups/${group.slug}` },
+        ]}
       />
 
       <div className="px-4 py-6 max-w-3xl mx-auto">
@@ -178,13 +188,8 @@ export default function TheaterGroupDetail({ group, relatedShogekijoGroups }: Pr
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const groups = await prisma.theaterGroup.findMany({
-    select: { slug: true },
-    where: { isActive: true },
-  });
-
   return {
-    paths: groups.map((g) => ({ params: { slug: g.slug } })),
+    paths: [],
     fallback: 'blocking',
   };
 };

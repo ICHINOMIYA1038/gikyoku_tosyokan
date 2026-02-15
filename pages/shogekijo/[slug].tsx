@@ -217,13 +217,8 @@ export default function ShogekijoDetail({ group, relatedStudentGroups }: Props) 
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const groups = await prisma.theaterGroup.findMany({
-    select: { slug: true },
-    where: { isActive: true },
-  });
-
   return {
-    paths: groups.map((g) => ({ params: { slug: g.slug } })),
+    paths: [],
     fallback: 'blocking',
   };
 };
