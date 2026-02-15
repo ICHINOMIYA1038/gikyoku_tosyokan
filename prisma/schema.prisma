@@ -239,6 +239,28 @@ model TheaterGroupUniversity {
   @@map("TheaterGroupUniversity")
 }
 
+// === 演劇ニュース収集（内部用ネタ帳） ===
+
+model TheaterNewsItem {
+  id          Int      @id @default(autoincrement())
+  source      String   // RSSソース名 (natalie, broadwayworld, etc.)
+  sourceUrl   String   @unique // 元記事URL（重複防止）
+  title       String
+  summary     String?  // 記事の要約・description
+  language    String   @default("ja") // ja or en
+  category    String?  // カテゴリタグ
+  publishedAt DateTime // 元記事の公開日時
+  fetchedAt   DateTime @default(now()) // 取得日時
+  used        Boolean  @default(false) // 記事に使用済みか
+  usedInSlug  String?  // 使用した記事のslug
+
+  @@index([publishedAt(sort: Desc)])
+  @@index([used])
+  @@index([source])
+  @@index([language])
+  @@map("TheaterNewsItem")
+}
+
 model Announcement {
   id               Int      @id @default(autoincrement())
   title            String
