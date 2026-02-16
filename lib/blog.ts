@@ -125,6 +125,18 @@ export async function getPostSlugsByLanguage(lang: string): Promise<string[]> {
   return posts.map((p) => p.slug);
 }
 
+export async function getAlternateLanguageSlug(
+  slug: string,
+  currentLang: string
+): Promise<string | null> {
+  const alternateLang = currentLang === 'ja' ? 'en' : 'ja';
+  const post = await prisma.blogPost.findFirst({
+    where: { slug, language: alternateLang, published: true },
+    select: { slug: true },
+  });
+  return post ? post.slug : null;
+}
+
 export async function getAllTags(): Promise<string[]> {
   const posts = await prisma.blogPost.findMany({
     where: { published: true },
