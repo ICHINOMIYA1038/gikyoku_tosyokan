@@ -3,6 +3,7 @@ import DropBox from "@/components/DropBox";
 import PostCardList from "@/components/PostCardList";
 import Pagination from "@/components/Pagination";
 import LoadingIndicator from "@/components/LoadingIndicator";
+import ShareSearchButton from "@/components/ShareSearchButton";
 
 interface SearchResultsProps {
     data: any;
@@ -39,9 +40,12 @@ const SearchResults: React.FC<SearchResultsProps> = ({
                             <>
                                 {data.searchResults.length !== 0 ? (
                                     <>
-                                        <div className="flex justify-between items-center mb-4">
-                                            <div className="text-lg font-semibold text-gray-700">
-                                                検索結果: <span className="text-green-700">{data.pagination?.total || 0}</span> 件
+                                        <div className="flex justify-between items-center mb-4 flex-wrap gap-2">
+                                            <div className="flex items-center gap-3 flex-wrap">
+                                                <div className="text-lg font-semibold text-gray-700">
+                                                    検索結果: <span className="text-green-700">{data.pagination?.total || 0}</span> 件
+                                                </div>
+                                                <ShareSearchButton />
                                             </div>
                                             <div className="text-sm text-gray-500">
                                                 {data.pagination?.current_page || 1} / {data.pagination?.total_pages || 1} ページ

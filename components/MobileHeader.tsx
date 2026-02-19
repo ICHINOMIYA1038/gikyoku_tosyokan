@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useState } from "react";
 import Link from "next/link";
-import { FaBars, FaTimes } from "react-icons/fa";
+import { FaBars, FaTimes, FaHeart } from "react-icons/fa";
 
 export default function MobileHeader() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -16,6 +16,7 @@ export default function MobileHeader() {
 
   const menuItems = [
     { href: "/", label: "検索する" },
+    { href: "/favorites", label: "お気に入り" },
     { href: "/university-theater", label: "大学演劇" },
     { href: "/shogekijo", label: "小劇場" },
     { href: "/support/about", label: "概要" },

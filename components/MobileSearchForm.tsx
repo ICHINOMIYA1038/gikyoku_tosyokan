@@ -167,6 +167,21 @@ export default function MobileSearchForm({
     setData([]);
     const query = new URLSearchParams(searchParams).toString();
 
+    // URLバーにパラメータを反映
+    const urlParams = new URLSearchParams();
+    if (keyword) urlParams.set("keyword", keyword);
+    if (minTotalCount) urlParams.set("minTotalCount", minTotalCount);
+    if (maxTotalCount) urlParams.set("maxTotalCount", maxTotalCount);
+    if (minMaleCount) urlParams.set("minMaleCount", minMaleCount);
+    if (maxMaleCount) urlParams.set("maxMaleCount", maxMaleCount);
+    if (minFemaleCount) urlParams.set("minFemaleCount", minFemaleCount);
+    if (maxFemaleCount) urlParams.set("maxFemaleCount", maxFemaleCount);
+    if (minPlaytime) urlParams.set("minPlaytime", minPlaytime);
+    if (maxPlaytime) urlParams.set("maxPlaytime", maxPlaytime);
+    if (selectedTags.length > 0) urlParams.set("categories", selectedTags.join(","));
+    const urlQuery = urlParams.toString();
+    router.push(urlQuery ? `/?${urlQuery}` : "/", undefined, { shallow: true });
+
     try {
       const response = await fetch(`/api/search?${query}`);
       if (!response.ok) {

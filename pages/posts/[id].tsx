@@ -18,7 +18,9 @@ import Seo from "@/components/seo";
 import StructuredData from "@/components/StructuredData";
 import OtherPosts from "@/components/Widget/OtherPosts";
 import { useState, useCallback } from "react";
-import { FaStar, FaCommentDots, FaShareAlt, FaBook, FaExternalLinkAlt, FaTheaterMasks } from "react-icons/fa";
+import { FaStar, FaCommentDots, FaShareAlt, FaBook, FaExternalLinkAlt, FaTheaterMasks, FaHeart, FaBalanceScale } from "react-icons/fa";
+import FavoriteButton from "@/components/FavoriteButton";
+import CompareButton from "@/components/CompareButton";
 import { prisma } from "@/lib/prisma";
 
 // メモ化されたコンポーネント
@@ -380,6 +382,12 @@ function PostPage({ post }: any) {
 
               {/* フローティングアクションボタン群 */}
               <div className="flex flex-col gap-3">
+                {/* お気に入りボタン */}
+                <FavoriteButton postId={post.id} variant="floating" />
+
+                {/* 比較ボタン */}
+                <CompareButton postId={post.id} variant="floating" />
+
                 {/* 読むボタン */}
                 {hasReadLinks && (
                   <button

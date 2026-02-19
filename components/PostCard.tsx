@@ -4,6 +4,7 @@ import { Post as PostType } from "@prisma/client";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { FaClock, FaUsers, FaMale, FaFemale, FaTag, FaPen, FaTheaterMasks } from "react-icons/fa";
+import FavoriteButton from "@/components/FavoriteButton";
 
 type PostPageProps = {
   post: PostType & { author: { id: number; name: string } };
@@ -32,6 +33,10 @@ const PostCard: React.FC<PostPageProps> = ({ post }: any) => {
                 <span className="text-xs font-serif opacity-70">No Image</span>
               </div>
             )}
+            {/* お気に入りボタン（右上） */}
+            <div className="absolute top-3 right-3 z-10">
+              <FavoriteButton postId={post.id} size="sm" />
+            </div>
              {/* カテゴリーバッジ（左上） */}
              {primaryCategory && (
               <div className="absolute top-3 left-3 flex gap-1 z-10">
