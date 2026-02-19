@@ -1,11 +1,14 @@
 import { GetStaticProps, GetStaticPaths } from 'next';
+import Head from 'next/head';
 import Link from 'next/link';
 import Layout from '@/components/Layout';
 import Seo from '@/components/seo';
 import StructuredData from '@/components/StructuredData';
 import SocialLinks from '@/components/SocialLinks';
 import { prisma } from '@/lib/prisma';
+import { generateTheaterGroupDescription } from '@/lib/seoUtils';
 import { FaUniversity, FaUsers, FaCalendarAlt, FaChevronRight, FaBook, FaTheaterMasks, FaMapMarkerAlt } from 'react-icons/fa';
+import PostCardSmall from '@/components/PostCardSmall';
 
 const groupTypeLabels: Record<string, string> = {
   STUDENT: '学生劇団',
@@ -31,14 +34,58 @@ export default function TheaterGroupDetail({ group, relatedShogekijoGroups }: Pr
   if (!group) return null;
 
   const prefecture = group.universities?.[0]?.university.prefecture || '';
+  const typeLabel = groupTypeLabels[group.groupType] || group.groupType;
+  const universityNames = group.universities?.map((u: any) => u.university.name) || [];
+
+  const pageDescription = group.description
+    || generateTheaterGroupDescription(group)
+    || `${group.name}の情報ページ`;
+
+  const pageKeywords = [
+    group.name,
+    typeLabel,
+    '大学演劇',
+    '学生劇団',
+    ...(prefecture ? [prefecture] : []),
+    ...universityNames,
+  ];
+
+  // JSON-LD: PerformingGroup
+  const sameAs: string[] = [];
+  if (group.website) sameAs.push(group.website);
+  if (group.twitter) sameAs.push(`https://x.com/${group.twitter}`);
+  if (group.instagram) sameAs.push(`https://www.instagram.com/${group.instagram}`);
+  if (group.corich) sameAs.push(group.corich);
+
+  const performingGroupJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'PerformingGroup',
+    name: group.name,
+    url: `https://gikyokutosyokan.com/theater-groups/${group.slug}`,
+    ...(group.foundedYear && { foundingDate: String(group.foundedYear) }),
+    ...(prefecture && { areaServed: prefecture }),
+    ...(group.description && { description: group.description }),
+    ...(sameAs.length > 0 && { sameAs }),
+  };
+
+  const breadcrumbJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'ホーム', item: 'https://gikyokutosyokan.com' },
+      { '@type': 'ListItem', position: 2, name: '大学演劇', item: 'https://gikyokutosyokan.com/university-theater' },
+      { '@type': 'ListItem', position: 3, name: '劇団一覧', item: 'https://gikyokutosyokan.com/theater-groups' },
+      { '@type': 'ListItem', position: 4, name: group.name },
+    ],
+  };
 
   return (
     <Layout>
       <Seo
         pageTitle={group.name}
-        pageDescription={group.description || `${group.name}の情報ページ`}
+        pageDescription={pageDescription}
         pagePath={`/theater-groups/${group.slug}`}
-        pageKeywords={['大学演劇', '学生劇団', group.name]}
+        pageKeywords={pageKeywords}
       />
       <StructuredData
         type="BreadcrumbList"
@@ -49,6 +96,12 @@ export default function TheaterGroupDetail({ group, relatedShogekijoGroups }: Pr
           { name: group.name, url: `https://gikyokutosyokan.com/theater-groups/${group.slug}` },
         ]}
       />
+      <Head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(performingGroupJsonLd) }}
+        />
+      </Head>
 
       <div className="px-4 py-6 max-w-3xl mx-auto">
         {/* パンくず */}
@@ -133,6 +186,21 @@ export default function TheaterGroupDetail({ group, relatedShogekijoGroups }: Pr
           </section>
         )}
 
+        {/* 上演作品 */}
+        {group.posts && group.posts.length > 0 && (
+          <section className="bg-white rounded-xl border border-gray-100 shadow-sm p-5 mb-4">
+            <h2 className="font-serif font-bold text-lg text-gray-800 mb-3 flex items-center gap-2">
+              <FaBook className="text-green-500" />
+              上演作品
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {group.posts.map((ptg: any) => (
+                <PostCardSmall key={ptg.post.id} post={ptg.post} />
+              ))}
+            </div>
+          </section>
+        )}
+
         {/* 関連ブログ記事 */}
         {group.blogPostSlug && (
           <section className="bg-white rounded-xl border border-gray-100 shadow-sm p-5 mb-4">
@@ -209,6 +277,27 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
               universityType: true,
               prefecture: true,
               region: true,
+            },
+          },
+        },
+      },
+      posts: {
+        include: {
+          post: {
+            select: {
+              id: true,
+              title: true,
+              image_url: true,
+              playtime: true,
+              totalNumber: true,
+              man: true,
+              woman: true,
+              author: {
+                select: {
+                  id: true,
+                  name: true,
+                },
+              },
             },
           },
         },

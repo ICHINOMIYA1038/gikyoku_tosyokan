@@ -1,20 +1,23 @@
 import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faReply, faTimes, faInfoCircle, faThumbsUp, faTheaterMasks, faCommentDots, faQuestionCircle, faPaperPlane } from "@fortawesome/free-solid-svg-icons";
+import { faReply, faTimes, faInfoCircle, faThumbsUp, faTheaterMasks, faCommentDots, faQuestionCircle, faPaperPlane, faStar } from "@fortawesome/free-solid-svg-icons";
 
 const COMMENT_TYPES = [
   { value: "感想", label: "感想", icon: faCommentDots, color: "blue", bg: "bg-gray-100", text: "text-gray-600", border: "border-gray-200" },
   { value: "上演報告", label: "上演報告", icon: faTheaterMasks, color: "green", bg: "bg-amber-50", text: "text-amber-700", border: "border-amber-200" },
+  { value: "レビュー", label: "レビュー", icon: faStar, color: "purple", bg: "bg-purple-50", text: "text-purple-700", border: "border-purple-200" },
   { value: "質問", label: "質問", icon: faQuestionCircle, color: "orange", bg: "bg-sky-50", text: "text-sky-700", border: "border-sky-200" },
 ];
 
 const COMMENT_TYPE_STYLES: Record<string, { bg: string; text: string; border: string }> = {
   "感想": { bg: "bg-blue-50", text: "text-blue-700", border: "border-blue-200" },
   "上演報告": { bg: "bg-green-50", text: "text-green-700", border: "border-green-200" },
+  "レビュー": { bg: "bg-purple-50", text: "text-purple-700", border: "border-purple-200" },
   "質問": { bg: "bg-orange-50", text: "text-orange-700", border: "border-orange-200" },
 };
 
-const MAX_CHARS = 500;
+const MAX_CHARS_DEFAULT = 500;
+const MAX_CHARS_REVIEW = 1000;
 const INITIAL_DISPLAY_COUNT = 3;
 
 const Comments = ({ comments: initialComments, postid, inline = false }: any) => {
@@ -86,7 +89,8 @@ const Comments = ({ comments: initialComments, postid, inline = false }: any) =>
   const handleCommentSubmit = async () => {
     const name = authorName.trim() || "名無しさん";
     if (!newComment.trim()) return;
-    if (newComment.length > MAX_CHARS) return;
+    const maxChars = selectedType === "レビュー" ? MAX_CHARS_REVIEW : MAX_CHARS_DEFAULT;
+    if (newComment.length > maxChars) return;
 
     setIsSendingComment(true);
     setCommentResult("");
@@ -301,12 +305,12 @@ const Comments = ({ comments: initialComments, postid, inline = false }: any) =>
               className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-300 focus:border-pink-300 transition min-h-[120px] text-sm resize-y"
               value={newComment}
               onChange={(e) => setNewComment(e.target.value)}
-              maxLength={MAX_CHARS}
+              maxLength={selectedType === "レビュー" ? MAX_CHARS_REVIEW : MAX_CHARS_DEFAULT}
             />
             <div className={`absolute bottom-2 right-3 text-xs ${
-              newComment.length > MAX_CHARS * 0.9 ? "text-red-500" : "text-gray-400"
+              newComment.length > (selectedType === "レビュー" ? MAX_CHARS_REVIEW : MAX_CHARS_DEFAULT) * 0.9 ? "text-red-500" : "text-gray-400"
             }`}>
-              {newComment.length}/{MAX_CHARS}
+              {newComment.length}/{selectedType === "レビュー" ? MAX_CHARS_REVIEW : MAX_CHARS_DEFAULT}
             </div>
           </div>
 
@@ -379,7 +383,11 @@ const Comments = ({ comments: initialComments, postid, inline = false }: any) =>
           {displayedComments.map((comment: any) => (
             <div key={comment.id} className="comment-thread">
               {/* 親コメント */}
-              <div className="bg-white rounded-xl p-4 border border-gray-200 hover:border-gray-300 transition">
+              <div className={`rounded-xl p-4 border hover:border-gray-300 transition ${
+                comment.commentType === "レビュー"
+                  ? "bg-purple-50/50 border-purple-200 border-2"
+                  : "bg-white border-gray-200"
+              }`}>
                 {!comment.deleted ? (
                   <>
                     {/* タイプタグ */}

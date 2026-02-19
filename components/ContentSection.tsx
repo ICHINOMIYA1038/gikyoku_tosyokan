@@ -11,6 +11,7 @@ interface ContentSectionProps {
     posts: any;
     authors: any;
     categories: any;
+    trendingPosts?: any[];
 }
 
 const getPopularPosts = async (): Promise<any> => {
@@ -18,7 +19,7 @@ const getPopularPosts = async (): Promise<any> => {
   return res.json();
 };
 
-const ContentSection: React.FC<ContentSectionProps> = ({ posts, authors, categories }) => {
+const ContentSection: React.FC<ContentSectionProps> = ({ posts, authors, categories, trendingPosts }) => {
     const router = useRouter();
     
     const {
@@ -51,6 +52,23 @@ const ContentSection: React.FC<ContentSectionProps> = ({ posts, authors, categor
                         人気作品、作者、カテゴリーをチェック
                     </p>
                 </div>
+
+                {/* 今よく見られている作品 */}
+                {trendingPosts && trendingPosts.length > 0 && (
+                    <div className="mb-12">
+                        <div className="bg-white rounded-xl shadow-lg p-6">
+                            <h3 className="text-2xl font-bold text-theater-neutral-900 flex items-center gap-2 mb-6">
+                                <FaFire className="text-orange-500" />
+                                今よく見られている作品
+                            </h3>
+                            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
+                                {trendingPosts.map((post: any) => (
+                                    <PostCardSmall key={post.id} post={post} />
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                )}
 
                 {/* メインコンテンツグリッド */}
                 <div className="grid lg:grid-cols-3 gap-8 mb-12">

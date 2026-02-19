@@ -50,7 +50,10 @@ model Post {
   averageRating Float?
   ratings   Rating[]
   author              Author          @relation(fields: [author_id], references: [id])
+  kangeki_url         String?
   categories          Category[]      @relation("PostCategory")
+  theaterGroups       PostTheaterGroup[]
+  awards              PostAward[]
 
   @@index([title])
   @@index([synopsis])
@@ -215,6 +218,7 @@ model TheaterGroup {
   isActive      Boolean                  @default(true)
   blogPostSlug  String?
   universities  TheaterGroupUniversity[]
+  posts         PostTheaterGroup[]
   createdAt     DateTime                 @default(now())
   updatedAt     DateTime                 @updatedAt
 
@@ -279,4 +283,31 @@ model Announcement {
   @@index([performanceDate])
   @@index([views(sort: Desc)])
   @@map("Announcement")
+}
+
+model PostTheaterGroup {
+  id              Int          @id @default(autoincrement())
+  postId          Int
+  theaterGroupId  Int
+  post            Post         @relation(fields: [postId], references: [id])
+  theaterGroup    TheaterGroup @relation(fields: [theaterGroupId], references: [id])
+
+  @@unique([postId, theaterGroupId])
+  @@index([postId])
+  @@index([theaterGroupId])
+  @@map("PostTheaterGroup")
+}
+
+model PostAward {
+  id         Int    @id @default(autoincrement())
+  postId     Int
+  awardName  String
+  awardYear  Int
+  awardType  String @default("受賞")
+  post       Post   @relation(fields: [postId], references: [id])
+
+  @@unique([postId, awardName, awardYear])
+  @@index([postId])
+  @@index([awardName])
+  @@map("PostAward")
 }

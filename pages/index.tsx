@@ -10,8 +10,9 @@ import ContentSection from "@/components/ContentSection";
 import SearchResults from "@/components/SearchResults";
 import FAQ from "@/components/FAQ";
 import Link from "next/link";
+import LatestBlogPosts from "@/components/LatestBlogPosts";
 
-export default function Home({ news, authors, posts, categories }: any) {
+export default function Home({ news, authors, posts, categories, blogPosts, trendingPosts }: any) {
   const [data, setData] = useState<any>(null); // 取得したデータを格納
   const [page, setPage] = useState(1);
   const [sort_by, setSortIndex] = useState<number>(1);
@@ -95,6 +96,9 @@ export default function Home({ news, authors, posts, categories }: any) {
           </div>
         </div>
         
+        {/* 最新の記事 */}
+        <LatestBlogPosts posts={blogPosts} />
+
         {/* ガイドセクション */}
         <section className="bg-gray-50 py-12 px-4">
           <div className="max-w-6xl mx-auto">
@@ -183,7 +187,7 @@ export default function Home({ news, authors, posts, categories }: any) {
           </div>
         </section>
 
-        <ContentSection posts={posts} authors={authors} categories={categories} />
+        <ContentSection posts={posts} authors={authors} categories={categories} trendingPosts={trendingPosts} />
         
         {/* FAQセクション */}
         <FAQ items={faqItems} />
@@ -197,10 +201,12 @@ export async function getStaticProps() {
   let authors = [];
   let posts = [];
   let categories = [];
+  let blogPosts: any[] = [];
+  let trendingPosts: any[] = [];
 
   try {
     // 並列でデータを取得（最適化）
-    const [newsData, authorsData, postsData, categoriesData] = await Promise.all([
+    const [newsData, authorsData, postsData, categoriesData, blogData, trendingData] = await Promise.all([
       // ニュースは最新10件のみ
       prisma.news.findMany({
         take: 10,
@@ -261,6 +267,28 @@ export async function getStaticProps() {
         },
         orderBy: { name: 'asc' },
       }),
+      // ブログ記事（最新3件）
+      prisma.blogPost.findMany({
+        where: { published: true, language: "ja" },
+        take: 3,
+        orderBy: { publishedAt: 'desc' },
+        select: {
+          slug: true,
+          title: true,
+          description: true,
+          publishedAt: true,
+          tags: true,
+        },
+      }),
+      // 注目作品（直近7日間のアクセス数ベース上位5作品）
+      prisma.$queryRaw`
+        SELECT a."postId", COUNT(*) as access_count
+        FROM "Access" a
+        WHERE a."date" >= CURRENT_DATE - INTERVAL '7 days'
+        GROUP BY a."postId"
+        ORDER BY access_count DESC
+        LIMIT 5
+      ` as Promise<Array<{ postId: number; access_count: bigint }>>,
     ]);
 
     // 日付データの変換
@@ -276,14 +304,54 @@ export async function getStaticProps() {
     authors = authorsData;
     posts = postsData;
     categories = categoriesData;
+
+    // ブログ記事の日付フォーマット
+    blogPosts = blogData.map((bp) => ({
+      ...bp,
+      publishedAt: bp.publishedAt.toLocaleDateString("ja-JP", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      }),
+    }));
+
+    // 注目作品の詳細取得
+    const trendingIds = (trendingData as Array<{ postId: number }>).map((t) => t.postId);
+    if (trendingIds.length > 0) {
+      const trendingPostsData = await prisma.post.findMany({
+        where: { id: { in: trendingIds } },
+        select: {
+          id: true,
+          title: true,
+          image_url: true,
+          playtime: true,
+          totalNumber: true,
+          man: true,
+          woman: true,
+          averageRating: true,
+          author: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+        },
+      });
+      // 元の順序（アクセス数順）を維持
+      trendingPosts = trendingIds
+        .map((id) => trendingPostsData.find((p) => p.id === id))
+        .filter(Boolean);
+    }
   } catch (error) {
     console.error("Error fetching data: ", error);
-    return { 
-      props: { 
+    return {
+      props: {
         news: [],
         authors: [],
         posts: [],
         categories: [],
+        blogPosts: [],
+        trendingPosts: [],
       },
     };
   }
@@ -294,6 +362,8 @@ export async function getStaticProps() {
       authors,
       posts,
       categories,
+      blogPosts,
+      trendingPosts,
     },
   };
 }

@@ -1,5 +1,6 @@
 import { GetStaticProps } from 'next';
 import { useState, useMemo } from 'react';
+import Head from 'next/head';
 import Link from 'next/link';
 import Layout from '@/components/Layout';
 import Seo from '@/components/seo';
@@ -40,6 +41,29 @@ export default function TheaterGroupsIndex({ theaterGroups, regions, prefectures
     });
   }, [theaterGroups, search, selectedRegion, selectedPrefecture, selectedType]);
 
+  const itemListJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: '大学演劇 劇団一覧',
+    numberOfItems: theaterGroups.length,
+    itemListElement: theaterGroups.slice(0, 50).map((g: any, i: number) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: g.name,
+      url: `https://gikyokutosyokan.com/theater-groups/${g.slug}`,
+    })),
+  };
+
+  const breadcrumbJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'ホーム', item: 'https://gikyokutosyokan.com' },
+      { '@type': 'ListItem', position: 2, name: '大学演劇', item: 'https://gikyokutosyokan.com/university-theater' },
+      { '@type': 'ListItem', position: 3, name: '劇団一覧' },
+    ],
+  };
+
   return (
     <Layout>
       <Seo
@@ -48,6 +72,16 @@ export default function TheaterGroupsIndex({ theaterGroups, regions, prefectures
         pagePath="/theater-groups"
         pageKeywords={['大学演劇', '学生劇団', '演劇サークル', '劇団一覧']}
       />
+      <Head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListJsonLd) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+        />
+      </Head>
 
       <div className="px-4 py-6">
         {/* パンくず */}

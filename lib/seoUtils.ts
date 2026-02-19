@@ -119,6 +119,51 @@ export const generateAuthorDescription = (author: any): string => {
  * @param separator 区切り文字
  * @returns SEOタイトル
  */
+/**
+ * 劇団用のメタディスクリプション生成
+ * theater-groups/[slug]とshogekijo/[slug]の両方で使用可能
+ */
+export const generateTheaterGroupDescription = (group: any): string => {
+  const parts: string[] = [];
+
+  // 劇団名 + 種別
+  const typeLabels: Record<string, string> = {
+    STUDENT: '学生劇団',
+    INTERCOLLEGE: 'インカレ劇団',
+    ACADEMIC: '大学演劇学科',
+    AMATEUR: '社会人劇団',
+    PROFESSIONAL: 'プロ劇団',
+    YOUTH: 'ユース劇団',
+  };
+  const typeLabel = typeLabels[group.groupType] || '劇団';
+  parts.push(`${group.name}は${typeLabel}`);
+
+  // 都道府県
+  const prefecture = group.prefecture || group.universities?.[0]?.university?.prefecture;
+  if (prefecture) {
+    parts.push(`${prefecture}を拠点に活動`);
+  }
+
+  // 設立年
+  if (group.foundedYear) {
+    parts.push(`${group.foundedYear}年設立`);
+  }
+
+  // 部員数
+  if (group.memberCount) {
+    parts.push(`部員数${group.memberCount}名`);
+  }
+
+  let result = parts.join('、') + '。';
+
+  // description概要
+  if (group.description) {
+    result += truncateText(group.description, 80);
+  }
+
+  return result;
+};
+
 export const generateSeoTitle = (
   pageTitle?: string,
   siteName: string = "戯曲図書館",

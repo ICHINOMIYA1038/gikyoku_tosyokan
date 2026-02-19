@@ -18,7 +18,7 @@ import Seo from "@/components/seo";
 import StructuredData from "@/components/StructuredData";
 import OtherPosts from "@/components/Widget/OtherPosts";
 import { useState, useCallback } from "react";
-import { FaStar, FaCommentDots, FaShareAlt, FaBook, FaExternalLinkAlt, FaTheaterMasks, FaHeart, FaBalanceScale } from "react-icons/fa";
+import { FaStar, FaCommentDots, FaShareAlt, FaBook, FaExternalLinkAlt, FaTheaterMasks, FaHeart, FaBalanceScale, FaTrophy } from "react-icons/fa";
 import FavoriteButton from "@/components/FavoriteButton";
 import CompareButton from "@/components/CompareButton";
 import { prisma } from "@/lib/prisma";
@@ -96,7 +96,8 @@ function PostPage({ post }: any) {
   // Amazonリンクと無料リンクの存在確認
   const hasAmazonLink = !!post.amazon_text_url;
   const hasFreeLink = !!post.link_to_plot;
-  const hasReadLinks = hasAmazonLink || hasFreeLink;
+  const hasKangekiLink = !!post.kangeki_url;
+  const hasReadLinks = hasAmazonLink || hasFreeLink || hasKangekiLink;
   const commentCount = post.comments?.length || 0;
 
   return (
@@ -197,6 +198,21 @@ function PostPage({ post }: any) {
                 {/* 1. ヒーロー */}
                 <MemoizedPostHero post={post} />
 
+                {/* 受賞歴バッジ */}
+                {post.awards && post.awards.length > 0 && (
+                  <div className="mt-4 flex flex-wrap justify-center gap-2">
+                    {post.awards.map((award: any, idx: number) => (
+                      <span
+                        key={idx}
+                        className="inline-flex items-center gap-1 px-3 py-1.5 bg-amber-50 border border-amber-200 rounded-full text-sm font-medium text-amber-800"
+                      >
+                        <FaTrophy className="text-amber-500 text-xs" />
+                        {award.awardName} {award.awardType}（{award.awardYear}年）
+                      </span>
+                    ))}
+                  </div>
+                )}
+
                 {/* 2. 読むボタンエリア */}
                 {(hasAmazonLink || hasFreeLink) && (
                   <div className="mt-6 flex flex-col sm:flex-row justify-center gap-4">
@@ -222,6 +238,19 @@ function PostPage({ post }: any) {
                     >
                       <FaBook className="mr-2" />
                       この戯曲を無料で読む
+                      <FaExternalLinkAlt className="ml-2 text-sm" />
+                    </a>
+                  )}
+
+                  {hasKangekiLink && (
+                    <a
+                      href={post.kangeki_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-center px-6 py-3 rounded-lg shadow-md font-bold text-lg w-full sm:w-auto bg-red-600 hover:bg-red-700 text-white transition-all hover:-translate-y-0.5"
+                    >
+                      <FaTheaterMasks className="mr-2" />
+                      観劇三昧で観る
                       <FaExternalLinkAlt className="ml-2 text-sm" />
                     </a>
                   )}
@@ -281,7 +310,48 @@ function PostPage({ post }: any) {
                   <MemoizedPostDetails post={post} />
                 </div>
 
-                {/* 6. 関連作品 */}
+                {/* 6. この脚本を上演した劇団 */}
+                {post.theaterGroups && post.theaterGroups.length > 0 && (
+                  <div className="mt-6">
+                    <div className="bg-white rounded-xl shadow-sm p-6 md:p-8 border border-gray-100">
+                      <h2 className="text-xl md:text-2xl font-bold mb-4 text-center text-gray-800 font-serif flex items-center justify-center gap-2">
+                        <FaTheaterMasks className="text-pink-500" />
+                        この脚本を上演した劇団
+                      </h2>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        {post.theaterGroups.map((ptg: any) => {
+                          const group = ptg.theaterGroup;
+                          const typeLabels: Record<string, string> = {
+                            STUDENT: '学生劇団', INTERCOLLEGE: 'インカレ', ACADEMIC: '大学学科',
+                            AMATEUR: '社会人', PROFESSIONAL: 'プロ', YOUTH: 'ユース',
+                          };
+                          return (
+                            <Link
+                              key={group.id}
+                              href={`/theater-groups/${group.slug}`}
+                              className="flex items-center gap-3 p-3 rounded-lg border border-gray-100 hover:border-pink-200 hover:bg-pink-50/50 transition-all group"
+                            >
+                              <div className="w-10 h-10 bg-pink-100 rounded-full flex items-center justify-center flex-shrink-0">
+                                <FaTheaterMasks className="text-pink-500" />
+                              </div>
+                              <div className="min-w-0">
+                                <p className="font-bold text-sm text-gray-800 group-hover:text-pink-700 truncate">
+                                  {group.name}
+                                </p>
+                                <div className="flex items-center gap-2 text-xs text-gray-500">
+                                  <span>{typeLabels[group.groupType] || group.groupType}</span>
+                                  {group.prefecture && <span>{group.prefecture}</span>}
+                                </div>
+                              </div>
+                            </Link>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* 7. 関連作品 */}
                 <div className="mt-6">
                   <div className="bg-white rounded-xl shadow-sm p-6 md:p-8 lg:p-10 border border-gray-100">
                     <h2 className="text-xl md:text-2xl font-bold mb-6 text-center text-gray-800 font-serif">
@@ -352,6 +422,18 @@ function PostPage({ post }: any) {
                     >
                       <FaBook className="mr-3 text-gray-400" />
                       無料で読む
+                    </a>
+                  )}
+
+                  {hasKangekiLink && (
+                    <a
+                      href={post.kangeki_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center px-4 py-3 rounded-lg text-gray-800 hover:bg-gray-50 font-bold text-sm transition-colors border border-gray-200"
+                    >
+                      <FaTheaterMasks className="mr-3 text-red-400" />
+                      観劇三昧で観る
                     </a>
                   )}
                 </div>
@@ -455,6 +537,7 @@ export async function getServerSideProps(context: any) {
         website3: true,
         ISBN_13: true,
         buy_link: true,
+        kangeki_url: true,
         author_id: true,
         man: true,
         woman: true,
@@ -500,6 +583,27 @@ export async function getServerSideProps(context: any) {
           orderBy: {
             date: 'desc'
           },
+        },
+        theaterGroups: {
+          select: {
+            theaterGroup: {
+              select: {
+                id: true,
+                name: true,
+                slug: true,
+                groupType: true,
+                prefecture: true,
+              }
+            }
+          }
+        },
+        awards: {
+          select: {
+            awardName: true,
+            awardYear: true,
+            awardType: true,
+          },
+          orderBy: { awardYear: 'asc' }
         },
         _count: {
           select: {

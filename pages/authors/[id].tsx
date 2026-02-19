@@ -1,26 +1,83 @@
 import * as React from "react";
+import Head from "next/head";
 import Link from "next/link";
-import { PrismaClient, Author as AuthorType } from "@prisma/client";
 import Layout from "@/components/Layout";
 import PostCardSmall from "@/components/PostCardSmall";
 import Seo from "@/components/seo";
 import LinkCard from "@/components/LinkCard";
 import CustomMarkdown from "@/components/CustomMarkdown";
-import { FaUser, FaUsers, FaGlobe, FaBook, FaTheaterMasks, FaExternalLinkAlt } from "react-icons/fa";
-const prisma = new PrismaClient();
+import { prisma } from "@/lib/prisma";
+import { FaUser, FaUsers, FaGlobe, FaBook, FaTheaterMasks, FaExternalLinkAlt, FaChevronRight } from "react-icons/fa";
 
 function AuthorPage({ author }: any) {
   const postCount = author.posts?.length || 0;
 
+  const pageKeywords = [
+    author.name,
+    '脚本家',
+    '劇作家',
+    '戯曲',
+    ...(author.group ? [author.group] : []),
+  ];
+
+  // JSON-LD: Person
+  const personJsonLd: any = {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    name: author.name,
+    url: `https://gikyokutosyokan.com/authors/${author.id}`,
+  };
+  if (author.website) {
+    personJsonLd.sameAs = [author.website];
+  }
+  if (author.group) {
+    personJsonLd.affiliation = { '@type': 'Organization', name: author.group };
+  }
+  if (author.profile && author.profile !== '詳細がありません。') {
+    personJsonLd.description = author.profile.substring(0, 200);
+  }
+
+  const breadcrumbJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'ホーム', item: 'https://gikyokutosyokan.com' },
+      { '@type': 'ListItem', position: 2, name: '作者一覧', item: 'https://gikyokutosyokan.com/authors' },
+      { '@type': 'ListItem', position: 3, name: author.name },
+    ],
+  };
+
   return (
     <Layout>
-      <Seo 
+      <Seo
         pageTitle={`${author.name}の戯曲一覧 - 戯曲図書館`}
         pageDescription={`${author.name}${author.group ? `（${author.group}）` : ''}の演劇脚本・戯曲を${postCount}作品掲載。${author.profile ? author.profile.substring(0, 100) : '文化祭・学園祭・部活動に最適な脚本をお探しの方へ。'}`}
         pagePath={`/authors/${author.id}`}
+        pageKeywords={pageKeywords}
       />
-      
+      <Head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+        />
+      </Head>
+
       <div className="min-h-screen bg-gradient-to-b from-theater-neutral-50 to-white">
+        {/* パンくず */}
+        <div className="max-w-6xl mx-auto px-4 pt-4">
+          <nav className="flex items-center gap-1 text-xs text-gray-500 flex-wrap">
+            <Link href="/" className="hover:text-pink-700">ホーム</Link>
+            <FaChevronRight className="text-[8px]" />
+            <Link href="/authors" className="hover:text-pink-700">作者一覧</Link>
+            <FaChevronRight className="text-[8px]" />
+            <span className="text-gray-800">{author.name}</span>
+          </nav>
+        </div>
+
         {/* ヒーローセクション */}
         <div className="bg-gradient-to-r from-theater-secondary-100 to-theater-secondary-50 py-12 px-4">
           <div className="max-w-6xl mx-auto">
