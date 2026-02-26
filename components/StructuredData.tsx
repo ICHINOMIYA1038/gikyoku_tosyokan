@@ -10,6 +10,12 @@ interface FAQItem {
   answer: string;
 }
 
+interface ReviewInfo {
+  author: string;
+  content: string;
+  date?: string;
+}
+
 interface RatingInfo {
   ratingValue: number;
   ratingCount: number;
@@ -32,6 +38,7 @@ interface PlayInfo {
     total?: number;
   };
   rating?: RatingInfo;
+  reviews?: ReviewInfo[];
   categories?: string[];
   datePublished?: string;
 }
@@ -241,6 +248,19 @@ const StructuredData = ({
             "worstRating": "1",
             "ratingCount": playInfo.rating.ratingCount
           };
+        }
+
+        // レビュー（最大5件）
+        if (playInfo.reviews && playInfo.reviews.length > 0) {
+          playData["review"] = playInfo.reviews.slice(0, 5).map((review) => ({
+            "@type": "Review",
+            "author": {
+              "@type": "Person",
+              "name": review.author
+            },
+            "reviewBody": review.content,
+            ...(review.date ? { "datePublished": review.date } : {})
+          }));
         }
 
         // 公開日

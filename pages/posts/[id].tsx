@@ -100,6 +100,16 @@ function PostPage({ post }: any) {
   const hasReadLinks = hasAmazonLink || hasFreeLink || hasKangekiLink;
   const commentCount = post.comments?.length || 0;
 
+  // レビュー型コメントを構造化データ用に抽出
+  const reviewComments = (post.comments || [])
+    .filter((c: any) => c.commentType === "レビュー" && !c.deleted && c.content)
+    .slice(0, 5)
+    .map((c: any) => ({
+      author: c.author || "名無しさん",
+      content: c.content.substring(0, 200),
+      date: c.date ? c.date.split(" ")[0]?.replace(/\//g, "-") : undefined,
+    }));
+
   return (
     <>
       <Layout>
@@ -179,6 +189,7 @@ function PostPage({ post }: any) {
               ratingValue: post.averageRating,
               ratingCount: post._count.ratings
             } : undefined,
+            reviews: reviewComments.length > 0 ? reviewComments : undefined,
             categories: post.categories?.map((cat: any) => cat.name)
           }}
         />
@@ -300,7 +311,7 @@ function PostPage({ post }: any) {
                 <div className="mt-6">
                   <div className="bg-pink-50/60 rounded-xl shadow-sm p-4 md:p-6 border border-pink-100">
                     {post.comments && (
-                      <MemoizedComments key={post.id} comments={post.comments} postid={post.id} inline={true} />
+                      <MemoizedComments key={post.id} comments={post.comments} postid={post.id} postTitle={post.title} inline={true} />
                     )}
                   </div>
                 </div>
@@ -326,24 +337,45 @@ function PostPage({ post }: any) {
                             AMATEUR: '社会人', PROFESSIONAL: 'プロ', YOUTH: 'ユース',
                           };
                           return (
-                            <Link
+                            <div
                               key={group.id}
-                              href={`/theater-groups/${group.slug}`}
-                              className="flex items-center gap-3 p-3 rounded-lg border border-gray-100 hover:border-pink-200 hover:bg-pink-50/50 transition-all group"
+                              className="p-3 rounded-lg border border-gray-100 hover:border-pink-200 hover:bg-pink-50/50 transition-all"
                             >
-                              <div className="w-10 h-10 bg-pink-100 rounded-full flex items-center justify-center flex-shrink-0">
-                                <FaTheaterMasks className="text-pink-500" />
-                              </div>
-                              <div className="min-w-0">
-                                <p className="font-bold text-sm text-gray-800 group-hover:text-pink-700 truncate">
-                                  {group.name}
-                                </p>
-                                <div className="flex items-center gap-2 text-xs text-gray-500">
-                                  <span>{typeLabels[group.groupType] || group.groupType}</span>
-                                  {group.prefecture && <span>{group.prefecture}</span>}
+                              <Link
+                                href={`/theater-groups/${group.slug}`}
+                                className="flex items-center gap-3 group"
+                              >
+                                <div className="w-10 h-10 bg-pink-100 rounded-full flex items-center justify-center flex-shrink-0">
+                                  <FaTheaterMasks className="text-pink-500" />
                                 </div>
-                              </div>
-                            </Link>
+                                <div className="min-w-0 flex-1">
+                                  <p className="font-bold text-sm text-gray-800 group-hover:text-pink-700 truncate">
+                                    {group.name}
+                                  </p>
+                                  <div className="flex items-center gap-2 text-xs text-gray-500">
+                                    <span>{typeLabels[group.groupType] || group.groupType}</span>
+                                    {group.prefecture && <span>{group.prefecture}</span>}
+                                    {ptg.performanceYear && (
+                                      <span className="text-pink-600 font-medium">{ptg.performanceYear}年上演</span>
+                                    )}
+                                  </div>
+                                </div>
+                              </Link>
+                              {ptg.sourceUrl && (
+                                <div className="mt-1.5 ml-[52px]">
+                                  <a
+                                    href={ptg.sourceUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center gap-1 text-[11px] px-2 py-0.5 rounded bg-pink-50 text-pink-600 hover:text-pink-800 font-medium transition-colors"
+                                    onClick={(e) => e.stopPropagation()}
+                                  >
+                                    <FaExternalLinkAlt />
+                                    <span>上演の根拠</span>
+                                  </a>
+                                </div>
+                              )}
+                            </div>
                           );
                         })}
                       </div>
@@ -586,6 +618,9 @@ export async function getServerSideProps(context: any) {
         },
         theaterGroups: {
           select: {
+            sourceUrl: true,
+            sourceType: true,
+            performanceYear: true,
             theaterGroup: {
               select: {
                 id: true,

@@ -11,6 +11,7 @@ import SearchResults from "@/components/SearchResults";
 import FAQ from "@/components/FAQ";
 import Link from "next/link";
 import LatestBlogPosts from "@/components/LatestBlogPosts";
+import RecentComments from "@/components/RecentComments";
 
 export default function Home({ news, authors, posts, categories, blogPosts, trendingPosts }: any) {
   const [data, setData] = useState<any>(null); // 取得したデータを格納
@@ -96,6 +97,9 @@ export default function Home({ news, authors, posts, categories, blogPosts, tren
           </div>
         </div>
         
+        {/* みんなの声（最新コメント） */}
+        <RecentComments />
+
         {/* 最新の記事 */}
         <LatestBlogPosts posts={blogPosts} />
 
@@ -245,6 +249,11 @@ export async function getStaticProps() {
             select: {
               id: true,
               name: true,
+            },
+          },
+          _count: {
+            select: {
+              comments: true,
             },
           },
         },

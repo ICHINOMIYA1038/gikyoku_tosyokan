@@ -193,6 +193,11 @@ export default async function handler(
               name: true,
             },
           },
+          _count: {
+            select: {
+              comments: true,
+            },
+          },
         },
       });
     }, 3, 500);
@@ -216,7 +221,7 @@ export default async function handler(
     const formattedResults = searchResults.map(post => ({
       ...post,
       ratings: [],
-      _count: { ratings: 0 },
+      _count: { ratings: 0, comments: (post as any)._count?.comments || 0 },
     }));
 
     // カウント結果を待つ（ただし検索結果は既に取得済み）

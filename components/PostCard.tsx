@@ -3,7 +3,7 @@ import Image from "next/image";
 import { Post as PostType } from "@prisma/client";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import { FaClock, FaUsers, FaMale, FaFemale, FaTag, FaPen, FaTheaterMasks } from "react-icons/fa";
+import { FaClock, FaUsers, FaMale, FaFemale, FaTag, FaPen, FaTheaterMasks, FaCommentDots } from "react-icons/fa";
 import FavoriteButton from "@/components/FavoriteButton";
 
 type PostPageProps = {
@@ -84,14 +84,22 @@ const PostCard: React.FC<PostPageProps> = ({ post }: any) => {
                   <span className="font-medium">{post.playtime}分</span>
                 </div>
               )}
-              
+
               {post.totalNumber && post.totalNumber > 0 && (
                 <div className="flex items-center gap-1.5 text-gray-600 text-sm">
                   <FaUsers className="text-blue-500/70" />
                   <span className="font-medium">{post.totalNumber}人</span>
                 </div>
               )}
-              
+
+              {/* コメント数 */}
+              {post._count?.comments > 0 && (
+                <div className="flex items-center gap-1.5 text-gray-600 text-sm">
+                  <FaCommentDots className="text-pink-400/70" />
+                  <span className="font-medium">{post._count.comments}</span>
+                </div>
+              )}
+
               {/* 男女内訳 */}
               {(post.man > 0 || post.woman > 0) && (
                 <div className="flex items-center gap-3 ml-auto text-xs text-gray-500 bg-gray-50 px-3 py-1 rounded-full border border-gray-100">

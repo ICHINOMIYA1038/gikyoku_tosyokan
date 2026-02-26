@@ -289,6 +289,9 @@ model PostTheaterGroup {
   id              Int          @id @default(autoincrement())
   postId          Int
   theaterGroupId  Int
+  sourceUrl       String?      // 上演の根拠となるURL（公式サイト・SNS等）
+  sourceType      String?      // 根拠の種類: official, twitter, instagram, corich, other
+  performanceYear Int?         // 上演年
   post            Post         @relation(fields: [postId], references: [id])
   theaterGroup    TheaterGroup @relation(fields: [theaterGroupId], references: [id])
 
