@@ -371,7 +371,7 @@ function PostPage({ post }: any) {
                                     onClick={(e) => e.stopPropagation()}
                                   >
                                     <FaExternalLinkAlt />
-                                    <span>上演の根拠</span>
+                                    <span>参考</span>
                                   </a>
                                 </div>
                               )}
