@@ -16,7 +16,7 @@ const Footer: React.FC = () => {
 
   return (
     <footer className="bg-theater-primary-300" role="contentinfo" aria-label="サイトフッター">
-      <div className="container mx-auto py-8">
+      <div className="container mx-auto py-6">
         <Link href="/" className="block mb-4" aria-label="戯曲図書館ホームへ">
           <img src="/logo.png" alt="戯曲図書館ロゴ" className="w-16 h-auto" width="64" height="64" />
         </Link>

@@ -26,9 +26,9 @@ export default function MobileHeader() {
 
   return (
     <>
-      <header className="flex items-center justify-between p-4 bg-theater-primary-300">
+      <header className="flex items-center justify-between p-3 bg-theater-primary-300">
         <Link className="flex items-center cursor-pointer" href={"/"} onClick={closeMenu}>
-          <img src="/logo.png" alt="Logo" className="w-12 h-12 mr-4" />
+          <img src="/logo.png" alt="Logo" className="w-10 h-10 mr-4" />
           <span className="text-xl font-bold">戯曲図書館</span>
         </Link>
         

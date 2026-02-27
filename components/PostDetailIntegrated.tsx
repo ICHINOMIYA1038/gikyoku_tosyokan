@@ -17,7 +17,7 @@ type PostPageProps = {
 export const PostHero: React.FC<PostPageProps> = ({ post }) => {
   return (
     <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-      <div className="bg-gradient-to-r from-theater-primary-50 to-theater-secondary-50 p-6 md:p-8 lg:p-10">
+      <div className="bg-gradient-to-r from-theater-primary-50 to-theater-secondary-50 p-5 md:p-6 lg:p-8">
         {/* 評価 */}
         {post.averageRating > 0 && (
           <div className="mb-4">
@@ -26,7 +26,7 @@ export const PostHero: React.FC<PostPageProps> = ({ post }) => {
         )}
 
         {/* タイトルと作者 */}
-        <h1 className="text-3xl md:text-4xl font-bold text-theater-neutral-900 mb-4">
+        <h1 className="text-2xl md:text-3xl font-bold text-theater-neutral-900 mb-3">
           {post.title}
         </h1>
 
@@ -68,25 +68,25 @@ export const PostDetails: React.FC<PostPageProps> = ({ post }) => {
   return (
     <div className="bg-white rounded-xl shadow-lg overflow-hidden">
       {/* 基本情報 */}
-      <div className="p-6 md:p-8 lg:p-10 border-b border-gray-100">
+      <div className="p-5 md:p-6 lg:p-8 border-b border-gray-100">
         <h2 className="text-xl font-bold mb-4 flex items-center gap-2 text-gray-800">
           <FaInfoCircle className="text-gray-400" />
           作品情報
         </h2>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
           {/* 上演時間 */}
           {post.playtime != null && post.playtime !== -1 ? (
             <Link
               href={`/?minPlaytime=${Math.max(0, post.playtime - 10)}&maxPlaytime=${post.playtime + 10}`}
-              className="bg-gradient-to-br from-gray-50 to-white rounded-lg p-3 md:p-4 text-center border border-gray-200 hover:shadow-md hover:border-theater-primary-300 transition-all cursor-pointer group"
+              className="bg-gradient-to-br from-gray-50 to-white rounded-lg p-2.5 md:p-3 text-center border border-gray-200 hover:shadow-md hover:border-theater-primary-300 transition-all cursor-pointer group"
             >
               <FaClock className="text-lg md:text-xl text-gray-400 group-hover:text-theater-primary-500 mx-auto mb-1 transition-colors" />
               <p className="text-xs font-medium text-gray-500">上演時間</p>
               <p className="font-bold text-base md:text-lg text-gray-900 mt-1">{post.playtime}分</p>
             </Link>
           ) : (
-            <div className="bg-gradient-to-br from-gray-50 to-white rounded-lg p-3 md:p-4 text-center border border-gray-200">
+            <div className="bg-gradient-to-br from-gray-50 to-white rounded-lg p-2.5 md:p-3 text-center border border-gray-200">
               <FaClock className="text-lg md:text-xl text-gray-400 mx-auto mb-1" />
               <p className="text-xs font-medium text-gray-500">上演時間</p>
               <p className="font-bold text-base md:text-lg text-gray-900 mt-1">不明</p>
@@ -97,14 +97,14 @@ export const PostDetails: React.FC<PostPageProps> = ({ post }) => {
           {post.totalNumber != null && post.totalNumber !== -1 ? (
             <Link
               href={`/?minTotalCount=${post.totalNumber}&maxTotalCount=${post.totalNumber}`}
-              className="bg-gradient-to-br from-gray-50 to-white rounded-lg p-3 md:p-4 text-center border border-gray-200 hover:shadow-md hover:border-theater-primary-300 transition-all cursor-pointer group"
+              className="bg-gradient-to-br from-gray-50 to-white rounded-lg p-2.5 md:p-3 text-center border border-gray-200 hover:shadow-md hover:border-theater-primary-300 transition-all cursor-pointer group"
             >
               <FaUsers className="text-lg md:text-xl text-gray-400 group-hover:text-theater-primary-500 mx-auto mb-1 transition-colors" />
               <p className="text-xs font-medium text-gray-500">総人数</p>
               <p className="font-bold text-base md:text-lg text-gray-900 mt-1">{post.totalNumber}人</p>
             </Link>
           ) : (
-            <div className="bg-gradient-to-br from-gray-50 to-white rounded-lg p-3 md:p-4 text-center border border-gray-200">
+            <div className="bg-gradient-to-br from-gray-50 to-white rounded-lg p-2.5 md:p-3 text-center border border-gray-200">
               <FaUsers className="text-lg md:text-xl text-gray-400 mx-auto mb-1" />
               <p className="text-xs font-medium text-gray-500">総人数</p>
               <p className="font-bold text-base md:text-lg text-gray-900 mt-1">不明</p>
@@ -115,14 +115,14 @@ export const PostDetails: React.FC<PostPageProps> = ({ post }) => {
           {post.man != null && post.man !== -1 ? (
             <Link
               href={`/?minMaleCount=${post.man}&maxMaleCount=${post.man}`}
-              className="bg-gradient-to-br from-gray-50 to-white rounded-lg p-3 md:p-4 text-center border border-gray-200 hover:shadow-md hover:border-theater-primary-300 transition-all cursor-pointer group"
+              className="bg-gradient-to-br from-gray-50 to-white rounded-lg p-2.5 md:p-3 text-center border border-gray-200 hover:shadow-md hover:border-theater-primary-300 transition-all cursor-pointer group"
             >
               <FaMale className="text-lg md:text-xl text-gray-400 group-hover:text-theater-primary-500 mx-auto mb-1 transition-colors" />
               <p className="text-xs font-medium text-gray-500">男性</p>
               <p className="font-bold text-base md:text-lg text-gray-900 mt-1">{post.man}人</p>
             </Link>
           ) : (
-            <div className="bg-gradient-to-br from-gray-50 to-white rounded-lg p-3 md:p-4 text-center border border-gray-200">
+            <div className="bg-gradient-to-br from-gray-50 to-white rounded-lg p-2.5 md:p-3 text-center border border-gray-200">
               <FaMale className="text-lg md:text-xl text-gray-400 mx-auto mb-1" />
               <p className="text-xs font-medium text-gray-500">男性</p>
               <p className="font-bold text-base md:text-lg text-gray-900 mt-1">不明</p>
@@ -133,14 +133,14 @@ export const PostDetails: React.FC<PostPageProps> = ({ post }) => {
           {post.woman != null && post.woman !== -1 ? (
             <Link
               href={`/?minFemaleCount=${post.woman}&maxFemaleCount=${post.woman}`}
-              className="bg-gradient-to-br from-gray-50 to-white rounded-lg p-3 md:p-4 text-center border border-gray-200 hover:shadow-md hover:border-theater-primary-300 transition-all cursor-pointer group"
+              className="bg-gradient-to-br from-gray-50 to-white rounded-lg p-2.5 md:p-3 text-center border border-gray-200 hover:shadow-md hover:border-theater-primary-300 transition-all cursor-pointer group"
             >
               <FaFemale className="text-lg md:text-xl text-gray-400 group-hover:text-theater-primary-500 mx-auto mb-1 transition-colors" />
               <p className="text-xs font-medium text-gray-500">女性</p>
               <p className="font-bold text-base md:text-lg text-gray-900 mt-1">{post.woman}人</p>
             </Link>
           ) : (
-            <div className="bg-gradient-to-br from-gray-50 to-white rounded-lg p-3 md:p-4 text-center border border-gray-200">
+            <div className="bg-gradient-to-br from-gray-50 to-white rounded-lg p-2.5 md:p-3 text-center border border-gray-200">
               <FaFemale className="text-lg md:text-xl text-gray-400 mx-auto mb-1" />
               <p className="text-xs font-medium text-gray-500">女性</p>
               <p className="font-bold text-base md:text-lg text-gray-900 mt-1">不明</p>
@@ -160,12 +160,12 @@ export const PostDetails: React.FC<PostPageProps> = ({ post }) => {
 
       {/* あらすじ */}
       {post.synopsis && (
-        <div className="p-6 md:p-8 lg:p-10 border-b border-gray-100">
+        <div className="p-5 md:p-6 lg:p-8 border-b border-gray-100">
           <h2 className="text-xl font-bold mb-4 flex items-center gap-2 text-gray-800">
             <FaQuoteLeft className="text-gray-400" />
             あらすじ
           </h2>
-          <div className="bg-gray-50 rounded-lg p-6 border-l-4 border-gray-300">
+          <div className="bg-gray-50 rounded-lg p-5 border-l-4 border-gray-300">
             <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">
               {post.synopsis}
             </p>
@@ -175,7 +175,7 @@ export const PostDetails: React.FC<PostPageProps> = ({ post }) => {
 
       {/* 詳細説明 */}
       {post.details && (
-        <div className="p-6 md:p-8 lg:p-10 border-b border-gray-100">
+        <div className="p-5 md:p-6 lg:p-8 border-b border-gray-100">
           <h2 className="text-xl font-bold mb-4 flex items-center gap-2 text-gray-800">
             <FaBook className="text-gray-400" />
             詳細説明
@@ -188,7 +188,7 @@ export const PostDetails: React.FC<PostPageProps> = ({ post }) => {
 
       {/* 作者情報（必要に応じて） */}
       {post.author.profile && (
-        <div className="p-6 md:p-8 lg:p-10 bg-gray-50">
+        <div className="p-5 md:p-6 lg:p-8 bg-gray-50">
           <h2 className="text-xl font-bold mb-4 flex items-center gap-2 text-gray-800">
             <FaPen className="text-gray-400" />
             作者について
@@ -218,9 +218,9 @@ export const PostDetails: React.FC<PostPageProps> = ({ post }) => {
 export const PostSidebar: React.FC<PostPageProps> = ({ post }) => {
   return (
     <aside className="hidden xl:block xl:w-80 2xl:w-96 flex-shrink-0">
-      <div className="sticky top-4 space-y-6">
+      <div className="sticky top-4 space-y-4">
         {/* 統計情報 */}
-        <div className="bg-white rounded-xl shadow-lg p-6">
+        <div className="bg-white rounded-xl shadow-lg p-5">
           <h3 className="font-bold text-lg mb-4 text-gray-800">統計情報</h3>
           <div className="space-y-3">
             <div className="flex items-center justify-between">
@@ -256,7 +256,7 @@ export const PostSidebar: React.FC<PostPageProps> = ({ post }) => {
         </div>
 
         {/* 関連作品 */}
-        <div className="bg-white rounded-xl shadow-lg p-6">
+        <div className="bg-white rounded-xl shadow-lg p-5">
           <h3 className="font-bold text-lg mb-4 text-gray-800">関連作品</h3>
           <div className="space-y-3">
             {post.categories && post.categories.length > 0 && (
@@ -301,7 +301,7 @@ export const PostSidebar: React.FC<PostPageProps> = ({ post }) => {
 
         {/* 作者のSNS（あれば） */}
         {(post.author.twitter || post.author.website) && (
-          <div className="bg-white rounded-xl shadow-lg p-6">
+          <div className="bg-white rounded-xl shadow-lg p-5">
             <h3 className="font-bold text-lg mb-4 text-gray-800">作者のリンク</h3>
             <div className="space-y-2">
               {post.author.twitter && (
@@ -331,7 +331,7 @@ export const PostSidebar: React.FC<PostPageProps> = ({ post }) => {
         )}
 
         {/* CTA */}
-        <div className="bg-gradient-to-br from-theater-primary-500 to-theater-primary-600 rounded-xl shadow-lg p-6 text-white">
+        <div className="bg-gradient-to-br from-theater-primary-500 to-theater-primary-600 rounded-xl shadow-lg p-5 text-white">
           <h3 className="font-bold text-lg mb-2">他の作品を探す</h3>
           <p className="text-sm mb-4 opacity-90">
             条件を指定して理想の脚本を見つけよう

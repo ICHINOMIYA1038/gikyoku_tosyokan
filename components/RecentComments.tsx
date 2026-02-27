@@ -39,15 +39,15 @@ const RecentComments: React.FC = () => {
 
   if (isLoading) {
     return (
-      <section className="py-12 px-4 bg-gradient-to-b from-pink-50/50 to-white">
+      <section className="py-8 px-4 bg-gradient-to-b from-pink-50/50 to-white">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-2xl md:text-3xl font-bold text-center mb-8 flex items-center justify-center gap-2">
+          <h2 className="text-2xl md:text-3xl font-bold text-center mb-6 flex items-center justify-center gap-2">
             <FaCommentDots className="text-pink-500" />
             みんなの声
           </h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="bg-white rounded-xl p-5 border border-gray-100 animate-pulse">
+              <div key={i} className="bg-white rounded-xl p-4 border border-gray-100 animate-pulse">
                 <div className="h-4 bg-gray-100 rounded w-3/4 mb-3"></div>
                 <div className="h-3 bg-gray-100 rounded w-full mb-2"></div>
                 <div className="h-3 bg-gray-100 rounded w-2/3"></div>
@@ -64,9 +64,9 @@ const RecentComments: React.FC = () => {
   }
 
   return (
-    <section className="py-12 px-4 bg-gradient-to-b from-pink-50/50 to-white">
+    <section className="py-8 px-4 bg-gradient-to-b from-pink-50/50 to-white">
       <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-8">
+        <div className="text-center mb-6">
           <h2 className="text-2xl md:text-3xl font-bold flex items-center justify-center gap-2">
             <FaCommentDots className="text-pink-500" />
             みんなの声
@@ -85,7 +85,7 @@ const RecentComments: React.FC = () => {
                 href={`/posts/${comment.postId}#comments-section`}
                 className="block group"
               >
-                <div className="bg-white rounded-xl p-5 border border-gray-100 hover:border-pink-200 hover:shadow-md transition-all h-full flex flex-col">
+                <div className="bg-white rounded-xl p-4 border border-gray-100 hover:border-pink-200 hover:shadow-md transition-all h-full flex flex-col">
                   {/* 作品情報 */}
                   <div className="flex items-center gap-2 mb-3 pb-3 border-b border-gray-50">
                     <div className="w-7 h-7 bg-pink-100 rounded-full flex items-center justify-center flex-shrink-0">

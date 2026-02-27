@@ -46,7 +46,7 @@ const PostCardSmall: React.FC<PostPageProps> = ({ post }: any) => {
         </div>
         
         {/* コンテンツ */}
-        <div className="p-4 flex flex-col flex-1">
+        <div className="p-3 flex flex-col flex-1">
           <h3 className="font-serif font-bold text-base text-gray-800 line-clamp-2 mb-2 group-hover:text-pink-700 transition-colors">
             {post.title}
           </h3>

@@ -15,7 +15,7 @@ const PostCard: React.FC<PostPageProps> = ({ post }: any) => {
   const additionalCategories = post.categories && post.categories.length > 1 ? post.categories.length - 1 : 0;
 
   return (
-    <Link href={`/posts/${post.id}`} className="block mb-4">
+    <Link href={`/posts/${post.id}`} className="block mb-3">
       <div className="group relative bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden hover:-translate-y-0.5">
         <div className="flex flex-col md:flex-row h-full">
           {/* 画像部分 */}
@@ -53,7 +53,7 @@ const PostCard: React.FC<PostPageProps> = ({ post }: any) => {
           </div>
           
           {/* テキスト部分 */}
-          <div className="flex-1 p-5 md:p-6 flex flex-col justify-between">
+          <div className="flex-1 p-4 md:p-5 flex flex-col justify-between">
             <div>
               <div className="flex justify-between items-start mb-2">
                  <h3 className="text-lg md:text-xl font-serif font-bold text-gray-800 group-hover:text-pink-700 transition-colors line-clamp-1 leading-snug">

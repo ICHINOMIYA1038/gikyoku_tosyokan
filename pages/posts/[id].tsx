@@ -202,8 +202,8 @@ function PostPage({ post }: any) {
           ]}
         />
         <div className="w-full">
-          <div className="container mx-auto px-4 pt-8 pb-12">
-            <div className="flex flex-col lg:flex-row gap-8">
+          <div className="container mx-auto px-4 pt-6 pb-8">
+            <div className="flex flex-col lg:flex-row gap-6">
               {/* メインカラム */}
               <main className="flex-1 min-w-0">
                 {/* 1. ヒーロー */}
@@ -308,8 +308,8 @@ function PostPage({ post }: any) {
                 </div>
 
                 {/* 4. コメントセクション */}
-                <div className="mt-6">
-                  <div className="bg-pink-50/60 rounded-xl shadow-sm p-4 md:p-6 border border-pink-100">
+                <div className="mt-4">
+                  <div className="bg-pink-50/60 rounded-xl shadow-sm p-4 md:p-5 border border-pink-100">
                     {post.comments && (
                       <MemoizedComments key={post.id} comments={post.comments} postid={post.id} postTitle={post.title} inline={true} />
                     )}
@@ -317,14 +317,14 @@ function PostPage({ post }: any) {
                 </div>
 
                 {/* 5. 作品詳細（作品情報、あらすじ、詳細説明、作者について） */}
-                <div className="mt-6">
+                <div className="mt-4">
                   <MemoizedPostDetails post={post} />
                 </div>
 
                 {/* 6. この脚本を上演した劇団 */}
                 {post.theaterGroups && post.theaterGroups.length > 0 && (
                   <div className="mt-6">
-                    <div className="bg-white rounded-xl shadow-sm p-6 md:p-8 border border-gray-100">
+                    <div className="bg-white rounded-xl shadow-sm p-5 md:p-6 border border-gray-100">
                       <h2 className="text-xl md:text-2xl font-bold mb-4 text-center text-gray-800 font-serif flex items-center justify-center gap-2">
                         <FaTheaterMasks className="text-pink-500" />
                         この脚本を上演した劇団
@@ -385,7 +385,7 @@ function PostPage({ post }: any) {
 
                 {/* 7. 関連作品 */}
                 <div className="mt-6">
-                  <div className="bg-white rounded-xl shadow-sm p-6 md:p-8 lg:p-10 border border-gray-100">
+                  <div className="bg-white rounded-xl shadow-sm p-5 md:p-6 lg:p-8 border border-gray-100">
                     <h2 className="text-xl md:text-2xl font-bold mb-6 text-center text-gray-800 font-serif">
                       関連作品
                     </h2>

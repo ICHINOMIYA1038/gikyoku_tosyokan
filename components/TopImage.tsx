@@ -19,11 +19,11 @@ const TopImage = ({ buttonClick }: any) => {
            style={{ backgroundImage: 'radial-gradient(#444 1px, transparent 1px)', backgroundSize: '30px 30px' }}>
       </div>
 
-      <div className="relative z-10 mx-auto max-w-6xl px-4 pt-16 pb-20 md:pt-24 md:pb-28">
-        <div className="flex flex-col md:flex-row items-center gap-12">
-          
+      <div className="relative z-10 mx-auto max-w-6xl px-4 pt-12 pb-16 md:pt-16 md:pb-20">
+        <div className="flex flex-col md:flex-row items-center gap-8">
+
           {/* 左側：テキストエリア */}
-          <div className="w-full md:w-1/2 text-center md:text-left space-y-8">
+          <div className="w-full md:w-1/2 text-center md:text-left space-y-6">
             <div className="space-y-4">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-pink-50 border border-pink-100 text-pink-700 text-sm font-medium mb-2">
                 <span className="flex h-2 w-2 rounded-full bg-pink-500"></span>

@@ -104,14 +104,14 @@ export default function Home({ news, authors, posts, categories, blogPosts, tren
         <LatestBlogPosts posts={blogPosts} />
 
         {/* ガイドセクション */}
-        <section className="bg-gray-50 py-12 px-4">
+        <section className="bg-gray-50 py-8 px-4">
           <div className="max-w-6xl mx-auto">
-            <h2 className="text-2xl md:text-3xl font-bold text-center mb-8">
+            <h2 className="text-2xl md:text-3xl font-bold text-center mb-6">
               演劇を始める方へのガイド
             </h2>
-            <div className="grid md:grid-cols-3 gap-6">
+            <div className="grid md:grid-cols-3 gap-5">
               <Link href="/guide/beginner/how-to-choose-script" className="block">
-                <div className="bg-white p-6 rounded-lg shadow hover:shadow-lg transition-shadow">
+                <div className="bg-white p-5 rounded-lg shadow hover:shadow-lg transition-shadow">
                   <h3 className="text-xl font-bold mb-3">脚本の選び方</h3>
                   <p className="text-gray-600 mb-3">
                     上演時間、人数、難易度から最適な脚本を選ぶポイントを解説
@@ -121,7 +121,7 @@ export default function Home({ news, authors, posts, categories, blogPosts, tren
               </Link>
               
               <Link href="/guide/school/culture-festival" className="block">
-                <div className="bg-white p-6 rounded-lg shadow hover:shadow-lg transition-shadow">
+                <div className="bg-white p-5 rounded-lg shadow hover:shadow-lg transition-shadow">
                   <h3 className="text-xl font-bold mb-3">文化祭演劇ガイド</h3>
                   <p className="text-gray-600 mb-3">
                     限られた時間と予算で成功させるための実践的アドバイス
@@ -131,7 +131,7 @@ export default function Home({ news, authors, posts, categories, blogPosts, tren
               </Link>
               
               <Link href="/guide/beginner/acting-basics" className="block">
-                <div className="bg-white p-6 rounded-lg shadow hover:shadow-lg transition-shadow">
+                <div className="bg-white p-5 rounded-lg shadow hover:shadow-lg transition-shadow">
                   <h3 className="text-xl font-bold mb-3">演技の基礎</h3>
                   <p className="text-gray-600 mb-3">
                     初心者でもできる演技力向上のトレーニング方法
@@ -141,7 +141,7 @@ export default function Home({ news, authors, posts, categories, blogPosts, tren
               </Link>
             </div>
             
-            <div className="text-center mt-8">
+            <div className="text-center mt-6">
               <Link href="/guide" className="inline-block bg-gray-600 text-white px-6 py-3 rounded-lg hover:bg-gray-700">
                 すべてのガイドを見る →
               </Link>
@@ -150,17 +150,17 @@ export default function Home({ news, authors, posts, categories, blogPosts, tren
         </section>
 
         {/* 劇団データベースセクション */}
-        <section className="py-12 px-4">
+        <section className="py-8 px-4">
           <div className="max-w-6xl mx-auto">
             <h2 className="text-2xl md:text-3xl font-bold text-center mb-3">
               劇団データベース
             </h2>
-            <p className="text-gray-600 text-center mb-8 text-sm">
+            <p className="text-gray-600 text-center mb-6 text-sm">
               全国の劇団・演劇団体の情報を検索できます
             </p>
             <div className="grid md:grid-cols-2 gap-6">
               <Link href="/university-theater" className="block group">
-                <div className="bg-gradient-to-r from-purple-50 to-pink-50 p-6 rounded-xl border border-purple-100 hover:shadow-lg transition-all hover:-translate-y-1">
+                <div className="bg-gradient-to-r from-purple-50 to-pink-50 p-5 rounded-xl border border-purple-100 hover:shadow-lg transition-all hover:-translate-y-1">
                   <div className="flex items-center gap-3 mb-3">
                     <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
                       <span className="text-lg">🎓</span>
@@ -174,7 +174,7 @@ export default function Home({ news, authors, posts, categories, blogPosts, tren
                 </div>
               </Link>
               <Link href="/shogekijo" className="block group">
-                <div className="bg-gradient-to-r from-orange-50 to-amber-50 p-6 rounded-xl border border-orange-100 hover:shadow-lg transition-all hover:-translate-y-1">
+                <div className="bg-gradient-to-r from-orange-50 to-amber-50 p-5 rounded-xl border border-orange-100 hover:shadow-lg transition-all hover:-translate-y-1">
                   <div className="flex items-center gap-3 mb-3">
                     <div className="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center">
                       <span className="text-lg">🎭</span>
@@ -191,7 +191,7 @@ export default function Home({ news, authors, posts, categories, blogPosts, tren
           </div>
         </section>
 
-        <ContentSection posts={posts} authors={authors} categories={categories} trendingPosts={trendingPosts} />
+        <ContentSection posts={posts} authors={authors} categories={categories} />
         
         {/* FAQセクション */}
         <FAQ items={faqItems} />

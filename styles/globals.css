@@ -21,7 +21,7 @@ body {
   background: rgb(var(--background-rgb));
   color: rgb(var(--foreground-rgb));
   font-family: 'Noto Sans JP', sans-serif;
-  line-height: 1.75;
+  line-height: 1.7;
   overflow-y: scroll;
   scroll-behavior: smooth;
   /* 紙のような質感を与える微細なノイズ（オプション） */
@@ -52,15 +52,15 @@ img, video {
 
 /* サポートドキュメント */
 .support-document {
-  @apply bg-white mx-auto my-6 max-w-3xl rounded-lg p-8 shadow-sm border border-gray-100;
+  @apply bg-white mx-auto my-6 max-w-3xl rounded-lg p-6 shadow-sm border border-gray-100;
 }
 
 .support-document h2 {
-  @apply text-2xl font-bold mt-8 mb-6 pb-2 border-b border-gray-200 text-gray-800;
+  @apply text-2xl font-bold mt-6 mb-4 pb-2 border-b border-gray-200 text-gray-800;
 }
 
 .support-document h3 {
-  @apply text-xl font-bold mt-8 mb-4 text-gray-800;
+  @apply text-xl font-bold mt-6 mb-3 text-gray-800;
   border-left: none;
   padding-left: 0;
 }
@@ -75,8 +75,8 @@ img, video {
 
 /* h2: 洗練された下線スタイル */
 h2 {
-  @apply text-2xl md:text-3xl font-bold my-10 text-gray-800 relative;
-  padding-bottom: 0.5em;
+  @apply text-2xl md:text-3xl font-bold my-6 text-gray-800 relative;
+  padding-bottom: 0.35em;
 }
 
 h2::after {
@@ -97,7 +97,7 @@ h2::before {
 /* コンテキストに応じたh2調整 */
 .post-section h2,
 .content-section h2 {
-  @apply text-2xl font-bold mb-6 text-gray-800;
+  @apply text-2xl font-bold mb-4 text-gray-800;
   border-bottom: none;
   padding-bottom: 0;
 }
@@ -108,7 +108,7 @@ h2::before {
 
 /* h3: シンプルな左ボーダー */
 h3 {
-  @apply text-lg md:text-xl font-semibold my-6 text-gray-800;
+  @apply text-lg md:text-xl font-semibold my-4 text-gray-800;
   padding: 0 0 0 1rem;
   border-left: 3px solid rgb(var(--primary-color));
   background: transparent;
@@ -120,7 +120,7 @@ h3::before {
 
 /* h4: ミニマルなスタイル */
 h4 {
-  @apply text-base md:text-lg font-bold my-4 text-gray-700;
+  @apply text-base md:text-lg font-bold my-3 text-gray-700;
   padding: 0;
 }
 
@@ -133,11 +133,11 @@ h4::before {
    -------------------------- */
 
 .post-section {
-  @apply my-10 bg-transparent; /* 背景色を削除して余白を活かす */
+  @apply my-6 bg-transparent; /* 背景色を削除して余白を活かす */
 }
 
 .section-title {
-  @apply text-2xl md:text-3xl font-bold mb-8 text-center text-gray-800 flex flex-col items-center justify-center;
+  @apply text-2xl md:text-3xl font-bold mb-6 text-center text-gray-800 flex flex-col items-center justify-center;
   border-bottom: none;
 }
 
@@ -158,7 +158,7 @@ h4::before {
   width: 40px;
   height: 1px;
   background: #cbd5e1; /* gray-300 */
-  margin-top: 1rem;
+  margin-top: 0.75rem;
 }
 
 .info-badge {

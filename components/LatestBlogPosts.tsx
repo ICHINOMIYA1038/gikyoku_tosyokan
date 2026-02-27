@@ -18,9 +18,9 @@ const LatestBlogPosts: React.FC<Props> = ({ posts }) => {
   if (!posts || posts.length === 0) return null;
 
   return (
-    <section className="py-12 px-4 bg-white">
+    <section className="py-8 px-4 bg-white">
       <div className="max-w-6xl mx-auto">
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl md:text-3xl font-bold flex items-center gap-2">
             <FaPen className="text-pink-500" />
             最新の記事
@@ -32,14 +32,14 @@ const LatestBlogPosts: React.FC<Props> = ({ posts }) => {
             すべての記事 <FaChevronRight className="text-xs" />
           </Link>
         </div>
-        <div className="grid md:grid-cols-3 gap-6">
+        <div className="grid md:grid-cols-3 gap-5">
           {posts.map((post) => (
             <Link
               key={post.slug}
               href={`/blog/ja/${post.slug}`}
               className="block group"
             >
-              <div className="bg-white p-6 rounded-xl border border-gray-100 hover:shadow-lg transition-all hover:-translate-y-1 h-full flex flex-col">
+              <div className="bg-white p-5 rounded-xl border border-gray-100 hover:shadow-lg transition-all hover:-translate-y-1 h-full flex flex-col">
                 <div className="flex flex-wrap gap-1.5 mb-3">
                   {post.tags.slice(0, 3).map((tag) => (
                     <span

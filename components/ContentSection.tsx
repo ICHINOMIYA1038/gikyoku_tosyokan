@@ -40,11 +40,11 @@ const ContentSection: React.FC<ContentSectionProps> = ({ posts, authors, categor
     })).sort((a: any, b: any) => b.postCount - a.postCount);
 
     return (
-        <section className="py-12 px-4 bg-gradient-to-b from-theater-neutral-50 to-white">
+        <section className="py-8 px-4 bg-gradient-to-b from-theater-neutral-50 to-white">
             <div className="max-w-7xl mx-auto">
                 {/* セクションタイトル */}
-                <div className="text-center mb-12">
-                    <h2 className="text-3xl md:text-4xl font-bold text-theater-neutral-900 mb-4">
+                <div className="text-center mb-8">
+                    <h2 className="text-2xl md:text-3xl font-bold text-theater-neutral-900 mb-3">
                         戯曲図書館の人気コンテンツ
                     </h2>
                     <p className="text-theater-neutral-600">
@@ -53,11 +53,11 @@ const ContentSection: React.FC<ContentSectionProps> = ({ posts, authors, categor
                 </div>
 
                 {/* メインコンテンツグリッド */}
-                <div className="grid lg:grid-cols-3 gap-8 mb-12">
+                <div className="grid lg:grid-cols-3 gap-6 mb-8">
                     {/* 人気記事TOP3 */}
                     <div className="lg:col-span-2">
-                        <div className="bg-white rounded-xl shadow-lg p-6">
-                            <div className="flex items-center justify-between mb-6">
+                        <div className="bg-white rounded-xl shadow-lg p-5">
+                            <div className="flex items-center justify-between mb-4">
                                 <h3 className="text-2xl font-bold text-theater-neutral-900 flex items-center gap-2">
                                     <FaTrophy className="text-theater-accent-yellow" />
                                     人気戯曲 TOP3
@@ -148,8 +148,8 @@ const ContentSection: React.FC<ContentSectionProps> = ({ posts, authors, categor
 
                     {/* カテゴリー一覧 */}
                     <div className="lg:col-span-1">
-                        <div className="bg-white rounded-xl shadow-lg p-6 h-full">
-                            <div className="flex items-center justify-between mb-6">
+                        <div className="bg-white rounded-xl shadow-lg p-5 h-full">
+                            <div className="flex items-center justify-between mb-4">
                                 <h3 className="text-xl font-bold text-theater-neutral-900 flex items-center gap-2">
                                     <FaTag className="text-theater-primary-500" />
                                     カテゴリー
@@ -185,8 +185,8 @@ const ContentSection: React.FC<ContentSectionProps> = ({ posts, authors, categor
                 </div>
 
                 {/* 作者一覧 */}
-                <div className="bg-white rounded-xl shadow-lg p-6">
-                    <div className="flex items-center justify-between mb-6">
+                <div className="bg-white rounded-xl shadow-lg p-5">
+                    <div className="flex items-center justify-between mb-4">
                         <h3 className="text-2xl font-bold text-theater-neutral-900 flex items-center gap-2">
                             <FaPen className="text-theater-secondary-500" />
                             作者一覧
@@ -220,7 +220,7 @@ const ContentSection: React.FC<ContentSectionProps> = ({ posts, authors, categor
                 </div>
 
                 {/* CTA セクション */}
-                <div className="mt-12 text-center">
+                <div className="mt-8 text-center">
                     <div className="inline-flex flex-col sm:flex-row gap-4">
                         <Link 
                             href="/posts"

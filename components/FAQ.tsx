@@ -50,19 +50,19 @@ const FAQ: React.FC<FAQProps> = ({ items, title = "よくある質問" }) => {
         />
       </Head>
       
-      <section className="max-w-4xl mx-auto my-12 px-4">
-        <h2 className="text-2xl md:text-3xl font-bold mb-8 text-center">
+      <section className="max-w-4xl mx-auto my-8 px-4">
+        <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center">
           {title}
         </h2>
         
-        <div className="space-y-4">
+        <div className="space-y-3">
           {items.map((item, index) => (
             <div
               key={index}
               className="border rounded-lg shadow-sm hover:shadow-md transition-shadow"
             >
               <button
-                className="w-full px-6 py-4 text-left flex justify-between items-center hover:bg-gray-50"
+                className="w-full px-5 py-3 text-left flex justify-between items-center hover:bg-gray-50"
                 onClick={() => toggleItem(index)}
                 aria-expanded={openItems.includes(index)}
                 aria-controls={`faq-answer-${index}`}
@@ -80,7 +80,7 @@ const FAQ: React.FC<FAQProps> = ({ items, title = "よくある質問" }) => {
               {openItems.includes(index) && (
                 <div
                   id={`faq-answer-${index}`}
-                  className="px-6 py-4 border-t bg-gray-50"
+                  className="px-5 py-3 border-t bg-gray-50"
                 >
                   <p className="text-gray-700 leading-relaxed whitespace-pre-line">
                     {item.answer}

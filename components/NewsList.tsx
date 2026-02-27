@@ -12,7 +12,7 @@ const NewsItem: React.FC<NewsItemProps> = ({ date, category, title, url }) => {
   const categoryClassName = getCategoryClassName(category);
 
   return (
-    <div className="m-5 p-5 border-solid border border-black lg:w-3/4 bg-white shadow-lg rounded-lg ">
+    <div className="m-3 p-4 border-solid border border-black lg:w-3/4 bg-white shadow-lg rounded-lg ">
       {url ? (
         <Link
           href={url}
@@ -46,7 +46,7 @@ const NewsItem: React.FC<NewsItemProps> = ({ date, category, title, url }) => {
 const NewsList: React.FC<{ news: NewsItemProps[] }> = ({ news }) => {
   return (
     <>
-      <h2 className="m-5 text-2xl font-bold">News</h2>
+      <h2 className="m-3 text-2xl font-bold">News</h2>
       {news &&
         news
           .slice(0, 5)
