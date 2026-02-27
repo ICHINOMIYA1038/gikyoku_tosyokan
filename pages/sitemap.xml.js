@@ -1,12 +1,10 @@
-import { prisma } from '@/lib/prisma';
+import { PrismaClient } from "@prisma/client";
 
 const EXTERNAL_DATA_URL = "https://gikyokutosyokan.com";
-
-const STUDENT_GROUP_TYPES = ['STUDENT', 'INTERCOLLEGE', 'ACADEMIC'];
-
-function generateSiteMap(posts, authors, categories, blogPosts, theaterGroups, universities) {
+const prisma = new PrismaClient();
+function generateSiteMap(posts, authors, categories, blogPosts) {
   const currentDate = new Date().toISOString();
-
+  
   return `<?xml version="1.0" encoding="UTF-8"?>
    <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
      <!-- トップページ -->
@@ -16,7 +14,7 @@ function generateSiteMap(posts, authors, categories, blogPosts, theaterGroups, u
        <changefreq>daily</changefreq>
        <priority>1.0</priority>
      </url>
-
+     
      <!-- 投稿ページ -->
      ${posts
        .map(({ id, updatedAt }) => {
@@ -44,7 +42,7 @@ function generateSiteMap(posts, authors, categories, blogPosts, theaterGroups, u
        <changefreq>weekly</changefreq>
        <priority>0.7</priority>
      </url>
-
+     
      <!-- 個別作者ページ -->
      ${authors
        .map(({ id }) => {
@@ -58,7 +56,7 @@ function generateSiteMap(posts, authors, categories, blogPosts, theaterGroups, u
      `;
        })
        .join("")}
-
+       
      <!-- 個別カテゴリページ -->
      ${categories
        .map(({ id }) => {
@@ -72,60 +70,7 @@ function generateSiteMap(posts, authors, categories, blogPosts, theaterGroups, u
      `;
        })
        .join("")}
-
-     <!-- 大学演劇ランディングページ -->
-     <url>
-       <loc>${`${EXTERNAL_DATA_URL}/university-theater`}</loc>
-       <lastmod>${currentDate}</lastmod>
-       <changefreq>weekly</changefreq>
-       <priority>0.7</priority>
-     </url>
-
-     <!-- 劇団一覧ページ -->
-     <url>
-       <loc>${`${EXTERNAL_DATA_URL}/theater-groups`}</loc>
-       <lastmod>${currentDate}</lastmod>
-       <changefreq>weekly</changefreq>
-       <priority>0.7</priority>
-     </url>
-
-     <!-- 小劇場データベースページ -->
-     <url>
-       <loc>${`${EXTERNAL_DATA_URL}/shogekijo`}</loc>
-       <lastmod>${currentDate}</lastmod>
-       <changefreq>weekly</changefreq>
-       <priority>0.7</priority>
-     </url>
-
-     <!-- 個別劇団ページ -->
-     ${theaterGroups
-       .map(({ slug, groupType }) => {
-         const basePath = STUDENT_GROUP_TYPES.includes(groupType) ? 'theater-groups' : 'shogekijo';
-         return `
-       <url>
-           <loc>${`${EXTERNAL_DATA_URL}/${basePath}/${slug}`}</loc>
-           <lastmod>${currentDate}</lastmod>
-           <changefreq>monthly</changefreq>
-           <priority>0.5</priority>
-       </url>
-     `;
-       })
-       .join("")}
-
-     <!-- 個別大学ページ -->
-     ${universities
-       .map(({ slug }) => {
-         return `
-       <url>
-           <loc>${`${EXTERNAL_DATA_URL}/universities/${slug}`}</loc>
-           <lastmod>${currentDate}</lastmod>
-           <changefreq>monthly</changefreq>
-           <priority>0.5</priority>
-       </url>
-     `;
-       })
-       .join("")}
-
+     
      <!-- オリジナル脚本ページ（重要） -->
      <url>
        <loc>${`${EXTERNAL_DATA_URL}/diary/plot`}</loc>
@@ -133,7 +78,7 @@ function generateSiteMap(posts, authors, categories, blogPosts, theaterGroups, u
        <changefreq>monthly</changefreq>
        <priority>0.9</priority>
      </url>
-
+     
      <!-- ガイドページ（SEO重要） -->
      <url>
        <loc>${`${EXTERNAL_DATA_URL}/guide`}</loc>
@@ -183,7 +128,7 @@ function generateSiteMap(posts, authors, categories, blogPosts, theaterGroups, u
        <changefreq>monthly</changefreq>
        <priority>0.8</priority>
      </url>
-
+     
      <!-- 特集ページ（SEO重要） -->
      <url>
        <loc>${`${EXTERNAL_DATA_URL}/special/seasonal`}</loc>
@@ -191,7 +136,7 @@ function generateSiteMap(posts, authors, categories, blogPosts, theaterGroups, u
        <changefreq>monthly</changefreq>
        <priority>0.8</priority>
      </url>
-
+     
      <!-- 用語集ページ（SEO重要） -->
      <url>
        <loc>${`${EXTERNAL_DATA_URL}/glossary`}</loc>
@@ -309,7 +254,7 @@ function generateSiteMap(posts, authors, categories, blogPosts, theaterGroups, u
        <changefreq>yearly</changefreq>
        <priority>0.3</priority>
      </url>
-
+     
    </urlset>
  `;
 }
@@ -327,16 +272,9 @@ export async function getServerSideProps({ res }) {
     where: { published: true },
     select: { slug: true, language: true, updatedAt: true },
   });
-  const theaterGroups = await prisma.theaterGroup.findMany({
-    where: { isActive: true },
-    select: { slug: true, groupType: true },
-  });
-  const universities = await prisma.university.findMany({
-    select: { slug: true },
-  });
 
   // We generate the XML sitemap with the data
-  const sitemap = generateSiteMap(posts, authors, categories, blogPosts, theaterGroups, universities);
+  const sitemap = generateSiteMap(posts, authors, categories, blogPosts);
   res.statusCode = 200;
   res.setHeader("Cache-Control", "s-maxage=86400, stale-while-revalidate"); // 24時間のキャッシュ
   res.setHeader("Content-Type", "text/xml");

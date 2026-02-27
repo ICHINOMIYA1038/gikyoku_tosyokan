@@ -11,6 +11,7 @@ const Seo = ({
   twitterCardType = "summary_large_image",
   pageKeywords,
   hreflang,
+  noindex,
 }: any) => {
   const defaultTitle = "戯曲図書館";
   const defaultDescription =
@@ -54,7 +55,10 @@ const Seo = ({
       <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={description} />
       <meta name="twitter:image" content={imgUrl} />
-      
+      <meta name="twitter:domain" content="gikyokutosyokan.com" />
+
+      {noindex && <meta name="robots" content="noindex, nofollow" />}
+
       {hreflang && hreflang.map((h: { lang: string; path: string }) => (
         <link key={h.lang} rel="alternate" hrefLang={h.lang} href={`${siteUrl}${h.path}`} />
       ))}

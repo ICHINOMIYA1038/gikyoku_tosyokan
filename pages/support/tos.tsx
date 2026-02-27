@@ -1,4 +1,5 @@
 import Layout from "@/components/Layout";
+import Seo from "@/components/seo";
 import SupportLayout from "@/components/SupportLayout";
 import { useRouter } from "next/router";
 
@@ -7,6 +8,11 @@ function Home() {
 
   return (
     <SupportLayout now="tos">
+      <Seo
+        pageTitle="利用規約"
+        pageDescription="戯曲図書館の利用規約。サービスの利用条件、禁止事項、免責事項について。"
+        pagePath="/support/tos"
+      />
       <div className="support-document">
         <h2>利用規約</h2>
         <p>

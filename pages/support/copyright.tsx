@@ -1,4 +1,5 @@
 import Layout from "@/components/Layout";
+import Seo from "@/components/seo";
 import SupportLayout from "@/components/SupportLayout";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -8,6 +9,11 @@ function Home() {
 
   return (
     <SupportLayout now="copyright">
+      <Seo
+        pageTitle="著作権に関して"
+        pageDescription="戯曲図書館に掲載されている戯曲の著作権についてのご案内。上演を希望される場合は権利者にご確認ください。"
+        pagePath="/support/copyright"
+      />
       <div className="support-document">
         <h2>著作権に関して</h2>
         <p className="font-bold">

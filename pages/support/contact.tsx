@@ -1,6 +1,7 @@
 import BlogLayout from "@/components/BlogLayout";
 import ContactForm from "@/components/Form/ContactForm";
 import Seo from "@/components/seo";
+import StructuredData from "@/components/StructuredData";
 
 function Home() {
   const breadcrumbs = [
@@ -18,6 +19,19 @@ function Home() {
         pageTitle="お問い合わせ | 戯曲図書館"
         pageDescription="戯曲図書館へのお問い合わせはこちらから。脚本に関するご質問やご要望をお待ちしています。"
         pagePath="/support/contact"
+      />
+      <StructuredData
+        type="FAQPage"
+        faqItems={[
+          {
+            question: 'お問い合わせ方法は？',
+            answer: 'ページ内のお問い合わせフォームまたはメール（gekidankatakago@gmail.com）からご連絡いただけます。',
+          },
+          {
+            question: 'どのような内容を問い合わせできますか？',
+            answer: '戯曲図書館へのご質問・ご要望・ご意見など、お気軽にお問い合わせください。掲載依頼も承っております。',
+          },
+        ]}
       />
       <div>
         <h1 className="text-3xl md:text-4xl font-bold mb-6">お問い合わせ</h1>

@@ -1,6 +1,7 @@
 // Pagination.tsx
 
 import React from "react";
+import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
@@ -54,8 +55,24 @@ const Pagination = ({ pagination, setPage, baseUrl }: any) => {
     }
   };
 
+  const generatePageUrl = (page: number) => {
+    if (!baseUrl) return null;
+    const url = new URL(baseUrl, 'https://gikyokutosyokan.com');
+    url.searchParams.set('page', page.toString());
+    return url.pathname + url.search;
+  };
+
   return (
-    <nav 
+    <>
+      <Head>
+        {baseUrl && currentPage > 1 && (
+          <link rel="prev" href={`https://gikyokutosyokan.com${generatePageUrl(currentPage - 1)}`} />
+        )}
+        {baseUrl && currentPage < totalPages && (
+          <link rel="next" href={`https://gikyokutosyokan.com${generatePageUrl(currentPage + 1)}`} />
+        )}
+      </Head>
+    <nav
       className="pagination flex flex-wrap items-center justify-center my-4"
       role="navigation"
       aria-label="ページネーション"
@@ -134,6 +151,7 @@ const Pagination = ({ pagination, setPage, baseUrl }: any) => {
         全{pagination.count}件 ({currentPage}/{totalPages}ページ)
       </div>
     </nav>
+    </>
   );
 };
 

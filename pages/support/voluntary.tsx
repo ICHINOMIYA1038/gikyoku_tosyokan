@@ -1,4 +1,5 @@
 import Layout from "@/components/Layout";
+import Seo from "@/components/seo";
 import SupportLayout from "@/components/SupportLayout";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -8,6 +9,11 @@ function Home() {
 
   return (
     <SupportLayout now="voluntary">
+      <Seo
+        pageTitle="ボランティア募集"
+        pageDescription="戯曲図書館では運営とあらすじ・感想の執筆のお手伝いをしていただける方を募集しています。"
+        pagePath="/support/voluntary"
+      />
       <div className="support-document">
         <h2>ボランティア募集</h2>
         <p>

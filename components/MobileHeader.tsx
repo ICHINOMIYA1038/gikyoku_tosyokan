@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useState } from "react";
 import Link from "next/link";
-import { FaBars, FaTimes, FaHeart } from "react-icons/fa";
+import { FaBars, FaTimes } from "react-icons/fa";
 
 export default function MobileHeader() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -14,16 +14,14 @@ export default function MobileHeader() {
     setIsMenuOpen(false);
   };
 
-  const menuItems = [
+  const menuItems: { href: string; label: string; isExternal?: boolean }[] = [
     { href: "/", label: "検索する" },
-    { href: "/favorites", label: "お気に入り" },
     { href: "/university-theater", label: "大学演劇" },
     { href: "/shogekijo", label: "小劇場" },
     { href: "/support/about", label: "概要" },
     { href: "/diary/plot", label: "オリジナル作品" },
     { href: "/support/posting-request", label: "掲載依頼" },
     { href: "/support/contact", label: "お問い合わせ" },
-    { href: "https://twitter.com/gekidankatakago", label: "Twitter", isExternal: true },
   ];
 
   return (

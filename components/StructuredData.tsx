@@ -168,9 +168,13 @@ const StructuredData = ({
           "url": siteUrl,
           "logo": logo,
           "description": "戯曲図書館は、演劇・舞台の脚本を検索できるサービスです。",
-          "sameAs": [
-            "https://twitter.com/gikyokutosyokan"
-          ]
+          "foundingDate": "2024",
+          "contactPoint": {
+            "@type": "ContactPoint",
+            "contactType": "customer support",
+            "email": "gekidankatakago@gmail.com",
+            "availableLanguage": ["Japanese"]
+          }
         };
 
       case "Play":

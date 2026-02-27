@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import Layout from '@/components/Layout';
+import Seo from '@/components/seo';
 
 type TestResult = {
   endpoint: string;
@@ -130,6 +131,7 @@ export default function ApiTestPage() {
 
   return (
     <Layout>
+      <Seo pageTitle="APIテスト" noindex={true} />
       <div className="max-w-6xl mx-auto p-6">
         <h1 className="text-3xl font-bold mb-6">API速度テスト</h1>
         

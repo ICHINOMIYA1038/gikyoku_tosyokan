@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import Layout from '@/components/Layout';
+import Seo from '@/components/seo';
 import { useRouter } from 'next/router';
 import { FaDatabase, FaCheckCircle, FaExclamationCircle } from 'react-icons/fa';
 
@@ -52,6 +53,7 @@ export default function SeedAnnouncementsPage() {
 
   return (
     <Layout>
+      <Seo pageTitle="サンプルデータ作成" noindex={true} />
       <div className="min-h-screen bg-gradient-to-b from-theater-neutral-50 to-white py-12 px-4">
         <div className="max-w-2xl mx-auto">
           <div className="bg-white rounded-lg shadow-md p-8">

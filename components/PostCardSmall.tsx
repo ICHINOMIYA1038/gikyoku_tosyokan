@@ -3,7 +3,6 @@ import Image from "next/image";
 import { Post as PostType } from "@prisma/client";
 import Link from "next/link";
 import { FaClock, FaUsers, FaTag, FaPen, FaMale, FaFemale, FaTheaterMasks } from "react-icons/fa";
-import FavoriteButton from "@/components/FavoriteButton";
 
 type PostPageProps = {
   post: PostType & { author: { id: number; name: string } };
@@ -36,11 +35,6 @@ const PostCardSmall: React.FC<PostPageProps> = ({ post }: any) => {
             </div>
           )}
           
-          {/* お気に入りボタン（左上） */}
-          <div className="absolute top-2 left-2 z-10">
-            <FavoriteButton postId={post.id} size="sm" />
-          </div>
-
           {/* カテゴリーバッジ */}
           {primaryCategory && (
             <div className="absolute top-2 right-2">

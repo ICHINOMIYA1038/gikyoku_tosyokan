@@ -1,5 +1,6 @@
 import LinkCard from "@/components/LinkCard";
 import SupportLayout from "@/components/SupportLayout";
+import StructuredData from "@/components/StructuredData";
 import { useRouter } from "next/router";
 
 function Home() {
@@ -7,6 +8,23 @@ function Home() {
 
   return (
     <SupportLayout now="about">
+      <StructuredData
+        type="FAQPage"
+        faqItems={[
+          {
+            question: '戯曲図書館とは？',
+            answer: '戯曲図書館は、演劇・舞台の脚本を上演時間や人数などから検索できるサービスです。文化祭や学園祭、部活動の上演作品探しにご活用いただけます。',
+          },
+          {
+            question: '脚本は読めますか？',
+            answer: '著作権の観点から、戯曲の内容自体は公開しておりません。作品の情報や入手方法を掲載しています。面白いと思った作品はぜひ購入してお読みください。',
+          },
+          {
+            question: '上演するにはどうすればいいですか？',
+            answer: '掲載されている戯曲は作者や出版社に著作権があります。上演をご希望の際には、各作品ページに記載の著作者にご連絡ください。',
+          },
+        ]}
+      />
       <div className="support-document">
         <h2>概要</h2>
         <p>

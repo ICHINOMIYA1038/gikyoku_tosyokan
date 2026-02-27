@@ -41,12 +41,6 @@ export default function Header() {
         >
           お問い合わせ
         </Link>
-        <Link
-          href="https://twitter.com/gekidankatakago"
-          className="text-theater-neutral-800 hover:text-theater-neutral-600"
-        >
-          Twitter
-        </Link>
       </nav>
     </header>
   );

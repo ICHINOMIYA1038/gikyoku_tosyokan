@@ -1,4 +1,5 @@
 import Layout from "@/components/Layout";
+import Seo from "@/components/seo";
 import SupportLayout from "@/components/SupportLayout";
 import { useRouter } from "next/router";
 
@@ -7,6 +8,11 @@ function Home() {
 
   return (
     <SupportLayout now="privacy-policy">
+      <Seo
+        pageTitle="プライバシーポリシー"
+        pageDescription="戯曲図書館のプライバシーポリシー。個人情報の取り扱い、Cookie利用、広告ポリシーについて。"
+        pagePath="/support/privacy-policy"
+      />
       <div className="support-document">
         <h2>プライバシーポリシー</h2>
         <h3>第1条（個人情報）</h3>

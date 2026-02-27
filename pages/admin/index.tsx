@@ -2,11 +2,13 @@ import AuthorForm from "@/components/Form/AuthorForm";
 import CategoryForm from "@/components/Form/CategoryForm";
 import PostForm from "@/components/Form/PostForm";
 import Layout from "@/components/Layout";
+import Seo from "@/components/seo";
 import { prisma } from "@/lib/prisma";
 
 export default function Home({ authors, categories }: any) {
   return (
     <Layout>
+      <Seo pageTitle="管理画面" noindex={true} />
       <div className="">
         <CategoryForm />
         <AuthorForm />

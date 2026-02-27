@@ -1,5 +1,5 @@
-// pages/index.js
 import { useState } from "react";
+import Seo from "@/components/seo";
 
 export default function Home() {
   const [inputValues, setInputValues] = useState<any>({
@@ -176,6 +176,7 @@ export default function Home() {
 
   return (
     <div className="container mx-auto mt-4">
+      <Seo pageTitle="観劇三昧記事生成" noindex={true} />
       <h1 className="text-2xl font-semibold mb-4">String Replacement App</h1>
       <div className="mb-4">
         <label htmlFor="streamingid" className="block mb-2">

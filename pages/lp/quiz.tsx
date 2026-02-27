@@ -1,6 +1,5 @@
-// pages/index.js
-
 import React, { useState, useEffect } from "react";
+import Seo from "@/components/seo";
 import { BsCircle } from "react-icons/bs";
 import { RxCross1 } from "react-icons/rx";
 import {
@@ -76,6 +75,12 @@ function QuizApp({ quizData }: any) {
     case QUIZ_TITLE:
       return (
         <QuizHeader>
+          <Seo
+            pageTitle="戯曲クイズ"
+            pageDescription="岸田國士戯曲賞受賞作を中心に戯曲に関するクイズを出題！あなたは何問答えられますか？"
+            pagePath="/lp/quiz"
+            pageKeywords={["戯曲クイズ", "岸田國士戯曲賞", "演劇クイズ"]}
+          />
           <div>
             岸田國士戯曲賞受賞作を中心に戯曲に関するクイズを出題します。
           </div>

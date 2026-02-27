@@ -1,4 +1,5 @@
 import Layout from "@/components/Layout";
+import Seo from "@/components/seo";
 import SupportLayout from "@/components/SupportLayout";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -8,6 +9,11 @@ function Home() {
 
   return (
     <SupportLayout now="aboutus">
+      <Seo
+        pageTitle="運営者概要"
+        pageDescription="戯曲図書館の運営者情報。大学在学時に作成し、個人で運営しています。"
+        pagePath="/support/aboutus"
+      />
       <div className="support-document">
         <h2>運営者概要</h2>
         <p>運営者:ふみ</p>

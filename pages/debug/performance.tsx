@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import Layout from '@/components/Layout';
+import Seo from '@/components/seo';
 
 export default function PerformanceDebugPage() {
   const [loading, setLoading] = useState(false);
@@ -29,6 +30,7 @@ export default function PerformanceDebugPage() {
 
   return (
     <Layout>
+      <Seo pageTitle="パフォーマンス診断" noindex={true} />
       <div className="max-w-6xl mx-auto p-6">
         <h1 className="text-3xl font-bold mb-6">パフォーマンス診断</h1>
         

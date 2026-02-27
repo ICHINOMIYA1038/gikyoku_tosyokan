@@ -1,5 +1,6 @@
 import TwitterIntroduction from "@/components/Ad/TwitterIntroduction";
 import Layout from "@/components/Layout";
+import Seo from "@/components/seo";
 import MessageModal from "@/components/Modal/MessageModalProps";
 import { PrismaClient } from "@prisma/client";
 import { useState } from "react";
@@ -95,6 +96,7 @@ export default function Home({ post, categories, authors }: any) {
 
   return (
     <Layout>
+      <Seo pageTitle="投稿編集" noindex={true} />
       <>
         <form
           onSubmit={handleSubmit}
