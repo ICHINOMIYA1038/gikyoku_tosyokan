@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import Layout from '@/components/Layout';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { FaCalendarAlt, FaMapMarkerAlt, FaEye, FaPlus, FaClock, FaTheaterMasks } from 'react-icons/fa';
+import { FaCalendarAlt, FaMapMarkerAlt, FaEye, FaPlus, FaClock, FaTheaterMasks, FaBook, FaUsers } from 'react-icons/fa';
 import Seo from '@/components/seo';
 
 type Announcement = {
@@ -16,6 +16,10 @@ type Announcement = {
   authorName: string;
   createdAt: string;
   views: number;
+  theaterGroupName?: string;
+  scriptTitle?: string;
+  postId?: number;
+  post?: { id: number; title: string } | null;
 };
 
 export default function AnnouncementsPage() {
@@ -73,12 +77,18 @@ export default function AnnouncementsPage() {
     const diff = now.getTime() - date.getTime();
     const hours = Math.floor(diff / (1000 * 60 * 60));
     const days = Math.floor(hours / 24);
-    
+
     if (days > 0) return `${days}日前`;
     if (hours > 0) return `${hours}時間前`;
     const minutes = Math.floor(diff / (1000 * 60));
     if (minutes > 0) return `${minutes}分前`;
     return 'たった今';
+  };
+
+  const getDisplayScriptTitle = (announcement: Announcement) => {
+    if (announcement.post) return announcement.post.title;
+    if (announcement.scriptTitle) return announcement.scriptTitle;
+    return null;
   };
 
   return (
@@ -148,7 +158,7 @@ export default function AnnouncementsPage() {
                           {getTimeAgo(announcement.createdAt)}
                         </span>
                       </div>
-                      
+
                       <div className="flex flex-wrap gap-4 mb-3 text-sm">
                         {announcement.performanceDate && (
                           <div className="flex items-center gap-1 text-theater-secondary-600">
@@ -162,16 +172,28 @@ export default function AnnouncementsPage() {
                             <span>{announcement.venue}</span>
                           </div>
                         )}
+                        {getDisplayScriptTitle(announcement) && (
+                          <div className="flex items-center gap-1 text-theater-primary-600">
+                            <FaBook />
+                            <span>{getDisplayScriptTitle(announcement)}</span>
+                          </div>
+                        )}
+                        {announcement.theaterGroupName && (
+                          <div className="flex items-center gap-1 text-theater-secondary-700">
+                            <FaUsers />
+                            <span>{announcement.theaterGroupName}</span>
+                          </div>
+                        )}
                         <div className="flex items-center gap-1 text-gray-500">
                           <FaEye />
                           <span>{announcement.views}回閲覧</span>
                         </div>
                       </div>
-                      
+
                       <p className="text-theater-neutral-700 line-clamp-2 mb-3">
                         {announcement.content}
                       </p>
-                      
+
                       <div className="flex justify-between items-center">
                         <span className="text-sm text-gray-500">
                           投稿者: {announcement.authorName}

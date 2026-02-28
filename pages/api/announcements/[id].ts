@@ -16,6 +16,9 @@ export default async function handler(
     try {
       const announcement = await prisma.announcement.findUnique({
         where: { id: announcementId },
+        include: {
+          post: { select: { id: true, title: true } },
+        },
       });
 
       if (!announcement) {

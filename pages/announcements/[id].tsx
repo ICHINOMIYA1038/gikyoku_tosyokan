@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Layout from '@/components/Layout';
 import Link from 'next/link';
-import { FaCalendarAlt, FaMapMarkerAlt, FaYenSign, FaPhone, FaUser, FaEye, FaClock, FaTheaterMasks, FaArrowLeft, FaTrash, FaShareAlt } from 'react-icons/fa';
+import { FaCalendarAlt, FaMapMarkerAlt, FaYenSign, FaPhone, FaUser, FaEye, FaClock, FaTheaterMasks, FaArrowLeft, FaTrash, FaShareAlt, FaBook, FaUsers } from 'react-icons/fa';
 import {
   TwitterShareButton,
   FacebookShareButton,
@@ -26,6 +26,10 @@ type Announcement = {
   createdAt: string;
   updatedAt: string;
   views: number;
+  theaterGroupName?: string;
+  scriptTitle?: string;
+  postId?: number;
+  post?: { id: number; title: string } | null;
 };
 
 export default function AnnouncementDetailPage() {
@@ -48,7 +52,7 @@ export default function AnnouncementDetailPage() {
       if (response.ok) {
         const data = await response.json();
         setAnnouncement(data);
-        
+
         // 削除権限のチェック（簡易的にローカルストレージで管理）
         const userIp = localStorage.getItem('userIpAddress');
         if (userIp && data.ipAddress === userIp) {
@@ -68,12 +72,12 @@ export default function AnnouncementDetailPage() {
     if (!confirm('この告知を削除してもよろしいですか？')) {
       return;
     }
-    
+
     try {
       const response = await fetch(`/api/announcements/${id}`, {
         method: 'DELETE',
       });
-      
+
       if (response.ok) {
         alert('告知を削除しました');
         router.push('/announcements');
@@ -127,6 +131,8 @@ export default function AnnouncementDetailPage() {
   const shareUrl = `https://gikyokutosyokan.com/announcements/${announcement.id}`;
   const shareTitle = `【公演告知】${announcement.title}`;
 
+  const displayScriptTitle = announcement.post?.title || announcement.scriptTitle;
+
   return (
     <>
       <Seo
@@ -147,11 +153,11 @@ export default function AnnouncementDetailPage() {
                 <FaArrowLeft />
                 <span>告知一覧に戻る</span>
               </Link>
-              
+
               <h1 className="text-2xl md:text-3xl font-bold text-theater-neutral-900 mb-4">
                 {announcement.title}
               </h1>
-              
+
               <div className="flex flex-wrap items-center gap-4 text-sm text-theater-neutral-700">
                 <div className="flex items-center gap-1">
                   <FaUser />
@@ -171,13 +177,40 @@ export default function AnnouncementDetailPage() {
 
           <div className="max-w-4xl mx-auto px-4 py-8">
             {/* 公演情報カード */}
-            {(announcement.performanceDate || announcement.venue || announcement.ticketPrice) && (
+            {(announcement.performanceDate || announcement.venue || announcement.ticketPrice || displayScriptTitle || announcement.theaterGroupName) && (
               <div className="bg-white rounded-lg shadow-md p-6 mb-6">
                 <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
                   <FaTheaterMasks className="text-theater-primary-500" />
                   公演情報
                 </h2>
                 <div className="grid md:grid-cols-2 gap-4">
+                  {displayScriptTitle && (
+                    <div className="flex items-start gap-3">
+                      <FaBook className="text-theater-primary-500 mt-1" />
+                      <div>
+                        <p className="font-medium">上演作品</p>
+                        {announcement.post ? (
+                          <Link
+                            href={`/posts/${announcement.post.id}`}
+                            className="text-theater-primary-600 hover:text-theater-primary-700 hover:underline"
+                          >
+                            {announcement.post.title}
+                          </Link>
+                        ) : (
+                          <p className="text-theater-neutral-700">{displayScriptTitle}</p>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                  {announcement.theaterGroupName && (
+                    <div className="flex items-start gap-3">
+                      <FaUsers className="text-theater-secondary-500 mt-1" />
+                      <div>
+                        <p className="font-medium">劇団・団体</p>
+                        <p className="text-theater-neutral-700">{announcement.theaterGroupName}</p>
+                      </div>
+                    </div>
+                  )}
                   {announcement.performanceDate && (
                     <div className="flex items-start gap-3">
                       <FaCalendarAlt className="text-theater-secondary-500 mt-1" />
@@ -245,7 +278,7 @@ export default function AnnouncementDetailPage() {
                   <FaShareAlt />
                   共有
                 </button>
-                
+
                 {showShareButtons && (
                   <div className="absolute bottom-full mb-2 left-0 bg-white rounded-lg shadow-lg p-3 flex gap-2">
                     <TwitterShareButton url={shareUrl} title={shareTitle}>

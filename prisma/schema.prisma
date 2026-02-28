@@ -54,6 +54,7 @@ model Post {
   categories          Category[]      @relation("PostCategory")
   theaterGroups       PostTheaterGroup[]
   awards              PostAward[]
+  announcements       Announcement[]
 
   @@index([title])
   @@index([synopsis])
@@ -278,10 +279,15 @@ model Announcement {
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
   views            Int      @default(0)
-  
+  postId           Int?
+  post             Post?    @relation(fields: [postId], references: [id])
+  theaterGroupName String?
+  scriptTitle      String?
+
   @@index([createdAt(sort: Desc)])
   @@index([performanceDate])
   @@index([views(sort: Desc)])
+  @@index([postId])
   @@map("Announcement")
 }
 

@@ -1,8 +1,14 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Layout from '@/components/Layout';
 import { useRouter } from 'next/router';
-import { FaTheaterMasks, FaCalendarAlt, FaMapMarkerAlt, FaYenSign, FaPhone, FaUser, FaInfoCircle } from 'react-icons/fa';
+import { FaTheaterMasks, FaCalendarAlt, FaMapMarkerAlt, FaYenSign, FaPhone, FaUser, FaInfoCircle, FaBook, FaUsers } from 'react-icons/fa';
 import Seo from '@/components/seo';
+
+type PostSuggestion = {
+  id: number;
+  title: string;
+  author: { name: string };
+};
 
 export default function NewAnnouncementPage() {
   const router = useRouter();
@@ -15,75 +21,146 @@ export default function NewAnnouncementPage() {
     ticketPrice: '',
     contactInfo: '',
     authorName: '',
+    theaterGroupName: '',
+    scriptTitle: '',
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
+
+  // 作品サジェスト
+  const [postQuery, setPostQuery] = useState('');
+  const [selectedPost, setSelectedPost] = useState<PostSuggestion | null>(null);
+  const [suggestions, setSuggestions] = useState<PostSuggestion[]>([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const suggestTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const suggestRef = useRef<HTMLDivElement>(null);
+
+  // サジェスト外クリックで閉じる
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (suggestRef.current && !suggestRef.current.contains(e.target as Node)) {
+        setShowSuggestions(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  // 作品検索（デバウンス付き）
+  useEffect(() => {
+    if (suggestTimerRef.current) clearTimeout(suggestTimerRef.current);
+
+    if (postQuery.length < 2) {
+      setSuggestions([]);
+      setShowSuggestions(false);
+      return;
+    }
+
+    suggestTimerRef.current = setTimeout(async () => {
+      try {
+        const res = await fetch(`/api/posts/suggest?q=${encodeURIComponent(postQuery)}`);
+        if (res.ok) {
+          const data: PostSuggestion[] = await res.json();
+          setSuggestions(data);
+          setShowSuggestions(data.length > 0);
+        }
+      } catch {
+        // サジェストの失敗は無視
+      }
+    }, 300);
+
+    return () => {
+      if (suggestTimerRef.current) clearTimeout(suggestTimerRef.current);
+    };
+  }, [postQuery]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
-    // エラーをクリア
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: '' }));
     }
   };
 
+  const handlePostSelect = (post: PostSuggestion) => {
+    setSelectedPost(post);
+    setPostQuery(post.title);
+    setFormData(prev => ({ ...prev, scriptTitle: post.title }));
+    setShowSuggestions(false);
+  };
+
+  const handlePostClear = () => {
+    setSelectedPost(null);
+    setPostQuery('');
+    setFormData(prev => ({ ...prev, scriptTitle: '' }));
+    setSuggestions([]);
+  };
+
   const validate = () => {
     const newErrors: Record<string, string> = {};
-    
+
     if (!formData.title.trim()) {
       newErrors.title = 'タイトルは必須です';
     } else if (formData.title.length > 100) {
       newErrors.title = 'タイトルは100文字以内で入力してください';
     }
-    
+
     if (!formData.content.trim()) {
       newErrors.content = '内容は必須です';
     } else if (formData.content.length > 2000) {
       newErrors.content = '内容は2000文字以内で入力してください';
     }
-    
+
     if (formData.venue && formData.venue.length > 100) {
       newErrors.venue = '会場は100文字以内で入力してください';
     }
-    
+
     if (formData.ticketPrice && formData.ticketPrice.length > 100) {
       newErrors.ticketPrice = 'チケット料金は100文字以内で入力してください';
     }
-    
+
     if (formData.contactInfo && formData.contactInfo.length > 200) {
       newErrors.contactInfo = '連絡先は200文字以内で入力してください';
     }
-    
+
     if (formData.authorName && formData.authorName.length > 50) {
       newErrors.authorName = '投稿者名は50文字以内で入力してください';
     }
-    
+
+    if (formData.theaterGroupName && formData.theaterGroupName.length > 100) {
+      newErrors.theaterGroupName = '劇団・団体名は100文字以内で入力してください';
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validate()) {
       return;
     }
-    
+
     setLoading(true);
-    
+
     try {
+      const body: Record<string, any> = { ...formData };
+      if (selectedPost) {
+        body.postId = selectedPost.id;
+      }
+
       const response = await fetch('/api/announcements', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(body),
       });
-      
+
       if (!response.ok) {
         throw new Error('Failed to create announcement');
       }
-      
+
       const data = await response.json();
       router.push(`/announcements/${data.id}`);
     } catch (error) {
@@ -183,6 +260,85 @@ export default function NewAnnouncementPage() {
                 <p className="text-gray-500 text-xs mt-1">
                   {formData.content.length}/2000文字
                 </p>
+              </div>
+
+              {/* 上演作品 */}
+              <div ref={suggestRef}>
+                <label htmlFor="scriptTitle" className="block text-sm font-bold text-theater-neutral-900 mb-2">
+                  <FaBook className="inline mr-1" />
+                  上演作品
+                </label>
+                {selectedPost ? (
+                  <div className="flex items-center gap-2 px-4 py-2 border border-theater-primary-300 rounded-lg bg-theater-primary-50">
+                    <span className="flex-1">
+                      {selectedPost.title}
+                      <span className="text-gray-500 text-sm ml-2">({selectedPost.author.name})</span>
+                    </span>
+                    <button
+                      type="button"
+                      onClick={handlePostClear}
+                      className="text-gray-400 hover:text-red-500 transition-colors text-sm"
+                    >
+                      解除
+                    </button>
+                  </div>
+                ) : (
+                  <div className="relative">
+                    <input
+                      type="text"
+                      id="scriptTitle"
+                      value={postQuery}
+                      onChange={(e) => {
+                        setPostQuery(e.target.value);
+                        setFormData(prev => ({ ...prev, scriptTitle: e.target.value }));
+                      }}
+                      placeholder="作品名を入力して検索（2文字以上で候補表示）"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-theater-primary-500"
+                    />
+                    {showSuggestions && (
+                      <ul className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                        {suggestions.map((post) => (
+                          <li key={post.id}>
+                            <button
+                              type="button"
+                              onClick={() => handlePostSelect(post)}
+                              className="w-full text-left px-4 py-2 hover:bg-theater-primary-50 transition-colors"
+                            >
+                              <span className="font-medium">{post.title}</span>
+                              <span className="text-gray-500 text-sm ml-2">({post.author.name})</span>
+                            </button>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                )}
+                <p className="text-gray-500 text-xs mt-1">
+                  戯曲図書館に登録されている作品を紐づけできます。未登録の場合はそのまま作品名を入力してください。
+                </p>
+              </div>
+
+              {/* 劇団・団体名 */}
+              <div>
+                <label htmlFor="theaterGroupName" className="block text-sm font-bold text-theater-neutral-900 mb-2">
+                  <FaUsers className="inline mr-1" />
+                  劇団・団体名
+                </label>
+                <input
+                  type="text"
+                  id="theaterGroupName"
+                  name="theaterGroupName"
+                  value={formData.theaterGroupName}
+                  onChange={handleChange}
+                  placeholder="例: 劇団○○、△△シアターカンパニー"
+                  className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-theater-primary-500 ${
+                    errors.theaterGroupName ? 'border-red-500' : 'border-gray-300'
+                  }`}
+                  maxLength={100}
+                />
+                {errors.theaterGroupName && (
+                  <p className="text-red-500 text-sm mt-1">{errors.theaterGroupName}</p>
+                )}
               </div>
 
               {/* 公演日時 */}

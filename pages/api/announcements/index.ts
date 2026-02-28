@@ -25,6 +25,15 @@ export default async function handler(
             authorName: true,
             createdAt: true,
             views: true,
+            theaterGroupName: true,
+            scriptTitle: true,
+            postId: true,
+            post: {
+              select: {
+                id: true,
+                title: true,
+              },
+            },
           },
           orderBy: { createdAt: 'desc' },
           skip,
@@ -35,7 +44,7 @@ export default async function handler(
 
       // キャッシュヘッダーを設定（1分間キャッシュ）
       res.setHeader('Cache-Control', 's-maxage=60, stale-while-revalidate');
-      
+
       res.status(200).json({
         announcements,
         total,
@@ -56,6 +65,9 @@ export default async function handler(
         ticketPrice,
         contactInfo,
         authorName,
+        postId,
+        theaterGroupName,
+        scriptTitle,
       } = req.body;
 
       if (!title || !content) {
@@ -67,6 +79,14 @@ export default async function handler(
         req.headers['x-forwarded-for'] as string ||
         req.socket.remoteAddress;
 
+      // postIdが指定されている場合、存在確認
+      if (postId) {
+        const post = await prisma.post.findUnique({ where: { id: postId } });
+        if (!post) {
+          return res.status(400).json({ error: '指定された作品が見つかりません' });
+        }
+      }
+
       const announcement = await prisma.announcement.create({
         data: {
           title,
@@ -77,6 +97,9 @@ export default async function handler(
           contactInfo,
           authorName: authorName || '名無しさん',
           ipAddress,
+          postId: postId ? parseInt(postId) : null,
+          theaterGroupName: theaterGroupName || null,
+          scriptTitle: scriptTitle || null,
         },
       });
 
