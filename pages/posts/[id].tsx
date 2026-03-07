@@ -224,7 +224,12 @@ function PostPage({ post }: any) {
                   </div>
                 )}
 
-                {/* 2. 読むボタンエリア */}
+                {/* 2. 作品詳細（作品情報、あらすじ、詳細説明、作者について） */}
+                <div className="mt-4">
+                  <MemoizedPostDetails post={post} />
+                </div>
+
+                {/* 3. 読むボタンエリア */}
                 {(hasAmazonLink || hasFreeLink) && (
                   <div className="mt-6 flex flex-col sm:flex-row justify-center gap-4">
                   {hasAmazonLink && (
@@ -316,12 +321,7 @@ function PostPage({ post }: any) {
                   </div>
                 </div>
 
-                {/* 5. 作品詳細（作品情報、あらすじ、詳細説明、作者について） */}
-                <div className="mt-4">
-                  <MemoizedPostDetails post={post} />
-                </div>
-
-                {/* 6. この脚本を上演した劇団 */}
+                {/* 5. この脚本を上演した劇団 */}
                 {post.theaterGroups && post.theaterGroups.length > 0 && (
                   <div className="mt-6">
                     <div className="bg-white rounded-xl shadow-sm p-5 md:p-6 border border-gray-100">
