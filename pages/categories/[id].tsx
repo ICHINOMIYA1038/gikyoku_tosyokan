@@ -12,27 +12,27 @@ const prisma = new PrismaClient();
 // カテゴリごとのSEO最適化コンテンツ
 const categoryDescriptions: { [key: string]: { intro: string; keywords: string[]; relatedSearches: string[] } } = {
   "コメディ": {
-    intro: "笑いあり涙ありのコメディ作品を集めました。文化祭や学園祭で観客を楽しませる、演じる側も楽しい脚本が見つかります。初心者でも取り組みやすい作品が多数。",
+    intro: "【厳選】文化祭・学園祭で盛り上がるコメディ脚本を多数掲載。初心者でも演じやすく、観客を笑顔にできる台本が見つかります。上演時間・人数で絞り込み検索も可能。",
     keywords: ["お笑い", "喜劇", "ユーモア", "爆笑", "文化祭コメディ"],
     relatedSearches: ["短編コメディ", "少人数コメディ", "学園コメディ", "30分コメディ"]
   },
   "シリアス": {
-    intro: "深いテーマと感動的なストーリーのシリアス作品。観客の心に残る、メッセージ性の強い演劇を上演したい方におすすめ。演技力向上にも最適。",
-    keywords: ["感動", "ドラマ", "重厚", "社会派", "ヒューマンドラマ"],
-    relatedSearches: ["感動系", "泣ける脚本", "社会問題", "戦争と平和"]
+    intro: "【厳選】泣ける演劇台本をお探しの方へ。感動的なストーリーで観客の心を動かすシリアス脚本を厳選。高校演劇や小劇場の公演で実績のある作品を掲載中。",
+    keywords: ["感動", "ドラマ", "泣ける", "社会派", "ヒューマンドラマ"],
+    relatedSearches: ["泣ける脚本", "感動系", "社会問題", "戦争と平和"]
   },
   "青春": {
-    intro: "学生生活や恋愛、友情をテーマにした青春作品。高校生・中学生が演じやすく、同世代の観客に共感を呼ぶ脚本を厳選しました。",
-    keywords: ["学園", "恋愛", "友情", "部活", "高校生"],
+    intro: "【厳選】高校演劇・文化祭にぴったりの青春脚本を掲載。学生生活・恋愛・友情をテーマに、同世代が共感できる台本を上演時間・人数別に検索できます。",
+    keywords: ["学園", "恋愛", "友情", "部活", "高校演劇"],
     relatedSearches: ["高校生向け", "恋愛もの", "部活動", "卒業"]
   },
   "ファンタジー": {
-    intro: "魔法や冒険、異世界を舞台にしたファンタジー作品。想像力を刺激し、舞台演出の工夫が楽しめる脚本が揃っています。",
+    intro: "【厳選】舞台映えするファンタジー脚本を掲載。魔法・冒険・異世界を舞台にした演劇台本で、演出の工夫が楽しめる作品を厳選しました。",
     keywords: ["魔法", "冒険", "異世界", "童話", "メルヘン"],
     relatedSearches: ["ファンタジー演劇", "童話劇", "冒険活劇", "魔法もの"]
   },
   "ミステリー": {
-    intro: "謎解きやサスペンスが楽しめるミステリー作品。観客を最後まで引き込む、緊張感のある舞台を作りたい方に最適な脚本集。",
+    intro: "【厳選】観客を最後まで引き込むミステリー脚本を掲載。謎解き・サスペンス系の演劇台本で、緊張感のある舞台を作りたい方に最適。",
     keywords: ["推理", "サスペンス", "謎解き", "探偵", "事件"],
     relatedSearches: ["推理劇", "サスペンス演劇", "探偵もの", "密室劇"]
   }
@@ -47,7 +47,7 @@ function CategoryPage({ category }: any) {
 
   // カテゴリー別の説明文を取得
   const categoryInfo = categoryDescriptions[category.name] || {
-    intro: `${category.name}ジャンルの演劇脚本を集めました。文化祭・学園祭・演劇部の公演に最適な作品が見つかります。`,
+    intro: `${category.name}ジャンルの演劇脚本・台本を厳選掲載。文化祭・学園祭・高校演劇に最適な作品を上演時間・人数で検索できます。`,
     keywords: [],
     relatedSearches: []
   };
@@ -158,9 +158,9 @@ function CategoryPage({ category }: any) {
 
   return (
     <>
-      <Seo 
-        pageTitle={`${category.name}の演劇脚本・戯曲一覧【${postCount}作品】文化祭・学園祭向け | 戯曲図書館`}
-        pageDescription={`${categoryInfo.intro} ${postCount}作品掲載。上演時間${stats.avgPlaytime}分平均、${stats.minPeople}人〜${stats.maxPeople}人対応。無料台本あり。`}
+      <Seo
+        pageTitle={`${category.name}の演劇脚本おすすめ${postCount}選｜無料台本あり`}
+        pageDescription={`${category.name}の演劇台本${postCount}作品を厳選掲載。上演時間${stats.avgPlaytime}分平均、${stats.minPeople}〜${stats.maxPeople}人対応。文化祭・学園祭・高校演劇に最適な脚本を人数・時間で検索。無料台本もあり。`}
         pagePath={`/categories/${category.id}`}
         pageImg={category.image_url || "https://gikyokutosyokan.com/logo.png"}
       />

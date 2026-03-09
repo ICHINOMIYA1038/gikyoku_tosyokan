@@ -286,8 +286,8 @@ export default function CastSizeGuide() {
   return (
     <Layout>
       <Seo
-        pageTitle="人数別おすすめ脚本ガイド | 1人から大人数まで完全網羅"
-        pageDescription="演劇の人数別に最適な脚本の選び方を解説。一人芝居から大人数劇まで、それぞれの特徴、メリット・デメリット、おすすめジャンルを詳しく紹介。"
+        pageTitle="【人数別】演劇脚本の選び方｜1人〜大人数まで完全網羅"
+        pageDescription="文化祭・学園祭・高校演劇に最適な脚本を人数別に解説。1人芝居から大人数劇まで、メリット・選び方・無料台本の情報を完全網羅。上演時間別の検索も可能。"
         pagePath="/guide/cast-size"
       />
       <StructuredData

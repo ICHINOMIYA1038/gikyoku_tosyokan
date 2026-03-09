@@ -167,8 +167,8 @@ export default function PlotPageOptimized() {
   return (
     <Layout>
       <Seo
-        pageTitle="無料演劇脚本ダウンロード｜文化祭・学園祭向け台本【上演料無料】- 戯曲図書館"
-        pageDescription="【完全無料】文化祭・学園祭で使える演劇脚本を無料ダウンロード。上演料不要、申請不要。15分の短編から90分の長編まで。少人数（2人）から大人数まで対応。コメディ、シリアス、青春など多彩なジャンル。"
+        pageTitle="無料演劇脚本ダウンロード｜上演料無料・文化祭向け台本"
+        pageDescription="演劇脚本を無料ダウンロード。上演料不要・申請不要で文化祭・学園祭・高校演劇にすぐ使える台本集。15分〜90分、2人〜8人対応。コメディ・シリアス・青春など多ジャンル。"
         pagePath="/diary/plot"
         pageImg="https://gikyokutosyokan.com/img/og-plot.jpg"
         pageImgWidth={1200}
