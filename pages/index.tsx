@@ -12,8 +12,9 @@ import FAQ from "@/components/FAQ";
 import Link from "next/link";
 import LatestBlogPosts from "@/components/LatestBlogPosts";
 import RecentComments from "@/components/RecentComments";
+import TrendingPosts from "@/components/TrendingPosts";
 
-export default function Home({ news, authors, posts, categories, blogPosts, trendingPosts }: any) {
+export default function Home({ news, authors, posts, categories, blogPosts, trendingPosts, announcements }: any) {
   const [data, setData] = useState<any>(null); // 取得したデータを格納
   const [page, setPage] = useState(1);
   const [sort_by, setSortIndex] = useState<number>(1);
@@ -70,6 +71,10 @@ export default function Home({ news, authors, posts, categories, blogPosts, tren
         <StructuredData type="FAQPage" faqItems={faqItems} />
         <TopImage buttonClick={handleScrollToRegistrationForm} />
         <NewsList news={news} />
+
+        {/* 今週の人気作品 */}
+        <TrendingPosts posts={trendingPosts} />
+
         <div
           className="lg:flex relative box-border"
           id="registration-form"
@@ -102,6 +107,51 @@ export default function Home({ news, authors, posts, categories, blogPosts, tren
 
         {/* 最新の記事 */}
         <LatestBlogPosts posts={blogPosts} />
+
+        {/* 最新の上演告知 */}
+        <section className="py-8 px-4">
+          <div className="max-w-6xl mx-auto">
+            <h2 className="text-2xl md:text-3xl font-bold text-center mb-6">
+              {"\uD83D\uDCE2"} 最新の上演告知
+            </h2>
+            {announcements && announcements.length > 0 ? (
+              <>
+                <div className="grid md:grid-cols-3 gap-5">
+                  {announcements.map((a: any) => (
+                    <Link key={a.id} href={`/announcements/${a.id}`} className="block group">
+                      <div className="bg-white p-5 rounded-lg shadow hover:shadow-lg transition-all hover:-translate-y-1 border border-gray-100">
+                        <h3 className="text-lg font-bold mb-2 group-hover:text-theater-primary-600 transition-colors line-clamp-2">
+                          {a.title}
+                        </h3>
+                        {a.theaterGroupName && (
+                          <p className="text-sm text-theater-secondary-700 mb-1">{a.theaterGroupName}</p>
+                        )}
+                        {a.performanceDate && (
+                          <p className="text-sm text-gray-600 mb-1">{"\uD83D\uDCC5"} {a.performanceDate}</p>
+                        )}
+                        {a.venue && (
+                          <p className="text-sm text-gray-600">{"\uD83D\uDCCD"} {a.venue}</p>
+                        )}
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+                <div className="text-center mt-6">
+                  <Link href="/announcements" className="inline-block bg-theater-primary-500 text-white px-6 py-3 rounded-lg hover:bg-theater-primary-600 transition-colors font-bold">
+                    もっと見る →
+                  </Link>
+                </div>
+              </>
+            ) : (
+              <div className="bg-white rounded-lg shadow-md p-8 text-center">
+                <p className="text-gray-600 mb-4">公演情報を投稿しませんか？</p>
+                <Link href="/announcements/new" className="inline-block bg-theater-primary-500 text-white px-6 py-3 rounded-lg hover:bg-theater-primary-600 transition-colors font-bold">
+                  告知を投稿する →
+                </Link>
+              </div>
+            )}
+          </div>
+        </section>
 
         {/* ガイドセクション */}
         <section className="bg-gray-50 py-8 px-4">
@@ -207,10 +257,11 @@ export async function getStaticProps() {
   let categories = [];
   let blogPosts: any[] = [];
   let trendingPosts: any[] = [];
+  let announcements: any[] = [];
 
   try {
     // 並列でデータを取得（最適化）
-    const [newsData, authorsData, postsData, categoriesData, blogData, trendingData] = await Promise.all([
+    const [newsData, authorsData, postsData, categoriesData, blogData, trendingData, announcementsData] = await Promise.all([
       // ニュースは最新10件のみ
       prisma.news.findMany({
         take: 10,
@@ -298,6 +349,18 @@ export async function getStaticProps() {
         ORDER BY access_count DESC
         LIMIT 5
       ` as Promise<Array<{ postId: number; access_count: bigint }>>,
+      // 最新の上演告知3件
+      prisma.announcement.findMany({
+        take: 3,
+        orderBy: { createdAt: 'desc' },
+        select: {
+          id: true,
+          title: true,
+          performanceDate: true,
+          venue: true,
+          theaterGroupName: true,
+        },
+      }),
     ]);
 
     // 日付データの変換
@@ -324,9 +387,25 @@ export async function getStaticProps() {
       }),
     }));
 
+    // 上演告知の日付フォーマット
+    announcements = announcementsData.map((a) => ({
+      ...a,
+      performanceDate: a.performanceDate
+        ? a.performanceDate.toLocaleDateString("ja-JP", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          })
+        : null,
+    }));
+
     // 注目作品の詳細取得
-    const trendingIds = (trendingData as Array<{ postId: number }>).map((t) => t.postId);
+    const trendingRaw = trendingData as Array<{ postId: number; access_count: bigint }>;
+    const trendingIds = trendingRaw.map((t) => t.postId);
     if (trendingIds.length > 0) {
+      const accessCountMap = Object.fromEntries(
+        trendingRaw.map((t) => [t.postId, Number(t.access_count)])
+      );
       const trendingPostsData = await prisma.post.findMany({
         where: { id: { in: trendingIds } },
         select: {
@@ -346,9 +425,13 @@ export async function getStaticProps() {
           },
         },
       });
-      // 元の順序（アクセス数順）を維持
+      // 元の順序（アクセス数順）を維持し、アクセス数を付与
       trendingPosts = trendingIds
-        .map((id) => trendingPostsData.find((p) => p.id === id))
+        .map((id) => {
+          const post = trendingPostsData.find((p) => p.id === id);
+          if (!post) return null;
+          return { ...post, accessCount: accessCountMap[id] || 0 };
+        })
         .filter(Boolean);
     }
   } catch (error) {
@@ -361,6 +444,7 @@ export async function getStaticProps() {
         categories: [],
         blogPosts: [],
         trendingPosts: [],
+        announcements: [],
       },
     };
   }
@@ -373,6 +457,7 @@ export async function getStaticProps() {
       categories,
       blogPosts,
       trendingPosts,
+      announcements,
     },
   };
 }

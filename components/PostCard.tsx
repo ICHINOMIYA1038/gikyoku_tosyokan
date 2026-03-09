@@ -3,7 +3,7 @@ import Image from "next/image";
 import { Post as PostType } from "@prisma/client";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import { FaClock, FaUsers, FaMale, FaFemale, FaTag, FaPen, FaTheaterMasks, FaCommentDots } from "react-icons/fa";
+import { FaClock, FaUsers, FaMale, FaFemale, FaTag, FaPen, FaTheaterMasks, FaCommentDots, FaStar } from "react-icons/fa";
 import FavoriteButton from "@/components/FavoriteButton";
 
 type PostPageProps = {
@@ -89,6 +89,14 @@ const PostCard: React.FC<PostPageProps> = ({ post }: any) => {
                 <div className="flex items-center gap-1.5 text-gray-600 text-sm">
                   <FaUsers className="text-blue-500/70" />
                   <span className="font-medium">{post.totalNumber}人</span>
+                </div>
+              )}
+
+              {/* 平均評価 */}
+              {post.averageRating != null && post.averageRating > 0 && (
+                <div className="flex items-center gap-1 text-gray-600 text-sm">
+                  <FaStar className="text-yellow-400/80" />
+                  <span className="font-medium">{post.averageRating.toFixed(1)}</span>
                 </div>
               )}
 

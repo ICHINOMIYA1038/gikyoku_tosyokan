@@ -184,6 +184,11 @@ export const getStaticProps: GetStaticProps = async () => {
               id: true,
               name: true
             }
+          },
+          _count: {
+            select: {
+              comments: true
+            }
           }
         },
         orderBy: {

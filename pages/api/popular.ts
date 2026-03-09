@@ -16,7 +16,7 @@ export default async function handler(
         },
         include: {
           _count: {
-            select: { access: true },
+            select: { access: true, comments: true },
           },
           author: true, // Include the associated Author records
           categories: true,

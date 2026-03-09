@@ -2,7 +2,7 @@ import * as React from "react";
 import Image from "next/image";
 import { Post as PostType } from "@prisma/client";
 import Link from "next/link";
-import { FaClock, FaUsers, FaTag, FaPen, FaMale, FaFemale, FaTheaterMasks } from "react-icons/fa";
+import { FaClock, FaUsers, FaTag, FaPen, FaMale, FaFemale, FaTheaterMasks, FaStar, FaCommentDots } from "react-icons/fa";
 
 type PostPageProps = {
   post: PostType & { author: { id: number; name: string } };
@@ -56,7 +56,7 @@ const PostCardSmall: React.FC<PostPageProps> = ({ post }: any) => {
             <span className="truncate">{post.author.name}</span>
           </div>
           
-          <div className="mt-auto flex items-center justify-between pt-3 border-t border-gray-50 text-xs text-gray-500">
+          <div className="mt-auto flex items-center flex-wrap gap-3 pt-3 border-t border-gray-50 text-xs text-gray-500">
             {post.playtime && post.playtime > 0 && (
               <div className="flex items-center gap-1">
                 <FaClock className="text-green-500/60" />
@@ -68,6 +68,20 @@ const PostCardSmall: React.FC<PostPageProps> = ({ post }: any) => {
                <div className="flex items-center gap-1">
                 <FaUsers className="text-blue-500/60" />
                 <span>{post.totalNumber}人</span>
+              </div>
+            )}
+
+            {post.averageRating != null && post.averageRating > 0 && (
+              <div className="flex items-center gap-1">
+                <FaStar className="text-yellow-400/70" />
+                <span>{post.averageRating.toFixed(1)}</span>
+              </div>
+            )}
+
+            {post._count?.comments > 0 && (
+              <div className="flex items-center gap-1">
+                <FaCommentDots className="text-pink-400/60" />
+                <span>{post._count.comments}</span>
               </div>
             )}
           </div>

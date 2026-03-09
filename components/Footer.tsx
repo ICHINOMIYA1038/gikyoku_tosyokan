@@ -23,6 +23,9 @@ const Footer: React.FC = () => {
               <li className="mb-2">
                 <Link href="/categories" className="hover:underline">カテゴリー一覧</Link>
               </li>
+              <li className="mb-2">
+                <Link href="/announcements" className="hover:underline">上演告知</Link>
+              </li>
             </ul>
           </div>
           <div className="w-full md:w-1/3 px-4 mb-8 md:mb-0">

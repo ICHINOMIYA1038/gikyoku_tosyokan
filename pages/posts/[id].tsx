@@ -224,9 +224,31 @@ function PostPage({ post }: any) {
                   </div>
                 )}
 
+                {/* コメント数バッジ */}
+                {commentCount > 0 && (
+                  <div className="mt-3 flex justify-center">
+                    <button
+                      onClick={scrollToComments}
+                      className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-pink-600 transition-colors"
+                    >
+                      <FaCommentDots className="text-xs" />
+                      <span>{commentCount}件のコメント</span>
+                    </button>
+                  </div>
+                )}
+
                 {/* 2. 作品詳細（作品情報、あらすじ、詳細説明、作者について） */}
                 <div className="mt-4">
                   <MemoizedPostDetails post={post} />
+                </div>
+
+                {/* コメントセクション */}
+                <div className="mt-4">
+                  <div className="bg-pink-50/60 rounded-xl shadow-sm p-4 md:p-5 border border-pink-100">
+                    {post.comments && (
+                      <MemoizedComments key={post.id} comments={post.comments} postid={post.id} postTitle={post.title} inline={true} />
+                    )}
+                  </div>
                 </div>
 
                 {/* 3. 読むボタンエリア */}
@@ -308,15 +330,6 @@ function PostPage({ post }: any) {
                         {error && <span className="text-red-600">{error}</span>}
                         {success && <span className="text-green-600">{success}</span>}
                       </div>
-                    )}
-                  </div>
-                </div>
-
-                {/* 4. コメントセクション */}
-                <div className="mt-4">
-                  <div className="bg-pink-50/60 rounded-xl shadow-sm p-4 md:p-5 border border-pink-100">
-                    {post.comments && (
-                      <MemoizedComments key={post.id} comments={post.comments} postid={post.id} postTitle={post.title} inline={true} />
                     )}
                   </div>
                 </div>

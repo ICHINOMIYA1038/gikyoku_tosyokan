@@ -515,6 +515,11 @@ export async function getStaticProps(context: any) {
                 name: true,
               },
             },
+            _count: {
+              select: {
+                comments: true,
+              },
+            },
           },
         },
       },

@@ -156,6 +156,7 @@ export async function getServerSideProps(context: any) {
         man: true,
         woman: true,
         synopsis: true,
+        averageRating: true,
         author: {
           select: {
             id: true,
@@ -166,6 +167,11 @@ export async function getServerSideProps(context: any) {
           select: {
             id: true,
             name: true,
+          },
+        },
+        _count: {
+          select: {
+            comments: true,
           },
         },
       },

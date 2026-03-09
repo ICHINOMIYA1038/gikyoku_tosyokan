@@ -18,6 +18,7 @@ export default function MobileHeader() {
     { href: "/", label: "検索する" },
     { href: "/university-theater", label: "大学演劇" },
     { href: "/shogekijo", label: "小劇場" },
+    { href: "/announcements", label: "上演告知" },
     { href: "/support/about", label: "概要" },
     { href: "/diary/plot", label: "オリジナル作品" },
     { href: "/support/posting-request", label: "掲載依頼" },
