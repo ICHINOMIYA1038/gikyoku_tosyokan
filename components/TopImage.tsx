@@ -27,9 +27,9 @@ const TopImage = ({ buttonClick }: any) => {
             <div className="space-y-4">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-pink-50 border border-pink-100 text-pink-700 text-sm font-medium mb-2">
                 <span className="flex h-2 w-2 rounded-full bg-pink-500"></span>
-                戯曲・脚本の検索サービス
+                戯曲を探す・知る・語る
               </div>
-              
+
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-gray-900 leading-tight tracking-tight">
                 物語との<br className="md:hidden" />
                 <span className="relative inline-block">
@@ -39,10 +39,10 @@ const TopImage = ({ buttonClick }: any) => {
                 を、<br />
                 もっと自由に。
               </h1>
-              
+
               <p className="text-gray-600 text-lg md:text-xl leading-relaxed max-w-lg mx-auto md:mx-0 font-sans">
-                上演時間、人数、ジャンルから。<br />
-                あなたの劇団にぴったりの脚本が、<br className="md:hidden"/>きっと見つかる。
+                脚本を探すだけじゃない。<br />
+                上演した感想をシェアし、<br className="md:hidden"/>次に演じる人の参考になる場所。
               </p>
             </div>
 
@@ -66,7 +66,7 @@ const TopImage = ({ buttonClick }: any) => {
             </div>
             
             <p className="text-xs text-gray-400 mt-6 font-sans">
-              ※ 当サイトは戯曲の検索データベースです。本文の閲覧には各出版社のサイトをご利用ください。
+              ※ 当サイトは戯曲の検索・レビューサービスです。脚本の本文は掲載しておりません。
             </p>
           </div>
 
