@@ -41,7 +41,7 @@ const SearchResults: React.FC<SearchResultsProps> = ({
                                     <>
                                         <div className="flex justify-between items-center mb-4">
                                             <div className="text-lg font-semibold text-gray-700">
-                                                検索結果: <span className="text-green-700">{data.pagination?.total || 0}</span> 件
+                                                検索結果: <span className="text-green-700">{data.pagination?.count || data.pagination?.total || 0}</span> 件
                                             </div>
                                             <div className="text-sm text-gray-500">
                                                 {data.pagination?.current_page || 1} / {data.pagination?.total_pages || 1} ページ
