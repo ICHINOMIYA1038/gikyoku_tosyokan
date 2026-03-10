@@ -13,32 +13,35 @@ const QuickReactions = ({ postId }: { postId: number }) => {
   const [counts, setCounts] = useState<Record<string, number>>({});
   const [reacted, setReacted] = useState<Set<string>>(new Set());
   const [animating, setAnimating] = useState<string | null>(null);
+  const [feedback, setFeedback] = useState<string | null>(null);
 
   useEffect(() => {
-    // Fetch counts
     fetch(`/api/reactions?postId=${postId}`)
       .then((r) => r.json())
       .then(setCounts)
       .catch(() => {});
 
-    // Restore reacted state
     try {
       const stored = localStorage.getItem(`reactions_${postId}`);
       if (stored) setReacted(new Set(JSON.parse(stored)));
     } catch {}
   }, [postId]);
 
-  const handleReact = async (reaction: string) => {
+  const handleReact = async (reaction: string, emoji: string) => {
     if (reacted.has(reaction)) return;
 
     setAnimating(reaction);
-    setTimeout(() => setAnimating(null), 600);
+    setTimeout(() => setAnimating(null), 800);
 
     // Optimistic update
     const newReacted = new Set(reacted);
     newReacted.add(reaction);
     setReacted(newReacted);
     setCounts((prev) => ({ ...prev, [reaction]: (prev[reaction] || 0) + 1 }));
+
+    // Show feedback
+    setFeedback(`${emoji} 送信しました！`);
+    setTimeout(() => setFeedback(null), 2000);
 
     try {
       localStorage.setItem(`reactions_${postId}`, JSON.stringify(Array.from(newReacted)));
@@ -76,15 +79,15 @@ const QuickReactions = ({ postId }: { postId: number }) => {
           return (
             <button
               key={r.key}
-              onClick={() => handleReact(r.key)}
+              onClick={() => handleReact(r.key, r.emoji)}
               disabled={isReacted}
               className={`
                 inline-flex items-center gap-1.5 px-3 py-2 rounded-full text-sm font-medium
-                transition-all duration-200 min-h-[40px] border
-                ${isAnimating ? "scale-110" : "scale-100"}
+                transition-all duration-300 min-h-[40px] border
+                ${isAnimating ? "scale-125 shadow-md" : "scale-100"}
                 ${isReacted
-                  ? "bg-amber-50 border-amber-300 text-amber-700 cursor-default"
-                  : "bg-white border-gray-200 text-gray-600 hover:border-amber-300 hover:bg-amber-50 active:bg-amber-100 cursor-pointer"
+                  ? "bg-amber-50 border-amber-400 text-amber-700 shadow-sm cursor-default"
+                  : "bg-white border-gray-200 text-gray-600 hover:border-amber-300 hover:bg-amber-50 active:scale-95 cursor-pointer"
                 }
               `}
             >
@@ -99,6 +102,11 @@ const QuickReactions = ({ postId }: { postId: number }) => {
           );
         })}
       </div>
+      {feedback && (
+        <div className="mt-3 inline-flex items-center gap-1.5 px-3 py-1.5 bg-green-50 border border-green-200 rounded-full text-sm text-green-700 animate-fade-in">
+          {feedback}
+        </div>
+      )}
     </div>
   );
 };
