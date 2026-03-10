@@ -28,9 +28,9 @@ export default function MobileHeader() {
   return (
     <>
       <header className="flex items-center justify-between p-3 bg-theater-primary-300">
-        <Link className="flex items-center cursor-pointer" href={"/"} onClick={closeMenu}>
-          <img src="/logo.png" alt="Logo" className="w-10 h-10 mr-4" />
-          <span className="text-xl font-bold">戯曲図書館</span>
+        <Link className="flex items-center cursor-pointer min-w-0" href={"/"} onClick={closeMenu}>
+          <img src="/logo.png" alt="Logo" className="w-10 h-10 mr-4 flex-shrink-0" />
+          <span className="text-xl font-bold truncate">戯曲図書館</span>
         </Link>
         
         {/* デスクトップメニュー */}
@@ -50,7 +50,7 @@ export default function MobileHeader() {
         {/* モバイルメニューボタン */}
         <button
           onClick={toggleMenu}
-          className="md:hidden p-2 text-theater-neutral-800 hover:text-theater-neutral-600 focus:outline-none"
+          className="flex md:hidden items-center justify-center flex-shrink-0 w-10 h-10 rounded-md bg-white/30 text-theater-neutral-800 hover:bg-white/50 active:bg-white/60 focus:outline-none relative z-10"
           aria-label="メニューを開く"
         >
           {isMenuOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
@@ -60,7 +60,7 @@ export default function MobileHeader() {
       {/* モバイルメニュー（スライドイン） */}
       <div
         className={`md:hidden fixed inset-0 z-50 transform transition-transform duration-300 ${
-          isMenuOpen ? "translate-x-0" : "translate-x-full"
+          isMenuOpen ? "translate-x-0" : "translate-x-full pointer-events-none"
         }`}
       >
         {/* オーバーレイ */}

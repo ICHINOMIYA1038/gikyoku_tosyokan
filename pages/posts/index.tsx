@@ -2,13 +2,75 @@ import Layout from "@/components/Layout";
 import PostCard from "@/components/PostCard";
 import Seo from "@/components/seo";
 import { prisma } from "@/lib/prisma";
-import { useState } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
+import { useRouter } from "next/router";
 import { FaTheaterMasks, FaFilter, FaSortAmountDown, FaSearch } from "react-icons/fa";
 
+const POSTS_PER_PAGE = 24;
+
 function PostListPage({ posts }: any) {
+  const router = useRouter();
+
+  // Initialize state from URL query params (fallback to defaults)
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [sortBy, setSortBy] = useState("latest");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [initialized, setInitialized] = useState(false);
+
+  // Read URL params on mount and when query changes
+  useEffect(() => {
+    if (!router.isReady) return;
+    const { q, category, sort, page } = router.query;
+    if (typeof q === "string") setSearchTerm(q);
+    if (typeof category === "string") setSelectedCategory(category);
+    if (typeof sort === "string") setSortBy(sort);
+    if (typeof page === "string") {
+      const parsed = parseInt(page, 10);
+      if (!isNaN(parsed) && parsed >= 1) setCurrentPage(parsed);
+    }
+    setInitialized(true);
+  }, [router.isReady, router.query]);
+
+  // Sync state back to URL params (skip until initial read is done)
+  const updateUrlParams = useCallback(
+    (newSearch: string, newCategory: string, newSort: string, newPage: number = 1) => {
+      const params: Record<string, string> = {};
+      if (newSearch) params.q = newSearch;
+      if (newCategory && newCategory !== "all") params.category = newCategory;
+      if (newSort && newSort !== "latest") params.sort = newSort;
+      if (newPage > 1) params.page = String(newPage);
+
+      router.replace(
+        { pathname: router.pathname, query: params },
+        undefined,
+        { shallow: true }
+      );
+    },
+    [router]
+  );
+
+  // Wrapped setters that also update URL (reset page to 1 on filter change)
+  const handleSearchChange = (value: string) => {
+    setSearchTerm(value);
+    setCurrentPage(1);
+    if (initialized) updateUrlParams(value, selectedCategory, sortBy, 1);
+  };
+  const handleCategoryChange = (value: string) => {
+    setSelectedCategory(value);
+    setCurrentPage(1);
+    if (initialized) updateUrlParams(searchTerm, value, sortBy, 1);
+  };
+  const handleSortChange = (value: string) => {
+    setSortBy(value);
+    setCurrentPage(1);
+    if (initialized) updateUrlParams(searchTerm, selectedCategory, value, 1);
+  };
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    if (initialized) updateUrlParams(searchTerm, selectedCategory, sortBy, page);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   // カテゴリーリストを抽出
   const categories: string[] = Array.from(
@@ -44,6 +106,31 @@ function PostListPage({ posts }: any) {
         return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
     }
   });
+
+  // ページネーション計算
+  const totalCount = sortedPosts.length;
+  const totalPages = Math.max(1, Math.ceil(totalCount / POSTS_PER_PAGE));
+  const safePage = Math.min(currentPage, totalPages);
+  const startIndex = (safePage - 1) * POSTS_PER_PAGE;
+  const endIndex = Math.min(startIndex + POSTS_PER_PAGE, totalCount);
+  const paginatedPosts = sortedPosts.slice(startIndex, endIndex);
+
+  // ページ番号リスト生成（最大7ページ表示）
+  const pageNumbers = useMemo(() => {
+    const pages: (number | "...")[] = [];
+    if (totalPages <= 7) {
+      for (let i = 1; i <= totalPages; i++) pages.push(i);
+    } else {
+      pages.push(1);
+      if (safePage > 3) pages.push("...");
+      const start = Math.max(2, safePage - 1);
+      const end = Math.min(totalPages - 1, safePage + 1);
+      for (let i = start; i <= end; i++) pages.push(i);
+      if (safePage < totalPages - 2) pages.push("...");
+      pages.push(totalPages);
+    }
+    return pages;
+  }, [safePage, totalPages]);
 
   return (
     <Layout>
@@ -87,7 +174,7 @@ function PostListPage({ posts }: any) {
                     type="text"
                     placeholder="タイトル、あらすじ、作者名で検索..."
                     value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
+                    onChange={(e) => handleSearchChange(e.target.value)}
                     className="w-full pl-12 pr-4 py-3 rounded-xl border border-theater-neutral-200 focus:border-theater-primary-500 focus:ring-2 focus:ring-theater-primary-200 transition-all duration-200 text-theater-neutral-800 placeholder-theater-neutral-400"
                   />
                 </div>
@@ -98,7 +185,7 @@ function PostListPage({ posts }: any) {
                 <FaFilter className="text-theater-neutral-500" />
                 <select
                   value={selectedCategory}
-                  onChange={(e) => setSelectedCategory(e.target.value)}
+                  onChange={(e) => handleCategoryChange(e.target.value)}
                   className="px-4 py-3 rounded-xl border border-theater-neutral-200 focus:border-theater-primary-500 focus:ring-2 focus:ring-theater-primary-200 transition-all duration-200 text-theater-neutral-700 bg-white cursor-pointer hover:bg-theater-neutral-50"
                 >
                   <option value="all">全カテゴリー</option>
@@ -113,7 +200,7 @@ function PostListPage({ posts }: any) {
                 <FaSortAmountDown className="text-theater-neutral-500" />
                 <select
                   value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value)}
+                  onChange={(e) => handleSortChange(e.target.value)}
                   className="px-4 py-3 rounded-xl border border-theater-neutral-200 focus:border-theater-primary-500 focus:ring-2 focus:ring-theater-primary-200 transition-all duration-200 text-theater-neutral-700 bg-white cursor-pointer hover:bg-theater-neutral-50"
                 >
                   <option value="latest">最新順</option>
@@ -126,16 +213,25 @@ function PostListPage({ posts }: any) {
 
             {/* 結果数表示 */}
             <div className="mt-4 text-sm text-theater-neutral-600">
-              <span className="font-semibold text-brand-primary">{sortedPosts.length}</span> 件の作品が見つかりました
+              {totalCount > 0 ? (
+                <>
+                  <span className="font-semibold text-brand-primary">{startIndex + 1}〜{endIndex}件</span>
+                  {" / "}全<span className="font-semibold text-brand-primary">{totalCount}</span>件の作品が見つかりました
+                </>
+              ) : (
+                <>
+                  <span className="font-semibold text-brand-primary">0</span> 件の作品が見つかりました
+                </>
+              )}
             </div>
           </div>
         </div>
 
         {/* メインコンテンツ */}
         <div className="px-4 md:px-0">
-          {sortedPosts.length > 0 ? (
+          {paginatedPosts.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-              {sortedPosts.map((post: any, index: number) => (
+              {paginatedPosts.map((post: any, index: number) => (
                 <div
                   key={post.id}
                   className="animate-fadeInUp"
@@ -157,6 +253,47 @@ function PostListPage({ posts }: any) {
                 検索条件を変更してお試しください
               </p>
             </div>
+          )}
+
+          {/* ページネーション */}
+          {totalPages > 1 && (
+            <nav className="flex justify-center items-center gap-1 mt-10 mb-8">
+              <button
+                onClick={() => handlePageChange(safePage - 1)}
+                disabled={safePage <= 1}
+                className="px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-200 disabled:opacity-40 disabled:cursor-not-allowed text-theater-neutral-600 hover:bg-theater-neutral-100"
+              >
+                前へ
+              </button>
+
+              {pageNumbers.map((page, i) =>
+                page === "..." ? (
+                  <span key={`ellipsis-${i}`} className="px-2 py-2 text-theater-neutral-400">
+                    ...
+                  </span>
+                ) : (
+                  <button
+                    key={page}
+                    onClick={() => handlePageChange(page as number)}
+                    className={`min-w-[40px] px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-200 ${
+                      page === safePage
+                        ? "bg-brand-primary text-white shadow-sm"
+                        : "text-theater-neutral-600 hover:bg-theater-neutral-100"
+                    }`}
+                  >
+                    {page}
+                  </button>
+                )
+              )}
+
+              <button
+                onClick={() => handlePageChange(safePage + 1)}
+                disabled={safePage >= totalPages}
+                className="px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-200 disabled:opacity-40 disabled:cursor-not-allowed text-theater-neutral-600 hover:bg-theater-neutral-100"
+              >
+                次へ
+              </button>
+            </nav>
           )}
         </div>
       </div>
