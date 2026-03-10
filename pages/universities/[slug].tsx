@@ -111,9 +111,12 @@ export default function UniversityDetail({ university }: Props) {
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
+  const universities = await prisma.university.findMany({
+    select: { slug: true },
+  });
   return {
-    paths: [],
-    fallback: 'blocking',
+    paths: universities.map((u: { slug: string }) => ({ params: { slug: u.slug } })),
+    fallback: false,
   };
 };
 

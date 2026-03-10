@@ -475,10 +475,12 @@ function CategoryPage({ category }: any) {
 export default CategoryPage;
 
 export async function getStaticPaths() {
-  // ビルド時にはパスを生成せず、全てfallbackで処理
+  const categories = await prisma.category.findMany({
+    select: { id: true },
+  });
   return {
-    paths: [],
-    fallback: 'blocking',
+    paths: categories.map((c: { id: number }) => ({ params: { id: String(c.id) } })),
+    fallback: false,
   };
 }
 

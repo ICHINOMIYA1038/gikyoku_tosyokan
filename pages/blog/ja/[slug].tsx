@@ -134,9 +134,10 @@ export default function BlogJaPost({ post, alternateSlug }: Props) {
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
+  const slugs = await getPostSlugsByLanguage('ja');
   return {
-    paths: [],
-    fallback: 'blocking',
+    paths: slugs.map((slug: string) => ({ params: { slug } })),
+    fallback: false,
   };
 };
 

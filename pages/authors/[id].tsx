@@ -161,10 +161,12 @@ function AuthorPage({ author }: any) {
 export default AuthorPage;
 
 export async function getStaticPaths() {
-  // ビルド時にはパスを生成せず、全てfallbackで処理
+  const authors = await prisma.author.findMany({
+    select: { id: true },
+  });
   return {
-    paths: [],
-    fallback: 'blocking',
+    paths: authors.map((a: { id: number }) => ({ params: { id: String(a.id) } })),
+    fallback: false,
   };
 }
 

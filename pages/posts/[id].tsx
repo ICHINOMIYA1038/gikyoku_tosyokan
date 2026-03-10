@@ -17,7 +17,7 @@ import Comments from "@/components/Comments";
 import Seo from "@/components/seo";
 import StructuredData from "@/components/StructuredData";
 import OtherPosts from "@/components/Widget/OtherPosts";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { FaStar, FaCommentDots, FaShareAlt, FaBook, FaExternalLinkAlt, FaTheaterMasks, FaHeart, FaBalanceScale, FaTrophy } from "react-icons/fa";
 import FavoriteButton from "@/components/FavoriteButton";
 import CompareButton from "@/components/CompareButton";
@@ -51,6 +51,14 @@ function PostPage({ post }: any) {
   const [success, setSuccess] = useState("");
   const [showShareButtons, setShowShareButtons] = useState(false);
   const [showReadButtons, setShowReadButtons] = useState(false);
+
+  useEffect(() => {
+    fetch("/api/record-access", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ postId: post.id }),
+    }).catch(() => {});
+  }, [post.id]);
 
   const handleStarClick = useCallback((value: number) => {
     setStar(value);
@@ -558,7 +566,17 @@ function PostPage({ post }: any) {
 
 export default React.memo(PostPage);
 
-export async function getServerSideProps(context: any) {
+export async function getStaticPaths() {
+  const posts = await prisma.post.findMany({
+    select: { id: true },
+  });
+  return {
+    paths: posts.map((p: { id: number }) => ({ params: { id: String(p.id) } })),
+    fallback: false,
+  };
+}
+
+export async function getStaticProps(context: any) {
   const postId = parseInt(context.params.id);
   if (isNaN(postId)) {
     return { notFound: true };
@@ -665,14 +683,6 @@ export async function getServerSideProps(context: any) {
       return { notFound: true };
     }
 
-    // アクセスログを非同期で記録
-    const ipAddress =
-      context.req.headers["x-real-ip"] ||
-      context.req.headers["x-forwarded-for"] ||
-      context.req.connection.remoteAddress;
-
-    recordAccessOptimized(ipAddress, postId).catch(console.error);
-
     // 日時フォーマット変換
     const formattedPost = {
       ...post,
@@ -699,37 +709,5 @@ export async function getServerSideProps(context: any) {
     return {
       notFound: true,
     };
-  }
-}
-
-// 最適化されたアクセスログ記録関数
-async function recordAccessOptimized(ipAddress: string, postId: number) {
-  try {
-    const currentDate = new Date();
-    const date = new Date(
-      currentDate.getFullYear(),
-      currentDate.getMonth(),
-      currentDate.getDate()
-    );
-
-    const existingAccess = await prisma.access.findFirst({
-      where: {
-        ipAddress: ipAddress,
-        postId: postId,
-        date: date,
-      },
-    });
-
-    if (!existingAccess) {
-      await prisma.access.create({
-        data: {
-          ipAddress,
-          postId,
-          date,
-        },
-      });
-    }
-  } catch (error) {
-    console.error("Failed to record access:", error);
   }
 }
