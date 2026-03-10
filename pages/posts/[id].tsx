@@ -19,6 +19,7 @@ import StructuredData from "@/components/StructuredData";
 import OtherPosts from "@/components/Widget/OtherPosts";
 import { useState, useCallback, useEffect } from "react";
 import { FaStar, FaCommentDots, FaShareAlt, FaBook, FaExternalLinkAlt, FaTheaterMasks, FaHeart, FaBalanceScale, FaTrophy } from "react-icons/fa";
+import QuickReactions from "@/components/QuickReactions";
 import FavoriteButton from "@/components/FavoriteButton";
 import CompareButton from "@/components/CompareButton";
 import { prisma } from "@/lib/prisma";
@@ -249,6 +250,9 @@ function PostPage({ post }: any) {
                 <div className="mt-4">
                   <MemoizedPostDetails post={post} />
                 </div>
+
+                {/* Quick Reactions */}
+                <QuickReactions postId={post.id} />
 
                 {/* コメントセクション */}
                 <div className="mt-4">
