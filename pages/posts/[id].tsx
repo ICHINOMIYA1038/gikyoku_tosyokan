@@ -20,6 +20,7 @@ import OtherPosts from "@/components/Widget/OtherPosts";
 import { useState, useCallback, useEffect } from "react";
 import { FaStar, FaCommentDots, FaShareAlt, FaBook, FaExternalLinkAlt, FaTheaterMasks, FaHeart, FaBalanceScale, FaTrophy } from "react-icons/fa";
 import QuickReactions from "@/components/QuickReactions";
+import ReactionBadge from "@/components/ReactionBadge";
 import FavoriteButton from "@/components/FavoriteButton";
 import CompareButton from "@/components/CompareButton";
 import { prisma } from "@/lib/prisma";
@@ -232,6 +233,11 @@ function PostPage({ post }: any) {
                     ))}
                   </div>
                 )}
+
+                {/* リアクションバッジ */}
+                <div className="mt-3 flex justify-center">
+                  <ReactionBadge postId={post.id} />
+                </div>
 
                 {/* コメント数バッジ */}
                 {commentCount > 0 && (
