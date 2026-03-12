@@ -279,6 +279,7 @@ export const getStaticProps: GetStaticProps = async () => {
         posts: JSON.parse(JSON.stringify(posts)),
         totalCount: posts.length
       },
+      revalidate: 3600,
     };
   } catch (error) {
     console.error("Error fetching school posts:", error);

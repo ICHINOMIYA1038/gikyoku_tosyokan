@@ -161,12 +161,9 @@ function AuthorPage({ author }: any) {
 export default AuthorPage;
 
 export async function getStaticPaths() {
-  const authors = await prisma.author.findMany({
-    select: { id: true },
-  });
   return {
-    paths: authors.map((a: { id: number }) => ({ params: { id: String(a.id) } })),
-    fallback: false,
+    paths: [],
+    fallback: "blocking",
   };
 }
 
@@ -224,6 +221,7 @@ export async function getStaticProps(context: any) {
       props: {
         author,
       },
+      revalidate: 3600,
     };
   } catch {
     return {

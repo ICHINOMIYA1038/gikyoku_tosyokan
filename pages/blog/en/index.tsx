@@ -78,5 +78,5 @@ export default function BlogEnIndex({ posts }: Props) {
 
 export const getStaticProps: GetStaticProps<Props> = async () => {
   const posts = await getPostsByLanguage('en');
-  return { props: { posts } };
+  return { props: { posts }, revalidate: 3600 };
 };

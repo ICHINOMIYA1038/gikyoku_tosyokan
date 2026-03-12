@@ -218,6 +218,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
         count,
         config,
       },
+      revalidate: 3600,
     };
   } catch (error) {
     console.error("Error:", error);

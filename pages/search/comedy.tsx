@@ -204,8 +204,9 @@ export const getStaticProps: GetStaticProps = async () => {
     return {
       props: {
         posts: JSON.parse(JSON.stringify(posts)),
-        totalCount
+        totalCount,
       },
+      revalidate: 3600,
     };
   } catch (error) {
     console.error("Error fetching comedy posts:", error);

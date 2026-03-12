@@ -115,8 +115,8 @@ export const getStaticPaths: GetStaticPaths = async () => {
     select: { slug: true },
   });
   return {
-    paths: universities.map((u: { slug: string }) => ({ params: { slug: u.slug } })),
-    fallback: false,
+    paths: [],
+    fallback: "blocking",
   };
 };
 
@@ -151,5 +151,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 
   return {
     props: { university: JSON.parse(JSON.stringify(university)) },
+    revalidate: 3600,
   };
 };

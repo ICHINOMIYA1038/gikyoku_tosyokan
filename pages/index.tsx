@@ -446,6 +446,7 @@ export async function getStaticProps() {
         trendingPosts: [],
         announcements: [],
       },
+      revalidate: 60,
     };
   }
 
@@ -459,5 +460,6 @@ export async function getStaticProps() {
       trendingPosts,
       announcements,
     },
+    revalidate: 3600,
   };
 }

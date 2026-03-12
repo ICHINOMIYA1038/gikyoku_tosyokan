@@ -419,5 +419,6 @@ export const getStaticProps: GetStaticProps = async () => {
       regions: allRegions,
       prefectures: allPrefectures,
     },
+    revalidate: 3600,
   };
 };

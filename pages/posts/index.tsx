@@ -332,13 +332,14 @@ export async function getStaticProps() {
       props: {
         posts,
       },
+      revalidate: 3600,
     };
   } catch {
     return {
-      notFound: true, // Return a 404 page
+      notFound: true,
     };
   } finally {
-    await prisma.$disconnect(); // リクエスト処理の最後で接続を切断
+    await prisma.$disconnect();
   }
 }
 

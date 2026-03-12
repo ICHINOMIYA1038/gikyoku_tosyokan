@@ -136,8 +136,8 @@ export default function BlogEnPost({ post, alternateSlug }: Props) {
 export const getStaticPaths: GetStaticPaths = async () => {
   const slugs = await getPostSlugsByLanguage('en');
   return {
-    paths: slugs.map((slug: string) => ({ params: { slug } })),
-    fallback: false,
+    paths: [],
+    fallback: "blocking",
   };
 };
 
@@ -146,5 +146,5 @@ export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
   const post = await getPostBySlug(slug);
   if (!post) return { notFound: true };
   const alternateSlug = await getAlternateLanguageSlug(slug, 'en');
-  return { props: { post, alternateSlug } };
+  return { props: { post, alternateSlug }, revalidate: 3600 };
 };

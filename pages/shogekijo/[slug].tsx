@@ -222,8 +222,8 @@ export const getStaticPaths: GetStaticPaths = async () => {
     select: { slug: true },
   });
   return {
-    paths: groups.map((g: { slug: string }) => ({ params: { slug: g.slug } })),
-    fallback: false,
+    paths: [],
+    fallback: "blocking",
   };
 };
 
@@ -279,5 +279,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       group: JSON.parse(JSON.stringify(group)),
       relatedStudentGroups,
     },
+    revalidate: 3600,
   };
 };

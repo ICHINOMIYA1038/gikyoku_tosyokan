@@ -475,12 +475,9 @@ function CategoryPage({ category }: any) {
 export default CategoryPage;
 
 export async function getStaticPaths() {
-  const categories = await prisma.category.findMany({
-    select: { id: true },
-  });
   return {
-    paths: categories.map((c: { id: number }) => ({ params: { id: String(c.id) } })),
-    fallback: false,
+    paths: [],
+    fallback: "blocking",
   };
 }
 
@@ -537,6 +534,7 @@ export async function getStaticProps(context: any) {
       props: {
         category,
       },
+      revalidate: 3600,
     };
   } catch {
     return {

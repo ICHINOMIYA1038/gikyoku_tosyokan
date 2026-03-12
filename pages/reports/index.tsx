@@ -162,7 +162,7 @@ export const getStaticProps: GetStaticProps = async () => {
       createdAt: a.createdAt.toISOString().split("T")[0],
     }));
 
-    return { props: { reports } };
+    return { props: { reports }, revalidate: 3600 };
   } catch {
     return { props: { reports: [] } };
   }

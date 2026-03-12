@@ -577,12 +577,9 @@ function PostPage({ post }: any) {
 export default React.memo(PostPage);
 
 export async function getStaticPaths() {
-  const posts = await prisma.post.findMany({
-    select: { id: true },
-  });
   return {
-    paths: posts.map((p: { id: number }) => ({ params: { id: String(p.id) } })),
-    fallback: false,
+    paths: [],
+    fallback: "blocking",
   };
 }
 
@@ -713,6 +710,7 @@ export async function getStaticProps(context: any) {
       props: {
         post: formattedPost,
       },
+      revalidate: 3600,
     };
   } catch (error) {
     console.error("Error fetching post:", error);
