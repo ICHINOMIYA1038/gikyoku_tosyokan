@@ -2,7 +2,7 @@ import { PrismaClient } from "@prisma/client";
 
 const EXTERNAL_DATA_URL = "https://gikyokutosyokan.com";
 const prisma = new PrismaClient();
-function generateSiteMap(posts, authors, categories, blogPosts) {
+function generateSiteMap(posts, authors, categories, blogPosts, studentGroups, shogekijoGroups) {
   const currentDate = new Date().toISOString();
   
   return `<?xml version="1.0" encoding="UTF-8"?>
@@ -199,6 +199,46 @@ function generateSiteMap(posts, authors, categories, blogPosts) {
        })
        .join("")}
 
+     <!-- 大学演劇・学生劇団ページ -->
+     <url>
+       <loc>${EXTERNAL_DATA_URL}/theater-groups</loc>
+       <lastmod>${currentDate}</lastmod>
+       <changefreq>weekly</changefreq>
+       <priority>0.7</priority>
+     </url>
+     ${studentGroups
+       .map(({ slug }) => {
+         return `
+       <url>
+           <loc>${EXTERNAL_DATA_URL}/theater-groups/${slug}</loc>
+           <lastmod>${currentDate}</lastmod>
+           <changefreq>monthly</changefreq>
+           <priority>0.6</priority>
+       </url>
+     `;
+       })
+       .join("")}
+
+     <!-- 小劇場・劇団ページ -->
+     <url>
+       <loc>${EXTERNAL_DATA_URL}/shogekijo</loc>
+       <lastmod>${currentDate}</lastmod>
+       <changefreq>weekly</changefreq>
+       <priority>0.7</priority>
+     </url>
+     ${shogekijoGroups
+       .map(({ slug }) => {
+         return `
+       <url>
+           <loc>${EXTERNAL_DATA_URL}/shogekijo/${slug}</loc>
+           <lastmod>${currentDate}</lastmod>
+           <changefreq>monthly</changefreq>
+           <priority>0.6</priority>
+       </url>
+     `;
+       })
+       .join("")}
+
      <!-- サポートページ -->
      <url>
        <loc>${`${EXTERNAL_DATA_URL}/support/about`}</loc>
@@ -273,8 +313,26 @@ export async function getServerSideProps({ res }) {
     select: { slug: true, language: true, updatedAt: true },
   });
 
+  // 大学演劇・学生劇団（theater-groups）
+  const studentGroups = await prisma.theaterGroup.findMany({
+    where: {
+      isActive: true,
+      groupType: { in: ['STUDENT', 'INTERCOLLEGE', 'ACADEMIC'] },
+    },
+    select: { slug: true },
+  });
+
+  // 小劇場・劇団（shogekijo）
+  const shogekijoGroups = await prisma.theaterGroup.findMany({
+    where: {
+      isActive: true,
+      groupType: { in: ['AMATEUR', 'PROFESSIONAL', 'YOUTH'] },
+    },
+    select: { slug: true },
+  });
+
   // We generate the XML sitemap with the data
-  const sitemap = generateSiteMap(posts, authors, categories, blogPosts);
+  const sitemap = generateSiteMap(posts, authors, categories, blogPosts, studentGroups, shogekijoGroups);
   res.statusCode = 200;
   res.setHeader("Cache-Control", "s-maxage=86400, stale-while-revalidate"); // 24時間のキャッシュ
   res.setHeader("Content-Type", "text/xml");
