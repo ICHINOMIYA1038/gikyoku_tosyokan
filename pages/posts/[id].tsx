@@ -710,7 +710,7 @@ export async function getStaticProps(context: any) {
       props: {
         post: formattedPost,
       },
-      revalidate: 3600,
+      revalidate: 86400,
     };
   } catch (error) {
     console.error("Error fetching post:", error);

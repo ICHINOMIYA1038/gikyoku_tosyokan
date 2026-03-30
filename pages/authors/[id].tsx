@@ -221,7 +221,7 @@ export async function getStaticProps(context: any) {
       props: {
         author,
       },
-      revalidate: 3600,
+      revalidate: 86400,
     };
   } catch {
     return {

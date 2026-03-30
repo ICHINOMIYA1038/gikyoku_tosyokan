@@ -332,7 +332,7 @@ export async function getStaticProps() {
       props: {
         posts,
       },
-      revalidate: 3600,
+      revalidate: 86400,
     };
   } catch {
     return {

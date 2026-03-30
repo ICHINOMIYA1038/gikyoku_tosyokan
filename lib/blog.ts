@@ -7,6 +7,7 @@ export interface BlogPost {
   description: string;
   tags: string[];
   content: string;
+  ogImageUrl?: string | null;
 }
 
 export interface BlogPostMeta {
@@ -45,6 +46,7 @@ export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
     description: post.description || '',
     tags: post.tags,
     content: post.content,
+    ogImageUrl: post.ogImageUrl,
   };
 }
 

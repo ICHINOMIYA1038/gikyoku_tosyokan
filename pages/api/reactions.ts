@@ -17,7 +17,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const countMap: Record<string, number> = {};
     counts.forEach((c: any) => { countMap[c.content] = c._count; });
 
-    res.setHeader('Cache-Control', 's-maxage=60, stale-while-revalidate=120');
+    res.setHeader('Cache-Control', 's-maxage=600, stale-while-revalidate=120');
     res.status(200).json(countMap);
   } catch (error) {
     console.error(error);

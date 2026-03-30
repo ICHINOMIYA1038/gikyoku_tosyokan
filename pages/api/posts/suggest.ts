@@ -29,7 +29,7 @@ export default async function handler(
       orderBy: { id: 'asc' },
     });
 
-    res.setHeader('Cache-Control', 's-maxage=300, stale-while-revalidate');
+    res.setHeader('Cache-Control', 's-maxage=3600, stale-while-revalidate');
     return res.status(200).json(posts);
   } catch (error) {
     console.error('Error suggesting posts:', error);

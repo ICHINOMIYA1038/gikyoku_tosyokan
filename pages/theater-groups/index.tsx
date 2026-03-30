@@ -171,12 +171,18 @@ export const getStaticProps: GetStaticProps = async () => {
     theaterGroups.flatMap((g) => g.universities.map((u) => u.university.region))
   ));
 
+  // descriptionを100文字に切り詰めてデータ転送量を削減
+  const slimGroups = theaterGroups.map((g) => ({
+    ...g,
+    description: g.description ? g.description.substring(0, 100) : null,
+  }));
+
   return {
     props: {
-      theaterGroups: JSON.parse(JSON.stringify(theaterGroups)),
+      theaterGroups: JSON.parse(JSON.stringify(slimGroups)),
       regions: allRegions,
       prefectures: allPrefectures,
     },
-    revalidate: 3600,
+    revalidate: 86400,
   };
 };

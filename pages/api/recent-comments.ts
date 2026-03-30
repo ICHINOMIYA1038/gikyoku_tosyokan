@@ -51,7 +51,7 @@ export default async function handler(
       postAuthor: c.post.author.name,
     }));
 
-    res.setHeader("Cache-Control", "public, s-maxage=300, stale-while-revalidate=600");
+    res.setHeader("Cache-Control", "public, s-maxage=3600, stale-while-revalidate=600");
     res.status(200).json(formatted);
   } catch (error) {
     console.error("Recent comments error:", error);

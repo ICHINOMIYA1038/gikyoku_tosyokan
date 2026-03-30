@@ -247,6 +247,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       group: JSON.parse(JSON.stringify(group)),
       relatedShogekijoGroups,
     },
-    revalidate: 3600,
+    revalidate: 86400,
   };
 };

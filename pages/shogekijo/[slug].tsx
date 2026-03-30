@@ -279,6 +279,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       group: JSON.parse(JSON.stringify(group)),
       relatedStudentGroups,
     },
-    revalidate: 3600,
+    revalidate: 86400,
   };
 };

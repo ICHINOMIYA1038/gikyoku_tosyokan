@@ -9,7 +9,7 @@ export default async function handler(
   // 強力なキャッシュヘッダーを設定（5分）
   res.setHeader(
     'Cache-Control',
-    'public, s-maxage=300, stale-while-revalidate=600'
+    'public, s-maxage=3600, stale-while-revalidate=600'
   );
 
   const cacheKey = 'authors-list';
