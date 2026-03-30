@@ -147,6 +147,7 @@ model BlogPost {
   content     String
   tags        String[]
   language    String   @default("ja")
+  ogImageUrl  String?
   publishedAt DateTime
   published   Boolean  @default(true)
   createdAt   DateTime @default(now())
