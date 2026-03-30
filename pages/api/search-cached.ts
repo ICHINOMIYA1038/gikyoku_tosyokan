@@ -9,7 +9,7 @@ export default async function handler(
   // キャッシュヘッダーを設定（2分）
   res.setHeader(
     'Cache-Control',
-    'public, s-maxage=120, stale-while-revalidate=300'
+    'public, s-maxage=600, stale-while-revalidate=300'
   );
 
   const {

@@ -8,21 +8,40 @@ export default async function handler(
 ) {
   if (req.method === "GET") {
     try {
+      // キャッシュヘッダーを設定（1時間キャッシュ）
+      res.setHeader(
+        "Cache-Control",
+        "public, s-maxage=3600, stale-while-revalidate=7200"
+      );
+
       const posts = await prisma.post.findMany({
+        take: 20, // 上位20件に制限
         orderBy: {
           access: {
-            _count: "desc", // Accessの数順に降順で並べ替え
+            _count: "desc",
           },
         },
-        include: {
+        select: {
+          id: true,
+          title: true,
+          image_url: true,
+          man: true,
+          woman: true,
+          totalNumber: true,
+          playtime: true,
+          averageRating: true,
           _count: {
             select: { access: true, comments: true },
           },
-          author: true, // Include the associated Author records
-          categories: true,
+          author: {
+            select: { id: true, name: true },
+          },
+          categories: {
+            select: { id: true, name: true },
+          },
         },
       });
-      res.status(201).json(posts);
+      res.status(200).json(posts);
     } catch (error) {
       res.status(500).json({ error: "An error occurred" });
     }

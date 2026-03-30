@@ -16,7 +16,7 @@ interface Props {
 
 export default function BlogJaPost({ post, alternateSlug }: Props) {
   const siteUrl = 'https://gikyokutosyokan.com';
-  const ogImageUrl = `${siteUrl}/api/og?title=${encodeURIComponent(post.title)}&date=${encodeURIComponent(post.date)}&tags=${encodeURIComponent(post.tags.slice(0, 3).join(','))}`;
+  const ogImageUrl = post.ogImageUrl || `${siteUrl}/api/og?title=${encodeURIComponent(post.title)}&date=${encodeURIComponent(post.date)}&tags=${encodeURIComponent(post.tags.slice(0, 3).join(','))}`;
   const hreflangList = [
     { lang: 'ja', path: `/blog/ja/${post.slug}` },
     { lang: 'x-default', path: `/blog/ja/${post.slug}` },
@@ -146,5 +146,5 @@ export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
   const post = await getPostBySlug(slug);
   if (!post) return { notFound: true };
   const alternateSlug = await getAlternateLanguageSlug(slug, 'ja');
-  return { props: { post, alternateSlug }, revalidate: 3600 };
+  return { props: { post, alternateSlug }, revalidate: 86400 };
 };

@@ -530,11 +530,20 @@ export async function getStaticProps(context: any) {
       };
     }
 
+    // synopsisを150文字に切り詰めてデータ転送量を削減
+    const slimCategory = {
+      ...category,
+      posts: category.posts.map((p: any) => ({
+        ...p,
+        synopsis: p.synopsis ? p.synopsis.substring(0, 150) : null,
+      })),
+    };
+
     return {
       props: {
-        category,
+        category: slimCategory,
       },
-      revalidate: 3600,
+      revalidate: 86400,
     };
   } catch {
     return {

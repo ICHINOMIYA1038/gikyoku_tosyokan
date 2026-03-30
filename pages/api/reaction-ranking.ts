@@ -32,7 +32,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     });
 
     if (ranked.length === 0) {
-      res.setHeader("Cache-Control", "s-maxage=300, stale-while-revalidate=600");
+      res.setHeader("Cache-Control", "s-maxage=3600, stale-while-revalidate=600");
       return res.status(200).json([]);
     }
 
@@ -85,7 +85,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       })
       .filter(Boolean);
 
-    res.setHeader("Cache-Control", "s-maxage=300, stale-while-revalidate=600");
+    res.setHeader("Cache-Control", "s-maxage=3600, stale-while-revalidate=600");
     res.status(200).json(results);
   } catch (error) {
     console.error(error);
