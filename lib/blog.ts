@@ -139,6 +139,55 @@ export async function getAlternateLanguageSlug(
   return post ? post.slug : null;
 }
 
+/**
+ * タグが最も多く一致するブログ記事を返す（自分自身を除く）。
+ * 一致タグ数が多い順、次に公開日が新しい順にソート。
+ */
+export async function getRelatedPosts(
+  currentSlug: string,
+  tags: string[],
+  language: string = 'ja',
+  limit: number = 5
+): Promise<BlogPostMeta[]> {
+  if (tags.length === 0) return [];
+
+  const posts = await prisma.blogPost.findMany({
+    where: {
+      published: true,
+      language,
+      slug: { not: currentSlug },
+      tags: { hasSome: tags },
+    },
+    select: {
+      slug: true,
+      title: true,
+      publishedAt: true,
+      description: true,
+      tags: true,
+    },
+    orderBy: { publishedAt: 'desc' },
+    take: 30,
+  });
+
+  const scored = posts.map((post) => {
+    const matchCount = post.tags.filter((t) => tags.includes(t)).length;
+    return { post, matchCount };
+  });
+
+  scored.sort((a, b) => {
+    if (b.matchCount !== a.matchCount) return b.matchCount - a.matchCount;
+    return b.post.publishedAt.getTime() - a.post.publishedAt.getTime();
+  });
+
+  return scored.slice(0, limit).map(({ post }) => ({
+    slug: post.slug,
+    title: post.title,
+    date: formatDate(post.publishedAt),
+    description: post.description || '',
+    tags: post.tags,
+  }));
+}
+
 export async function getAllTags(): Promise<string[]> {
   const posts = await prisma.blogPost.findMany({
     where: { published: true },

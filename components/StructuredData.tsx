@@ -10,6 +10,25 @@ interface FAQItem {
   answer: string;
 }
 
+interface EventItem {
+  name: string;
+  startDate: string;
+  endDate?: string;
+  location?: {
+    name: string;
+  };
+  url?: string;
+  offers?: {
+    priceMin?: number;
+    priceMax?: number;
+    priceCurrency?: string;
+  };
+  performer?: {
+    name: string;
+  };
+  description?: string;
+}
+
 interface ReviewInfo {
   author: string;
   content: string;
@@ -44,7 +63,7 @@ interface PlayInfo {
 }
 
 interface StructuredDataProps {
-  type?: "WebSite" | "Article" | "BreadcrumbList" | "Organization" | "Play" | "FAQPage";
+  type?: "WebSite" | "Article" | "BreadcrumbList" | "Organization" | "Play" | "FAQPage" | "EventList";
   title?: string;
   description?: string;
   url?: string;
@@ -62,6 +81,8 @@ interface StructuredDataProps {
   playInfo?: PlayInfo;
   // FAQPage用の追加プロパティ
   faqItems?: FAQItem[];
+  // EventList用の追加プロパティ
+  events?: EventItem[];
 }
 
 const StructuredData = ({
@@ -77,7 +98,8 @@ const StructuredData = ({
   organizationName = "戯曲図書館",
   logo = "https://gikyokutosyokan.com/logo.png",
   playInfo,
-  faqItems
+  faqItems,
+  events
 }: StructuredDataProps) => {
   const siteUrl = "https://gikyokutosyokan.com";
   
@@ -273,6 +295,56 @@ const StructuredData = ({
         }
 
         return playData;
+
+      case "EventList":
+        if (!events || events.length === 0) return null;
+        return {
+          "@context": "https://schema.org",
+          "@graph": events.map((ev) => {
+            const eventData: Record<string, unknown> = {
+              "@type": "TheaterEvent",
+              "name": ev.name,
+              "startDate": ev.startDate,
+              "eventStatus": "https://schema.org/EventScheduled",
+              "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode"
+            };
+            if (ev.endDate) eventData["endDate"] = ev.endDate;
+            if (ev.description) eventData["description"] = ev.description;
+            if (ev.url) eventData["url"] = ev.url;
+            if (ev.location?.name) {
+              eventData["location"] = {
+                "@type": "Place",
+                "name": ev.location.name,
+                "address": {
+                  "@type": "PostalAddress",
+                  "addressLocality": "Tokyo",
+                  "addressCountry": "JP"
+                }
+              };
+            }
+            if (ev.offers && (ev.offers.priceMin !== undefined || ev.offers.priceMax !== undefined)) {
+              eventData["offers"] = {
+                "@type": "Offer",
+                "price": ev.offers.priceMin ?? ev.offers.priceMax,
+                "priceCurrency": ev.offers.priceCurrency || "JPY",
+                "availability": "https://schema.org/InStock",
+                ...(ev.url ? { "url": ev.url } : {})
+              };
+            }
+            if (ev.performer?.name) {
+              eventData["performer"] = {
+                "@type": "TheaterGroup",
+                "name": ev.performer.name
+              };
+            }
+            eventData["organizer"] = {
+              "@type": "Organization",
+              "name": organizationName,
+              "url": siteUrl
+            };
+            return eventData;
+          })
+        };
 
       case "FAQPage":
         if (!faqItems || faqItems.length === 0) return null;
