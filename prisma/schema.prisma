@@ -109,9 +109,12 @@ model ParentComment {
   date        DateTime       @default(now())
   likes       Int            @default(0)
   commentType String?
+  userId      String?
+  user        User?          @relation(fields: [userId], references: [id], onDelete: SetNull)
   children    ChildComment[]
   post        Post           @relation(fields: [post_id], references: [id])
 
+  @@index([userId])
   @@map("ParentComment")
 }
 
@@ -123,8 +126,11 @@ model ChildComment {
   author          String        @default("名無しさん")
   date            DateTime      @default(now())
   likes           Int           @default(0)
+  userId          String?
+  user            User?         @relation(fields: [userId], references: [id], onDelete: SetNull)
   parentComment   ParentComment @relation(fields: [parentCommentId], references: [id])
 
+  @@index([userId])
   @@map("ChildComment")
 }
 
@@ -320,4 +326,74 @@ model PostAward {
   @@index([postId])
   @@index([awardName])
   @@map("PostAward")
+}
+
+// ============================================
+// NextAuth.js 認証モデル
+// ============================================
+
+enum UserRole {
+  USER
+  MODERATOR
+  ADMIN
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  role          UserRole  @default(USER)
+  bio           String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  accounts          Account[]
+  sessions          Session[]
+  parentComments    ParentComment[]
+  childComments     ChildComment[]
+
+  @@index([email])
+  @@map("User")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+  @@map("Account")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("Session")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("VerificationToken")
 }

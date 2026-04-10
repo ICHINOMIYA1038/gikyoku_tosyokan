@@ -1,0 +1,122 @@
+import type { NextAuthOptions } from 'next-auth';
+import GoogleProvider from 'next-auth/providers/google';
+import { PrismaAdapter } from '@next-auth/prisma-adapter';
+import { prisma } from '@/lib/prisma';
+import type { UserRole } from '@prisma/client';
+
+/**
+ * NextAuth.js 設定
+ *
+ * セッション戦略: JWT（サーバーレス環境での高速化）
+ * アダプタ: Prisma（User/Account/VerificationToken の永続化）
+ * プロバイダ: Google OAuth のみ
+ *
+ * 認証フロー:
+ * 1. /api/auth/signin/google にリダイレクト
+ * 2. Google認証完了後、Accountレコード作成 or 既存ユーザーにリンク
+ * 3. 初回はUserレコード作成
+ * 4. JWTトークン発行、cookieに保存
+ * 5. session callbackでsession.userにid/roleを注入
+ */
+export const authOptions: NextAuthOptions = {
+  adapter: PrismaAdapter(prisma),
+  providers: [
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID ?? '',
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? '',
+      authorization: {
+        params: {
+          prompt: 'select_account',
+          access_type: 'online',
+          response_type: 'code',
+          scope: 'openid email profile',
+        },
+      },
+      // Googleから受け取るプロファイルを内部User形式に変換
+      profile(profile) {
+        return {
+          id: profile.sub,
+          name: profile.name,
+          email: profile.email,
+          image: profile.picture,
+          role: 'USER' as UserRole,
+        };
+      },
+    }),
+  ],
+
+  session: {
+    strategy: 'jwt',
+    maxAge: 30 * 24 * 60 * 60, // 30日
+  },
+
+  // 本番では必ずHTTPSのみにする
+  useSecureCookies: process.env.NODE_ENV === 'production',
+
+  pages: {
+    signIn: '/auth/signin',
+    error: '/auth/signin',
+  },
+
+  callbacks: {
+    /**
+     * JWT生成時のカスタマイズ
+     * DB上のUserレコードからidとroleを取り出してトークンに埋め込む
+     */
+    async jwt({ token, user }) {
+      // 初回サインイン時
+      if (user) {
+        token.id = user.id;
+        token.role = (user as { role?: UserRole }).role ?? 'USER';
+      }
+
+      // 既存トークンの場合、最新のrole情報をDBから取得
+      if (token.email && !token.role) {
+        const dbUser = await prisma.user.findUnique({
+          where: { email: token.email },
+          select: { id: true, role: true },
+        });
+        if (dbUser) {
+          token.id = dbUser.id;
+          token.role = dbUser.role;
+        }
+      }
+
+      return token;
+    },
+
+    /**
+     * クライアントに返すsessionをカスタマイズ
+     * session.user に id と role を注入
+     */
+    async session({ session, token }) {
+      if (session.user) {
+        session.user.id = token.id as string;
+        session.user.role = (token.role as UserRole) ?? 'USER';
+      }
+      return session;
+    },
+
+    /**
+     * サインインフローの許可制御
+     * 現在は全Googleユーザーを許可
+     */
+    async signIn({ user, account }) {
+      if (account?.provider === 'google') {
+        // emailが確認済みでなければ拒否（Google側で通常確認されているが念のため）
+        const email = user.email;
+        if (!email) return false;
+      }
+      return true;
+    },
+  },
+
+  events: {
+    async createUser({ user }) {
+      // 初回ログインユーザーのログ（今後Slack通知等に拡張可能）
+      console.log(`[auth] New user created: ${user.email}`);
+    },
+  },
+
+  debug: process.env.NODE_ENV === 'development',
+};

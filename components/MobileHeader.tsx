@@ -2,6 +2,7 @@ import * as React from "react";
 import { useState } from "react";
 import Link from "next/link";
 import { FaBars, FaTimes } from "react-icons/fa";
+import AuthMenu from "@/components/AuthMenu";
 
 export default function MobileHeader() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -34,7 +35,7 @@ export default function MobileHeader() {
         </Link>
         
         {/* デスクトップメニュー */}
-        <nav className="space-x-4 hidden md:flex font-semibold">
+        <nav className="space-x-4 hidden md:flex font-semibold items-center">
           {menuItems.map((item) => (
             <Link
               key={item.href}
@@ -45,6 +46,7 @@ export default function MobileHeader() {
               {item.label}
             </Link>
           ))}
+          <AuthMenu variant="desktop" />
         </nav>
 
         {/* モバイルメニューボタン */}
@@ -84,7 +86,7 @@ export default function MobileHeader() {
             </button>
           </div>
 
-          <nav className="flex flex-col p-4">
+          <nav className="flex flex-col p-4 overflow-y-auto max-h-[calc(100vh-10rem)]">
             {menuItems.map((item) => (
               <Link
                 key={item.href}
@@ -99,6 +101,7 @@ export default function MobileHeader() {
                 )}
               </Link>
             ))}
+            <AuthMenu variant="mobile" />
           </nav>
 
           {/* フッター情報 */}
