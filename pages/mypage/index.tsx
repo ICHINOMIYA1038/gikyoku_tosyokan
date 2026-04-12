@@ -1,11 +1,13 @@
 import { GetServerSideProps } from 'next';
 import { getServerSession } from 'next-auth/next';
+import { signOut } from 'next-auth/react';
 import { authOptions } from '@/lib/authOptions';
 import Layout from '@/components/Layout';
 import Seo from '@/components/seo';
 import { prisma } from '@/lib/prisma';
 import Link from 'next/link';
-import { FaUser, FaCommentDots } from 'react-icons/fa';
+import { useState } from 'react';
+import { FaUser, FaCommentDots, FaTrash, FaExclamationTriangle } from 'react-icons/fa';
 
 interface Props {
   user: {
@@ -28,6 +30,29 @@ interface Props {
 }
 
 export default function MyPage({ user, stats, recentComments }: Props) {
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deleteConfirmText, setDeleteConfirmText] = useState('');
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState('');
+
+  const handleDeleteAccount = async () => {
+    if (deleteConfirmText !== '削除する') return;
+    setIsDeleting(true);
+    setDeleteError('');
+    try {
+      const res = await fetch('/api/account/delete', { method: 'POST' });
+      if (res.ok) {
+        signOut({ callbackUrl: '/' });
+      } else {
+        const data = await res.json();
+        setDeleteError(data.error || 'アカウント削除に失敗しました');
+      }
+    } catch {
+      setDeleteError('通信エラーが発生しました');
+    }
+    setIsDeleting(false);
+  };
+
   return (
     <Layout>
       <Seo pageTitle="マイページ" pageDescription="戯曲図書館マイページ" pagePath="/mypage" />
@@ -82,7 +107,7 @@ export default function MyPage({ user, stats, recentComments }: Props) {
         </div>
 
         {/* 最近のコメント */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
           <h3 className="text-lg font-bold mb-4">最近のコメント</h3>
           {recentComments.length === 0 ? (
             <p className="text-sm text-gray-500">まだコメントがありません。</p>
@@ -101,6 +126,80 @@ export default function MyPage({ user, stats, recentComments }: Props) {
                 </li>
               ))}
             </ul>
+          )}
+        </div>
+
+        {/* アカウント削除 */}
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          <h3 className="text-lg font-bold mb-2 text-gray-900">アカウント設定</h3>
+          {!showDeleteConfirm ? (
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600">アカウントの削除</p>
+                <p className="text-xs text-gray-400 mt-0.5">
+                  アカウントとログイン情報が削除されます。投稿済みコメントは匿名として残ります。
+                </p>
+              </div>
+              <button
+                onClick={() => setShowDeleteConfirm(true)}
+                className="flex items-center gap-1.5 px-3 py-2 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+              >
+                <FaTrash className="text-xs" />
+                削除
+              </button>
+            </div>
+          ) : (
+            <div className="border border-red-200 rounded-lg p-4 bg-red-50">
+              <div className="flex items-start gap-3 mb-4">
+                <FaExclamationTriangle className="text-red-500 mt-0.5 flex-shrink-0" />
+                <div>
+                  <p className="text-sm font-bold text-red-800">本当に削除しますか？</p>
+                  <p className="text-xs text-red-600 mt-1">
+                    この操作は取り消せません。アカウント、ログイン情報、プロフィールが完全に削除されます。
+                    投稿済みのコメントは匿名（「退会済みユーザー」）として残ります。
+                  </p>
+                </div>
+              </div>
+              <div className="mb-3">
+                <label className="block text-xs text-red-700 mb-1">
+                  確認のため「削除する」と入力してください
+                </label>
+                <input
+                  type="text"
+                  value={deleteConfirmText}
+                  onChange={(e) => setDeleteConfirmText(e.target.value)}
+                  placeholder="削除する"
+                  className="w-full px-3 py-2 border border-red-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-red-300"
+                />
+              </div>
+              {deleteError && (
+                <p className="text-sm text-red-600 mb-3">{deleteError}</p>
+              )}
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={handleDeleteAccount}
+                  disabled={deleteConfirmText !== '削除する' || isDeleting}
+                  className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                    deleteConfirmText === '削除する' && !isDeleting
+                      ? 'bg-red-600 hover:bg-red-700 text-white'
+                      : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                  }`}
+                >
+                  <FaTrash className="text-xs" />
+                  {isDeleting ? '削除中...' : 'アカウントを完全に削除'}
+                </button>
+                <button
+                  onClick={() => {
+                    setShowDeleteConfirm(false);
+                    setDeleteConfirmText('');
+                    setDeleteError('');
+                  }}
+                  className="px-4 py-2 text-sm text-gray-600 hover:text-gray-800 transition-colors"
+                >
+                  キャンセル
+                </button>
+              </div>
+            </div>
           )}
         </div>
       </div>
