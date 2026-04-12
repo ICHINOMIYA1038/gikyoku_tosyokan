@@ -201,7 +201,7 @@ const Comments = ({ comments: initialComments, postid, postTitle, inline = false
       const response = await fetch("/api/deleteComment", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ commentId, isParent }),
+        body: JSON.stringify({ commentId, isParent, postId: postid }),
       });
       if (!response.ok) {
         setComments(prevComments);

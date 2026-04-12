@@ -78,6 +78,21 @@ export default async function handler(
       (comment as { date: Date }).date.toLocaleString("en-US", { timeZone: "Asia/Tokyo" })
     );
     const formatted = `${jst.getFullYear()}/${jst.getMonth() + 1}/${jst.getDate()} ${jst.getHours()}:${jst.getMinutes()}`;
+
+    // ISRキャッシュを再検証（次回アクセス時に最新コメントが表示される）
+    let revalidatePostId: number | null = targetid;
+    if (!isParent) {
+      // 子コメントの場合、親コメントからpost_idを取得
+      const parent = await prisma.parentComment.findUnique({
+        where: { id: targetid },
+        select: { post_id: true },
+      });
+      revalidatePostId = parent?.post_id ?? null;
+    }
+    if (revalidatePostId) {
+      try { await res.revalidate(`/posts/${revalidatePostId}`); } catch {}
+    }
+
     res.status(201).json({ ...comment, date: formatted });
   } catch (error) {
     console.error(error);

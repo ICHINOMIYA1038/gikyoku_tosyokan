@@ -54,6 +54,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         data: { deleted: true, content: "[削除されたコメントです]" },
       });
     }
+    // ISRキャッシュを再検証
+    const { postId } = req.body;
+    if (postId) {
+      try { await res.revalidate(`/posts/${postId}`); } catch {}
+    }
+
     res.status(200).json({ success: true });
   } catch (error) {
     console.error(error);

@@ -36,7 +36,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   const ext = contentType.split('/')[1].replace('jpeg', 'jpg');
-  const key = `avatars/${session.user.id}.${ext}`;
+  const timestamp = Date.now();
+  const key = `avatars/${session.user.id}-${timestamp}.${ext}`;
   const avatarUrl = `https://${S3_BUCKET}.s3.${S3_REGION}.amazonaws.com/${key}`;
 
   try {
