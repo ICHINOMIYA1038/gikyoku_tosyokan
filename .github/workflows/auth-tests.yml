@@ -1,0 +1,89 @@
+name: Auth & Security Tests
+
+on:
+  push:
+    branches: [main, feature/nextauth-login]
+    paths:
+      - 'lib/auth*.ts'
+      - 'pages/api/auth/**'
+      - 'pages/api/account/**'
+      - 'pages/api/createComment.ts'
+      - 'pages/api/deleteComment.ts'
+      - 'components/AuthMenu.tsx'
+      - 'components/Comments.tsx'
+      - 'prisma/schema.prisma'
+      - 'scripts/test-auth-*.ts'
+      - '.github/workflows/auth-tests.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'lib/auth*.ts'
+      - 'pages/api/auth/**'
+      - 'pages/api/account/**'
+      - 'pages/api/createComment.ts'
+      - 'pages/api/deleteComment.ts'
+      - 'components/AuthMenu.tsx'
+      - 'components/Comments.tsx'
+      - 'prisma/schema.prisma'
+      - 'scripts/test-auth-*.ts'
+
+jobs:
+  auth-tests:
+    name: Auth Flow & Security Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    services:
+      postgres:
+        image: postgres:15-alpine
+        env:
+          POSTGRES_USER: testuser
+          POSTGRES_PASSWORD: testpassword
+          POSTGRES_DB: testdb
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      POSTGRES_PRISMA_URL: postgresql://testuser:testpassword@localhost:5432/testdb
+      POSTGRES_URL_NON_POOLING: postgresql://testuser:testpassword@localhost:5432/testdb
+      NEXTAUTH_SECRET: test-secret-for-ci-only-do-not-use-in-production
+      NEXTAUTH_URL: http://localhost:3000
+      GOOGLE_CLIENT_ID: test-client-id
+      GOOGLE_CLIENT_SECRET: test-client-secret
+      CI: true
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Setup database schema
+        run: npx prisma db push --skip-generate
+
+      - name: Generate Prisma client
+        run: npx prisma generate
+
+      - name: Seed test data
+        run: npx tsx scripts/ci-seed.ts
+
+      - name: Run auth flow tests
+        run: npx tsx scripts/test-auth-flow.ts
+
+      - name: Run security tests
+        run: npx tsx scripts/test-auth-security.ts
+
+      - name: TypeScript type check
+        run: npx tsc --noEmit
