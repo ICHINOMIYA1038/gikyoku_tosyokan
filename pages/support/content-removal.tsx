@@ -1,5 +1,6 @@
 import Seo from "@/components/seo";
 import SupportLayout from "@/components/SupportLayout";
+import Link from "next/link";
 
 function ContentRemoval() {
   return (
@@ -67,7 +68,7 @@ function ContentRemoval() {
         </p>
         <p>
           お問い合わせフォームからもご連絡いただけます：
-          <a href="/support/contact" className="text-blue-600 hover:underline">お問い合わせページ</a>
+          <Link href="/support/contact" className="text-blue-600 hover:underline">お問い合わせページ</Link>
         </p>
 
         <h3>免責事項</h3>
