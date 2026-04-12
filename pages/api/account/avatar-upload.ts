@@ -40,7 +40,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const avatarUrl = `https://${S3_BUCKET}.s3.${S3_REGION}.amazonaws.com/${key}`;
 
   try {
-    const s3 = new S3Client({ region: S3_REGION });
+    const s3 = new S3Client({
+      region: S3_REGION,
+      credentials: {
+        accessKeyId: process.env.AWS_ACCESS_KEY || process.env.AWS_ACCESS_KEY_ID || '',
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || '',
+      },
+    });
     const command = new PutObjectCommand({
       Bucket: S3_BUCKET,
       Key: key,
