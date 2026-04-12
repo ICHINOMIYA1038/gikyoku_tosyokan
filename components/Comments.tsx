@@ -178,34 +178,40 @@ const Comments = ({ comments: initialComments, postid, postTitle, inline = false
 
   const handleDelete = async (commentId: number, isParent: boolean) => {
     if (!confirm("このコメントを削除しますか？")) return;
+
+    // 楽観的更新: APIレスポンスを待たず即座にUIを更新
+    const prevComments = [...comments];
+    if (isParent) {
+      setComments((prev: any) =>
+        prev.map((c: any) =>
+          c.id === commentId ? { ...c, deleted: true, content: "[削除されたコメントです]" } : c
+        )
+      );
+    } else {
+      setComments((prev: any) =>
+        prev.map((c: any) => ({
+          ...c,
+          children: c.children?.map((ch: any) =>
+            ch.id === commentId ? { ...ch, deleted: true, content: "[削除されたコメントです]" } : ch
+          ),
+        }))
+      );
+    }
+
+    // バックグラウンドでAPI呼び出し、失敗時はロールバック
     try {
       const response = await fetch("/api/deleteComment", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ commentId, isParent }),
       });
-      if (response.ok) {
-        if (isParent) {
-          setComments((prev: any) =>
-            prev.map((c: any) =>
-              c.id === commentId ? { ...c, deleted: true, content: "[削除されたコメントです]" } : c
-            )
-          );
-        } else {
-          setComments((prev: any) =>
-            prev.map((c: any) => ({
-              ...c,
-              children: c.children?.map((ch: any) =>
-                ch.id === commentId ? { ...ch, deleted: true, content: "[削除されたコメントです]" } : ch
-              ),
-            }))
-          );
-        }
-      } else {
+      if (!response.ok) {
+        setComments(prevComments);
         const err = await response.json();
         alert(err.error || "削除に失敗しました");
       }
     } catch (error) {
+      setComments(prevComments);
       console.error("Delete error:", error);
       alert("削除中にエラーが発生しました");
     }
