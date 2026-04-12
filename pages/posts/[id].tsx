@@ -270,6 +270,19 @@ function PostPage({ post }: any) {
                 </div>
 
                 {/* 3. 読むボタンエリア */}
+                {!hasReadLinks && (
+                  <div className="mt-6 p-4 bg-gray-50 rounded-xl border border-gray-200 text-center">
+                    <p className="text-sm text-gray-500">
+                      <FaBook className="inline mr-1.5 text-gray-400" />
+                      この作品の台本の入手方法についてはまだ情報がありません。
+                    </p>
+                    <p className="text-xs text-gray-400 mt-1.5">
+                      当サイトでは台本自体の公開は行っておりません。入手先の情報をお持ちの方は
+                      <Link href="/support/contact" className="text-blue-500 hover:underline">お問い合わせ</Link>
+                      よりお知らせください。
+                    </p>
+                  </div>
+                )}
                 {(hasAmazonLink || hasFreeLink) && (
                   <div className="mt-6 flex flex-col sm:flex-row justify-center gap-4">
                   {hasAmazonLink && (
@@ -650,7 +663,9 @@ export async function getStaticProps(context: any) {
               select: {
                 id: true,
                 name: true,
+                displayName: true,
                 image: true,
+                avatarUrl: true,
               }
             },
             children: {

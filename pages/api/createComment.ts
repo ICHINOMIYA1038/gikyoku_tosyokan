@@ -55,7 +55,7 @@ export default async function handler(
           ...(userId ? { user: { connect: { id: userId } } } : {}),
         },
         include: {
-          user: { select: { id: true, name: true, image: true } },
+          user: { select: { id: true, name: true, displayName: true, image: true, avatarUrl: true } },
         },
       });
     } else {
@@ -68,7 +68,7 @@ export default async function handler(
           ...(userId ? { user: { connect: { id: userId } } } : {}),
         },
         include: {
-          user: { select: { id: true, name: true, image: true } },
+          user: { select: { id: true, name: true, displayName: true, image: true, avatarUrl: true } },
         },
       });
     }

@@ -644,15 +644,15 @@ const Comments = ({ comments: initialComments, postid, postTitle, inline = false
                     </p>
                     <div className="flex flex-wrap items-center justify-between gap-2 mt-3 pt-2 border-t border-gray-100">
                       <div className="flex items-center gap-2 text-xs text-gray-400">
-                        {comment.user?.image && (
+                        {(comment.user?.avatarUrl || comment.user?.image) && (
                           // eslint-disable-next-line @next/next/no-img-element
                           <img
-                            src={comment.user.image}
+                            src={comment.user.avatarUrl || comment.user.image}
                             alt={comment.author}
-                            className="w-5 h-5 rounded-full"
+                            className="w-5 h-5 rounded-full object-cover"
                           />
                         )}
-                        <span className="font-medium text-gray-600">{comment.author}</span>
+                        <span className="font-medium text-gray-600">{comment.user?.displayName || comment.author}</span>
                         {comment.user && (
                           <span className="text-[10px] bg-blue-50 text-blue-600 px-1.5 rounded">認証済</span>
                         )}
@@ -706,15 +706,15 @@ const Comments = ({ comments: initialComments, postid, postTitle, inline = false
                           </p>
                           <div className="flex items-center justify-between mt-2">
                             <div className="flex items-center gap-2 text-xs text-gray-400">
-                              {elem.user?.image && (
+                              {(elem.user?.avatarUrl || elem.user?.image) && (
                                 // eslint-disable-next-line @next/next/no-img-element
                                 <img
-                                  src={elem.user.image}
+                                  src={elem.user.avatarUrl || elem.user.image}
                                   alt={elem.author}
-                                  className="w-5 h-5 rounded-full"
+                                  className="w-5 h-5 rounded-full object-cover"
                                 />
                               )}
-                              <span className="font-medium text-gray-600">{elem.author}</span>
+                              <span className="font-medium text-gray-600">{elem.user?.displayName || elem.author}</span>
                               {elem.user && (
                                 <span className="text-[10px] bg-blue-50 text-blue-600 px-1.5 rounded">認証済</span>
                               )}
