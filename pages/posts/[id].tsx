@@ -629,6 +629,13 @@ export async function getStaticProps(context: any) {
           }
         },
         comments: {
+          where: {
+            // リアクションはコメントとは別機能なので除外
+            OR: [
+              { commentType: { not: 'リアクション' } },
+              { commentType: null },
+            ],
+          },
           select: {
             id: true,
             content: true,

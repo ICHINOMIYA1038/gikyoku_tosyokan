@@ -11,7 +11,13 @@ export default async function handler(
 
   try {
     const comments = await prisma.parentComment.findMany({
-      where: { deleted: false },
+      where: {
+        deleted: false,
+        OR: [
+          { commentType: { not: 'リアクション' } },
+          { commentType: null },
+        ],
+      },
       orderBy: { date: "desc" },
       take: 6,
       select: {
