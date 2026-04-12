@@ -31,8 +31,16 @@ export default async function handler(
 
   const session = await getAuth(req, res);
   const userId = session?.user?.id ?? null;
-  // ログインユーザーは強制的にプロフィール名を使う（なりすまし防止）
-  const displayAuthor = session?.user?.name || author || "名無しさん";
+
+  // ログインユーザーはdisplayName > name の優先度でプロフィール名を使う（なりすまし防止）
+  let displayAuthor = author || "名無しさん";
+  if (userId) {
+    const dbUser = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { displayName: true, name: true },
+    });
+    displayAuthor = dbUser?.displayName || dbUser?.name || displayAuthor;
+  }
 
   try {
     let comment;
