@@ -19,12 +19,14 @@ const NewsItem: React.FC<NewsItemProps> = ({ date, category, title, url }) => {
   const bgColor = categoryStyles[category] || "bg-gray-600";
 
   const content = (
-    <div className="flex flex-wrap items-center gap-2">
-      <span className={`px-2 py-0.5 text-xs font-semibold text-white rounded ${bgColor}`}>
-        {category}
-      </span>
-      <span className="text-sm text-gray-500">{date}</span>
-      <span className="text-sm text-gray-800">{title}</span>
+    <div>
+      <div className="flex items-center gap-2 mb-1">
+        <span className={`px-2 py-0.5 text-xs font-semibold text-white rounded ${bgColor}`}>
+          {category}
+        </span>
+        <span className="text-xs text-gray-400">{date}</span>
+      </div>
+      <p className="text-sm text-gray-800">{title}</p>
     </div>
   );
 
