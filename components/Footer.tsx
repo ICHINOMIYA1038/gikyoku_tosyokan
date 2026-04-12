@@ -52,6 +52,9 @@ const Footer: React.FC = () => {
                 <Link href="/support/copyright" className="hover:underline">著作権について</Link>
               </li>
               <li className="mb-2">
+                <Link href="/support/content-removal" className="hover:underline">権利侵害の申告</Link>
+              </li>
+              <li className="mb-2">
                 <Link href="/sitemap.xml" className="hover:underline">サイトマップ</Link>
               </li>
             </ul>

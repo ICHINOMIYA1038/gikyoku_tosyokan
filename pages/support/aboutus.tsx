@@ -33,6 +33,16 @@ function Home() {
         <div className="text-blue-600 my-5">
           <Link href="/support/contact">お問い合わせフォーム</Link>
         </div>
+
+        <h3>外部送信規律への対応</h3>
+        <p>
+          当サイトは、電気通信事業法第27条の12に定める外部送信規律に対応しています。
+          外部送信される情報の詳細は
+          <Link href="/support/privacy-policy" className="text-blue-600 hover:underline mx-1">
+            プライバシーポリシー
+          </Link>
+          の「Cookieの利用と外部送信規律」をご確認ください。
+        </p>
         <br />
       </div>
     </SupportLayout>

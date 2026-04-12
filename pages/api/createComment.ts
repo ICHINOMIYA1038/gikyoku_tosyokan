@@ -1,47 +1,78 @@
 import { prisma } from "@/lib/prisma";
 import { NextApiRequest, NextApiResponse } from "next";
+import { getAuth } from "@/lib/auth";
 
+/**
+ * コメント投稿API
+ *
+ * 認証状態:
+ * - ログイン済み: session.user.id/name が紐付く。authorフィールドは表示名として扱う
+ * - 未ログイン: 従来通り匿名投稿（author任意指定）
+ */
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  if (req.method === "POST") {
-    const { author, content, isParent, targetid, commentType } = req.body;
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "このメソッドは許可されていません" });
+  }
 
-    try {
-      let comment;
-      if (isParent) {
-        // 親コメントを作成
-        comment = await prisma.parentComment.create({
-          data: {
-            author,
-            deleted: false,
-            content,
-            commentType: commentType || null,
-            post: { connect: { id: targetid } },
-          },
-        });
-      } else {
-        // 子コメントを作成
-        comment = await prisma.childComment.create({
-          data: {
-            author,
-            content,
-            deleted: false,
-            parentComment: { connect: { id: targetid } },
-          },
-        });
-      }
+  const { author, content, isParent, targetid, commentType } = req.body;
 
-      // 日時をJSTフォーマットして返す
-      const jst = new Date((comment as any).date.toLocaleString("en-US", { timeZone: "Asia/Tokyo" }));
-      const formatted = `${jst.getFullYear()}/${jst.getMonth() + 1}/${jst.getDate()} ${jst.getHours()}:${jst.getMinutes()}`;
-      res.status(201).json({ ...comment, date: formatted });
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: "コメントの投稿中にエラーが発生しました" });
+  if (!content || typeof content !== "string" || content.trim().length === 0) {
+    return res.status(400).json({ error: "コメント本文は必須です" });
+  }
+  if (content.length > 2000) {
+    return res.status(400).json({ error: "コメントは2000文字以内で入力してください" });
+  }
+  if (!targetid || typeof targetid !== "number") {
+    return res.status(400).json({ error: "投稿先IDが不正です" });
+  }
+
+  const session = await getAuth(req, res);
+  const userId = session?.user?.id ?? null;
+  // ログインユーザーは強制的にプロフィール名を使う（なりすまし防止）
+  const displayAuthor = session?.user?.name || author || "名無しさん";
+
+  try {
+    let comment;
+    if (isParent) {
+      comment = await prisma.parentComment.create({
+        data: {
+          author: displayAuthor,
+          content,
+          commentType: commentType || null,
+          deleted: false,
+          post: { connect: { id: targetid } },
+          ...(userId ? { user: { connect: { id: userId } } } : {}),
+        },
+        include: {
+          user: { select: { id: true, name: true, image: true } },
+        },
+      });
+    } else {
+      comment = await prisma.childComment.create({
+        data: {
+          author: displayAuthor,
+          content,
+          deleted: false,
+          parentComment: { connect: { id: targetid } },
+          ...(userId ? { user: { connect: { id: userId } } } : {}),
+        },
+        include: {
+          user: { select: { id: true, name: true, image: true } },
+        },
+      });
     }
-  } else {
-    res.status(405).json({ error: "このメソッドは許可されていません" });
+
+    // 日時をJSTフォーマットして返す
+    const jst = new Date(
+      (comment as { date: Date }).date.toLocaleString("en-US", { timeZone: "Asia/Tokyo" })
+    );
+    const formatted = `${jst.getFullYear()}/${jst.getMonth() + 1}/${jst.getDate()} ${jst.getHours()}:${jst.getMinutes()}`;
+    res.status(201).json({ ...comment, date: formatted });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "コメントの投稿中にエラーが発生しました" });
   }
 }

@@ -638,6 +638,14 @@ export async function getStaticProps(context: any) {
             post_id: true,
             likes: true,
             commentType: true,
+            userId: true,
+            user: {
+              select: {
+                id: true,
+                name: true,
+                image: true,
+              }
+            },
             children: {
               select: {
                 id: true,
@@ -647,6 +655,14 @@ export async function getStaticProps(context: any) {
                 deleted: true,
                 parentCommentId: true,
                 likes: true,
+                userId: true,
+                user: {
+                  select: {
+                    id: true,
+                    name: true,
+                    image: true,
+                  }
+                },
               }
             }
           },

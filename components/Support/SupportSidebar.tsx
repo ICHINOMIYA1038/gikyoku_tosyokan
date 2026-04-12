@@ -115,6 +115,17 @@ const SupportSidebar = ({ now }: any) => {
             </div>
           </Link>
         </li>
+        <li>
+          <Link href="/support/content-removal">
+            <div
+              className={`p-2 cursor-pointer ${
+                now === "content-removal" ? "bg-blue-500 text-white" : "bg-white"
+              } hover:bg-blue-500 hover:text-white`}
+            >
+              権利侵害の申告
+            </div>
+          </Link>
+        </li>
       </ul>
     </div>
   );

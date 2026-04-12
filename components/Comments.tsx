@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faReply, faTimes, faInfoCircle, faThumbsUp, faTheaterMasks, faCommentDots, faQuestionCircle, faPaperPlane, faStar, faFire, faClock, faShareAlt, faCheck } from "@fortawesome/free-solid-svg-icons";
+import { faReply, faTimes, faInfoCircle, faThumbsUp, faTheaterMasks, faCommentDots, faQuestionCircle, faPaperPlane, faStar, faFire, faClock, faShareAlt, faCheck, faTrash, faSignInAlt } from "@fortawesome/free-solid-svg-icons";
+import { useSession } from "next-auth/react";
+import Link from "next/link";
 
 const COMMENT_TYPES = [
   { value: "感想", label: "感想", icon: faCommentDots, color: "blue", bg: "bg-gray-100", text: "text-gray-600", border: "border-gray-200" },
@@ -24,6 +26,7 @@ type SortMode = "newest" | "popular";
 type FilterType = "all" | "感想" | "上演報告" | "レビュー" | "質問";
 
 const Comments = ({ comments: initialComments, postid, postTitle, inline = false }: any) => {
+  const { data: session } = useSession();
   const [comments, setComments] = useState(initialComments);
   const [isSendingComment, setIsSendingComment] = useState(false);
   const [commentResult, setCommentResult] = useState("");
@@ -171,6 +174,46 @@ const Comments = ({ comments: initialComments, postid, postTitle, inline = false
       setCommentResult("エラーが発生しました");
     }
     setIsSendingComment(false);
+  };
+
+  const handleDelete = async (commentId: number, isParent: boolean) => {
+    if (!confirm("このコメントを削除しますか？")) return;
+    try {
+      const response = await fetch("/api/deleteComment", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ commentId, isParent }),
+      });
+      if (response.ok) {
+        if (isParent) {
+          setComments((prev: any) =>
+            prev.map((c: any) =>
+              c.id === commentId ? { ...c, deleted: true, content: "[削除されたコメントです]" } : c
+            )
+          );
+        } else {
+          setComments((prev: any) =>
+            prev.map((c: any) => ({
+              ...c,
+              children: c.children?.map((ch: any) =>
+                ch.id === commentId ? { ...ch, deleted: true, content: "[削除されたコメントです]" } : ch
+              ),
+            }))
+          );
+        }
+      } else {
+        const err = await response.json();
+        alert(err.error || "削除に失敗しました");
+      }
+    } catch (error) {
+      console.error("Delete error:", error);
+      alert("削除中にエラーが発生しました");
+    }
+  };
+
+  const isOwnComment = (comment: any): boolean => {
+    if (!session?.user?.id) return false;
+    return comment.user?.id === session.user.id || comment.userId === session.user.id;
   };
 
   const handleReplyClick = (comment: any) => {
@@ -376,16 +419,45 @@ const Comments = ({ comments: initialComments, postid, postTitle, inline = false
             </div>
           )}
 
-          {/* 名前入力 */}
-          <div className="mb-3">
-            <input
-              type="text"
-              placeholder="名無しさん"
-              className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-300 focus:border-pink-300 transition text-sm min-h-[44px]"
-              value={authorName}
-              onChange={(e) => setAuthorName(e.target.value)}
-            />
-          </div>
+          {/* 名前入力 / ログイン中の表示 */}
+          {session ? (
+            <div className="mb-3 flex items-center gap-2 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+              {session.user.image && (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={session.user.image}
+                  alt={session.user.name ?? "user"}
+                  className="w-7 h-7 rounded-full"
+                />
+              )}
+              <div className="flex-1 min-w-0">
+                <p className="text-xs text-blue-700">
+                  <span className="font-medium">{session.user.name ?? "ユーザー"}</span>{" "}
+                  としてログイン中
+                </p>
+              </div>
+            </div>
+          ) : (
+            <div className="mb-3">
+              <div className="flex items-center justify-between mb-1.5">
+                <p className="text-xs text-gray-400">名前（任意）</p>
+                <Link
+                  href="/auth/signup"
+                  className="flex items-center gap-1 text-xs text-blue-600 hover:text-blue-700 transition-colors"
+                >
+                  <FontAwesomeIcon icon={faSignInAlt} className="w-2.5 h-2.5" />
+                  ログインして投稿
+                </Link>
+              </div>
+              <input
+                type="text"
+                placeholder="名無しさん"
+                className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-300 focus:border-pink-300 transition text-sm min-h-[44px]"
+                value={authorName}
+                onChange={(e) => setAuthorName(e.target.value)}
+              />
+            </div>
+          )}
 
           {/* コメント入力 */}
           <div className="mb-3 relative">
@@ -567,9 +639,20 @@ const Comments = ({ comments: initialComments, postid, postTitle, inline = false
                       {comment.content}
                     </p>
                     <div className="flex flex-wrap items-center justify-between gap-2 mt-3 pt-2 border-t border-gray-100">
-                      <div className="text-xs text-gray-400">
+                      <div className="flex items-center gap-2 text-xs text-gray-400">
+                        {comment.user?.image && (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img
+                            src={comment.user.image}
+                            alt={comment.author}
+                            className="w-5 h-5 rounded-full"
+                          />
+                        )}
                         <span className="font-medium text-gray-600">{comment.author}</span>
-                        <span className="mx-1.5">·</span>
+                        {comment.user && (
+                          <span className="text-[10px] bg-blue-50 text-blue-600 px-1.5 rounded">認証済</span>
+                        )}
+                        <span className="mx-0.5">·</span>
                         {comment.date}
                       </div>
                       <div className="flex items-center gap-0.5">
@@ -588,6 +671,15 @@ const Comments = ({ comments: initialComments, postid, postTitle, inline = false
                         >
                           <FontAwesomeIcon icon={faShareAlt} className="w-3 h-3" />
                         </button>
+                        {isOwnComment(comment) && (
+                          <button
+                            className="flex items-center text-sm text-gray-400 hover:text-red-500 hover:bg-red-50 active:bg-red-100 rounded-full px-2 py-1.5 min-h-[44px] transition-colors"
+                            onClick={() => handleDelete(comment.id, true)}
+                            aria-label="削除"
+                          >
+                            <FontAwesomeIcon icon={faTrash} className="w-3 h-3" />
+                          </button>
+                        )}
                       </div>
                     </div>
                   </>
@@ -609,12 +701,34 @@ const Comments = ({ comments: initialComments, postid, postTitle, inline = false
                             {elem.content}
                           </p>
                           <div className="flex items-center justify-between mt-2">
-                            <div className="text-xs text-gray-400">
+                            <div className="flex items-center gap-2 text-xs text-gray-400">
+                              {elem.user?.image && (
+                                // eslint-disable-next-line @next/next/no-img-element
+                                <img
+                                  src={elem.user.image}
+                                  alt={elem.author}
+                                  className="w-5 h-5 rounded-full"
+                                />
+                              )}
                               <span className="font-medium text-gray-600">{elem.author}</span>
-                              <span className="mx-1.5">·</span>
+                              {elem.user && (
+                                <span className="text-[10px] bg-blue-50 text-blue-600 px-1.5 rounded">認証済</span>
+                              )}
+                              <span className="mx-0.5">·</span>
                               {elem.date}
                             </div>
-                            {renderLikeButton(elem.id, elem.likes || 0, false)}
+                            <div className="flex items-center gap-0.5">
+                              {renderLikeButton(elem.id, elem.likes || 0, false)}
+                              {isOwnComment(elem) && (
+                                <button
+                                  className="flex items-center text-xs text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-full px-2 py-1 transition-colors"
+                                  onClick={() => handleDelete(elem.id, false)}
+                                  aria-label="削除"
+                                >
+                                  <FontAwesomeIcon icon={faTrash} className="w-3 h-3" />
+                                </button>
+                              )}
+                            </div>
                           </div>
                         </>
                       ) : (
