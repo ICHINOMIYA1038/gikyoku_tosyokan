@@ -114,7 +114,7 @@ export default function SignUp({ providers, callbackUrl }: Props) {
             {/* 利用規約 */}
             <p className="mt-6 text-xs text-gray-400 text-center">
               登録することで、
-              <Link href="/support/terms" className="text-theater-primary-600 hover:underline">
+              <Link href="/support/tos" className="text-theater-primary-600 hover:underline">
                 利用規約
               </Link>
               および
