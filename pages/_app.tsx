@@ -2,7 +2,6 @@ import "@/styles/globals.css";
 import "@/styles/markdown.css";
 
 import type { AppProps } from "next/app";
-import type { Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 import { Analytics } from "@vercel/analytics/react";
 import Script from "next/script";
@@ -23,10 +22,7 @@ const notoSansJP = Noto_Sans_JP({
 
 const queryClient = new QueryClient();
 
-export default function App({
-  Component,
-  pageProps: { session, ...pageProps },
-}: AppProps<{ session: Session | null }>) {
+export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
   useEffect(() => {
     const handleRouterChange = (url: any) => {
@@ -69,7 +65,7 @@ export default function App({
            `,
         }}
       />
-      <SessionProvider session={session}>
+      <SessionProvider session={pageProps.session}>
         <QueryClientProvider client={queryClient}>
           <main className={notoSansJP.className}>
             <Component {...pageProps} />

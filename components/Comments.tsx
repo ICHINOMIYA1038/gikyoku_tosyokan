@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faReply, faTimes, faInfoCircle, faThumbsUp, faTheaterMasks, faCommentDots, faQuestionCircle, faPaperPlane, faStar, faFire, faClock, faShareAlt, faCheck, faTrash, faSignInAlt } from "@fortawesome/free-solid-svg-icons";
-import { useSession, signIn } from "next-auth/react";
+import { useSession } from "next-auth/react";
+import Link from "next/link";
 
 const COMMENT_TYPES = [
   { value: "感想", label: "感想", icon: faCommentDots, color: "blue", bg: "bg-gray-100", text: "text-gray-600", border: "border-gray-200" },
@@ -440,14 +441,13 @@ const Comments = ({ comments: initialComments, postid, postTitle, inline = false
             <div className="mb-3">
               <div className="flex items-center justify-between mb-1.5">
                 <p className="text-xs text-gray-400">名前（任意）</p>
-                <button
-                  type="button"
-                  onClick={() => signIn("google")}
+                <Link
+                  href="/auth/signup"
                   className="flex items-center gap-1 text-xs text-blue-600 hover:text-blue-700 transition-colors"
                 >
                   <FontAwesomeIcon icon={faSignInAlt} className="w-2.5 h-2.5" />
                   ログインして投稿
-                </button>
+                </Link>
               </div>
               <input
                 type="text"

@@ -1,7 +1,8 @@
-import { useSession, signIn, signOut } from 'next-auth/react';
+import { useSession, signOut } from 'next-auth/react';
 import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
-import { FaSignInAlt, FaSignOutAlt, FaUser, FaChevronDown } from 'react-icons/fa';
+import { useRouter } from 'next/router';
+import { FaSignInAlt, FaSignOutAlt, FaUser, FaChevronDown, FaUserPlus } from 'react-icons/fa';
 
 interface AuthMenuProps {
   variant?: 'desktop' | 'mobile';
@@ -34,23 +35,39 @@ const AuthMenu: React.FC<AuthMenuProps> = ({ variant = 'desktop' }) => {
   if (!session) {
     if (variant === 'mobile') {
       return (
-        <button
-          onClick={() => signIn('google')}
-          className="w-full flex items-center gap-3 py-3 px-4 text-left text-gray-800 hover:bg-gray-100 rounded-lg transition-colors"
-        >
-          <FaSignInAlt className="text-theater-primary-600" />
-          <span className="font-medium">ログイン</span>
-        </button>
+        <div className="border-t border-gray-200 pt-3 mt-3 space-y-1">
+          <Link
+            href="/auth/signin"
+            className="w-full flex items-center gap-3 py-3 px-4 text-left text-gray-800 hover:bg-gray-100 rounded-lg transition-colors"
+          >
+            <FaSignInAlt className="text-theater-primary-600" />
+            <span className="font-medium">ログイン</span>
+          </Link>
+          <Link
+            href="/auth/signup"
+            className="w-full flex items-center gap-3 py-3 px-4 text-left text-white bg-theater-primary-600 hover:bg-theater-primary-700 rounded-lg transition-colors"
+          >
+            <FaUserPlus />
+            <span className="font-medium">新規登録（無料）</span>
+          </Link>
+        </div>
       );
     }
     return (
-      <button
-        onClick={() => signIn('google')}
-        className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-theater-primary-600 hover:bg-theater-primary-700 rounded-full transition-colors"
-      >
-        <FaSignInAlt />
-        <span>ログイン</span>
-      </button>
+      <div className="flex items-center gap-2">
+        <Link
+          href="/auth/signin"
+          className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-theater-neutral-800 hover:text-theater-neutral-600 transition-colors"
+        >
+          <span>ログイン</span>
+        </Link>
+        <Link
+          href="/auth/signup"
+          className="flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-white bg-theater-primary-600 hover:bg-theater-primary-700 rounded-full transition-colors"
+        >
+          <span>新規登録</span>
+        </Link>
+      </div>
     );
   }
 
