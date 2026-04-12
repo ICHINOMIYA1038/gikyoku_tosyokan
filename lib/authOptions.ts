@@ -93,6 +93,17 @@ export const authOptions: NextAuthOptions = {
       if (session.user) {
         session.user.id = token.id as string;
         session.user.role = (token.role as UserRole) ?? 'USER';
+        // DBからカスタムプロフィール情報を取得して上書き
+        if (token.id) {
+          const dbUser = await prisma.user.findUnique({
+            where: { id: token.id as string },
+            select: { displayName: true, avatarUrl: true, groupName: true },
+          });
+          if (dbUser) {
+            if (dbUser.displayName) session.user.name = dbUser.displayName;
+            if (dbUser.avatarUrl) session.user.image = dbUser.avatarUrl;
+          }
+        }
       }
       return session;
     },

@@ -160,9 +160,7 @@ const Comments = ({ comments: initialComments, postid, postTitle, inline = false
           try {
             localStorage.setItem("comment_author_name", name);
           } catch {}
-          if (!replyTo) {
-            setTimeout(() => setShowRatingNudge(true), 500);
-          }
+          // リアクションとコメントは独立した機能のため、ナッジは表示しない
         } else {
           setCommentResult("コメントのデータが不正です");
         }
@@ -776,39 +774,9 @@ const Comments = ({ comments: initialComments, postid, postTitle, inline = false
         </div>
       )}
 
-      {/* 評価ナッジ */}
-      {showRatingNudge && (
-        <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-xl">
-          <div className="flex items-center justify-between gap-3">
-            <div className="flex items-center gap-3 min-w-0">
-              <div className="w-7 h-7 bg-yellow-100 rounded-full flex items-center justify-center flex-shrink-0">
-                <FontAwesomeIcon icon={faStar} className="text-yellow-500 w-3 h-3" />
-              </div>
-              <div>
-                <p className="text-sm font-bold text-gray-800">コメントありがとうございます！</p>
-                <p className="text-xs text-gray-500">この作品の評価もお願いできますか？上の星をクリックして評価できます。</p>
-              </div>
-            </div>
-            <button
-              className="flex-shrink-0 text-xs font-medium text-yellow-600 hover:text-yellow-700 transition-colors p-2 min-h-[44px] flex items-center"
-              onClick={() => {
-                setShowRatingNudge(false);
-                const ratingSection = document.querySelector(".bg-white.rounded-xl.shadow-sm.px-4.py-4");
-                if (ratingSection) {
-                  ratingSection.scrollIntoView({ behavior: "smooth", block: "center" });
-                }
-              }}
-            >
-              評価する
-            </button>
-            <button
-              className="flex-shrink-0 text-gray-400 hover:text-gray-600 transition-colors p-2 min-h-[44px] min-w-[44px] flex items-center justify-center"
-              onClick={() => setShowRatingNudge(false)}
-              aria-label="閉じる"
-            >
-              <FontAwesomeIcon icon={faTimes} className="w-3 h-3" />
-            </button>
-          </div>
+      {/* 評価ナッジ - 削除済み（リアクションとコメントは独立機能） */}
+      {false && (
+        <div>
         </div>
       )}
     </div>

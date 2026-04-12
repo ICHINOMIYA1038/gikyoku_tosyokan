@@ -7,13 +7,17 @@ import Seo from '@/components/seo';
 import { prisma } from '@/lib/prisma';
 import Link from 'next/link';
 import { useState } from 'react';
-import { FaUser, FaCommentDots, FaTrash, FaExclamationTriangle, FaHeart } from 'react-icons/fa';
+import { FaUser, FaCommentDots, FaTrash, FaExclamationTriangle, FaHeart, FaPen, FaTheaterMasks } from 'react-icons/fa';
 
 interface Props {
   user: {
     name: string | null;
+    displayName: string | null;
     email: string | null;
     image: string | null;
+    avatarUrl: string | null;
+    bio: string | null;
+    groupName: string | null;
     createdAt: string;
   };
   stats: {
@@ -68,12 +72,12 @@ export default function MyPage({ user, stats, recentComments, favoriteCount, fav
         {/* プロフィールカード */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
           <div className="flex items-center gap-4">
-            {user.image ? (
+            {(user.avatarUrl || user.image) ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
-                src={user.image}
-                alt={user.name ?? 'user'}
-                className="w-20 h-20 rounded-full"
+                src={user.avatarUrl || user.image || ''}
+                alt={user.displayName || user.name || 'user'}
+                className="w-20 h-20 rounded-full object-cover"
               />
             ) : (
               <div className="w-20 h-20 rounded-full bg-gray-200 flex items-center justify-center">
@@ -81,8 +85,21 @@ export default function MyPage({ user, stats, recentComments, favoriteCount, fav
               </div>
             )}
             <div className="flex-1">
-              <h2 className="text-xl font-bold text-gray-900">{user.name ?? 'ユーザー'}</h2>
-              <p className="text-sm text-gray-600">{user.email}</p>
+              <div className="flex items-center gap-2">
+                <h2 className="text-xl font-bold text-gray-900">{user.displayName || user.name || 'ユーザー'}</h2>
+                <Link href="/mypage/edit" className="text-gray-400 hover:text-theater-primary-600 transition-colors">
+                  <FaPen className="text-xs" />
+                </Link>
+              </div>
+              {user.groupName && (
+                <p className="text-sm text-gray-600 flex items-center gap-1 mt-0.5">
+                  <FaTheaterMasks className="text-xs text-gray-400" />
+                  {user.groupName}
+                </p>
+              )}
+              {user.bio && (
+                <p className="text-sm text-gray-500 mt-1 line-clamp-2">{user.bio}</p>
+              )}
               <p className="text-xs text-gray-400 mt-1">登録日: {user.createdAt}</p>
             </div>
           </div>
@@ -268,7 +285,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
   const [user, parentCount, childCount, parents, favoriteCount, favorites] = await Promise.all([
     prisma.user.findUnique({
       where: { id: userId },
-      select: { name: true, email: true, image: true, createdAt: true },
+      select: { name: true, displayName: true, email: true, image: true, avatarUrl: true, bio: true, groupName: true, createdAt: true },
     }),
     prisma.parentComment.count({ where: { userId, deleted: false } }),
     prisma.childComment.count({ where: { userId, deleted: false } }),
@@ -295,8 +312,12 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
     props: {
       user: {
         name: user.name,
+        displayName: user.displayName,
         email: user.email,
         image: user.image,
+        avatarUrl: user.avatarUrl,
+        bio: user.bio,
+        groupName: user.groupName,
         createdAt: user.createdAt.toISOString().split('T')[0],
       },
       stats: {
