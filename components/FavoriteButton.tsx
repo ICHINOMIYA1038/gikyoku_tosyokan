@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
-import { isFavorite, toggleFavorite } from "@/lib/favorites";
+import { useFavorites } from "@/contexts/FavoritesContext";
 
 interface FavoriteButtonProps {
   postId: number;
@@ -9,23 +9,15 @@ interface FavoriteButtonProps {
 }
 
 const FavoriteButton: React.FC<FavoriteButtonProps> = ({ postId, size = "md", variant = "default" }) => {
-  const [liked, setLiked] = useState(false);
-
-  useEffect(() => {
-    setLiked(isFavorite(postId));
-
-    const handler = () => setLiked(isFavorite(postId));
-    window.addEventListener("favorites-changed", handler);
-    return () => window.removeEventListener("favorites-changed", handler);
-  }, [postId]);
+  const { isFav, toggle } = useFavorites();
+  const liked = isFav(postId);
 
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    toggleFavorite(postId);
+    toggle(postId);
   };
 
-  // フローティングアクション用スタイル（詳細ページ右下）
   if (variant === "floating") {
     return (
       <button
@@ -37,16 +29,11 @@ const FavoriteButton: React.FC<FavoriteButtonProps> = ({ postId, size = "md", va
         }`}
         aria-label={liked ? "お気に入りから削除" : "お気に入りに追加"}
       >
-        {liked ? (
-          <FaHeart className="text-lg" />
-        ) : (
-          <FaRegHeart className="text-lg" />
-        )}
+        {liked ? <FaHeart className="text-lg" /> : <FaRegHeart className="text-lg" />}
       </button>
     );
   }
 
-  // カード用スタイル（デフォルト）
   const iconClass = size === "sm" ? "text-base" : "text-xl";
   const btnClass = size === "sm" ? "w-8 h-8" : "w-10 h-10";
 

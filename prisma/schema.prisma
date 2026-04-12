@@ -55,6 +55,7 @@ model Post {
   theaterGroups       PostTheaterGroup[]
   awards              PostAward[]
   announcements       Announcement[]
+  favorites           Favorite[]
 
   @@index([title])
   @@index([synopsis])
@@ -353,6 +354,7 @@ model User {
   sessions          Session[]
   parentComments    ParentComment[]
   childComments     ChildComment[]
+  favorites         Favorite[]
 
   @@index([email])
   @@map("User")
@@ -396,4 +398,18 @@ model VerificationToken {
 
   @@unique([identifier, token])
   @@map("VerificationToken")
+}
+
+model Favorite {
+  id        Int      @id @default(autoincrement())
+  userId    String
+  postId    Int
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, postId])
+  @@index([userId])
+  @@index([postId])
+  @@map("Favorite")
 }

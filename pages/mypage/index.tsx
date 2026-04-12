@@ -7,7 +7,7 @@ import Seo from '@/components/seo';
 import { prisma } from '@/lib/prisma';
 import Link from 'next/link';
 import { useState } from 'react';
-import { FaUser, FaCommentDots, FaTrash, FaExclamationTriangle } from 'react-icons/fa';
+import { FaUser, FaCommentDots, FaTrash, FaExclamationTriangle, FaHeart } from 'react-icons/fa';
 
 interface Props {
   user: {
@@ -27,9 +27,15 @@ interface Props {
     postTitle: string;
     postId: number;
   }>;
+  favoriteCount: number;
+  favoritePosts: Array<{
+    id: number;
+    title: string;
+    authorName: string;
+  }>;
 }
 
-export default function MyPage({ user, stats, recentComments }: Props) {
+export default function MyPage({ user, stats, recentComments, favoriteCount, favoritePosts }: Props) {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [deleteConfirmText, setDeleteConfirmText] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
@@ -83,7 +89,16 @@ export default function MyPage({ user, stats, recentComments }: Props) {
         </div>
 
         {/* 統計 */}
-        <div className="grid grid-cols-2 gap-4 mb-6">
+        <div className="grid grid-cols-3 gap-4 mb-6">
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+            <div className="flex items-center gap-3">
+              <FaHeart className="text-2xl text-pink-500" />
+              <div>
+                <p className="text-xs text-gray-500">お気に入り</p>
+                <p className="text-2xl font-bold">{favoriteCount}</p>
+              </div>
+            </div>
+          </div>
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <div className="flex items-center gap-3">
               <FaCommentDots className="text-2xl text-theater-primary-600" />
@@ -104,6 +119,35 @@ export default function MyPage({ user, stats, recentComments }: Props) {
               </div>
             </div>
           </div>
+        </div>
+
+        {/* お気に入り */}
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-bold">お気に入り作品</h3>
+            {favoriteCount > 0 && (
+              <Link href="/favorites" className="text-sm text-theater-primary-600 hover:underline">
+                すべて見る
+              </Link>
+            )}
+          </div>
+          {favoritePosts.length === 0 ? (
+            <p className="text-sm text-gray-500">まだお気に入り登録がありません。</p>
+          ) : (
+            <ul className="space-y-3">
+              {favoritePosts.map((p) => (
+                <li key={p.id} className="border-b border-gray-100 pb-3 last:border-0">
+                  <Link
+                    href={`/posts/${p.id}`}
+                    className="text-sm text-theater-primary-600 hover:underline font-medium"
+                  >
+                    {p.title}
+                  </Link>
+                  <p className="text-xs text-gray-400 mt-0.5">{p.authorName}</p>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
 
         {/* 最近のコメント */}
@@ -221,7 +265,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
 
   const userId = session.user.id;
 
-  const [user, parentCount, childCount, parents] = await Promise.all([
+  const [user, parentCount, childCount, parents, favoriteCount, favorites] = await Promise.all([
     prisma.user.findUnique({
       where: { id: userId },
       select: { name: true, email: true, image: true, createdAt: true },
@@ -233,6 +277,13 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
       orderBy: { date: 'desc' },
       take: 5,
       include: { post: { select: { id: true, title: true } } },
+    }),
+    prisma.favorite.count({ where: { userId } }),
+    prisma.favorite.findMany({
+      where: { userId },
+      orderBy: { createdAt: 'desc' },
+      take: 8,
+      include: { post: { select: { id: true, title: true, author: { select: { name: true } } } } },
     }),
   ]);
 
@@ -258,6 +309,12 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
         date: c.date.toISOString().split('T')[0],
         postTitle: c.post.title,
         postId: c.post.id,
+      })),
+      favoriteCount,
+      favoritePosts: favorites.map((f) => ({
+        id: f.post.id,
+        title: f.post.title,
+        authorName: f.post.author.name,
       })),
     },
   };

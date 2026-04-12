@@ -13,6 +13,7 @@ import { Noto_Sans_JP } from "next/font/google";
 import MobileOptimizations from "@/components/MobileOptimizations";
 import CookieConsent from "@/components/CookieConsent";
 import { isConsentAccepted } from "@/lib/cookie-consent";
+import { FavoritesProvider } from "@/contexts/FavoritesContext";
 
 const notoSansJP = Noto_Sans_JP({
   subsets: ["latin"],
@@ -78,11 +79,13 @@ export default function App({ Component, pageProps }: AppProps) {
         </>
       )}
       <SessionProvider session={pageProps.session}>
-        <QueryClientProvider client={queryClient}>
-          <main className={notoSansJP.className}>
-            <Component {...pageProps} />
-          </main>
-        </QueryClientProvider>
+        <FavoritesProvider>
+          <QueryClientProvider client={queryClient}>
+            <main className={notoSansJP.className}>
+              <Component {...pageProps} />
+            </main>
+          </QueryClientProvider>
+        </FavoritesProvider>
       </SessionProvider>
       <Analytics />
       <CookieConsent />
