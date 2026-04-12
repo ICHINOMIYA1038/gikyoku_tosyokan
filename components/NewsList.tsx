@@ -8,75 +8,76 @@ interface NewsItemProps {
   url: string;
 }
 
+const categoryStyles: Record<string, string> = {
+  "重要": "bg-red-600",
+  "お知らせ": "bg-blue-600",
+  "新着脚本": "bg-green-600",
+  "公演情報": "bg-purple-600",
+};
+
 const NewsItem: React.FC<NewsItemProps> = ({ date, category, title, url }) => {
-  const categoryClassName = getCategoryClassName(category);
+  const bgColor = categoryStyles[category] || "bg-gray-600";
+
+  const content = (
+    <div className="flex flex-wrap items-center gap-2">
+      <span className={`px-2 py-0.5 text-xs font-semibold text-white rounded ${bgColor}`}>
+        {category}
+      </span>
+      <span className="text-sm text-gray-500">{date}</span>
+      <span className="text-sm text-gray-800">{title}</span>
+    </div>
+  );
 
   return (
-    <div className="m-3 p-4 border-solid border border-black lg:w-3/4 bg-white shadow-lg rounded-lg ">
+    <div className="py-3 border-b border-gray-100 last:border-0">
       {url ? (
-        <Link
-          href={url}
-          className="flex flex-wrap items-center border-b border-gray-300 hover:text-blue-500"
-        >
-          <p
-            className={`px-2 py-1 mr-2 text-xs font-semibold bg-blue-600 text-white rounded-sm`}
-          >
-            {category}
-          </p>
-          <p className="text-sm mr-4">{date}</p>
-
-          <p className="">{title}</p>
+        <Link href={url} className="block hover:bg-gray-50 -mx-2 px-2 py-1 rounded transition-colors">
+          {content}
         </Link>
       ) : (
-        <div className="flex">
-          <p
-            className={`px-2 py-1 mr-2 text-xs font-semibold bg-blue-600 text-white rounded-sm`}
-          >
-            {category}
-          </p>
-          <p className="text-sm mr-4">{date}</p>
-
-          <p className="">{title}</p>
-        </div>
+        <div className="px-2 py-1">{content}</div>
       )}
     </div>
   );
 };
 
-const NewsList: React.FC<{ news: NewsItemProps[] }> = ({ news }) => {
+interface NewsListProps {
+  news: NewsItemProps[];
+  limit?: number;
+  showAll?: boolean;
+}
+
+const NewsList: React.FC<NewsListProps> = ({ news, limit = 3, showAll = false }) => {
+  const sorted = [...(news || [])].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  const displayed = showAll ? sorted : sorted.slice(0, limit);
+
   return (
-    <>
-      <h2 className="m-3 text-2xl font-bold">News</h2>
-      {news &&
-        news
-          .slice(0, 5)
-          .reverse()
-          .map((item: any) => (
+    <div>
+      <div className="flex items-center justify-between mb-2">
+        <h2 className="text-xl font-bold">News</h2>
+        {!showAll && sorted.length > limit && (
+          <Link href="/news" className="text-sm text-blue-600 hover:underline">
+            すべて見る
+          </Link>
+        )}
+      </div>
+      <div className="bg-white rounded-lg shadow-sm border border-gray-200 px-4">
+        {displayed.length > 0 ? (
+          displayed.map((item: any) => (
             <NewsItem
-              key={item.id}
+              key={item.id || item.date}
               date={item.date}
               category={item.category}
               title={item.title}
               url={item.url}
             />
-          ))}
-    </>
+          ))
+        ) : (
+          <p className="py-4 text-sm text-gray-500 text-center">お知らせはありません</p>
+        )}
+      </div>
+    </div>
   );
 };
-
-function getCategoryClassName(category: string): string {
-  switch (category) {
-    case "新着脚本":
-      return "new-script";
-    case "公演情報":
-      return "performance-info";
-    case "お知らせ":
-      return "notice";
-    case "重要":
-      return "important";
-    default:
-      return "";
-  }
-}
 
 export default NewsList;
