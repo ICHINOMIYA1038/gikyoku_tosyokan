@@ -37,7 +37,7 @@ export default function BlogLayout({
               <li key={index} className="flex items-center">
                 {index > 0 && <FaChevronRight className="mx-2 text-gray-400" size={12} />}
                 {item.url ? (
-                  <Link href={item.url} className="hover:text-blue-600 transition-colors">
+                  <Link href={item.url} className="hover:text-theater-primary-600 transition-colors">
                     {index === 0 && <FaHome className="inline mr-1" />}
                     {item.name}
                   </Link>

@@ -455,7 +455,7 @@ export default function MobileSearchForm({
               </button>
               <button
                 onClick={handleSearch}
-                className="flex-1 p-3 bg-theater-secondary-600 text-white rounded-lg hover:bg-theater-secondary-700 transition-colors font-bold"
+                className="flex-1 p-3 bg-theater-primary-600 text-white rounded-lg hover:bg-theater-primary-700 transition-colors font-bold"
               >
                 検索する
               </button>

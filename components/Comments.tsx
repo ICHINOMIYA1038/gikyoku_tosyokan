@@ -306,14 +306,14 @@ const Comments = ({ comments: initialComments, postid, postTitle, inline = false
       <button
         className={`flex items-center gap-1.5 text-sm transition-colors rounded-full px-2.5 py-1.5 min-h-[44px] ${
           isLiked
-            ? "text-pink-600 bg-pink-50 cursor-default"
-            : "text-gray-400 hover:text-pink-600 hover:bg-pink-50 active:bg-pink-100"
+            ? "text-theater-primary-600 bg-theater-primary-50 cursor-default"
+            : "text-gray-400 hover:text-theater-primary-600 hover:bg-theater-primary-50 active:bg-theater-primary-100"
         }`}
         onClick={() => !isLiked && handleLike(id, isParent)}
         disabled={isLiked}
         aria-label="いいね"
       >
-        <FontAwesomeIcon icon={faThumbsUp} className={`w-3 h-3 ${isLiked ? "text-pink-600" : ""}`} />
+        <FontAwesomeIcon icon={faThumbsUp} className={`w-3 h-3 ${isLiked ? "text-theater-primary-600" : ""}`} />
         {likes > 0 && <span className="font-medium text-xs">{likes}</span>}
         {!isLiked && likes === 0 && <span className="text-xs hidden sm:inline">参考になった</span>}
       </button>
@@ -325,16 +325,16 @@ const Comments = ({ comments: initialComments, postid, postTitle, inline = false
   );
 
   return (
-    <div className={`comments-section transition-all duration-1000 ${isHighlighted ? "ring-2 ring-pink-300 ring-offset-4 rounded-xl" : ""}`} id="comments-section" ref={sectionRef}>
+    <div className={`comments-section transition-all duration-1000 ${isHighlighted ? "ring-2 ring-theater-primary-300 ring-offset-4 rounded-xl" : ""}`} id="comments-section" ref={sectionRef}>
       {/* ヘッダー */}
       <div className="flex items-center justify-between mb-5">
         <div className="flex items-center gap-3">
-          <div className="w-1 h-7 bg-pink-600 rounded-full"></div>
+          <div className="w-1 h-7 bg-theater-primary-600 rounded-full"></div>
           <h2 className="text-xl md:text-2xl font-bold font-serif text-gray-800">
             みんなの声
           </h2>
           {totalCommentCount > 0 && (
-            <span className="bg-pink-600 text-white text-sm font-bold px-2.5 py-0.5 rounded-full">
+            <span className="bg-theater-primary-600 text-white text-sm font-bold px-2.5 py-0.5 rounded-full">
               {totalCommentCount}
             </span>
           )}
@@ -348,7 +348,7 @@ const Comments = ({ comments: initialComments, postid, postTitle, inline = false
             まだコメントはありません
           </p>
           <button
-            className="inline-flex items-center gap-1.5 px-6 py-3 bg-pink-600 hover:bg-pink-700 active:bg-pink-800 text-white text-sm font-bold rounded-full transition-colors min-h-[44px]"
+            className="inline-flex items-center gap-1.5 px-6 py-3 bg-theater-primary-600 hover:bg-theater-primary-700 active:bg-theater-primary-800 text-white text-sm font-bold rounded-full transition-colors min-h-[44px]"
             onClick={() => setShowForm(true)}
           >
             <FontAwesomeIcon icon={faPaperPlane} className="w-3 h-3" />
@@ -363,7 +363,7 @@ const Comments = ({ comments: initialComments, postid, postTitle, inline = false
           className="w-full mb-5 flex items-center gap-2.5 px-4 py-3 bg-gray-50 hover:bg-gray-100 active:bg-gray-200 rounded-lg text-left transition-colors min-h-[48px] group"
           onClick={() => setShowForm(true)}
         >
-          <FontAwesomeIcon icon={faPaperPlane} className="text-pink-400 w-3.5 h-3.5" />
+          <FontAwesomeIcon icon={faPaperPlane} className="text-theater-primary-400 w-3.5 h-3.5" />
           <span className="text-sm text-gray-400 group-hover:text-gray-500 transition-colors">
             コメントを書く...
           </span>
@@ -460,7 +460,7 @@ const Comments = ({ comments: initialComments, postid, postTitle, inline = false
               <input
                 type="text"
                 placeholder="名無しさん"
-                className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-300 focus:border-pink-300 transition text-sm min-h-[44px]"
+                className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-theater-primary-300 focus:border-theater-primary-300 transition text-sm min-h-[44px]"
                 value={authorName}
                 onChange={(e) => setAuthorName(e.target.value)}
               />
@@ -472,7 +472,7 @@ const Comments = ({ comments: initialComments, postid, postTitle, inline = false
             <textarea
               id="comment-input"
               placeholder={replyTo ? `${replyTo.author}さんに返信...` : "この作品の感想、上演した際の体験談など、自由にお書きください"}
-              className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-300 focus:border-pink-300 transition min-h-[120px] text-sm resize-y"
+              className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-theater-primary-300 focus:border-theater-primary-300 transition min-h-[120px] text-sm resize-y"
               value={newComment}
               onChange={(e) => setNewComment(e.target.value)}
               maxLength={selectedType === "レビュー" ? MAX_CHARS_REVIEW : MAX_CHARS_DEFAULT}
@@ -496,7 +496,7 @@ const Comments = ({ comments: initialComments, postid, postTitle, inline = false
               className={`flex items-center gap-2 px-6 py-2.5 rounded-full text-sm font-bold transition-colors min-h-[44px] ${
                 isSendingComment || !newComment.trim()
                   ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-                  : "bg-pink-600 hover:bg-pink-700 active:bg-pink-800 text-white"
+                  : "bg-theater-primary-600 hover:bg-theater-primary-700 active:bg-theater-primary-800 text-white"
               }`}
               onClick={handleCommentSubmit}
               disabled={isSendingComment || !newComment.trim()}
@@ -672,7 +672,7 @@ const Comments = ({ comments: initialComments, postid, postTitle, inline = false
                       <div className="flex items-center gap-0.5">
                         {renderLikeButton(comment.id, comment.likes || 0, true)}
                         <button
-                          className="flex items-center gap-1 text-sm text-gray-400 hover:text-pink-500 hover:bg-pink-50 active:bg-pink-100 rounded-full px-2 py-1.5 min-h-[44px] transition-colors"
+                          className="flex items-center gap-1 text-sm text-gray-400 hover:text-theater-primary-500 hover:bg-theater-primary-50 active:bg-theater-primary-100 rounded-full px-2 py-1.5 min-h-[44px] transition-colors"
                           onClick={() => handleReplyClick(comment)}
                         >
                           <FontAwesomeIcon icon={faReply} className="w-3 h-3" />
@@ -766,7 +766,7 @@ const Comments = ({ comments: initialComments, postid, postTitle, inline = false
 
           {hasMore && (
             <button
-              className="w-full py-3 text-center text-sm font-medium text-pink-600 hover:text-pink-700 hover:bg-pink-50 rounded-xl transition-colors border border-gray-200 min-h-[44px]"
+              className="w-full py-3 text-center text-sm font-medium text-theater-primary-600 hover:text-pink-700 hover:bg-theater-primary-50 rounded-xl transition-colors border border-gray-200 min-h-[44px]"
               onClick={() => setShowAllComments(true)}
             >
               すべてのコメントを表示（{processedComments.length}件）
@@ -779,7 +779,7 @@ const Comments = ({ comments: initialComments, postid, postTitle, inline = false
       {comments.length >= 3 && !showForm && showAllComments && (
         <div className="mt-6 pt-4 border-t border-gray-100 text-center">
           <button
-            className="inline-flex items-center gap-2 text-sm font-medium text-pink-600 hover:text-pink-700 transition-colors min-h-[44px] px-4 py-2"
+            className="inline-flex items-center gap-2 text-sm font-medium text-theater-primary-600 hover:text-pink-700 transition-colors min-h-[44px] px-4 py-2"
             onClick={() => {
               setShowForm(true);
               setTimeout(() => {

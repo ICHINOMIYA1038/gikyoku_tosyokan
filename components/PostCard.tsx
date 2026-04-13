@@ -16,7 +16,7 @@ const PostCard: React.FC<PostPageProps> = ({ post }: any) => {
 
   return (
     <Link href={`/posts/${post.id}`} className="block mb-3">
-      <div className="group relative bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden hover:-translate-y-0.5">
+      <div className="group relative bg-white rounded-lg border border-gray-100 shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden hover:-translate-y-0.5">
         <div className="flex flex-col md:flex-row h-full">
           {/* 画像部分 */}
           <div className="relative w-full md:w-48 h-48 md:h-auto flex-shrink-0 bg-gray-50">
@@ -87,7 +87,7 @@ const PostCard: React.FC<PostPageProps> = ({ post }: any) => {
 
               {post.totalNumber && post.totalNumber > 0 && (
                 <div className="flex items-center gap-1.5 text-gray-600 text-sm">
-                  <FaUsers className="text-blue-500/70" />
+                  <FaUsers className="text-theater-primary-400/70" />
                   <span className="font-medium">{post.totalNumber}人</span>
                 </div>
               )}
@@ -113,7 +113,7 @@ const PostCard: React.FC<PostPageProps> = ({ post }: any) => {
                 <div className="flex items-center gap-3 ml-auto text-xs text-gray-500 bg-gray-50 px-3 py-1 rounded-full border border-gray-100">
                    {post.man > 0 && (
                     <div className="flex items-center gap-1">
-                      <span className="w-2 h-2 rounded-full bg-blue-400"></span>
+                      <span className="w-2 h-2 rounded-full bg-theater-primary-400"></span>
                       <span>男 {post.man}</span>
                     </div>
                   )}

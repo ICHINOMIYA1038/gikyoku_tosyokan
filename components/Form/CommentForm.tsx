@@ -100,7 +100,7 @@ function CommentForm({
         <div className="mb-4 flex items-center">
           <input
             type="checkbox"
-            className="mr-2 h-6 w-6 text-blue-500 rounded focus:outline-none focus:shadow-outline"
+            className="mr-2 h-6 w-6 text-theater-primary-500 rounded focus:outline-none focus:shadow-outline"
             checked={agreedToTerms}
             onChange={(e) => setAgreedToTerms(e.target.checked)}
           />

@@ -111,13 +111,13 @@ function JapaneseSidebar({ category, currentPath }: { category?: string; current
           {menuItems.map((section, index) => (
             <div key={index}>
               <h4 className="flex items-center gap-2 font-semibold text-gray-700 mb-2">
-                <span className="text-blue-500">{section.icon}</span>
+                <span className="text-theater-primary-500">{section.icon}</span>
                 {section.title}
               </h4>
               <ul className="ml-6 space-y-1">
                 {section.items.map((item, itemIndex) => (
                   <li key={itemIndex}>
-                    <Link href={item.href} className={`flex items-center gap-2 text-sm py-1 hover:text-blue-600 transition-colors ${currentPath === item.href ? 'text-blue-600 font-medium' : 'text-gray-600'}`}>
+                    <Link href={item.href} className={`flex items-center gap-2 text-sm py-1 hover:text-theater-primary-600 transition-colors ${currentPath === item.href ? 'text-theater-primary-600 font-medium' : 'text-gray-600'}`}>
                       <FaChevronRight size={10} />
                       {item.title}
                     </Link>
@@ -149,7 +149,7 @@ function JapaneseSidebar({ category, currentPath }: { category?: string; current
       <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg shadow-sm p-4 text-white">
         <h3 className="font-bold mb-2">脚本をお探しですか？</h3>
         <p className="text-sm mb-3">条件に合った作品を簡単検索</p>
-        <Link href="/" className="inline-block bg-white text-blue-600 px-4 py-2 rounded-lg font-medium text-sm hover:bg-gray-100 transition-colors">
+        <Link href="/" className="inline-block bg-white text-theater-primary-600 px-4 py-2 rounded-lg font-medium text-sm hover:bg-gray-100 transition-colors">
           作品を探す →
         </Link>
       </div>
@@ -220,13 +220,13 @@ function EnglishSidebar({ currentPath }: { currentPath?: string }) {
           {menuItems.map((section, index) => (
             <div key={index}>
               <h4 className="flex items-center gap-2 font-semibold text-gray-700 mb-2">
-                <span className="text-blue-500">{section.icon}</span>
+                <span className="text-theater-primary-500">{section.icon}</span>
                 {section.title}
               </h4>
               <ul className="ml-6 space-y-1">
                 {section.items.map((item, itemIndex) => (
                   <li key={itemIndex}>
-                    <Link href={item.href} className={`flex items-center gap-2 text-sm py-1 hover:text-blue-600 transition-colors ${currentPath === item.href ? 'text-blue-600 font-medium' : 'text-gray-600'}`}>
+                    <Link href={item.href} className={`flex items-center gap-2 text-sm py-1 hover:text-theater-primary-600 transition-colors ${currentPath === item.href ? 'text-theater-primary-600 font-medium' : 'text-gray-600'}`}>
                       <FaChevronRight size={10} />
                       {item.title}
                     </Link>

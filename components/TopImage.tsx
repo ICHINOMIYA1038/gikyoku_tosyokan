@@ -11,7 +11,7 @@ const TopImage = ({ buttonClick }: any) => {
       {/* 背景装飾 - 和紙のようなテクスチャ感と柔らかなグラデーション */}
       <div className="absolute inset-0 z-0 opacity-30">
         <div className="absolute top-[-20%] right-[-10%] w-[600px] h-[600px] rounded-full bg-theater-primary-100 blur-3xl" />
-        <div className="absolute bottom-[-10%] left-[-10%] w-[500px] h-[500px] rounded-full bg-blue-50 blur-3xl" />
+        <div className="absolute bottom-[-10%] left-[-10%] w-[500px] h-[500px] rounded-full bg-theater-primary-50 blur-3xl" />
       </div>
       
       {/* グリッドパターン（うっすらと） */}
