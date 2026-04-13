@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { prisma } from '@/lib/prisma';
+import { getAuth } from '@/lib/auth';
 
 export default async function handler(
   req: NextApiRequest,
@@ -87,6 +88,18 @@ export default async function handler(
         }
       }
 
+      // ログインユーザーの場合、userIdとdisplayNameを紐付け
+      const session = await getAuth(req, res);
+      const userId = session?.user?.id ?? null;
+      let displayAuthor = authorName || '名無しさん';
+      if (userId) {
+        const dbUser = await prisma.user.findUnique({
+          where: { id: userId },
+          select: { displayName: true, name: true },
+        });
+        displayAuthor = dbUser?.displayName || dbUser?.name || displayAuthor;
+      }
+
       const announcement = await prisma.announcement.create({
         data: {
           title,
@@ -95,8 +108,9 @@ export default async function handler(
           venue,
           ticketPrice,
           contactInfo,
-          authorName: authorName || '名無しさん',
+          authorName: displayAuthor,
           ipAddress,
+          userId,
           postId: postId ? parseInt(postId) : null,
           theaterGroupName: theaterGroupName || null,
           scriptTitle: scriptTitle || null,

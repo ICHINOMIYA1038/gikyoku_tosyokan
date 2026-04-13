@@ -284,6 +284,8 @@ model Announcement {
   contactInfo      String?
   authorName       String   @default("名無しさん")
   ipAddress        String?
+  userId           String?
+  user             User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
   views            Int      @default(0)
@@ -296,6 +298,7 @@ model Announcement {
   @@index([performanceDate])
   @@index([views(sort: Desc)])
   @@index([postId])
+  @@index([userId])
   @@map("Announcement")
 }
 
@@ -358,6 +361,9 @@ model User {
   parentComments    ParentComment[]
   childComments     ChildComment[]
   favorites         Favorite[]
+  reports           Report[]
+  searchHistories   SearchHistory[]
+  announcements     Announcement[]
 
   @@index([email])
   @@map("User")
@@ -415,4 +421,45 @@ model Favorite {
   @@index([userId])
   @@index([postId])
   @@map("Favorite")
+}
+
+// ============================================
+// 通報・検索履歴
+// ============================================
+
+enum ReportStatus {
+  PENDING
+  REVIEWED
+  RESOLVED
+  DISMISSED
+}
+
+model Report {
+  id          Int          @id @default(autoincrement())
+  reporterId  String
+  reason      String
+  details     String?
+  targetType  String       // "comment" | "announcement" | "user"
+  targetId    String       // 対象のID（コメントID, ユーザーID等）
+  targetUrl   String?      // 通報対象のページURL
+  status      ReportStatus @default(PENDING)
+  createdAt   DateTime     @default(now())
+  resolvedAt  DateTime?
+  reporter    User         @relation(fields: [reporterId], references: [id], onDelete: Cascade)
+
+  @@index([reporterId])
+  @@index([status])
+  @@map("Report")
+}
+
+model SearchHistory {
+  id         Int      @id @default(autoincrement())
+  userId     String
+  query      Json
+  resultCount Int?
+  createdAt  DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+  @@map("SearchHistory")
 }

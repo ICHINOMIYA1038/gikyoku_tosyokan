@@ -1,8 +1,11 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faReply, faTimes, faInfoCircle, faThumbsUp, faTheaterMasks, faCommentDots, faQuestionCircle, faPaperPlane, faStar, faFire, faClock, faShareAlt, faCheck, faTrash, faSignInAlt } from "@fortawesome/free-solid-svg-icons";
+import { faReply, faTimes, faInfoCircle, faThumbsUp, faTheaterMasks, faCommentDots, faQuestionCircle, faPaperPlane, faStar, faFire, faClock, faShareAlt, faCheck, faTrash, faSignInAlt, faFlag } from "@fortawesome/free-solid-svg-icons";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
+import dynamic from "next/dynamic";
+
+const ReportDialog = dynamic(() => import("@/components/ReportDialog"), { ssr: false });
 
 const COMMENT_TYPES = [
   { value: "感想", label: "感想", icon: faCommentDots, color: "blue", bg: "bg-gray-100", text: "text-gray-600", border: "border-gray-200" },
@@ -28,6 +31,7 @@ type FilterType = "all" | "感想" | "上演報告" | "レビュー" | "質問";
 const Comments = ({ comments: initialComments, postid, postTitle, inline = false }: any) => {
   const { data: session } = useSession();
   const [comments, setComments] = useState(initialComments);
+  const [reportTarget, setReportTarget] = useState<{ id: number; isParent: boolean } | null>(null);
   const [isSendingComment, setIsSendingComment] = useState(false);
   const [commentResult, setCommentResult] = useState("");
   const [newComment, setNewComment] = useState("");
@@ -652,7 +656,13 @@ const Comments = ({ comments: initialComments, postid, postTitle, inline = false
                             className="w-5 h-5 rounded-full object-cover"
                           />
                         )}
-                        <span className="font-medium text-gray-600">{comment.user?.displayName || comment.author}</span>
+                        {comment.user?.id ? (
+                          <Link href={`/users/${comment.user.id}`} className="font-medium text-gray-600 hover:text-blue-600 hover:underline">
+                            {comment.user.displayName || comment.author}
+                          </Link>
+                        ) : (
+                          <span className="font-medium text-gray-600">{comment.author}</span>
+                        )}
                         {comment.user && (
                           <span className="text-[10px] bg-blue-50 text-blue-600 px-1.5 rounded">認証済</span>
                         )}
@@ -682,6 +692,15 @@ const Comments = ({ comments: initialComments, postid, postTitle, inline = false
                             aria-label="削除"
                           >
                             <FontAwesomeIcon icon={faTrash} className="w-3 h-3" />
+                          </button>
+                        )}
+                        {session && !isOwnComment(comment) && (
+                          <button
+                            className="flex items-center text-sm text-gray-400 hover:text-orange-500 hover:bg-orange-50 rounded-full px-2 py-1.5 min-h-[44px] transition-colors"
+                            onClick={() => setReportTarget({ id: comment.id, isParent: true })}
+                            aria-label="通報"
+                          >
+                            <FontAwesomeIcon icon={faFlag} className="w-3 h-3" />
                           </button>
                         )}
                       </div>
@@ -774,10 +793,14 @@ const Comments = ({ comments: initialComments, postid, postTitle, inline = false
         </div>
       )}
 
-      {/* 評価ナッジ - 削除済み（リアクションとコメントは独立機能） */}
-      {false && (
-        <div>
-        </div>
+      {/* 通報ダイアログ */}
+      {reportTarget && (
+        <ReportDialog
+          targetType="comment"
+          targetId={reportTarget.id}
+          targetUrl={`/posts/${postid}#comments-section`}
+          onClose={() => setReportTarget(null)}
+        />
       )}
     </div>
   );
