@@ -32,38 +32,46 @@ const GROUP_TYPES = [
 ];
 
 const GENRES = [
-  { value: '演劇', icon: FaTheaterMasks },
+  { value: 'ストレートプレイ', icon: FaTheaterMasks },
   { value: 'ミュージカル', icon: FaMusic },
-  { value: '朗読劇', icon: FaBook },
   { value: 'コメディ', icon: FaBullhorn },
+  { value: '朗読劇', icon: FaBook },
   { value: '声劇', icon: FaMicrophone },
-  { value: '即興', icon: FaPaintBrush },
+  { value: '即興（インプロ）', icon: FaPaintBrush },
+  { value: '時代劇', icon: FaTheaterMasks },
+  { value: 'ダンス・身体表現', icon: FaUsers },
+  { value: '児童劇', icon: FaSeedling },
+  { value: '不条理劇', icon: FaPaintBrush },
+  { value: '社会派', icon: FaBullhorn },
+  { value: 'ファンタジー', icon: FaStar },
+  { value: 'ホラー・サスペンス', icon: FaFire },
+  { value: '人形劇', icon: FaHandshake },
   { value: 'その他', icon: FaTheaterMasks },
 ];
 
 const VIBES = [
   { value: 'カジュアル', label: 'カジュアル', desc: '楽しく演劇を楽しむ', icon: FaCoffee },
   { value: '本格派', label: '本格派', desc: 'ストイックに作品を追求', icon: FaFire },
-  { value: '初心者歓迎', label: '初心者歓迎', desc: '未経験でも安心', icon: FaSeedling },
-  { value: 'プロ志向', label: 'プロ志向', desc: '将来プロを目指す', icon: FaStar },
   { value: 'アットホーム', label: 'アットホーム', desc: '仲間と居心地よく', icon: FaUsers },
   { value: 'ゆるめ', label: 'ゆるめ', desc: '自分のペースで参加', icon: FaLeaf },
   { value: '実験的', label: '実験的', desc: '新しい表現に挑戦', icon: FaPaintBrush },
+  { value: 'エンタメ重視', label: 'エンタメ重視', desc: 'お客さんを楽しませる', icon: FaBullhorn },
+  { value: '少人数', label: '少人数', desc: '密な関係で作品を作る', icon: FaHandshake },
+  { value: '大所帯', label: '大所帯', desc: '大人数でワイワイ活動', icon: FaUsers },
 ];
 
 const ROLES = ['役者', '演出', '脚本', '音響', '照明', '舞台監督', '制作', '映像', '衣装', 'スタッフ全般'];
 
 const FEE_OPTIONS = ['参加費なし', 'チケットノルマあり', '団費あり', 'ギャラあり', '要相談'];
 
-const PREFECTURES = [
-  '北海道', '青森県', '岩手県', '宮城県', '秋田県', '山形県', '福島県',
-  '茨城県', '栃木県', '群馬県', '埼玉県', '千葉県', '東京都', '神奈川県',
-  '新潟県', '富山県', '石川県', '福井県', '山梨県', '長野県',
-  '岐阜県', '静岡県', '愛知県', '三重県',
-  '滋賀県', '京都府', '大阪府', '兵庫県', '奈良県', '和歌山県',
-  '鳥取県', '島根県', '岡山県', '広島県', '山口県',
-  '徳島県', '香川県', '愛媛県', '高知県',
-  '福岡県', '佐賀県', '長崎県', '熊本県', '大分県', '宮崎県', '鹿児島県', '沖縄県',
+const REGIONS: { name: string; prefs: string[] }[] = [
+  { name: '関東', prefs: ['東京都', '神奈川県', '埼玉県', '千葉県', '茨城県', '栃木県', '群馬県'] },
+  { name: '関西', prefs: ['大阪府', '京都府', '兵庫県', '奈良県', '滋賀県', '和歌山県'] },
+  { name: '東海', prefs: ['愛知県', '静岡県', '岐阜県', '三重県'] },
+  { name: '北海道・東北', prefs: ['北海道', '宮城県', '青森県', '岩手県', '秋田県', '山形県', '福島県'] },
+  { name: '甲信越・北陸', prefs: ['新潟県', '長野県', '山梨県', '富山県', '石川県', '福井県'] },
+  { name: '中国・四国', prefs: ['広島県', '岡山県', '山口県', '鳥取県', '島根県', '香川県', '愛媛県', '徳島県', '高知県'] },
+  { name: '九州・沖縄', prefs: ['福岡県', '熊本県', '鹿児島県', '大分県', '宮崎県', '佐賀県', '長崎県', '沖縄県'] },
 ];
 
 // ---- コンポーネント ----
@@ -241,14 +249,33 @@ export default function NewRecruitPage() {
                 <h2 className="text-base font-bold text-gray-900 mb-3">
                   <FaMapMarkerAlt className="inline mr-1 text-gray-400" />活動地域
                 </h2>
-                <select
-                  value={form.prefecture}
-                  onChange={(e) => setForm({ ...form, prefecture: e.target.value })}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-theater-primary-200"
-                >
-                  <option value="">都道府県を選択</option>
-                  {PREFECTURES.map((p) => <option key={p} value={p}>{p}</option>)}
-                </select>
+                {form.prefecture && (
+                  <div className="flex items-center gap-2 mb-3">
+                    <span className="px-3 py-1.5 bg-theater-primary-600 text-white text-sm rounded-full font-medium">
+                      {form.prefecture}
+                    </span>
+                    <button type="button" onClick={() => setForm({ ...form, prefecture: '' })} className="text-xs text-gray-400 hover:text-gray-600">変更</button>
+                  </div>
+                )}
+                {!form.prefecture && (
+                  <div className="space-y-3">
+                    {REGIONS.map((region) => (
+                      <div key={region.name}>
+                        <p className="text-xs text-gray-500 font-medium mb-1.5">{region.name}</p>
+                        <div className="flex flex-wrap gap-1.5">
+                          {region.prefs.map((p) => (
+                            <button
+                              key={p}
+                              type="button"
+                              onClick={() => setForm({ ...form, prefecture: p })}
+                              className="px-3 py-1.5 text-sm border border-gray-200 rounded-full bg-white text-gray-600 hover:border-theater-primary-400 hover:text-theater-primary-600 transition-colors"
+                            >{p.replace(/[都府県]$/, '')}</button>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </section>
 
               {/* ジャンル */}
