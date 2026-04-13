@@ -498,12 +498,17 @@ model Recruitment {
   theaterGroupId      Int?
   theaterGroup        TheaterGroup?     @relation(fields: [theaterGroupId], references: [id])
   theaterGroupName    String?
+  recruitmentType     String?           // "member" | "cast" | "staff"
   rolesWanted         String[]
+  genre               String?           // 演劇, ミュージカル, 朗読劇 等
+  vibe                String[]          // カジュアル, 本格派, 初心者歓迎 等
+  groupType           String?           // 学生劇団, 社会人劇団, プロ 等
   experienceLevel     ExperienceLevel   @default(ANY)
   genderRequirement   String?
   ageRangeMin         Int?
   ageRangeMax         Int?
   feeStructure        String?
+  prefecture          String?
   rehearsalFrequency  String?
   rehearsalLocation   String?
   venue               String?

@@ -72,8 +72,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const {
       title, description, theaterGroupId, theaterGroupName,
-      rolesWanted, experienceLevel, genderRequirement,
-      ageRangeMin, ageRangeMax, feeStructure,
+      recruitmentType, rolesWanted, genre, vibe, groupType,
+      experienceLevel, genderRequirement,
+      ageRangeMin, ageRangeMax, feeStructure, prefecture,
       rehearsalFrequency, rehearsalLocation,
       venue, startDate, endDate, images, contactMethod,
     } = req.body;
@@ -92,8 +93,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         postedBy: session.user.id,
         theaterGroupId: theaterGroupId || null,
         theaterGroupName: theaterGroupName || null,
+        recruitmentType: recruitmentType || null,
         rolesWanted,
+        genre: genre || null,
+        vibe: vibe || [],
+        groupType: groupType || null,
         experienceLevel: experienceLevel || 'ANY',
+        prefecture: prefecture || null,
         genderRequirement: genderRequirement || null,
         ageRangeMin: ageRangeMin ? parseInt(ageRangeMin) : null,
         ageRangeMax: ageRangeMax ? parseInt(ageRangeMax) : null,
