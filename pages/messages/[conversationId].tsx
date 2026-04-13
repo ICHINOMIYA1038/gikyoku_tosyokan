@@ -98,9 +98,9 @@ export default function ConversationPage({ conversationId }: Props) {
   };
 
   return (
-    <Layout>
+    <Layout noPadding noFooter>
       <Seo pageTitle={`${other?.name || ''}とのメッセージ`} pageDescription="メッセージ" pagePath={`/messages/${conversationId}`} />
-      <div className="max-w-3xl mx-auto flex flex-col" style={{ height: 'calc(100vh - 64px)' }}>
+      <div className="max-w-3xl mx-auto flex flex-col h-[calc(100dvh-56px)]">
         {/* ヘッダー */}
         <div className="flex items-center gap-3 px-4 py-3 bg-white border-b border-gray-200 sticky top-0 z-10">
           <Link href="/messages" className="text-gray-500 hover:text-gray-700 p-1">

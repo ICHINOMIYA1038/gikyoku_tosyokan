@@ -2,7 +2,7 @@ import MobileHeader from "@/components/MobileHeader";
 import Footer from "./Footer";
 import ImportantMessage from "./importantMessage";
 
-function Layout({ children, ishead, noPadding }: any) {
+function Layout({ children, ishead, noPadding, noFooter }: any) {
   return (
     <div>
       <div className="sticky top-0 z-40">
@@ -11,7 +11,7 @@ function Layout({ children, ishead, noPadding }: any) {
       <div className="header-gap"></div>
       {/*<ImportantMessage />*/}
       <div className={noPadding ? "" : "md:px-12 md:py-6"}>{children}</div>
-      <Footer />
+      {!noFooter && <Footer />}
     </div>
   );
 }
