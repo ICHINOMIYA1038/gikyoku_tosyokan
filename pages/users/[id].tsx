@@ -72,12 +72,12 @@ export default function UserProfile({ profile, stats, recentComments }: Props) {
 
           <div className="flex gap-6 mt-4 pt-4 border-t border-gray-100">
             <div className="flex items-center gap-1.5 text-sm text-gray-600">
-              <FaCommentDots className="text-pink-500" />
+              <FaCommentDots className="text-theater-primary-500" />
               <span className="font-medium">{stats.commentCount}</span>
               <span className="text-gray-400">コメント</span>
             </div>
             <div className="flex items-center gap-1.5 text-sm text-gray-600">
-              <FaHeart className="text-pink-500" />
+              <FaHeart className="text-theater-primary-500" />
               <span className="font-medium">{stats.favoriteCount}</span>
               <span className="text-gray-400">お気に入り</span>
             </div>

@@ -204,7 +204,7 @@ export default function ShogekijoIndex({
               <div className="text-[10px] md:text-xs text-gray-500">劇団</div>
             </div>
             <div className="text-center">
-              <FaMapMarkerAlt className="mx-auto text-lg md:text-xl text-pink-500 mb-1" />
+              <FaMapMarkerAlt className="mx-auto text-lg md:text-xl text-theater-primary-500 mb-1" />
               <div className="text-xl md:text-3xl font-bold text-gray-800">
                 {totalPrefectures}
               </div>
@@ -330,7 +330,7 @@ export default function ShogekijoIndex({
           </p>
           <Link
             href="/university-theater"
-            className="inline-flex items-center gap-1 text-sm text-pink-700 hover:text-pink-900 font-medium transition-colors"
+            className="inline-flex items-center gap-1 text-sm text-theater-primary-700 hover:text-theater-primary-900 font-medium transition-colors"
           >
             大学演劇データベースを見る <FaChevronRight className="text-[10px]" />
           </Link>

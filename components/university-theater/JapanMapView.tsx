@@ -110,7 +110,7 @@ export default function JapanMapView({ prefectureData }: JapanMapViewProps) {
                         <FaUniversity className="text-blue-400 shrink-0 text-xs" />
                         <Link
                           href={`/universities/${uni.slug}`}
-                          className="font-medium text-sm text-gray-800 hover:text-pink-700 transition-colors"
+                          className="font-medium text-sm text-gray-800 hover:text-theater-primary-700 transition-colors"
                         >
                           {uni.name}
                         </Link>
@@ -131,7 +131,7 @@ export default function JapanMapView({ prefectureData }: JapanMapViewProps) {
                                 className="flex items-center gap-1.5 group/link"
                               >
                                 <FaTheaterMasks className="text-purple-400 text-[10px] shrink-0" />
-                                <span className="text-xs text-gray-700 group-hover/link:text-pink-700 transition-colors">
+                                <span className="text-xs text-gray-700 group-hover/link:text-theater-primary-700 transition-colors">
                                   {g.name}
                                 </span>
                                 {gType && (
@@ -163,7 +163,7 @@ export default function JapanMapView({ prefectureData }: JapanMapViewProps) {
                   <button
                     key={pref}
                     onClick={() => setSelectedPref(pref)}
-                    className="w-full px-4 py-2.5 flex items-center justify-between hover:bg-pink-50/50 transition-colors text-left"
+                    className="w-full px-4 py-2.5 flex items-center justify-between hover:bg-theater-primary-50/50 transition-colors text-left"
                   >
                     <div className="flex items-center gap-2 min-w-0">
                       <span

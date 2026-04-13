@@ -307,7 +307,7 @@ export default function TimeGuide() {
                 onClick={() => setSelectedDuration("all")}
                 className={`p-3 rounded-lg text-center transition-all ${
                   selectedDuration === "all" 
-                    ? "bg-blue-500 text-white shadow-lg" 
+                    ? "bg-theater-primary-600 text-white shadow-lg" 
                     : "bg-white hover:bg-gray-50 border"
                 }`}
               >
@@ -320,7 +320,7 @@ export default function TimeGuide() {
                   onClick={() => setSelectedDuration(guide.id)}
                   className={`p-3 rounded-lg text-center transition-all ${
                     selectedDuration === guide.id 
-                      ? "bg-blue-500 text-white shadow-lg" 
+                      ? "bg-theater-primary-600 text-white shadow-lg" 
                       : "bg-white hover:bg-gray-50 border"
                   }`}
                 >
@@ -361,7 +361,7 @@ export default function TimeGuide() {
                   <div className="space-y-3">
                     {guide.structure.map((section, i) => (
                       <div key={i} className="flex items-start">
-                        <div className="bg-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0 text-sm font-bold">
+                        <div className="bg-theater-primary-600 text-white rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0 text-sm font-bold">
                           {i + 1}
                         </div>
                         <div className="ml-4 flex-1">
@@ -450,7 +450,7 @@ export default function TimeGuide() {
               <div className="text-center pt-4 border-t">
                 <Link 
                   href={guide.searchLink}
-                  className="inline-block bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition-colors"
+                  className="inline-block bg-theater-primary-600 text-white px-6 py-3 rounded-lg hover:bg-theater-primary-600 transition-colors"
                 >
                   {guide.duration}の作品を探す →
                 </Link>
@@ -599,7 +599,7 @@ export default function TimeGuide() {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/" className="inline-block bg-blue-500 text-white px-8 py-3 rounded-lg hover:bg-blue-600 font-semibold">
+            <Link href="/" className="inline-block bg-theater-primary-600 text-white px-8 py-3 rounded-lg hover:bg-theater-primary-600 font-semibold">
               時間で作品を探す
             </Link>
             <Link href="/guide/cast-size" className="inline-block bg-white text-blue-500 border-2 border-blue-500 px-8 py-3 rounded-lg hover:bg-blue-50 font-semibold">

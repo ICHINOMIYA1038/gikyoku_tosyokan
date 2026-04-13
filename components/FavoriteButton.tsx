@@ -24,8 +24,8 @@ const FavoriteButton: React.FC<FavoriteButtonProps> = ({ postId, size = "md", va
         onClick={handleClick}
         className={`w-12 h-12 rounded-full shadow-lg flex items-center justify-center transition-all duration-200 hover:scale-105 ${
           liked
-            ? "bg-pink-500 hover:bg-pink-600 text-white"
-            : "bg-white border-2 border-pink-300 text-pink-400 hover:bg-pink-50 hover:text-pink-500"
+            ? "bg-theater-primary-500 hover:bg-theater-primary-600 text-white"
+            : "bg-white border-2 border-theater-primary-300 text-theater-primary-400 hover:bg-theater-primary-50 hover:text-theater-primary-500"
         }`}
         aria-label={liked ? "お気に入りから削除" : "お気に入りに追加"}
       >
@@ -44,9 +44,9 @@ const FavoriteButton: React.FC<FavoriteButtonProps> = ({ postId, size = "md", va
       aria-label={liked ? "お気に入りから削除" : "お気に入りに追加"}
     >
       {liked ? (
-        <FaHeart className={`${iconClass} text-pink-500`} />
+        <FaHeart className={`${iconClass} text-theater-primary-500`} />
       ) : (
-        <FaRegHeart className={`${iconClass} text-gray-300 hover:text-pink-300`} />
+        <FaRegHeart className={`${iconClass} text-gray-300 hover:text-theater-primary-300`} />
       )}
     </button>
   );

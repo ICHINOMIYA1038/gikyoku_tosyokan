@@ -25,7 +25,7 @@ export default function BlogLanding() {
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link
             href="/blog/ja"
-            className="bg-blue-600 text-white px-8 py-4 rounded-lg font-medium hover:bg-blue-700 transition-colors"
+            className="bg-theater-primary-600 text-white px-8 py-4 rounded-lg font-medium hover:bg-theater-primary-700 transition-colors"
           >
             日本語の記事を読む
           </Link>

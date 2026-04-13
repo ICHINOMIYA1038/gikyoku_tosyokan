@@ -62,8 +62,8 @@ export default function SignUp({ providers, callbackUrl }: Props) {
               <ul className="space-y-4">
                 {BENEFITS.map((benefit) => (
                   <li key={benefit.title} className="flex items-start gap-3">
-                    <div className="w-9 h-9 bg-pink-50 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <benefit.icon className="text-pink-600" />
+                    <div className="w-9 h-9 bg-theater-primary-50 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <benefit.icon className="text-theater-primary-600" />
                     </div>
                     <div>
                       <p className="font-medium text-gray-900 text-sm">{benefit.title}</p>

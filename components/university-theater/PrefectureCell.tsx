@@ -17,11 +17,11 @@ export default function PrefectureCell({ name, universityCount, groupCount, isSe
         !hasData
           ? 'bg-gray-50 border-gray-100 text-gray-300 cursor-default'
           : isSelected
-            ? 'bg-pink-50 border-pink-300 shadow-sm ring-1 ring-pink-200'
-            : 'bg-white border-gray-150 hover:border-pink-200 hover:shadow-sm cursor-pointer'
+            ? 'bg-theater-primary-50 border-theater-primary-300 shadow-sm ring-1 ring-pink-200'
+            : 'bg-white border-gray-150 hover:border-theater-primary-200 hover:shadow-sm cursor-pointer'
       }`}
     >
-      <div className={`font-medium text-sm mb-1 ${hasData ? (isSelected ? 'text-pink-800' : 'text-gray-800') : 'text-gray-300'}`}>
+      <div className={`font-medium text-sm mb-1 ${hasData ? (isSelected ? 'text-theater-primary-800' : 'text-gray-800') : 'text-gray-300'}`}>
         {name}
       </div>
       {hasData && (

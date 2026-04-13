@@ -55,9 +55,9 @@ export default function UniversityDetail({ university }: Props) {
       <div className="px-4 py-6 max-w-4xl mx-auto">
         {/* パンくず */}
         <nav className="flex items-center gap-1 text-xs text-gray-500 mb-4 flex-wrap">
-          <Link href="/" className="hover:text-pink-700">ホーム</Link>
+          <Link href="/" className="hover:text-theater-primary-700">ホーム</Link>
           <FaChevronRight className="text-[8px]" />
-          <Link href="/university-theater" className="hover:text-pink-700">大学演劇</Link>
+          <Link href="/university-theater" className="hover:text-theater-primary-700">大学演劇</Link>
           <FaChevronRight className="text-[8px]" />
           <span className="text-gray-800">{university.name}</span>
         </nav>
@@ -75,12 +75,12 @@ export default function UniversityDetail({ university }: Props) {
 
           <div className="flex flex-wrap gap-4 text-sm text-gray-600">
             <div className="flex items-center gap-1">
-              <FaMapMarkerAlt className="text-pink-500" />
+              <FaMapMarkerAlt className="text-theater-primary-500" />
               <span>{university.prefecture}（{regionLabels[university.region] || university.region}）</span>
             </div>
             {university.website && (
               <a href={university.website} target="_blank" rel="noopener noreferrer"
-                className="flex items-center gap-1 text-pink-700 hover:underline">
+                className="flex items-center gap-1 text-theater-primary-700 hover:underline">
                 <FaGlobe />
                 <span>公式サイト</span>
               </a>

@@ -89,7 +89,7 @@ function QuizApp({ quizData }: any) {
             onClick={() => {
               setStatus(QUIZ_QUESTION);
             }}
-            className="hover:shadow:lg bg-blue-500 text-white px-4 py-2 rounded-md h-12 w-32 my-4"
+            className="hover:shadow:lg bg-theater-primary-600 text-white px-4 py-2 rounded-md h-12 w-32 my-4"
           >
             スタート
           </button>
@@ -112,7 +112,7 @@ function QuizApp({ quizData }: any) {
                       option == questions[currentQuestion].correctAnswer
                     )
                   }
-                  className="bg-blue-500 text-white px-4 py-2 rounded-md"
+                  className="bg-theater-primary-600 text-white px-4 py-2 rounded-md"
                 >
                   {option}
                 </button>

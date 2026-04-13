@@ -476,7 +476,7 @@ export default function GlossaryIndex() {
             用語を覚えたら、実際に演劇に挑戦してみましょう
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/guide" className="inline-block bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600">
+            <Link href="/guide" className="inline-block bg-theater-primary-600 text-white px-6 py-3 rounded-lg hover:bg-theater-primary-600">
               演劇ガイドを読む
             </Link>
             <Link href="/" className="inline-block bg-gray-500 text-white px-6 py-3 rounded-lg hover:bg-gray-600">

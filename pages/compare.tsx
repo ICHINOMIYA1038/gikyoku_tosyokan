@@ -66,7 +66,7 @@ function ComparePage({ posts: initialPosts }: { posts: any[] }) {
     const validNums = nums.filter((n): n is number => n !== null);
     if (validNums.length < 2) return "";
     const target = type === "max" ? Math.max(...validNums) : Math.min(...validNums);
-    return nums[index] === target ? "text-pink-600 font-bold" : "";
+    return nums[index] === target ? "text-theater-primary-600 font-bold" : "";
   };
 
   return (
@@ -149,7 +149,7 @@ function ComparePage({ posts: initialPosts }: { posts: any[] }) {
                   </button>
                 </div>
                 <div className="px-5 pt-4 pb-2">
-                  <h2 className="text-lg font-bold font-serif text-gray-800 group-hover:text-pink-600 transition-colors line-clamp-2">
+                  <h2 className="text-lg font-bold font-serif text-gray-800 group-hover:text-theater-primary-600 transition-colors line-clamp-2">
                     {post.title}
                   </h2>
                   <div className="flex items-center gap-1.5 mt-1 text-sm text-gray-500">
@@ -187,7 +187,7 @@ function ComparePage({ posts: initialPosts }: { posts: any[] }) {
                     <span className="font-bold text-gray-700">{post.man > 0 ? post.man : "—"}</span>
                   </div>
                   <div className="flex items-center gap-1 text-sm">
-                    <span className="w-2.5 h-2.5 rounded-full bg-pink-400"></span>
+                    <span className="w-2.5 h-2.5 rounded-full bg-theater-primary-400"></span>
                     <span className="text-gray-500">女</span>
                     <span className="font-bold text-gray-700">{post.woman > 0 ? post.woman : "—"}</span>
                   </div>
@@ -204,7 +204,7 @@ function ComparePage({ posts: initialPosts }: { posts: any[] }) {
                 {post.categories && post.categories.length > 0 && (
                   <div className="flex flex-wrap gap-1.5 mb-4">
                     {post.categories.map((c: any) => (
-                      <span key={c.id} className="px-2.5 py-0.5 bg-pink-50 text-pink-600 text-xs font-medium rounded-full border border-pink-100">
+                      <span key={c.id} className="px-2.5 py-0.5 bg-theater-primary-50 text-theater-primary-600 text-xs font-medium rounded-full border border-theater-primary-100">
                         {c.name}
                       </span>
                     ))}

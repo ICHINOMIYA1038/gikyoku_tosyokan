@@ -266,7 +266,7 @@ export default function ActingBasics() {
             <div className="border-l-4 border-red-500 pl-6">
               <h3 className="text-xl font-semibold mb-3">3-1. 感情を理解する</h3>
               
-              <div className="bg-pink-50 p-4 rounded-lg mb-4">
+              <div className="bg-theater-primary-50 p-4 rounded-lg mb-4">
                 <h4 className="font-semibold mb-3">感情のレイヤー</h4>
                 <p className="text-sm text-gray-700 mb-3">
                   人の感情は単純ではありません。複数の感情が同時に存在することを理解しましょう。
@@ -507,7 +507,7 @@ export default function ActingBasics() {
             初心者でも演じやすい作品を集めました。
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
-            <Link href="/?categories=2" className="inline-block bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 text-center">
+            <Link href="/?categories=2" className="inline-block bg-theater-primary-600 text-white px-6 py-3 rounded-lg hover:bg-theater-primary-600 text-center">
               初心者向け作品を探す
             </Link>
             <Link href="/guide" className="inline-block bg-gray-500 text-white px-6 py-3 rounded-lg hover:bg-gray-600 text-center">

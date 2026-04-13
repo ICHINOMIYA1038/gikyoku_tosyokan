@@ -10,7 +10,7 @@ export default function StatsBar({ universityCount, groupCount, prefectureCount 
   const stats = [
     { icon: FaUniversity, label: '大学', value: universityCount, unit: '校', color: 'text-blue-500' },
     { icon: FaTheaterMasks, label: '劇団', value: groupCount, unit: '団体', color: 'text-purple-500' },
-    { icon: FaMapMarkerAlt, label: '都道府県', value: prefectureCount, unit: '', color: 'text-pink-500' },
+    { icon: FaMapMarkerAlt, label: '都道府県', value: prefectureCount, unit: '', color: 'text-theater-primary-500' },
   ];
 
   return (

@@ -330,7 +330,7 @@ export default function CastSizeGuide() {
                 onClick={() => setSelectedSize("all")}
                 className={`p-3 rounded-lg text-center transition-all ${
                   selectedSize === "all" 
-                    ? "bg-blue-500 text-white shadow-lg" 
+                    ? "bg-theater-primary-600 text-white shadow-lg" 
                     : "bg-white hover:bg-gray-50 border"
                 }`}
               >
@@ -343,7 +343,7 @@ export default function CastSizeGuide() {
                   onClick={() => setSelectedSize(item.size)}
                   className={`p-3 rounded-lg text-center transition-all ${
                     selectedSize === item.size 
-                      ? "bg-blue-500 text-white shadow-lg" 
+                      ? "bg-theater-primary-600 text-white shadow-lg" 
                       : "bg-white hover:bg-gray-50 border"
                   }`}
                 >
@@ -458,7 +458,7 @@ export default function CastSizeGuide() {
               <div className="text-center pt-4 border-t">
                 <Link 
                   href={guide.searchLink}
-                  className="inline-block bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition-colors"
+                  className="inline-block bg-theater-primary-600 text-white px-6 py-3 rounded-lg hover:bg-theater-primary-600 transition-colors"
                 >
                   {guide.range}の作品を探す →
                 </Link>
@@ -627,7 +627,7 @@ export default function CastSizeGuide() {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/" className="inline-block bg-blue-500 text-white px-8 py-3 rounded-lg hover:bg-blue-600 font-semibold">
+            <Link href="/" className="inline-block bg-theater-primary-600 text-white px-8 py-3 rounded-lg hover:bg-theater-primary-600 font-semibold">
               作品を探す
             </Link>
             <Link href="/guide/beginner/how-to-choose-script" className="inline-block bg-white text-blue-500 border-2 border-blue-500 px-8 py-3 rounded-lg hover:bg-blue-50 font-semibold">

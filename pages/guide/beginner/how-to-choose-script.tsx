@@ -274,7 +274,7 @@ export default function HowToChooseScript() {
             戯曲図書館では、これらの条件で簡単に作品を検索できます。
             ぜひ、あなたの公演にぴったりの作品を見つけてください。
           </p>
-          <Link href="/" className="inline-block bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600">
+          <Link href="/" className="inline-block bg-theater-primary-600 text-white px-6 py-3 rounded-lg hover:bg-theater-primary-600">
             作品を探す →
           </Link>
         </section>

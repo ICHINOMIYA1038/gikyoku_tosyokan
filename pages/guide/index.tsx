@@ -183,7 +183,7 @@ export default function GuideIndex() {
           <p className="mb-6">
             ガイドを参考に、あなたの条件に合った作品を探してみましょう
           </p>
-          <Link href="/" className="inline-block bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600">
+          <Link href="/" className="inline-block bg-theater-primary-600 text-white px-6 py-3 rounded-lg hover:bg-theater-primary-600">
             作品を検索する
           </Link>
         </section>

@@ -244,7 +244,7 @@ function PostPage({ post }: any) {
                   <div className="mt-3 flex justify-center">
                     <button
                       onClick={scrollToComments}
-                      className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-pink-600 transition-colors"
+                      className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-theater-primary-600 transition-colors"
                     >
                       <FaCommentDots className="text-xs" />
                       <span>{commentCount}件のコメント</span>
@@ -262,7 +262,7 @@ function PostPage({ post }: any) {
 
                 {/* コメントセクション */}
                 <div className="mt-4">
-                  <div className="bg-pink-50/60 rounded-xl shadow-sm p-4 md:p-5 border border-pink-100">
+                  <div className="bg-theater-primary-50/60 rounded-xl shadow-sm p-4 md:p-5 border border-theater-primary-100">
                     {post.comments && (
                       <MemoizedComments key={post.id} comments={post.comments} postid={post.id} postTitle={post.title} inline={true} />
                     )}
@@ -370,7 +370,7 @@ function PostPage({ post }: any) {
                   <div className="mt-6">
                     <div className="bg-white rounded-xl shadow-sm p-5 md:p-6 border border-gray-100">
                       <h2 className="text-xl md:text-2xl font-bold mb-4 text-center text-gray-800 font-serif flex items-center justify-center gap-2">
-                        <FaTheaterMasks className="text-pink-500" />
+                        <FaTheaterMasks className="text-theater-primary-500" />
                         この脚本を上演した劇団
                       </h2>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -383,24 +383,24 @@ function PostPage({ post }: any) {
                           return (
                             <div
                               key={group.id}
-                              className="p-3 rounded-lg border border-gray-100 hover:border-pink-200 hover:bg-pink-50/50 transition-all"
+                              className="p-3 rounded-lg border border-gray-100 hover:border-theater-primary-200 hover:bg-theater-primary-50/50 transition-all"
                             >
                               <Link
                                 href={`/theater-groups/${group.slug}`}
                                 className="flex items-center gap-3 group"
                               >
-                                <div className="w-10 h-10 bg-pink-100 rounded-full flex items-center justify-center flex-shrink-0">
-                                  <FaTheaterMasks className="text-pink-500" />
+                                <div className="w-10 h-10 bg-theater-primary-100 rounded-full flex items-center justify-center flex-shrink-0">
+                                  <FaTheaterMasks className="text-theater-primary-500" />
                                 </div>
                                 <div className="min-w-0 flex-1">
-                                  <p className="font-bold text-sm text-gray-800 group-hover:text-pink-700 truncate">
+                                  <p className="font-bold text-sm text-gray-800 group-hover:text-theater-primary-700 truncate">
                                     {group.name}
                                   </p>
                                   <div className="flex items-center gap-2 text-xs text-gray-500">
                                     <span>{typeLabels[group.groupType] || group.groupType}</span>
                                     {group.prefecture && <span>{group.prefecture}</span>}
                                     {ptg.performanceYear && (
-                                      <span className="text-pink-600 font-medium">{ptg.performanceYear}年上演</span>
+                                      <span className="text-theater-primary-600 font-medium">{ptg.performanceYear}年上演</span>
                                     )}
                                   </div>
                                 </div>
@@ -411,7 +411,7 @@ function PostPage({ post }: any) {
                                     href={ptg.sourceUrl}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="inline-flex items-center gap-1 text-[11px] px-2 py-0.5 rounded bg-pink-50 text-pink-600 hover:text-pink-800 font-medium transition-colors"
+                                    className="inline-flex items-center gap-1 text-[11px] px-2 py-0.5 rounded bg-theater-primary-50 text-theater-primary-600 hover:text-theater-primary-800 font-medium transition-colors"
                                     onClick={(e) => e.stopPropagation()}
                                   >
                                     <FaExternalLinkAlt />
@@ -453,7 +453,7 @@ function PostPage({ post }: any) {
                   <div className="flex flex-wrap gap-3">
                     <Link
                       href="/university-theater"
-                      className="text-xs text-pink-600 hover:text-pink-800 font-medium transition-colors"
+                      className="text-xs text-theater-primary-600 hover:text-theater-primary-800 font-medium transition-colors"
                     >
                       大学演劇データベース →
                     </Link>
@@ -568,7 +568,7 @@ function PostPage({ post }: any) {
 
                 {/* コメントボタン（スクロール先へ） */}
                 <button
-                  className="bg-pink-600 hover:bg-pink-700 text-white w-12 h-12 rounded-full shadow-lg flex items-center justify-center transition-all duration-200 hover:scale-105 relative"
+                  className="bg-theater-primary-600 hover:bg-theater-primary-700 text-white w-12 h-12 rounded-full shadow-lg flex items-center justify-center transition-all duration-200 hover:scale-105 relative"
                   onClick={scrollToComments}
                   aria-label="コメントへ移動"
                 >

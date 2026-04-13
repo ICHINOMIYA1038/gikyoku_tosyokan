@@ -53,11 +53,11 @@ export default function TheaterGroupDetail({ group, relatedShogekijoGroups }: Pr
       <div className="px-4 py-6 max-w-3xl mx-auto">
         {/* パンくず */}
         <nav className="flex items-center gap-1 text-xs text-gray-500 mb-4 flex-wrap">
-          <Link href="/" className="hover:text-pink-700">ホーム</Link>
+          <Link href="/" className="hover:text-theater-primary-700">ホーム</Link>
           <FaChevronRight className="text-[8px]" />
-          <Link href="/university-theater" className="hover:text-pink-700">大学演劇</Link>
+          <Link href="/university-theater" className="hover:text-theater-primary-700">大学演劇</Link>
           <FaChevronRight className="text-[8px]" />
-          <Link href="/theater-groups" className="hover:text-pink-700">劇団一覧</Link>
+          <Link href="/theater-groups" className="hover:text-theater-primary-700">劇団一覧</Link>
           <FaChevronRight className="text-[8px]" />
           <span className="text-gray-800">{group.name}</span>
         </nav>
@@ -105,7 +105,7 @@ export default function TheaterGroupDetail({ group, relatedShogekijoGroups }: Pr
                 <li key={i} className="flex items-center gap-2">
                   <Link
                     href={`/universities/${u.university.slug}`}
-                    className="text-sm text-pink-700 hover:underline"
+                    className="text-sm text-theater-primary-700 hover:underline"
                   >
                     {u.university.name}
                   </Link>
@@ -137,12 +137,12 @@ export default function TheaterGroupDetail({ group, relatedShogekijoGroups }: Pr
         {group.blogPostSlug && (
           <section className="bg-white rounded-xl border border-gray-100 shadow-sm p-5 mb-4">
             <h2 className="font-serif font-bold text-lg text-gray-800 mb-3 flex items-center gap-2">
-              <FaBook className="text-pink-500" />
+              <FaBook className="text-theater-primary-500" />
               関連記事
             </h2>
             <Link
               href={`/blog/ja/${group.blogPostSlug}`}
-              className="text-sm text-pink-700 hover:underline"
+              className="text-sm text-theater-primary-700 hover:underline"
             >
               この劇団が掲載されているブログ記事を読む
             </Link>

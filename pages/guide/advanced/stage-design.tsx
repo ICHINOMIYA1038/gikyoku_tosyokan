@@ -512,7 +512,7 @@ export default function StageDesignGuide() {
                       {item.colors.map((color, i) => (
                         <div key={i} className="flex items-center bg-gray-50 p-3 rounded">
                           <div className={`w-8 h-8 rounded mr-3 ${
-                            color.color === "青" ? "bg-blue-500" :
+                            color.color === "青" ? "bg-theater-primary-600" :
                             color.color === "赤" ? "bg-red-500" :
                             color.color === "緑" ? "bg-green-500" :
                             color.color === "アンバー" ? "bg-yellow-600" :
@@ -603,7 +603,7 @@ export default function StageDesignGuide() {
                   <span>小道具・装飾</span>
                   <div className="flex items-center">
                     <div className="w-32 bg-gray-200 rounded-full h-4 mr-3">
-                      <div className="bg-blue-500 h-4 rounded-full" style={{width: "20%"}}></div>
+                      <div className="bg-theater-primary-600 h-4 rounded-full" style={{width: "20%"}}></div>
                     </div>
                     <span className="font-semibold">20,000円</span>
                   </div>

@@ -185,10 +185,10 @@ export default function ShogekijoDetail({ group, relatedStudentGroups }: Props) 
                 const rgType = groupTypeLabels[rg.groupType];
                 return (
                   <li key={rg.slug} className="flex items-center gap-2">
-                    <FaTheaterMasks className="text-pink-400 text-sm shrink-0" />
+                    <FaTheaterMasks className="text-theater-primary-400 text-sm shrink-0" />
                     <Link
                       href={`/theater-groups/${rg.slug}`}
-                      className="text-sm text-pink-700 hover:underline flex-1"
+                      className="text-sm text-theater-primary-700 hover:underline flex-1"
                     >
                       {rg.name}
                     </Link>
@@ -204,7 +204,7 @@ export default function ShogekijoDetail({ group, relatedStudentGroups }: Props) 
             <div className="mt-3 pt-3 border-t border-gray-50">
               <Link
                 href="/university-theater"
-                className="text-xs text-pink-600 hover:text-pink-800 transition-colors"
+                className="text-xs text-theater-primary-600 hover:text-theater-primary-800 transition-colors"
               >
                 大学演劇データベースを見る →
               </Link>

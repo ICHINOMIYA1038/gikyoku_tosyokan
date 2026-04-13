@@ -37,7 +37,7 @@ export default function PrefectureDetail({ prefecture, universities, onClose }: 
                 <FaUniversity className="text-blue-400 shrink-0" />
                 <Link
                   href={`/universities/${uni.slug}`}
-                  className="font-medium text-sm text-gray-800 hover:text-pink-700 transition-colors"
+                  className="font-medium text-sm text-gray-800 hover:text-theater-primary-700 transition-colors"
                 >
                   {uni.name}
                 </Link>

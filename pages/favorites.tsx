@@ -49,7 +49,7 @@ function FavoritesPage({ posts, isShared }: { posts: any[]; isShared: boolean })
       />
       <div className="container mx-auto px-4 py-8">
         <div className="flex items-center gap-3 mb-6">
-          <FaHeart className="text-pink-500 text-2xl" />
+          <FaHeart className="text-theater-primary-500 text-2xl" />
           <h1 className="text-2xl font-bold font-serif text-gray-800">お気に入り</h1>
         </div>
 
@@ -104,7 +104,7 @@ function FavoritesPage({ posts, isShared }: { posts: any[]; isShared: boolean })
             <p className="text-gray-500 mb-4">まだお気に入りがありません</p>
             <Link
               href="/"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-pink-500 text-white font-bold rounded-lg hover:bg-pink-600 transition-colors"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-theater-primary-500 text-white font-bold rounded-lg hover:bg-theater-primary-600 transition-colors"
             >
               <FaSearch />
               脚本を探す

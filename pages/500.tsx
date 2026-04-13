@@ -23,7 +23,7 @@ export default function Custom500() {
           </p>
           <div className="space-y-4">
             <Link href="/">
-              <button className="w-full bg-blue-500 text-white py-3 px-6 rounded-lg hover:bg-blue-600 transition-colors">
+              <button className="w-full bg-theater-primary-600 text-white py-3 px-6 rounded-lg hover:bg-theater-primary-600 transition-colors">
                 トップページへ戻る
               </button>
             </Link>

@@ -52,9 +52,9 @@ export default function TheaterGroupsIndex({ theaterGroups, regions, prefectures
       <div className="px-4 py-6">
         {/* パンくず */}
         <nav className="flex items-center gap-1 text-xs text-gray-500 mb-4">
-          <Link href="/" className="hover:text-pink-600">ホーム</Link>
+          <Link href="/" className="hover:text-theater-primary-600">ホーム</Link>
           <FaChevronRight className="text-[8px]" />
-          <Link href="/university-theater" className="hover:text-pink-600">大学演劇</Link>
+          <Link href="/university-theater" className="hover:text-theater-primary-600">大学演劇</Link>
           <FaChevronRight className="text-[8px]" />
           <span className="text-gray-700">劇団一覧</span>
         </nav>

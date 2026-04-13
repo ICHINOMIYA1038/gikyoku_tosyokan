@@ -297,35 +297,35 @@ export default function CultureFestivalGuide() {
             
             <ol className="space-y-4">
               <li className="flex items-start">
-                <span className="bg-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0 mr-3">1</span>
+                <span className="bg-theater-primary-600 text-white rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0 mr-3">1</span>
                 <div>
                   <strong>完璧を求めない</strong>
                   <p className="text-sm text-gray-600 mt-1">プロの舞台ではありません。楽しむことが最優先です。</p>
                 </div>
               </li>
               <li className="flex items-start">
-                <span className="bg-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0 mr-3">2</span>
+                <span className="bg-theater-primary-600 text-white rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0 mr-3">2</span>
                 <div>
                   <strong>全員に役割を与える</strong>
                   <p className="text-sm text-gray-600 mt-1">キャストだけでなく、音響・照明・受付まで全員参加で。</p>
                 </div>
               </li>
               <li className="flex items-start">
-                <span className="bg-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0 mr-3">3</span>
+                <span className="bg-theater-primary-600 text-white rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0 mr-3">3</span>
                 <div>
                   <strong>観客を意識する</strong>
                   <p className="text-sm text-gray-600 mt-1">内輪ネタは控えめに。誰でも楽しめる演出を。</p>
                 </div>
               </li>
               <li className="flex items-start">
-                <span className="bg-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0 mr-3">4</span>
+                <span className="bg-theater-primary-600 text-white rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0 mr-3">4</span>
                 <div>
                   <strong>記録を残す</strong>
                   <p className="text-sm text-gray-600 mt-1">写真・動画は一生の思い出。必ず撮影担当を決めましょう。</p>
                 </div>
               </li>
               <li className="flex items-start">
-                <span className="bg-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0 mr-3">5</span>
+                <span className="bg-theater-primary-600 text-white rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0 mr-3">5</span>
                 <div>
                   <strong>終わったら打ち上げ</strong>
                   <p className="text-sm text-gray-600 mt-1">成功も失敗も、みんなで分かち合えば最高の思い出に。</p>
@@ -376,7 +376,7 @@ export default function CultureFestivalGuide() {
             観客も演者も楽しめる舞台を作り上げてください。
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
-            <Link href="/" className="inline-block bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 text-center">
+            <Link href="/" className="inline-block bg-theater-primary-600 text-white px-6 py-3 rounded-lg hover:bg-theater-primary-600 text-center">
               作品を探す
             </Link>
             <Link href="/guide" className="inline-block bg-gray-500 text-white px-6 py-3 rounded-lg hover:bg-gray-600 text-center">

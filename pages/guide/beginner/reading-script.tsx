@@ -242,7 +242,7 @@ export default function ReadingScript() {
                 }`}
               >
                 <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-bold ${
-                  activeStep === step.step ? "bg-blue-500" : "bg-gray-400"
+                  activeStep === step.step ? "bg-theater-primary-600" : "bg-gray-400"
                 }`}>
                   {step.step}
                 </div>
@@ -274,7 +274,7 @@ export default function ReadingScript() {
                     <ul className="space-y-2">
                       {step.tasks.map((task, index) => (
                         <li key={index} className="flex items-start">
-                          <span className="bg-blue-500 text-white rounded-full w-5 h-5 flex items-center justify-center flex-shrink-0 text-xs mr-2 mt-0.5">
+                          <span className="bg-theater-primary-600 text-white rounded-full w-5 h-5 flex items-center justify-center flex-shrink-0 text-xs mr-2 mt-0.5">
                             {index + 1}
                           </span>
                           <span className="text-sm">{task}</span>
@@ -319,7 +319,7 @@ export default function ReadingScript() {
                     className={`px-4 py-2 rounded ${
                       activeStep === 5 
                         ? "bg-gray-200 text-gray-400 cursor-not-allowed" 
-                        : "bg-blue-500 text-white hover:bg-blue-600"
+                        : "bg-theater-primary-600 text-white hover:bg-theater-primary-600"
                     }`}
                     disabled={activeStep === 5}
                   >
@@ -531,7 +531,7 @@ export default function ReadingScript() {
             </form>
             
             <div className="mt-6 flex gap-4">
-              <button className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600">
+              <button className="bg-theater-primary-600 text-white px-6 py-2 rounded-lg hover:bg-theater-primary-600">
                 保存する
               </button>
               <button className="bg-gray-500 text-white px-6 py-2 rounded-lg hover:bg-gray-600">
@@ -711,7 +711,7 @@ export default function ReadingScript() {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/" className="inline-block bg-blue-500 text-white px-8 py-3 rounded-lg hover:bg-blue-600 font-semibold">
+            <Link href="/" className="inline-block bg-theater-primary-600 text-white px-8 py-3 rounded-lg hover:bg-theater-primary-600 font-semibold">
               作品を探す
             </Link>
             <Link href="/guide/beginner/acting-basics" className="inline-block bg-white text-blue-500 border-2 border-blue-500 px-8 py-3 rounded-lg hover:bg-blue-50 font-semibold">

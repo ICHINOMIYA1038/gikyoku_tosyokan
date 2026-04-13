@@ -408,8 +408,8 @@ export default function SeasonalSpecial() {
           <h2 className="text-2xl font-bold mb-6">季節別人気作品の傾向</h2>
           
           <div className="grid md:grid-cols-2 gap-6">
-            <div className="bg-pink-50 p-6 rounded-lg">
-              <h3 className="font-bold mb-4 text-pink-700">
+            <div className="bg-theater-primary-50 p-6 rounded-lg">
+              <h3 className="font-bold mb-4 text-theater-primary-700">
                 <FaGraduationCap className="inline mr-2" />
                 春（卒業シーズン）
               </h3>
@@ -576,7 +576,7 @@ export default function SeasonalSpecial() {
           <div className="bg-gray-50 p-8 rounded-lg">
             <div className="space-y-6">
               <div className="flex items-start">
-                <div className="bg-blue-500 text-white rounded-full w-10 h-10 flex items-center justify-center flex-shrink-0 font-bold">
+                <div className="bg-theater-primary-600 text-white rounded-full w-10 h-10 flex items-center justify-center flex-shrink-0 font-bold">
                   3
                 </div>
                 <div className="ml-4 flex-1">
@@ -588,7 +588,7 @@ export default function SeasonalSpecial() {
               </div>
 
               <div className="flex items-start">
-                <div className="bg-blue-500 text-white rounded-full w-10 h-10 flex items-center justify-center flex-shrink-0 font-bold">
+                <div className="bg-theater-primary-600 text-white rounded-full w-10 h-10 flex items-center justify-center flex-shrink-0 font-bold">
                   2
                 </div>
                 <div className="ml-4 flex-1">
@@ -600,7 +600,7 @@ export default function SeasonalSpecial() {
               </div>
 
               <div className="flex items-start">
-                <div className="bg-blue-500 text-white rounded-full w-10 h-10 flex items-center justify-center flex-shrink-0 font-bold">
+                <div className="bg-theater-primary-600 text-white rounded-full w-10 h-10 flex items-center justify-center flex-shrink-0 font-bold">
                   1
                 </div>
                 <div className="ml-4 flex-1">
@@ -612,7 +612,7 @@ export default function SeasonalSpecial() {
               </div>
 
               <div className="flex items-start">
-                <div className="bg-blue-500 text-white rounded-full w-10 h-10 flex items-center justify-center flex-shrink-0 font-bold">
+                <div className="bg-theater-primary-600 text-white rounded-full w-10 h-10 flex items-center justify-center flex-shrink-0 font-bold">
                   2W
                 </div>
                 <div className="ml-4 flex-1">
@@ -679,7 +679,7 @@ export default function SeasonalSpecial() {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/" className="inline-block bg-blue-500 text-white px-8 py-3 rounded-lg hover:bg-blue-600 font-semibold">
+            <Link href="/" className="inline-block bg-theater-primary-600 text-white px-8 py-3 rounded-lg hover:bg-theater-primary-600 font-semibold">
               作品を探す
             </Link>
             <Link href="/guide" className="inline-block bg-white text-blue-500 border-2 border-blue-500 px-8 py-3 rounded-lg hover:bg-blue-50 font-semibold">

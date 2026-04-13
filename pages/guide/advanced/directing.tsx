@@ -476,7 +476,7 @@ export default function DirectingGuide() {
                 <div key={index} className="flex items-start">
                   <div className={`w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 text-white font-bold mr-4 ${
                     index === 0 ? "bg-purple-500" :
-                    index === 1 ? "bg-blue-500" :
+                    index === 1 ? "bg-theater-primary-600" :
                     index === 2 ? "bg-green-500" :
                     "bg-orange-500"
                   }`}>

@@ -215,12 +215,12 @@ export default function Home({ news, authors, posts, categories, blogPosts, tren
                     <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
                       <span className="text-lg">🎓</span>
                     </div>
-                    <h3 className="text-xl font-bold text-gray-800 group-hover:text-pink-700 transition-colors">大学演劇データベース</h3>
+                    <h3 className="text-xl font-bold text-gray-800 group-hover:text-theater-primary-700 transition-colors">大学演劇データベース</h3>
                   </div>
                   <p className="text-sm text-gray-600 mb-3">
                     全国の大学学生劇団・演劇サークルを地図から検索。大学別・地域別に探せます。
                   </p>
-                  <span className="text-sm text-pink-600 font-medium">詳しく見る →</span>
+                  <span className="text-sm text-theater-primary-600 font-medium">詳しく見る →</span>
                 </div>
               </Link>
               <Link href="/shogekijo" className="block group">

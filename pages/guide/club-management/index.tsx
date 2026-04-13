@@ -313,7 +313,7 @@ export default function ClubManagement() {
                 onClick={() => setActiveTab(tab.id)}
                 className={`flex items-center px-4 py-2 rounded-lg transition-all ${
                   activeTab === tab.id
-                    ? "bg-blue-500 text-white shadow"
+                    ? "bg-theater-primary-600 text-white shadow"
                     : "bg-white text-gray-700 hover:bg-gray-50"
                 }`}
               >
@@ -800,7 +800,7 @@ export default function ClubManagement() {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/" className="inline-block bg-blue-500 text-white px-8 py-3 rounded-lg hover:bg-blue-600 font-semibold">
+            <Link href="/" className="inline-block bg-theater-primary-600 text-white px-8 py-3 rounded-lg hover:bg-theater-primary-600 font-semibold">
               上演作品を探す
             </Link>
             <Link href="/guide" className="inline-block bg-white text-blue-500 border-2 border-blue-500 px-8 py-3 rounded-lg hover:bg-blue-50 font-semibold">

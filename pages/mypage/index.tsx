@@ -109,7 +109,7 @@ export default function MyPage({ user, stats, recentComments, favoriteCount, fav
         <div className="grid grid-cols-3 gap-4 mb-6">
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <div className="flex items-center gap-3">
-              <FaHeart className="text-2xl text-pink-500" />
+              <FaHeart className="text-2xl text-theater-primary-500" />
               <div>
                 <p className="text-xs text-gray-500">お気に入り</p>
                 <p className="text-2xl font-bold">{favoriteCount}</p>

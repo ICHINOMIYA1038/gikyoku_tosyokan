@@ -151,7 +151,7 @@ export default function SchoolPage({ posts, totalCount }: SchoolPageProps) {
               href="/?maxPlaytime=60&category=青春"
               className="block p-3 border rounded-lg hover:bg-gray-50 text-center"
             >
-              <FaTheaterMasks className="mx-auto text-xl text-pink-500 mb-1" />
+              <FaTheaterMasks className="mx-auto text-xl text-theater-primary-500 mb-1" />
               <span className="text-sm font-medium block">青春もの / 60分以内</span>
               <span className="text-xs text-gray-500">学生に人気</span>
             </Link>
