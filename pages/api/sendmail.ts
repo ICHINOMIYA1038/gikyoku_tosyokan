@@ -88,8 +88,6 @@ export default async function handler(
         `,
       });
 
-      console.log("Customer email sent:", customerEmail.data?.id);
-      console.log("Admin email sent:", adminEmail.data?.id);
 
       res.status(200).json({
         message:

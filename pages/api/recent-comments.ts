@@ -27,6 +27,7 @@ export default async function handler(
         date: true,
         likes: true,
         commentType: true,
+        userId: true,
         post: {
           select: {
             id: true,
@@ -52,6 +53,7 @@ export default async function handler(
       }),
       likes: c.likes,
       commentType: c.commentType,
+      userId: c.userId,
       postId: c.post.id,
       postTitle: c.post.title,
       postAuthor: c.post.author.name,

@@ -57,7 +57,6 @@ export default async function handler(
     if (page === "1") {
       const cachedResult = searchCache.get(cacheKey);
       if (cachedResult) {
-        console.log("[Search] Cache hit");
         return res.status(200).json(cachedResult);
       }
     }
