@@ -82,12 +82,27 @@ export default async function handler(
     // ISRキャッシュを再検証（次回アクセス時に最新コメントが表示される）
     let revalidatePostId: number | null = targetid;
     if (!isParent) {
-      // 子コメントの場合、親コメントからpost_idを取得
-      const parent = await prisma.parentComment.findUnique({
+      // 子コメントの場合、親コメントの投稿者にメール通知
+      const parentComment = await prisma.parentComment.findUnique({
         where: { id: targetid },
-        select: { post_id: true },
+        select: { post_id: true, userId: true, user: { select: { email: true, displayName: true, name: true } } },
       });
-      revalidatePostId = parent?.post_id ?? null;
+      revalidatePostId = parentComment?.post_id ?? null;
+
+      // 返信先ユーザーにメール通知（自分自身への返信は除く）
+      if (parentComment?.user?.email && parentComment.userId !== userId) {
+        try {
+          const { Resend } = await import('resend');
+          const resend = new Resend(process.env.RESEND_API_KEY);
+          const recipientName = parentComment.user.displayName || parentComment.user.name || 'ユーザー';
+          await resend.emails.send({
+            from: `戯曲図書館 <noreply@${process.env.RESEND_DOMAIN || 'gikyokutosyokan.com'}>`,
+            to: parentComment.user.email,
+            subject: `${displayAuthor}さんがあなたのコメントに返信しました`,
+            text: `${recipientName}さん\n\n${displayAuthor}さんがあなたのコメントに返信しました。\n\n「${content.substring(0, 100)}${content.length > 100 ? '...' : ''}」\n\n確認する: https://gikyokutosyokan.com/posts/${revalidatePostId}#comments-section\n\n---\n戯曲図書館`,
+          });
+        } catch {}
+      }
     }
     if (revalidatePostId) {
       try { await res.revalidate(`/posts/${revalidatePostId}`); } catch {}
