@@ -17,12 +17,11 @@ export default function MobileHeader() {
 
   const menuItems: { href: string; label: string; isExternal?: boolean }[] = [
     { href: "/", label: "検索する" },
+    { href: "/recruit", label: "劇団員募集" },
     { href: "/university-theater", label: "大学演劇" },
     { href: "/shogekijo", label: "小劇場" },
     { href: "/announcements", label: "上演告知" },
     { href: "/support/about", label: "概要" },
-    { href: "/diary/plot", label: "オリジナル作品" },
-    { href: "/support/posting-request", label: "掲載依頼" },
     { href: "/support/contact", label: "お問い合わせ" },
   ];
 

@@ -2,7 +2,7 @@ import { useSession, signOut } from 'next-auth/react';
 import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { FaSignInAlt, FaSignOutAlt, FaUser, FaChevronDown, FaUserPlus } from 'react-icons/fa';
+import { FaSignInAlt, FaSignOutAlt, FaUser, FaChevronDown, FaUserPlus, FaEnvelope } from 'react-icons/fa';
 
 interface AuthMenuProps {
   variant?: 'desktop' | 'mobile';
@@ -102,6 +102,13 @@ const AuthMenu: React.FC<AuthMenuProps> = ({ variant = 'desktop' }) => {
           <FaUser />
           <span>マイページ</span>
         </Link>
+        <Link
+          href="/messages"
+          className="w-full flex items-center gap-3 py-3 px-4 text-left text-gray-800 hover:bg-gray-100 rounded-lg transition-colors"
+        >
+          <FaEnvelope />
+          <span>メッセージ</span>
+        </Link>
         <button
           onClick={() => signOut({ callbackUrl: '/' })}
           className="w-full flex items-center gap-3 py-3 px-4 text-left text-gray-800 hover:bg-gray-100 rounded-lg transition-colors"
@@ -151,6 +158,14 @@ const AuthMenu: React.FC<AuthMenuProps> = ({ variant = 'desktop' }) => {
           >
             <FaUser className="text-gray-500" />
             マイページ
+          </Link>
+          <Link
+            href="/messages"
+            onClick={() => setOpen(false)}
+            className="flex items-center gap-3 px-4 py-3 text-sm text-gray-700 hover:bg-gray-100"
+          >
+            <FaEnvelope className="text-gray-500" />
+            メッセージ
           </Link>
           <button
             onClick={() => {

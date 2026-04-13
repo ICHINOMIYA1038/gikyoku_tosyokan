@@ -228,6 +228,7 @@ model TheaterGroup {
   blogPostSlug  String?
   universities  TheaterGroupUniversity[]
   posts         PostTheaterGroup[]
+  recruitments  Recruitment[]
   createdAt     DateTime                 @default(now())
   updatedAt     DateTime                 @updatedAt
 
@@ -279,6 +280,8 @@ model Announcement {
   title            String
   content          String
   performanceDate  DateTime?
+  startDate        DateTime?
+  endDate          DateTime?
   venue            String?
   ticketPrice      String?
   contactInfo      String?
@@ -293,9 +296,11 @@ model Announcement {
   post             Post?    @relation(fields: [postId], references: [id])
   theaterGroupName String?
   scriptTitle      String?
+  images           String[]
 
   @@index([createdAt(sort: Desc)])
   @@index([performanceDate])
+  @@index([startDate])
   @@index([views(sort: Desc)])
   @@index([postId])
   @@index([userId])
@@ -364,6 +369,10 @@ model User {
   reports           Report[]
   searchHistories   SearchHistory[]
   announcements     Announcement[]
+  recruitments      Recruitment[]
+  applications      Application[]
+  sentMessages      Message[]       @relation("SentMessages")
+  receivedMessages  Message[]       @relation("ReceivedMessages")
 
   @@index([email])
   @@map("User")
@@ -462,4 +471,117 @@ model SearchHistory {
 
   @@index([userId, createdAt])
   @@map("SearchHistory")
+}
+
+// ============================================
+// 劇団員募集
+// ============================================
+
+enum RecruitmentStatus {
+  ACTIVE
+  CLOSED
+  PAUSED
+}
+
+enum ExperienceLevel {
+  ANY
+  BEGINNER
+  EXPERIENCED
+}
+
+model Recruitment {
+  id                  String            @id @default(cuid())
+  title               String
+  description         String
+  postedBy            String
+  poster              User              @relation(fields: [postedBy], references: [id], onDelete: Cascade)
+  theaterGroupId      Int?
+  theaterGroup        TheaterGroup?     @relation(fields: [theaterGroupId], references: [id])
+  theaterGroupName    String?
+  rolesWanted         String[]
+  experienceLevel     ExperienceLevel   @default(ANY)
+  genderRequirement   String?
+  ageRangeMin         Int?
+  ageRangeMax         Int?
+  feeStructure        String?
+  rehearsalFrequency  String?
+  rehearsalLocation   String?
+  venue               String?
+  startDate           DateTime?
+  endDate             DateTime?
+  images              String[]
+  contactMethod       String?
+  status              RecruitmentStatus @default(ACTIVE)
+  views               Int               @default(0)
+  publishedAt         DateTime          @default(now())
+  expiresAt           DateTime?
+  createdAt           DateTime          @default(now())
+  updatedAt           DateTime          @updatedAt
+  applications        Application[]
+
+  @@index([status, publishedAt])
+  @@index([postedBy])
+  @@index([theaterGroupId])
+  @@map("Recruitment")
+}
+
+enum ApplicationStatus {
+  PENDING
+  REVIEWING
+  ACCEPTED
+  REJECTED
+  WITHDRAWN
+}
+
+model Application {
+  id             String            @id @default(cuid())
+  recruitmentId  String
+  recruitment    Recruitment       @relation(fields: [recruitmentId], references: [id], onDelete: Cascade)
+  applicantId    String
+  applicant      User              @relation(fields: [applicantId], references: [id], onDelete: Cascade)
+  message        String
+  status         ApplicationStatus @default(PENDING)
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+
+  @@unique([recruitmentId, applicantId])
+  @@index([applicantId])
+  @@index([recruitmentId])
+  @@map("Application")
+}
+
+// ============================================
+// メッセージ
+// ============================================
+
+model Conversation {
+  id           String    @id @default(cuid())
+  participant1 String
+  participant2 String
+  lastMessage  String?
+  lastAt       DateTime  @default(now())
+  messages     Message[]
+  createdAt    DateTime  @default(now())
+
+  @@unique([participant1, participant2])
+  @@index([participant1, lastAt])
+  @@index([participant2, lastAt])
+  @@map("Conversation")
+}
+
+model Message {
+  id             String       @id @default(cuid())
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  senderId       String
+  sender         User         @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade)
+  receiverId     String
+  receiver       User         @relation("ReceivedMessages", fields: [receiverId], references: [id], onDelete: Cascade)
+  content        String
+  readAt         DateTime?
+  createdAt      DateTime     @default(now())
+
+  @@index([conversationId, createdAt])
+  @@index([receiverId, readAt])
+  @@map("Message")
 }
