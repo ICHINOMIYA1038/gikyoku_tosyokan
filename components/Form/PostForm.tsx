@@ -120,7 +120,7 @@ const PostForm: React.FC<any> = ({ authors, categories }: any) => {
     <>
       <form
         onSubmit={handleSubmit}
-        className="bg-blue-200 shadow-md rounded px-8 pt-6 pb-8 mb-4 max-w-2xl"
+        className="bg-theater-primary-50 shadow-md rounded-lg px-8 pt-6 pb-8 mb-4 max-w-2xl"
       >
         <h2>脚本データ</h2>
         <div>
@@ -382,7 +382,7 @@ const SelectChip: React.FC<any> = ({ label }) => {
 };
 
 const Chip: React.FC<ChipProps> = ({ label, onRemove }) => (
-  <span className="bg-blue-500 text-white p-2 m-1 rounded flex items-center">
+  <span className="bg-theater-primary-600 text-white p-2 m-1 rounded-lg flex items-center">
     {label}
     <button onClick={onRemove} className="ml-2">
       ×

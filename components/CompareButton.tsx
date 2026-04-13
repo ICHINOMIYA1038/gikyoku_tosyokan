@@ -35,7 +35,7 @@ const CompareButton: React.FC<CompareButtonProps> = ({ postId, size = "md", vari
         onClick={handleClick}
         className={`w-12 h-12 rounded-full shadow-lg flex items-center justify-center transition-all duration-200 hover:scale-105 ${
           inCompare
-            ? "bg-blue-500 hover:bg-blue-600 text-white"
+            ? "bg-theater-primary-600 hover:bg-theater-primary-700 text-white"
             : "bg-white border-2 border-blue-300 text-blue-400 hover:bg-blue-50 hover:text-blue-500"
         }`}
         aria-label={inCompare ? "比較から削除" : "比較に追加"}
@@ -56,7 +56,7 @@ const CompareButton: React.FC<CompareButtonProps> = ({ postId, size = "md", vari
         isSmall ? "px-2 py-1 text-xs" : "px-3 py-1.5 text-sm"
       } rounded-full shadow-sm transition-all ${
         inCompare
-          ? "bg-blue-500 text-white hover:bg-blue-600"
+          ? "bg-theater-primary-600 text-white hover:bg-theater-primary-700"
           : "bg-white/90 backdrop-blur-sm text-gray-600 hover:bg-blue-50 hover:text-blue-600"
       }`}
       aria-label={inCompare ? "比較から削除" : "比較に追加"}

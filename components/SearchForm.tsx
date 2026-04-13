@@ -165,7 +165,7 @@ export default function SearchForm({
         <button
           className={`flex-1 py-4 px-6 text-sm font-bold flex items-center justify-center gap-2 transition-all ${
             activeTab === "search"
-              ? "text-pink-600 bg-white border-b-2 border-pink-500"
+              ? "text-theater-primary-600 bg-white border-b-2 border-theater-primary-500"
               : "text-gray-500 bg-gray-50 hover:bg-gray-100 hover:text-gray-700"
           }`}
           onClick={() => setActiveTab("search")}
@@ -176,7 +176,7 @@ export default function SearchForm({
         <button
           className={`flex-1 py-4 px-6 text-sm font-bold flex items-center justify-center gap-2 transition-all ${
             activeTab === "categories"
-              ? "text-pink-600 bg-white border-b-2 border-pink-500"
+              ? "text-theater-primary-600 bg-white border-b-2 border-theater-primary-500"
               : "text-gray-500 bg-gray-50 hover:bg-gray-100 hover:text-gray-700"
           }`}
           onClick={() => setActiveTab("categories")}
@@ -194,7 +194,7 @@ export default function SearchForm({
               <label className="block text-sm font-bold text-gray-700 mb-2">キーワード</label>
               <div className="relative">
                 <input
-                  className="w-full p-3 pl-10 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-pink-100 focus:border-pink-300 transition-all outline-none"
+                  className="w-full p-3 pl-10 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-theater-primary-100 focus:border-theater-primary-300 transition-all outline-none"
                   placeholder="作品名、作者名など..."
                   value={keyword}
                   onChange={(e) => setKeyword(e.target.value)}
@@ -225,7 +225,7 @@ export default function SearchForm({
                   <label className="text-xs font-bold text-gray-500 mb-1 block">総人数</label>
                   <div className="flex items-center gap-2">
                     <input
-                      className="w-full p-2 bg-white border border-gray-200 rounded text-center focus:border-pink-300 outline-none"
+                      className="w-full p-2 bg-white border border-gray-200 rounded text-center focus:border-theater-primary-300 outline-none"
                       type="number"
                       placeholder="下限"
                       value={minTotalCount}
@@ -233,7 +233,7 @@ export default function SearchForm({
                     />
                     <span className="text-gray-400">〜</span>
                     <input
-                      className="w-full p-2 bg-white border border-gray-200 rounded text-center focus:border-pink-300 outline-none"
+                      className="w-full p-2 bg-white border border-gray-200 rounded text-center focus:border-theater-primary-300 outline-none"
                       type="number"
                       placeholder="上限"
                       value={maxTotalCount}
@@ -246,7 +246,7 @@ export default function SearchForm({
                   <label className="text-xs font-bold text-gray-500 mb-1 block">男性</label>
                   <div className="flex items-center gap-2">
                     <input
-                      className="w-full p-2 bg-white border border-gray-200 rounded text-center focus:border-pink-300 outline-none"
+                      className="w-full p-2 bg-white border border-gray-200 rounded text-center focus:border-theater-primary-300 outline-none"
                       type="number"
                       placeholder="0"
                       value={minMaleCount}
@@ -254,7 +254,7 @@ export default function SearchForm({
                     />
                     <span className="text-gray-400">〜</span>
                     <input
-                      className="w-full p-2 bg-white border border-gray-200 rounded text-center focus:border-pink-300 outline-none"
+                      className="w-full p-2 bg-white border border-gray-200 rounded text-center focus:border-theater-primary-300 outline-none"
                       type="number"
                       placeholder="上限なし"
                       value={maxMaleCount}
@@ -267,7 +267,7 @@ export default function SearchForm({
                   <label className="text-xs font-bold text-gray-500 mb-1 block">女性</label>
                   <div className="flex items-center gap-2">
                     <input
-                      className="w-full p-2 bg-white border border-gray-200 rounded text-center focus:border-pink-300 outline-none"
+                      className="w-full p-2 bg-white border border-gray-200 rounded text-center focus:border-theater-primary-300 outline-none"
                       type="number"
                       placeholder="0"
                       value={minFemaleCount}
@@ -275,7 +275,7 @@ export default function SearchForm({
                     />
                     <span className="text-gray-400">〜</span>
                     <input
-                      className="w-full p-2 bg-white border border-gray-200 rounded text-center focus:border-pink-300 outline-none"
+                      className="w-full p-2 bg-white border border-gray-200 rounded text-center focus:border-theater-primary-300 outline-none"
                       type="number"
                       placeholder="上限なし"
                       value={maxFemaleCount}
@@ -294,7 +294,7 @@ export default function SearchForm({
                 
                 <div className="flex items-center gap-2">
                   <input
-                    className="w-full p-2 bg-white border border-gray-200 rounded text-center focus:border-pink-300 outline-none"
+                    className="w-full p-2 bg-white border border-gray-200 rounded text-center focus:border-theater-primary-300 outline-none"
                     type="number"
                     min="0"
                     max="999"
@@ -304,7 +304,7 @@ export default function SearchForm({
                   />
                   <span className="text-gray-400">〜</span>
                   <input
-                    className="w-full p-2 bg-white border border-gray-200 rounded text-center focus:border-pink-300 outline-none"
+                    className="w-full p-2 bg-white border border-gray-200 rounded text-center focus:border-theater-primary-300 outline-none"
                     type="number"
                     min="0"
                     max="999"

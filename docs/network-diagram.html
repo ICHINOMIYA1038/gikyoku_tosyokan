@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>ネットワーク構成図 - 戯曲図書館</title>
+<style>
+  @page { size: A4; margin: 20mm; }
+  body { font-family: 'Hiragino Kaku Gothic Pro', 'Meiryo', sans-serif; font-size: 11pt; color: #222; margin: 0; padding: 20mm; }
+  h1 { font-size: 16pt; text-align: center; border-bottom: 2px solid #333; padding-bottom: 8px; margin-bottom: 6px; }
+  .subtitle { text-align: center; font-size: 10pt; color: #666; margin-bottom: 24px; }
+  .diagram { display: flex; flex-direction: column; align-items: center; gap: 0; margin: 20px 0; }
+  .box { border: 2px solid #333; border-radius: 8px; padding: 12px 24px; text-align: center; min-width: 280px; background: #fff; position: relative; }
+  .box-user { background: #e8f4fd; border-color: #2196F3; }
+  .box-cdn { background: #fff3e0; border-color: #FF9800; }
+  .box-web { background: #f3e5f5; border-color: #9C27B0; }
+  .box-db { background: #e8f5e9; border-color: #4CAF50; }
+  .box-ext { background: #fce4ec; border-color: #E91E63; }
+  .box-storage { background: #fff8e1; border-color: #FFC107; }
+  .box h3 { margin: 0 0 4px 0; font-size: 12pt; }
+  .box p { margin: 2px 0; font-size: 9pt; color: #555; }
+  .arrow { font-size: 20pt; color: #888; line-height: 1.2; text-align: center; padding: 2px 0; }
+  .arrow-label { font-size: 8pt; color: #888; text-align: center; margin-top: -2px; }
+  .side-row { display: flex; justify-content: center; gap: 24px; margin: 16px 0; flex-wrap: wrap; }
+  .side-box { border: 2px solid #999; border-radius: 8px; padding: 10px 20px; text-align: center; min-width: 200px; background: #fafafa; }
+  .note-section { margin-top: 28px; border: 1px solid #ccc; border-radius: 6px; padding: 16px; background: #fafafa; }
+  .note-section h3 { font-size: 11pt; margin: 0 0 8px 0; border-bottom: 1px solid #ddd; padding-bottom: 4px; }
+  .note-section p, .note-section li { font-size: 9pt; color: #444; line-height: 1.6; }
+  .note-section ul { margin: 4px 0; padding-left: 20px; }
+  .footer { margin-top: 32px; text-align: right; font-size: 9pt; color: #888; }
+</style>
+</head>
+<body>
+
+<h1>ネットワーク構成図</h1>
+<p class="subtitle">電気通信事業届出 添付資料 ｜ 戯曲図書館（gikyokutosyokan.com）</p>
+
+<div class="diagram">
+  <div class="box box-user">
+    <h3>ユーザー（利用者）</h3>
+    <p>Webブラウザ（PC・スマートフォン）</p>
+  </div>
+
+  <div class="arrow">▼</div>
+  <div class="arrow-label">HTTPS（TLS 1.2/1.3 暗号化通信）</div>
+
+  <div class="box box-cdn">
+    <h3>Cloudflare, Inc.</h3>
+    <p>CDN / DNS / DDoS防御 / WAF</p>
+    <p>所在地：米国（エッジサーバーは世界各地）</p>
+  </div>
+
+  <div class="arrow">▼</div>
+  <div class="arrow-label">HTTPS（オリジンへのプロキシ）</div>
+
+  <div class="box box-web">
+    <h3>Vercel, Inc.</h3>
+    <p>Webアプリケーションサーバー / Edge Functions</p>
+    <p>フレームワーク：Next.js（サーバーレス）</p>
+    <p>所在地：米国（東京リージョンを含む世界各地のEdge）</p>
+  </div>
+
+  <div class="arrow">▼</div>
+  <div class="arrow-label">PostgreSQL接続（SSL暗号化 / PgBouncer接続プーリング）</div>
+
+  <div class="box box-db">
+    <h3>Supabase, Inc.（AWS上）</h3>
+    <p>PostgreSQL データベース</p>
+    <p>所在地：AWS 東京リージョン（ap-northeast-1）</p>
+    <p>接続：PgBouncer経由の接続プーリング</p>
+  </div>
+</div>
+
+<div class="side-row">
+  <div class="side-box box-ext">
+    <h3>Google LLC</h3>
+    <p>OAuth 2.0 認証基盤</p>
+    <p>Google Analytics（アクセス解析）</p>
+    <p>Google AdSense（広告配信）</p>
+  </div>
+
+  <div class="side-box box-storage">
+    <h3>Amazon Web Services, Inc.</h3>
+    <p>S3（画像ストレージ）</p>
+    <p>所在地：東京リージョン</p>
+  </div>
+
+  <div class="side-box" style="background:#f0f4ff; border-color:#5C6BC0;">
+    <h3>Resend, Inc.</h3>
+    <p>メール送信サービス</p>
+    <p>（お問い合わせ通知用）</p>
+  </div>
+</div>
+
+<div class="note-section">
+  <h3>構成の説明</h3>
+  <p>当事業者は<strong>自ら電気通信回線設備を設置せず</strong>、以下のクラウドサービスを利用してサービスを提供しています。</p>
+  <ul>
+    <li><strong>CDN / セキュリティ</strong>：Cloudflare, Inc. — DNS管理、CDN配信、DDoS対策、WAF（Webアプリケーションファイアウォール）</li>
+    <li><strong>Webサーバー</strong>：Vercel, Inc. — Next.jsアプリケーションのサーバーレスホスティング</li>
+    <li><strong>データベース</strong>：Supabase, Inc.（AWS東京リージョン上） — PostgreSQLによるデータ永続化</li>
+    <li><strong>認証</strong>：Google LLC — OAuth 2.0プロトコルによるユーザー認証（Googleアカウント連携）</li>
+    <li><strong>画像保存</strong>：Amazon Web Services, Inc. — S3オブジェクトストレージ</li>
+    <li><strong>メール送信</strong>：Resend, Inc. — トランザクションメール（問い合わせ通知）</li>
+  </ul>
+</div>
+
+<div class="note-section">
+  <h3>通信の保護</h3>
+  <ul>
+    <li>ユーザーとサーバー間の全ての通信はHTTPS（TLS 1.2以上）により暗号化</li>
+    <li>データベース接続はSSL暗号化通信を使用</li>
+    <li>認証情報はOAuth 2.0 + PKCEプロトコルにより保護（パスワードの保存・中継なし）</li>
+    <li>セッション管理はJWT（署名付きトークン）による</li>
+  </ul>
+</div>
+
+<div class="note-section">
+  <h3>提供するサービスの概要</h3>
+  <ul>
+    <li><strong>サービス名</strong>：戯曲図書館（gikyokutosyokan.com）</li>
+    <li><strong>内容</strong>：演劇脚本の検索・レビュー・コメント機能、ユーザー間メッセージング機能（予定）、脚本売買仲介機能（予定）の提供</li>
+    <li><strong>利用者</strong>：演劇関係者および一般の演劇愛好家</li>
+    <li><strong>通信の媒介</strong>：コメント・レビュー投稿（不特定多数への情報発信）、ダイレクトメッセージ（特定者間通信、実装予定）</li>
+  </ul>
+</div>
+
+<div class="footer">
+  作成日：2026年4月12日
+</div>
+
+</body>
+</html>

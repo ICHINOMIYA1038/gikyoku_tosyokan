@@ -10,7 +10,7 @@ const TopImage = ({ buttonClick }: any) => {
     <div className="relative w-full bg-white overflow-hidden">
       {/* 背景装飾 - 和紙のようなテクスチャ感と柔らかなグラデーション */}
       <div className="absolute inset-0 z-0 opacity-30">
-        <div className="absolute top-[-20%] right-[-10%] w-[600px] h-[600px] rounded-full bg-pink-100 blur-3xl" />
+        <div className="absolute top-[-20%] right-[-10%] w-[600px] h-[600px] rounded-full bg-theater-primary-100 blur-3xl" />
         <div className="absolute bottom-[-10%] left-[-10%] w-[500px] h-[500px] rounded-full bg-blue-50 blur-3xl" />
       </div>
       
@@ -25,8 +25,8 @@ const TopImage = ({ buttonClick }: any) => {
           {/* 左側：テキストエリア */}
           <div className="w-full md:w-1/2 text-center md:text-left space-y-6">
             <div className="space-y-4">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-pink-50 border border-pink-100 text-pink-700 text-sm font-medium mb-2">
-                <span className="flex h-2 w-2 rounded-full bg-pink-500"></span>
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-theater-primary-50 border border-theater-primary-100 text-theater-primary-700 text-sm font-medium mb-2">
+                <span className="flex h-2 w-2 rounded-full bg-theater-primary-500"></span>
                 戯曲を探す・知る・語る
               </div>
 
@@ -34,7 +34,7 @@ const TopImage = ({ buttonClick }: any) => {
                 物語との<br className="md:hidden" />
                 <span className="relative inline-block">
                   出会い
-                  <span className="absolute bottom-2 left-0 w-full h-3 bg-pink-200/50 -z-10 transform -rotate-1"></span>
+                  <span className="absolute bottom-2 left-0 w-full h-3 bg-theater-primary-200/50 -z-10 transform -rotate-1"></span>
                 </span>
                 を、<br />
                 もっと自由に。
@@ -51,7 +51,7 @@ const TopImage = ({ buttonClick }: any) => {
                 className="group relative inline-flex items-center justify-center gap-2 bg-theater-primary-600 text-white px-8 py-4 rounded-lg text-lg font-medium shadow-lg hover:shadow-xl hover:bg-theater-primary-700 hover:-translate-y-1 transition-all duration-300 min-w-[200px]"
                 onClick={buttonClick}
               >
-                <FaSearch className="text-pink-400 group-hover:scale-110 transition-transform" />
+                <FaSearch className="text-theater-primary-400 group-hover:scale-110 transition-transform" />
                 <span>脚本を探す</span>
                 <span className="absolute inset-0 rounded-lg ring-2 ring-white/20 group-hover:ring-white/40 transition-all"></span>
               </button>
@@ -96,14 +96,14 @@ const TopImage = ({ buttonClick }: any) => {
               </div>
               <div className="h-16 w-32 bg-gray-50 rounded mb-2"></div>
               <div className="flex justify-between">
-                <div className="h-2 w-8 bg-pink-100 rounded"></div>
+                <div className="h-2 w-8 bg-theater-primary-100 rounded"></div>
                 <div className="h-2 w-8 bg-blue-100 rounded"></div>
               </div>
             </div>
 
              <div className="absolute bottom-20 left-0 bg-white p-3 rounded-lg shadow-lg border border-gray-100 hidden lg:block animate-float-delayed">
                <div className="flex items-center gap-2">
-                 <div className="w-2 h-2 rounded-full bg-pink-500"></div>
+                 <div className="w-2 h-2 rounded-full bg-theater-primary-500"></div>
                  <span className="text-xs font-bold text-gray-700">登録作品数 1,000+</span>
                </div>
              </div>

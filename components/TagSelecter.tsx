@@ -34,7 +34,7 @@ function TagSelector({
             key={tag.id}
             onClick={() => handleTagClick(tag.id)}
             className={`p-1 rounded-lg cursor-pointer ${selectedTags.includes(tag.id)
-              ? "bg-blue-500 text-white shadow-md"
+              ? "bg-theater-primary-600 text-white shadow-md"
               : "bg-gray-200 text-gray-700"
               }`}
           >

@@ -105,7 +105,7 @@ export default function ShogekijoMapView({ prefectureData }: ShogekijoMapViewPro
                       className="flex items-center gap-2 px-4 py-3 hover:bg-orange-50/50 transition-colors"
                     >
                       <FaTheaterMasks className="text-purple-400 text-sm shrink-0" />
-                      <span className="text-sm text-gray-800 hover:text-pink-700 transition-colors flex-1">
+                      <span className="text-sm text-gray-800 hover:text-theater-primary-700 transition-colors flex-1">
                         {g.name}
                       </span>
                       {gType && (

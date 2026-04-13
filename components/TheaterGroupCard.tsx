@@ -33,7 +33,7 @@ export default function TheaterGroupCard({ group, linkPrefix = '/theater-groups'
       <div className="p-4 flex flex-col flex-1">
         <div className="flex items-start justify-between gap-2 mb-2">
           <Link href={`${linkPrefix}/${group.slug}`} className="flex-1">
-            <h3 className={`font-serif font-bold text-base text-gray-800 line-clamp-2 transition-colors ${linkPrefix === '/shogekijo' ? 'group-hover:text-orange-700' : 'group-hover:text-pink-700'}`}>
+            <h3 className={`font-serif font-bold text-base text-gray-800 line-clamp-2 transition-colors ${linkPrefix === '/shogekijo' ? 'group-hover:text-orange-700' : 'group-hover:text-theater-primary-700'}`}>
               {group.name}
             </h3>
           </Link>
@@ -53,7 +53,7 @@ export default function TheaterGroupCard({ group, linkPrefix = '/theater-groups'
 
         {prefectures.length > 0 && (
           <div className="flex items-center gap-1 text-xs text-gray-400 mb-2">
-            <FaMapMarkerAlt className="text-pink-400/60 shrink-0" />
+            <FaMapMarkerAlt className="text-theater-primary-400/60 shrink-0" />
             <span>{prefectures.join('・')}</span>
           </div>
         )}

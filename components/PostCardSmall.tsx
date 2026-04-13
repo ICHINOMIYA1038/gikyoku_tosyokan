@@ -38,7 +38,7 @@ const PostCardSmall: React.FC<PostPageProps> = ({ post }: any) => {
           {/* カテゴリーバッジ */}
           {primaryCategory && (
             <div className="absolute top-2 right-2">
-              <span className="px-2 py-0.5 bg-white/90 backdrop-blur-sm text-pink-700 text-[10px] font-medium rounded shadow-sm border border-gray-100">
+              <span className="px-2 py-0.5 bg-white/90 backdrop-blur-sm text-theater-primary-700 text-[10px] font-medium rounded shadow-sm border border-gray-100">
                 {primaryCategory.name}
               </span>
             </div>
@@ -47,7 +47,7 @@ const PostCardSmall: React.FC<PostPageProps> = ({ post }: any) => {
         
         {/* コンテンツ */}
         <div className="p-3 flex flex-col flex-1">
-          <h3 className="font-serif font-bold text-base text-gray-800 line-clamp-2 mb-2 group-hover:text-pink-700 transition-colors">
+          <h3 className="font-serif font-bold text-base text-gray-800 line-clamp-2 mb-2 group-hover:text-theater-primary-700 transition-colors">
             {post.title}
           </h3>
           
@@ -80,7 +80,7 @@ const PostCardSmall: React.FC<PostPageProps> = ({ post }: any) => {
 
             {post._count?.comments > 0 && (
               <div className="flex items-center gap-1">
-                <FaCommentDots className="text-pink-400/60" />
+                <FaCommentDots className="text-theater-primary-400/60" />
                 <span>{post._count.comments}</span>
               </div>
             )}

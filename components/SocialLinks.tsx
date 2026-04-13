@@ -11,7 +11,7 @@ type SocialLinksProps = {
 
 export default function SocialLinks({ website, twitter, instagram, corich, otherLinks, size = 'md' }: SocialLinksProps) {
   const iconSize = size === 'sm' ? 'text-sm' : 'text-base';
-  const linkClass = `inline-flex items-center gap-1 ${size === 'sm' ? 'text-xs' : 'text-sm'} text-gray-600 hover:text-pink-700 transition-colors`;
+  const linkClass = `inline-flex items-center gap-1 ${size === 'sm' ? 'text-xs' : 'text-sm'} text-gray-600 hover:text-theater-primary-700 transition-colors`;
 
   const links: { href: string; icon: React.ReactNode; label: string }[] = [];
 

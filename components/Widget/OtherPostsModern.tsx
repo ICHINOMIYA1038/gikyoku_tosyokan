@@ -177,7 +177,7 @@ const OtherPostsModern = ({ authorId, postId, authorName }: any) => {
                       {/* キャスト数 */}
                       {(post.totalNumber > 0 || post.man > 0 || post.woman > 0) && (
                         <div className="flex items-center text-sm text-gray-600">
-                          <FaUsers className="mr-2 text-pink-400" />
+                          <FaUsers className="mr-2 text-theater-primary-400" />
                           <span>{formatCast(post)}</span>
                           {post.totalNumber > 0 && post.totalNumber <= 5 && (
                             <span className="ml-auto text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full font-semibold">

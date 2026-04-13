@@ -127,7 +127,7 @@ const ContactForm: React.FC = () => {
             type="button"
             onClick={handleSendMail}
             disabled={isSending}
-            className={`bg-blue-500 text-white p-2 rounded-md ${isSending ? "opacity-50 cursor-not-allowed" : ""
+            className={`bg-theater-primary-600 text-white p-2 rounded-lg ${isSending ? "opacity-50 cursor-not-allowed" : ""
               }`}
           >
             {isSending ? "送信中..." : "送信"}

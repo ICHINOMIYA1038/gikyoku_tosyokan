@@ -8,12 +8,12 @@ const amazonStyle = {
 
 const GikyokuIntroduction = ({ post }: any) => {
   return (
-    <div className="m-5 bg-pink-300 px-4 py-2 rounded-md max-w-96 basic-card inline-block">
+    <div className="m-5 bg-theater-primary-300 px-4 py-2 rounded-md max-w-96 basic-card inline-block">
       <div className="bg-white p-5">
         <h2>優秀新人戯曲賞</h2>
         <a
           href="https://www.amazon.com"
-          className="font-bold bg-pink-300 px-4 py-2 my-2 rounded-md text-black>
+          className="font-bold bg-theater-primary-300 px-4 py-2 my-2 rounded-md text-black>
         text-sm inline-block"
           target="_blank"
           rel="noopener noreferrer"

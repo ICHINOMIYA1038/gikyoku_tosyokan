@@ -22,12 +22,12 @@ const LatestBlogPosts: React.FC<Props> = ({ posts }) => {
       <div className="max-w-6xl mx-auto">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl md:text-3xl font-bold flex items-center gap-2">
-            <FaPen className="text-pink-500" />
+            <FaPen className="text-theater-primary-500" />
             最新の記事
           </h2>
           <Link
             href="/blog/ja"
-            className="text-pink-600 hover:text-pink-700 text-sm font-medium flex items-center gap-1"
+            className="text-theater-primary-600 hover:text-theater-primary-700 text-sm font-medium flex items-center gap-1"
           >
             すべての記事 <FaChevronRight className="text-xs" />
           </Link>
@@ -44,13 +44,13 @@ const LatestBlogPosts: React.FC<Props> = ({ posts }) => {
                   {post.tags.slice(0, 3).map((tag) => (
                     <span
                       key={tag}
-                      className="px-2 py-0.5 bg-pink-50 text-pink-600 text-[10px] font-medium rounded-full"
+                      className="px-2 py-0.5 bg-theater-primary-50 text-theater-primary-600 text-[10px] font-medium rounded-full"
                     >
                       {tag}
                     </span>
                   ))}
                 </div>
-                <h3 className="font-bold text-gray-800 group-hover:text-pink-700 transition-colors mb-2 line-clamp-2">
+                <h3 className="font-bold text-gray-800 group-hover:text-theater-primary-700 transition-colors mb-2 line-clamp-2">
                   {post.title}
                 </h3>
                 {post.description && (

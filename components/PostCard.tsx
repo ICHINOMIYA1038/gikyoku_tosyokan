@@ -40,7 +40,7 @@ const PostCard: React.FC<PostPageProps> = ({ post }: any) => {
              {/* カテゴリーバッジ（左上） */}
              {primaryCategory && (
               <div className="absolute top-3 left-3 flex gap-1 z-10">
-                <span className="px-2.5 py-1 bg-white/90 backdrop-blur-sm border border-gray-100 text-pink-700 text-xs font-medium rounded-full shadow-sm">
+                <span className="px-2.5 py-1 bg-white/90 backdrop-blur-sm border border-gray-100 text-theater-primary-700 text-xs font-medium rounded-full shadow-sm">
                   {primaryCategory.name}
                 </span>
                 {additionalCategories > 0 && (
@@ -56,7 +56,7 @@ const PostCard: React.FC<PostPageProps> = ({ post }: any) => {
           <div className="flex-1 p-4 md:p-5 flex flex-col justify-between">
             <div>
               <div className="flex justify-between items-start mb-2">
-                 <h3 className="text-lg md:text-xl font-serif font-bold text-gray-800 group-hover:text-pink-700 transition-colors line-clamp-1 leading-snug">
+                 <h3 className="text-lg md:text-xl font-serif font-bold text-gray-800 group-hover:text-theater-primary-700 transition-colors line-clamp-1 leading-snug">
                   {post.title}
                 </h3>
               </div>
@@ -103,7 +103,7 @@ const PostCard: React.FC<PostPageProps> = ({ post }: any) => {
               {/* コメント数 */}
               {post._count?.comments > 0 && (
                 <div className="flex items-center gap-1.5 text-gray-600 text-sm">
-                  <FaCommentDots className="text-pink-400/70" />
+                  <FaCommentDots className="text-theater-primary-400/70" />
                   <span className="font-medium">{post._count.comments}</span>
                 </div>
               )}
@@ -119,7 +119,7 @@ const PostCard: React.FC<PostPageProps> = ({ post }: any) => {
                   )}
                   {post.woman > 0 && (
                     <div className="flex items-center gap-1">
-                      <span className="w-2 h-2 rounded-full bg-pink-400"></span>
+                      <span className="w-2 h-2 rounded-full bg-theater-primary-400"></span>
                       <span>女 {post.woman}</span>
                     </div>
                   )}

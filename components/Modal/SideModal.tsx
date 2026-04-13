@@ -43,7 +43,7 @@ const SideModal = ({ closeModal }: any) => {
                   onClick={() => handleTabClick(index)}
                   className={`cursor-pointer ${
                     activeTab === index
-                      ? "bg-blue-500 text-white"
+                      ? "bg-theater-primary-600 text-white"
                       : "bg-gray-200 text-gray-600"
                   } p-2`}
                 >
