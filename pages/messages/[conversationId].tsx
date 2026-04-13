@@ -80,7 +80,8 @@ export default function ConversationPage({ conversationId }: Props) {
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
+    // Ctrl+Enter or Cmd+Enter で送信
+    if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
       e.preventDefault();
       handleSend();
     }
@@ -182,7 +183,7 @@ export default function ConversationPage({ conversationId }: Props) {
                 e.target.style.height = Math.min(e.target.scrollHeight, 120) + 'px';
               }}
               onKeyDown={handleKeyDown}
-              placeholder="メッセージを入力... (Enterで送信)"
+              placeholder="メッセージを入力..."
               rows={1}
               maxLength={2000}
               className="flex-1 px-4 py-2.5 border border-gray-300 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-theater-primary-200 focus:border-theater-primary-400 resize-none leading-relaxed"
@@ -200,7 +201,7 @@ export default function ConversationPage({ conversationId }: Props) {
               <FaPaperPlane className="text-sm" />
             </button>
           </div>
-          <p className="text-[10px] text-gray-400 mt-1 text-right">Shift+Enterで改行</p>
+          <p className="text-[10px] text-gray-400 mt-1 text-right">Ctrl+Enterで送信</p>
         </div>
       </div>
     </Layout>
