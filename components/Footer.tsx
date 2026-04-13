@@ -1,67 +1,70 @@
 import React from "react";
 import Link from "next/link";
+
+const footerLinks = [
+  {
+    title: "このサイトについて",
+    links: [
+      { href: "/support/aboutus", label: "運営者概要" },
+      { href: "/support/press-release", label: "プレスリリース" },
+      { href: "/authors", label: "作者一覧" },
+      { href: "/categories", label: "カテゴリー一覧" },
+      { href: "/announcements", label: "上演告知" },
+    ],
+  },
+  {
+    title: "ヘルプ",
+    links: [
+      { href: "/support/contact", label: "お問い合わせ" },
+      { href: "/support/privacy-policy", label: "プライバシーポリシー" },
+      { href: "/support/posting-request", label: "掲載リクエスト" },
+    ],
+  },
+  {
+    title: "利用規約等",
+    links: [
+      { href: "/support/tos", label: "利用規約" },
+      { href: "/support/copyright", label: "著作権について" },
+      { href: "/support/content-removal", label: "権利侵害の申告" },
+      { href: "/sitemap.xml", label: "サイトマップ" },
+    ],
+  },
+];
+
 const Footer: React.FC = () => {
   return (
-    <footer className="bg-theater-primary-700 text-white" role="contentinfo" aria-label="サイトフッター">
-      <div className="container mx-auto py-6">
-        <Link href="/" className="block mb-4" aria-label="戯曲図書館ホームへ">
-          <img src="/logo.png" alt="戯曲図書館ロゴ" className="w-16 h-auto" width="64" height="64" />
+    <footer className="bg-theater-neutral-900 text-gray-300" role="contentinfo" aria-label="サイトフッター">
+      <div className="container mx-auto px-4 py-10">
+        <Link href="/" className="block mb-6" aria-label="戯曲図書館ホームへ">
+          <img src="/logo.png" alt="戯曲図書館ロゴ" className="w-14 h-auto opacity-80" width="56" height="56" />
         </Link>
-        <nav className="flex flex-wrap" aria-label="フッターナビゲーション">
-          <div className="w-full md:w-1/3 px-4 mb-8 md:mb-0">
-            <h2 className="text-lg font-semibold mb-4">このサイトについて</h2>
-            <ul role="list">
-              <li className="mb-2">
-                <Link href="/support/aboutus" className="hover:underline">運営者概要</Link>
-              </li>
-              <li className="mb-2">
-                <Link href="/support/press-release" className="hover:underline">プレスリリース</Link>
-              </li>
-              <li className="mb-2">
-                <Link href="/authors" className="hover:underline">作者一覧</Link>
-              </li>
-              <li className="mb-2">
-                <Link href="/categories" className="hover:underline">カテゴリー一覧</Link>
-              </li>
-              <li className="mb-2">
-                <Link href="/announcements" className="hover:underline">上演告知</Link>
-              </li>
-            </ul>
-          </div>
-          <div className="w-full md:w-1/3 px-4 mb-8 md:mb-0">
-            <h2 className="text-lg font-semibold mb-4">ヘルプ</h2>
-            <ul role="list">
-              <li className="mb-2">
-                <Link href="/support/contact" className="hover:underline">お問い合わせ</Link>
-              </li>
-              <li className="mb-2">
-                <Link href="/support/privacy-policy" className="hover:underline">プライバシーポリシー</Link>
-              </li>
-              <li className="mb-2">
-                <Link href="/support/posting-request" className="hover:underline">掲載リクエスト</Link>
-              </li>
-            </ul>
-          </div>
-          <div className="w-full md:w-1/3 px-4">
-            <h2 className="text-lg font-semibold mb-4">利用規約等</h2>
-            <ul role="list">
-              <li className="mb-2">
-                <Link href="/support/tos" className="hover:underline">利用規約</Link>
-              </li>
-              <li className="mb-2">
-                <Link href="/support/copyright" className="hover:underline">著作権について</Link>
-              </li>
-              <li className="mb-2">
-                <Link href="/support/content-removal" className="hover:underline">権利侵害の申告</Link>
-              </li>
-              <li className="mb-2">
-                <Link href="/sitemap.xml" className="hover:underline">サイトマップ</Link>
-              </li>
-            </ul>
-          </div>
+        <nav className="grid grid-cols-1 md:grid-cols-3 gap-8" aria-label="フッターナビゲーション">
+          {footerLinks.map((section) => (
+            <div key={section.title}>
+              <h2 className="text-sm font-semibold text-white uppercase tracking-wider mb-3">
+                {section.title}
+              </h2>
+              <ul className="space-y-2">
+                {section.links.map((link) => (
+                  <li key={link.href}>
+                    <Link
+                      href={link.href}
+                      className="text-sm text-gray-400 hover:text-white transition-colors"
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
         </nav>
       </div>
-      <p className="text-center py-4">© 2026 戯曲図書館 All Rights Reserved.</p>
+      <div className="border-t border-gray-800">
+        <p className="text-center py-4 text-xs text-gray-500">
+          © 2026 戯曲図書館 All Rights Reserved.
+        </p>
+      </div>
     </footer>
   );
 };

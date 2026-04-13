@@ -9,7 +9,7 @@ const Answer = ({ options, handleAnswer }: any) => {
         <button
           key={index}
           onClick={() => handleAnswer(option === options[0])}
-          className="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-full"
+          className="bg-theater-primary-600 hover:bg-theater-primary-700 text-white font-semibold py-2 px-4 rounded-full"
         >
           {option}
         </button>

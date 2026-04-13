@@ -49,7 +49,7 @@ const CookieConsent: React.FC = () => {
             </button>
             <button
               onClick={handleAccept}
-              className="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors"
+              className="px-4 py-2 text-sm font-medium text-white bg-theater-primary-600 hover:bg-theater-primary-700 rounded-lg transition-colors"
             >
               同意する
             </button>

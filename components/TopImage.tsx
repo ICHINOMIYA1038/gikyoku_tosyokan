@@ -48,7 +48,7 @@ const TopImage = ({ buttonClick }: any) => {
 
             <div className="flex flex-col sm:flex-row items-center gap-4 justify-center md:justify-start">
               <button
-                className="group relative inline-flex items-center justify-center gap-2 bg-gray-900 text-white px-8 py-4 rounded-lg text-lg font-medium shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300 min-w-[200px]"
+                className="group relative inline-flex items-center justify-center gap-2 bg-theater-primary-600 text-white px-8 py-4 rounded-lg text-lg font-medium shadow-lg hover:shadow-xl hover:bg-theater-primary-700 hover:-translate-y-1 transition-all duration-300 min-w-[200px]"
                 onClick={buttonClick}
               >
                 <FaSearch className="text-pink-400 group-hover:scale-110 transition-transform" />

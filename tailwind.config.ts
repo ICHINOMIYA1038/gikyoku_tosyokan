@@ -9,18 +9,9 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // サイト全体で使用する4色のカラーパレット
-        brand: {
-          // プライマリカラー（深いピンク - ブランド色）
-          primary: "#db2777",
-          // セカンダリカラー（深い緑 - アクション）
-          secondary: "#16a34a", 
-          // ダークグレー（テキスト・影）
-          dark: "#1e293b",
-          // ライトグレー（背景）
-          light: "#f8fafc",
-        },
-        // 互換性のための既存カラーマッピング
+        // 戯曲図書館 デザインシステム
+        // Primary: ピンク系（ブランドカラー）
+        // Neutral: グレー系（テキスト・背景）
         theater: {
           primary: {
             50: "#fdf2f8",
@@ -28,18 +19,19 @@ const config: Config = {
             200: "#fbcfe8",
             300: "#f9a8d4",
             400: "#f472b6",
-            500: "#db2777",
+            500: "#ec4899",
             600: "#db2777",
             700: "#be185d",
-          },
-          secondary: {
-            500: "#16a34a",
-            600: "#16a34a",
-            700: "#15803d",
+            800: "#9d174d",
+            900: "#831843",
           },
           neutral: {
             50: "#f8fafc",
             100: "#f1f5f9",
+            200: "#e2e8f0",
+            300: "#cbd5e1",
+            400: "#94a3b8",
+            500: "#64748b",
             600: "#475569",
             700: "#334155",
             800: "#1e293b",
@@ -47,11 +39,10 @@ const config: Config = {
           },
           accent: {
             yellow: "#fbbf24",
-          }
+            green: "#16a34a",
+          },
         },
       },
-      "link-card":
-        "shadow-md cursor-pointer hover:shadow-md hover:scale-105 transition-transform duration-300 rounded-lg",
       fontFamily: {
         sans: ['"Noto Sans JP"', "sans-serif"],
         serif: ['"Shippori Mincho"', "serif"],
@@ -72,9 +63,6 @@ const config: Config = {
       },
     },
   },
-  plugins: [
-    require("@tailwindcss/line-clamp"),
-    // ...
-  ],
+  plugins: [require("@tailwindcss/line-clamp")],
 };
 export default config;

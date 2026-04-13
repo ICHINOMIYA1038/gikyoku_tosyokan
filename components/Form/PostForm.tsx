@@ -372,7 +372,7 @@ const SelectChip: React.FC<any> = ({ label }) => {
       }}
     >
       <span
-        className={`text-white p-2 m-1 rounded flex items-center ${isSelected ? "bg-blue-500" : "bg-gray-500"
+        className={`text-white p-2 m-1 rounded flex items-center ${isSelected ? "bg-theater-primary-600" : "bg-gray-500"
           }`}
       >
         {label}

@@ -109,7 +109,7 @@ const Pagination = ({ pagination, setPage, baseUrl }: any) => {
           key={pageNumber}
           className={`mx-1 py-2 px-3 rounded ${
             currentPage === pageNumber
-              ? "bg-blue-500 text-white font-bold"
+              ? "bg-theater-primary-600 text-white font-bold"
               : "text-gray-700 hover:bg-gray-300"
           } cursor-pointer transition-colors`}
           onClick={() => handlePageChange(pageNumber)}

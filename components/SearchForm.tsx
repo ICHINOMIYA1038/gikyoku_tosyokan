@@ -316,7 +316,7 @@ export default function SearchForm({
                 
                 <div className="pt-4">
                   <button
-                    className="w-full py-3 bg-gray-800 text-white font-bold rounded-lg shadow-md hover:bg-gray-900 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-center gap-2"
+                    className="w-full py-3 bg-theater-primary-600 text-white font-bold rounded-lg shadow-md hover:bg-theater-primary-700 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-center gap-2"
                     onClick={() => {
                       if (page != 1) {
                         setPage(1);
@@ -353,7 +353,7 @@ export default function SearchForm({
             
             <div className="mt-6 pt-6 border-t border-gray-100">
                <button
-                  className="w-full py-3 bg-gray-800 text-white font-bold rounded-lg shadow-md hover:bg-gray-900 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-center gap-2"
+                  className="w-full py-3 bg-theater-primary-600 text-white font-bold rounded-lg shadow-md hover:bg-theater-primary-700 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-center gap-2"
                   onClick={() => {
                     if (page != 1) {
                       setPage(1);

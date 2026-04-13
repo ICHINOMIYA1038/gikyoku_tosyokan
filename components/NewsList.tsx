@@ -10,7 +10,7 @@ interface NewsItemProps {
 
 const categoryStyles: Record<string, string> = {
   "重要": "bg-red-600",
-  "お知らせ": "bg-blue-600",
+  "お知らせ": "bg-theater-primary-600",
   "新着脚本": "bg-green-600",
   "公演情報": "bg-purple-600",
 };

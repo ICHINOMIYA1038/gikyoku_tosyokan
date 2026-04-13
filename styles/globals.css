@@ -3,18 +3,8 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 51, 65, 85; /* slate-700 */
-  --background-rgb: 253, 253, 252; /* 暖かみのあるオフホワイト */
-  --primary-rgb: 219, 39, 119; /* pink-600 */
-  --secondary-rgb: 22, 163, 74; /* green-600 */
-  
-  /* カードなどの背景色 */
-  --card-bg: 255, 255, 255;
-  
-  /* 既存変数との互換性 */
-  --primary-color: 219, 39, 119;
-  --secondary-color: 22, 163, 74;
-  --top-image-bg: 253, 242, 248;
+  --foreground-rgb: 51, 65, 85;
+  --background-rgb: 253, 253, 252;
 }
 
 body {
@@ -24,8 +14,6 @@ body {
   line-height: 1.7;
   overflow-y: scroll;
   scroll-behavior: smooth;
-  /* 紙のような質感を与える微細なノイズ（オプション） */
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
 }
 
 /* 明朝体の適用 */
@@ -41,39 +29,41 @@ img, video {
   display: block;
 }
 
-/* カードスタイル - フラットで洗練されたデザイン */
+/* ============================================
+   デザインシステム: 共通コンポーネント
+   カラー: theater-primary (ピンク系)
+   ============================================ */
+
+/* カード */
 .basic-card {
-  @apply bg-white border border-gray-100 rounded-lg shadow-sm hover:shadow-md transition-all duration-300;
+  @apply bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-all duration-300;
 }
 
 .link-card {
-  @apply shadow-sm cursor-pointer hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 rounded-lg bg-white border border-gray-100;
+  @apply shadow-sm cursor-pointer hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 rounded-lg bg-white border border-gray-200;
 }
 
 /* サポートドキュメント */
 .support-document {
-  @apply bg-white mx-auto my-6 max-w-3xl rounded-lg p-6 shadow-sm border border-gray-100;
+  @apply bg-white mx-auto my-6 max-w-3xl rounded-lg p-6 shadow-sm border border-gray-200;
 }
 
 .support-document h2 {
   @apply text-2xl font-bold mt-6 mb-4 pb-2 border-b border-gray-200 text-gray-800;
 }
+.support-document h2::after { content: none; }
 
 .support-document h3 {
   @apply text-xl font-bold mt-6 mb-3 text-gray-800;
   border-left: none;
   padding-left: 0;
 }
+.support-document h3::before { content: none; }
 
-.support-document h3::before {
-  content: none;
-}
+/* ============================================
+   見出しスタイル
+   ============================================ */
 
-/* --------------------------
-   新しい見出しデザイン
-   -------------------------- */
-
-/* h2: 洗練された下線スタイル */
 h2 {
   @apply text-2xl md:text-3xl font-bold my-6 text-gray-800 relative;
   padding-bottom: 0.35em;
@@ -84,17 +74,14 @@ h2::after {
   position: absolute;
   left: 0;
   bottom: 0;
-  width: 60px; /* 短めのライン */
+  width: 60px;
   height: 3px;
-  background: rgb(var(--primary-color));
+  @apply bg-theater-primary-600;
   opacity: 0.8;
 }
 
-h2::before {
-  content: none; /* 既存の装飾を削除 */
-}
+h2::before { content: none; }
 
-/* コンテキストに応じたh2調整 */
 .post-section h2,
 .content-section h2 {
   @apply text-2xl font-bold mb-4 text-gray-800;
@@ -106,86 +93,79 @@ h2::before {
   display: none;
 }
 
-/* h3: シンプルな左ボーダー */
 h3 {
   @apply text-lg md:text-xl font-semibold my-4 text-gray-800;
   padding: 0 0 0 1rem;
-  border-left: 3px solid rgb(var(--primary-color));
+  border-left: 3px solid theme('colors.theater.primary.600');
   background: transparent;
 }
+h3::before { content: none; }
 
-h3::before {
-  content: none;
-}
-
-/* h4: ミニマルなスタイル */
 h4 {
   @apply text-base md:text-lg font-bold my-3 text-gray-700;
   padding: 0;
 }
+h4::before { content: none; }
 
-h4::before {
-  content: none;
-}
-
-/* --------------------------
-   コンポーネントスタイル
-   -------------------------- */
+/* ============================================
+   コンポーネント
+   ============================================ */
 
 .post-section {
-  @apply my-6 bg-transparent; /* 背景色を削除して余白を活かす */
+  @apply my-6 bg-transparent;
 }
 
 .section-title {
   @apply text-2xl md:text-3xl font-bold mb-6 text-center text-gray-800 flex flex-col items-center justify-center;
   border-bottom: none;
 }
-
 .section-title::before {
-  content: "✦"; /* 装飾アイコン */
+  content: "✦";
   font-size: 0.6em;
-  color: rgb(var(--primary-color));
+  @apply text-theater-primary-600;
   margin-bottom: 0.5rem;
-  margin-right: 0;
-  width: auto;
-  height: auto;
-  background: none;
 }
-
 .section-title::after {
   content: "";
   display: block;
   width: 40px;
   height: 1px;
-  background: #cbd5e1; /* gray-300 */
+  @apply bg-gray-300;
   margin-top: 0.75rem;
 }
 
 .info-badge {
-  @apply bg-white px-3 py-1.5 rounded border border-gray-200 text-sm flex items-center gap-2 transition-colors duration-200;
+  @apply bg-white px-3 py-1.5 rounded-lg border border-gray-200 text-sm flex items-center gap-2 transition-colors duration-200;
 }
-
 .info-badge-label {
   @apply text-gray-500 text-xs;
 }
-
 .info-badge-value {
   @apply font-bold text-gray-700;
 }
 
 .author-link {
-  @apply text-gray-700 hover:text-pink-600 transition-colors duration-200 flex items-center gap-1 border-b border-transparent hover:border-pink-300;
+  @apply text-gray-700 hover:text-theater-primary-600 transition-colors duration-200 flex items-center gap-1 border-b border-transparent hover:border-theater-primary-300;
 }
 
 .category-badge {
-  @apply bg-white border border-gray-200 rounded px-3 py-1 text-sm text-gray-600 hover:border-pink-300 hover:text-pink-600 transition-all duration-200 shadow-sm;
+  @apply bg-white border border-gray-200 rounded-lg px-3 py-1 text-sm text-gray-600 hover:border-theater-primary-300 hover:text-theater-primary-600 transition-all duration-200 shadow-sm;
 }
 
-/* ボタン類の共通スタイル */
+/* ボタン */
 .btn-primary {
-  @apply bg-pink-600 text-white px-6 py-3 rounded-md font-medium shadow-md hover:bg-pink-700 hover:shadow-lg transition-all duration-300;
+  @apply bg-theater-primary-600 text-white px-6 py-3 rounded-lg font-medium shadow-sm hover:bg-theater-primary-700 hover:shadow-md transition-all duration-200;
+}
+
+.btn-secondary {
+  @apply bg-theater-neutral-800 text-white px-6 py-3 rounded-lg font-medium shadow-sm hover:bg-theater-neutral-900 hover:shadow-md transition-all duration-200;
 }
 
 .btn-outline {
-  @apply bg-transparent border border-gray-300 text-gray-700 px-6 py-3 rounded-md font-medium hover:border-gray-400 hover:bg-gray-50 transition-all duration-300;
+  @apply bg-transparent border border-gray-300 text-gray-700 px-6 py-3 rounded-lg font-medium hover:border-gray-400 hover:bg-gray-50 transition-all duration-200;
+}
+
+/* フォーム入力 */
+.input-base {
+  @apply w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-theater-primary-200 focus:border-theater-primary-400 transition-colors;
 }

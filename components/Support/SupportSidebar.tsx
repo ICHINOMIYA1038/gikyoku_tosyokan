@@ -11,8 +11,8 @@ const SupportSidebar = ({ now }: any) => {
           <Link href="/support/about">
             <div
               className={`p-2 cursor-pointer ${
-                now === "about" ? "bg-blue-500 text-white" : "bg-white"
-              } hover:bg-blue-500 hover:text-white`}
+                now === "about" ? "bg-theater-primary-600 text-white" : "bg-white"
+              } hover:bg-theater-primary-600 hover:text-white`}
             >
               サイト概要
             </div>
@@ -22,8 +22,8 @@ const SupportSidebar = ({ now }: any) => {
           <Link href="/support/aboutus">
             <div
               className={`p-2 cursor-pointer ${
-                now === "aboutus" ? "bg-blue-500 text-white" : "bg-white"
-              } hover:bg-blue-500 hover:text-white`}
+                now === "aboutus" ? "bg-theater-primary-600 text-white" : "bg-white"
+              } hover:bg-theater-primary-600 hover:text-white`}
             >
               運営者概要
             </div>
@@ -34,8 +34,8 @@ const SupportSidebar = ({ now }: any) => {
           <Link href="/support/contact">
             <div
               className={`p-2 cursor-pointer ${
-                now === "contact" ? "bg-blue-500 text-white" : "bg-white"
-              } hover:bg-blue-500 hover:text-white`}
+                now === "contact" ? "bg-theater-primary-600 text-white" : "bg-white"
+              } hover:bg-theater-primary-600 hover:text-white`}
             >
               お問い合わせ
             </div>
@@ -46,8 +46,8 @@ const SupportSidebar = ({ now }: any) => {
           <Link href="/support/press-release">
             <div
               className={`p-2 cursor-pointer ${
-                now === "press-release" ? "bg-blue-500 text-white" : "bg-white"
-              } hover:bg-blue-500 hover:text-white`}
+                now === "press-release" ? "bg-theater-primary-600 text-white" : "bg-white"
+              } hover:bg-theater-primary-600 hover:text-white`}
             >
               プレスリリース
             </div>
@@ -58,8 +58,8 @@ const SupportSidebar = ({ now }: any) => {
           <Link href="/support/copyright">
             <div
               className={`p-2 cursor-pointer ${
-                now === "copyright" ? "bg-blue-500 text-white" : "bg-white"
-              } hover:bg-blue-500 hover:text-white`}
+                now === "copyright" ? "bg-theater-primary-600 text-white" : "bg-white"
+              } hover:bg-theater-primary-600 hover:text-white`}
             >
               著作権に関して
             </div>
@@ -71,9 +71,9 @@ const SupportSidebar = ({ now }: any) => {
             <div
               className={`p-2 cursor-pointer ${
                 now === "posting-request"
-                  ? "bg-blue-500 text-white"
+                  ? "bg-theater-primary-600 text-white"
                   : "bg-white"
-              } hover:bg-blue-500 hover:text-white`}
+              } hover:bg-theater-primary-600 hover:text-white`}
             >
               掲載依頼
             </div>
@@ -85,8 +85,8 @@ const SupportSidebar = ({ now }: any) => {
           <Link href="/support/voluntary">
             <div
               className={`p-2 cursor-pointer ${
-                now === "voluntary" ? "bg-blue-500 text-white" : "bg-white"
-              } hover:bg-blue-500 hover:text-white`}
+                now === "voluntary" ? "bg-theater-primary-600 text-white" : "bg-white"
+              } hover:bg-theater-primary-600 hover:text-white`}
             >
               ボランティア募集
             </div>
@@ -97,8 +97,8 @@ const SupportSidebar = ({ now }: any) => {
           <Link href="/support/privacy-policy">
             <div
               className={`p-2 cursor-pointer ${
-                now === "privacy-policy" ? "bg-blue-500 text-white" : "bg-white"
-              } hover:bg-blue-500 hover:text-white`}
+                now === "privacy-policy" ? "bg-theater-primary-600 text-white" : "bg-white"
+              } hover:bg-theater-primary-600 hover:text-white`}
             >
               プライバシーポリシー
             </div>
@@ -108,8 +108,8 @@ const SupportSidebar = ({ now }: any) => {
           <Link href="/support/tos">
             <div
               className={`p-2 cursor-pointer ${
-                now === "tos" ? "bg-blue-500 text-white" : "bg-white"
-              } hover:bg-blue-500 hover:text-white`}
+                now === "tos" ? "bg-theater-primary-600 text-white" : "bg-white"
+              } hover:bg-theater-primary-600 hover:text-white`}
             >
               利用規約
             </div>
@@ -119,8 +119,8 @@ const SupportSidebar = ({ now }: any) => {
           <Link href="/support/content-removal">
             <div
               className={`p-2 cursor-pointer ${
-                now === "content-removal" ? "bg-blue-500 text-white" : "bg-white"
-              } hover:bg-blue-500 hover:text-white`}
+                now === "content-removal" ? "bg-theater-primary-600 text-white" : "bg-white"
+              } hover:bg-theater-primary-600 hover:text-white`}
             >
               権利侵害の申告
             </div>
