@@ -6,6 +6,7 @@ import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/authOptions';
 import Link from 'next/link';
 import { useState } from 'react';
+import { useRouter } from 'next/router';
 import { FaTheaterMasks, FaMapMarkerAlt, FaClock, FaYenSign, FaUsers, FaCalendarAlt, FaArrowLeft, FaPaperPlane, FaSignInAlt } from 'react-icons/fa';
 
 interface Props {
@@ -16,6 +17,7 @@ interface Props {
 }
 
 export default function RecruitDetailPage({ recruitment: r, isOwner, hasApplied, isLoggedIn }: Props) {
+  const router = useRouter();
   const [showApplyForm, setShowApplyForm] = useState(false);
   const [applyMessage, setApplyMessage] = useState('');
   const [applying, setApplying] = useState(false);
@@ -32,9 +34,10 @@ export default function RecruitDetailPage({ recruitment: r, isOwner, hasApplied,
         body: JSON.stringify({ message: applyMessage }),
       });
       if (res.ok) {
-        setApplied(true);
-        setShowApplyForm(false);
-        setResult('応募しました。メッセージで募集者とやりとりできます。');
+        const data = await res.json();
+        // 応募成功 → メッセージ画面に直接遷移
+        router.push(`/messages/${data.conversationId}`);
+        return;
       } else {
         const err = await res.json();
         setResult(err.error || '応募に失敗しました');
