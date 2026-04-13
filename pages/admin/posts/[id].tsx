@@ -375,7 +375,7 @@ const SelectChip: React.FC<any> = ({ label }) => {
     >
       <span
         className={`text-white p-2 m-1 rounded flex items-center ${
-          isSelected ? "bg-blue-500" : "bg-gray-500"
+          isSelected ? "bg-theater-primary-600" : "bg-gray-500"
         }`}
       >
         {label}
@@ -385,7 +385,7 @@ const SelectChip: React.FC<any> = ({ label }) => {
 };
 
 const Chip: React.FC<ChipProps> = ({ label, onRemove }) => (
-  <span className="bg-blue-500 text-white p-2 m-1 rounded flex items-center">
+  <span className="bg-theater-primary-600 text-white p-2 m-1 rounded flex items-center">
     {label}
     <button onClick={onRemove} className="ml-2">
       ×

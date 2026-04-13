@@ -17,7 +17,7 @@ type PostPageProps = {
 export const PostHero: React.FC<PostPageProps> = ({ post }) => {
   return (
     <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-      <div className="bg-gradient-to-r from-theater-primary-50 to-theater-secondary-50 p-5 md:p-6 lg:p-8">
+      <div className="bg-gradient-to-r from-theater-primary-50 to-theater-primary-50 p-5 md:p-6 lg:p-8">
         {/* 評価 */}
         {post.averageRating > 0 && (
           <div className="mb-4">

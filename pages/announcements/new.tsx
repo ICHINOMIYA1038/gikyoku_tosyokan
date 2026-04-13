@@ -182,7 +182,7 @@ export default function NewAnnouncementPage() {
       <Layout>
         <div className="min-h-screen bg-gradient-to-b from-theater-neutral-50 to-white">
           {/* ヘッダーセクション */}
-          <div className="bg-gradient-to-r from-theater-primary-100 via-theater-secondary-50 to-theater-primary-100 py-8 px-4">
+          <div className="bg-gradient-to-r from-theater-primary-100 via-theater-primary-50 to-theater-primary-100 py-8 px-4">
             <div className="max-w-3xl mx-auto">
               <h1 className="text-3xl font-bold text-theater-neutral-900 flex items-center gap-3">
                 <FaTheaterMasks className="text-theater-primary-500" />

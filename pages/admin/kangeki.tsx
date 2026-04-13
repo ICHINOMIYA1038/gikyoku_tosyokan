@@ -481,7 +481,7 @@ export default function Home() {
       <div className="mb-4">
         <button
           onClick={() => alert(replaceValues())}
-          className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded"
+          className="bg-theater-primary-600 hover:bg-theater-primary-700 text-white font-semibold py-2 px-4 rounded"
         >
           Replace Values
         </button>

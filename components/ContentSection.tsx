@@ -105,7 +105,7 @@ const ContentSection: React.FC<ContentSectionProps> = ({ posts, authors, categor
                                                         className="w-full h-full object-cover group-hover:scale-110 transition-transform"
                                                     />
                                                 ) : (
-                                                    <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-theater-primary-100 to-theater-secondary-100">
+                                                    <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-theater-primary-100 to-theater-primary-100">
                                                         <FaTheaterMasks className="text-2xl text-theater-primary-300" />
                                                     </div>
                                                 )}
@@ -122,7 +122,7 @@ const ContentSection: React.FC<ContentSectionProps> = ({ posts, authors, categor
                                                 <div className="flex items-center gap-3 mt-2 text-xs text-theater-neutral-500">
                                                     {post.playtime > 0 && (
                                                         <span className="flex items-center gap-1">
-                                                            <FaClock className="text-theater-secondary-400" />
+                                                            <FaClock className="text-theater-primary-400" />
                                                             {post.playtime}分
                                                         </span>
                                                     )}
@@ -188,7 +188,7 @@ const ContentSection: React.FC<ContentSectionProps> = ({ posts, authors, categor
                 <div className="bg-white rounded-xl shadow-lg p-5">
                     <div className="flex items-center justify-between mb-4">
                         <h3 className="text-2xl font-bold text-theater-neutral-900 flex items-center gap-2">
-                            <FaPen className="text-theater-secondary-500" />
+                            <FaPen className="text-theater-primary-500" />
                             作者一覧
                         </h3>
                         <Link href="/authors" className="text-theater-primary-600 hover:text-theater-primary-700 text-sm font-medium flex items-center gap-1">
@@ -201,10 +201,10 @@ const ContentSection: React.FC<ContentSectionProps> = ({ posts, authors, categor
                             <Link
                                 key={author.id}
                                 href={`/authors/${author.id}`}
-                                className="p-3 bg-gradient-to-br from-theater-secondary-50 to-theater-secondary-100 rounded-lg hover:from-theater-secondary-100 hover:to-theater-secondary-200 transition-all group text-center"
+                                className="p-3 bg-gradient-to-br from-theater-primary-50 to-theater-primary-100 rounded-lg hover:from-theater-primary-100 hover:to-theater-primary-200 transition-all group text-center"
                             >
                                 <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center mx-auto mb-2 group-hover:scale-110 transition-transform">
-                                    <FaPen className="text-theater-secondary-500" />
+                                    <FaPen className="text-theater-primary-500" />
                                 </div>
                                 <p className="text-sm font-medium text-theater-neutral-800 truncate">
                                     {author.name}
@@ -231,7 +231,7 @@ const ContentSection: React.FC<ContentSectionProps> = ({ posts, authors, categor
                         </Link>
                         <Link 
                             href="/guide"
-                            className="px-8 py-3 bg-theater-secondary-500 text-white font-bold rounded-lg hover:bg-theater-secondary-600 transition-colors flex items-center gap-2 justify-center"
+                            className="px-8 py-3 bg-theater-primary-500 text-white font-bold rounded-lg hover:bg-theater-primary-600 transition-colors flex items-center gap-2 justify-center"
                         >
                             <FaStar />
                             演劇ガイドを読む

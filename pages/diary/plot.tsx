@@ -193,7 +193,7 @@ export default function PlotPageOptimized() {
           
           {/* 特徴バッジ */}
           <div className="flex flex-wrap gap-3 mb-6">
-            <span className="inline-flex items-center px-3 py-1 bg-theater-secondary-100 text-theater-secondary-700 rounded-full text-sm font-medium">
+            <span className="inline-flex items-center px-3 py-1 bg-theater-primary-100 text-theater-primary-700 rounded-full text-sm font-medium">
               <FaDownload className="mr-1" /> 即ダウンロード可能
             </span>
             <span className="inline-flex items-center px-3 py-1 bg-theater-accent-yellow/20 text-theater-neutral-800 rounded-full text-sm font-medium">
@@ -208,7 +208,7 @@ export default function PlotPageOptimized() {
           </div>
 
           {/* 使用条件 */}
-          <div className="bg-white rounded-lg p-4 border-l-4 border-theater-secondary-500">
+          <div className="bg-white rounded-lg p-4 border-l-4 border-theater-primary-500">
             <h2 className="font-bold text-lg mb-2">✅ 使用条件</h2>
             <ul className="space-y-1 text-sm text-theater-neutral-700">
               <li>✓ 上演許可申請不要</li>
@@ -310,7 +310,7 @@ export default function PlotPageOptimized() {
                     </div>
                     
                     <div className="text-right">
-                      <span className="text-theater-secondary-600 font-bold">
+                      <span className="text-theater-primary-600 font-bold">
                         今すぐ読む →
                       </span>
                     </div>
@@ -350,14 +350,14 @@ export default function PlotPageOptimized() {
         </section>
 
         {/* CTA セクション */}
-        <section className="mt-12 bg-gradient-to-r from-theater-secondary-500 to-theater-secondary-600 rounded-lg p-8 text-white text-center">
+        <section className="mt-12 bg-gradient-to-r from-theater-primary-500 to-theater-primary-600 rounded-lg p-8 text-white text-center">
           <h2 className="text-2xl font-bold mb-4">もっと多くの脚本をお探しですか？</h2>
           <p className="mb-6">
             戯曲図書館では、有料脚本も含めて1000作品以上の脚本情報を検索できます
           </p>
           <Link 
             href="/" 
-            className="inline-block bg-white text-theater-secondary-600 font-bold px-6 py-3 rounded-lg hover:bg-theater-neutral-100 transition"
+            className="inline-block bg-white text-theater-primary-600 font-bold px-6 py-3 rounded-lg hover:bg-theater-neutral-100 transition"
           >
             脚本を検索する
           </Link>

@@ -124,7 +124,7 @@ export default function Home({ news, authors, posts, categories, blogPosts, tren
                           {a.title}
                         </h3>
                         {a.theaterGroupName && (
-                          <p className="text-sm text-theater-secondary-700 mb-1">{a.theaterGroupName}</p>
+                          <p className="text-sm text-theater-primary-700 mb-1">{a.theaterGroupName}</p>
                         )}
                         {a.performanceDate && (
                           <p className="text-sm text-gray-600 mb-1">{"\uD83D\uDCC5"} {a.performanceDate}</p>

@@ -144,7 +144,7 @@ export default function AnnouncementDetailPage() {
       <Layout>
         <div className="min-h-screen bg-gradient-to-b from-theater-neutral-50 to-white">
           {/* ヘッダーセクション */}
-          <div className="bg-gradient-to-r from-theater-primary-100 via-theater-secondary-50 to-theater-primary-100 py-8 px-4">
+          <div className="bg-gradient-to-r from-theater-primary-100 via-theater-primary-50 to-theater-primary-100 py-8 px-4">
             <div className="max-w-4xl mx-auto">
               <Link
                 href="/announcements"
@@ -204,7 +204,7 @@ export default function AnnouncementDetailPage() {
                   )}
                   {announcement.theaterGroupName && (
                     <div className="flex items-start gap-3">
-                      <FaUsers className="text-theater-secondary-500 mt-1" />
+                      <FaUsers className="text-theater-primary-500 mt-1" />
                       <div>
                         <p className="font-medium">劇団・団体</p>
                         <p className="text-theater-neutral-700">{announcement.theaterGroupName}</p>
@@ -213,7 +213,7 @@ export default function AnnouncementDetailPage() {
                   )}
                   {announcement.performanceDate && (
                     <div className="flex items-start gap-3">
-                      <FaCalendarAlt className="text-theater-secondary-500 mt-1" />
+                      <FaCalendarAlt className="text-theater-primary-500 mt-1" />
                       <div>
                         <p className="font-medium">公演日時</p>
                         <p className="text-theater-neutral-700">

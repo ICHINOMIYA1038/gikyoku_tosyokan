@@ -174,7 +174,7 @@ export default function ShortPage({ posts, totalCount }: ShortPageProps) {
           </p>
           <Link
             href="/?maxPlaytime=30"
-            className="inline-block bg-blue-500 text-white px-8 py-3 rounded-lg hover:bg-blue-600 font-semibold"
+            className="inline-block bg-theater-primary-600 text-white px-8 py-3 rounded-lg hover:bg-theater-primary-700 font-semibold"
           >
             短編戯曲をもっと見る
           </Link>

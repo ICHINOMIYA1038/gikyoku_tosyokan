@@ -87,7 +87,6 @@ const getAmazonData = async () => {
 };
 
 const amazonApiHandler = async (_req: NextApiRequest, res: NextApiResponse) => {
-  console.log("ACCESS_KEY");
   try {
     //const authorizationHeader = "aaa";
     const authorizationHeader = await generateKey();

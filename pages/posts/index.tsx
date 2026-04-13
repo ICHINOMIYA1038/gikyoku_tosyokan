@@ -144,7 +144,7 @@ function PostListPage({ posts }: any) {
           {/* 装飾的な背景パターン */}
           <div className="absolute inset-0 opacity-10">
             <div className="absolute top-10 left-10 w-64 h-64 bg-white rounded-full filter blur-3xl"></div>
-            <div className="absolute bottom-10 right-10 w-96 h-96 bg-theater-secondary-400 rounded-full filter blur-3xl"></div>
+            <div className="absolute bottom-10 right-10 w-96 h-96 bg-theater-primary-400 rounded-full filter blur-3xl"></div>
           </div>
 
           <div className="relative max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8">

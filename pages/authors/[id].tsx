@@ -31,13 +31,13 @@ function AuthorPage({ author }: any) {
       
       <div className="min-h-screen bg-gradient-to-b from-theater-neutral-50 to-white">
         {/* ヒーローセクション */}
-        <div className="bg-gradient-to-r from-theater-secondary-100 to-theater-secondary-50 py-12 px-4">
+        <div className="bg-gradient-to-r from-theater-primary-100 to-theater-primary-50 py-12 px-4">
           <div className="max-w-6xl mx-auto">
             <div className="flex items-start gap-6">
               {/* アバター部分 */}
               <div className="hidden md:block">
                 <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center shadow-lg">
-                  <FaUser className="text-4xl text-theater-secondary-500" />
+                  <FaUser className="text-4xl text-theater-primary-500" />
                 </div>
               </div>
               
@@ -49,14 +49,14 @@ function AuthorPage({ author }: any) {
                 
                 {author.group && (
                   <div className="flex items-center gap-2 text-theater-neutral-700 mb-4">
-                    <FaUsers className="text-theater-secondary-400" />
+                    <FaUsers className="text-theater-primary-400" />
                     <span className="text-lg">{author.group}</span>
                   </div>
                 )}
                 
                 <div className="flex flex-wrap gap-4 text-theater-neutral-700">
                   <div className="flex items-center gap-2">
-                    <FaBook className="text-theater-secondary-400" />
+                    <FaBook className="text-theater-primary-400" />
                     <span>{postCount}作品</span>
                   </div>
                   {author.website && (
@@ -64,7 +64,7 @@ function AuthorPage({ author }: any) {
                       href={author.website}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-2 text-theater-secondary-600 hover:text-theater-secondary-700 transition-colors"
+                      className="flex items-center gap-2 text-theater-primary-600 hover:text-theater-primary-700 transition-colors"
                     >
                       <FaGlobe />
                       <span>公式サイト</span>
@@ -82,7 +82,7 @@ function AuthorPage({ author }: any) {
           {(author.profile || author.website) && (
             <div className="bg-white rounded-lg shadow-md p-6 mb-8">
               <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
-                <FaUser className="text-theater-secondary-500" />
+                <FaUser className="text-theater-primary-500" />
                 プロフィール
               </h2>
               
@@ -104,7 +104,7 @@ function AuthorPage({ author }: any) {
           <div className="bg-white rounded-lg shadow-md p-6">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-2xl font-bold text-theater-neutral-900 flex items-center gap-2">
-                <FaTheaterMasks className="text-theater-secondary-500" />
+                <FaTheaterMasks className="text-theater-primary-500" />
                 作品一覧
               </h2>
               <span className="text-sm text-theater-neutral-600">
@@ -130,7 +130,7 @@ function AuthorPage({ author }: any) {
 
           {/* 関連情報セクション */}
           <div className="mt-8 grid md:grid-cols-2 gap-6">
-            <div className="bg-theater-secondary-50 rounded-lg p-6">
+            <div className="bg-theater-primary-50 rounded-lg p-6">
               <h3 className="text-lg font-bold mb-4 text-theater-neutral-900">
                 📚 作品について
               </h3>

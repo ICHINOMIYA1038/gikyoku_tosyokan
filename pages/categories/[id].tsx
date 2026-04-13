@@ -219,7 +219,7 @@ function CategoryPage({ category }: any) {
                   <div className="text-sm text-theater-neutral-600">作品数</div>
                 </div>
                 <div className="bg-white rounded-lg p-3 text-center">
-                  <FaClock className="text-2xl text-theater-secondary-400 mx-auto mb-1" />
+                  <FaClock className="text-2xl text-theater-primary-400 mx-auto mb-1" />
                   <div className="text-2xl font-bold text-theater-neutral-900">{stats.avgPlaytime}分</div>
                   <div className="text-sm text-theater-neutral-600">平均上演時間</div>
                 </div>
@@ -401,7 +401,7 @@ function CategoryPage({ category }: any) {
 
             {/* SEO用コンテンツ */}
             <div className="grid md:grid-cols-2 gap-6 mb-8">
-              <div className="bg-theater-secondary-50 rounded-lg p-6">
+              <div className="bg-theater-primary-50 rounded-lg p-6">
                 <h3 className="text-lg font-bold mb-4 text-theater-neutral-900">
                   📚 {category.name}作品の特徴
                 </h3>

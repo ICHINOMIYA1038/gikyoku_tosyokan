@@ -102,7 +102,7 @@ export default function AnnouncementsPage() {
       <Layout>
         <div className="min-h-screen bg-gradient-to-b from-theater-neutral-50 to-white">
           {/* ヘッダーセクション */}
-          <div className="bg-gradient-to-r from-theater-primary-100 via-theater-secondary-50 to-theater-primary-100 py-12 px-4">
+          <div className="bg-gradient-to-r from-theater-primary-100 via-theater-primary-50 to-theater-primary-100 py-12 px-4">
             <div className="max-w-6xl mx-auto">
               <div className="flex items-center justify-between mb-4">
                 <h1 className="text-3xl md:text-4xl font-bold text-theater-neutral-900 flex items-center gap-3">
@@ -161,7 +161,7 @@ export default function AnnouncementsPage() {
 
                       <div className="flex flex-wrap gap-4 mb-3 text-sm">
                         {announcement.performanceDate && (
-                          <div className="flex items-center gap-1 text-theater-secondary-600">
+                          <div className="flex items-center gap-1 text-theater-primary-600">
                             <FaCalendarAlt />
                             <span>{formatPerformanceDate(announcement.performanceDate)}</span>
                           </div>
@@ -179,7 +179,7 @@ export default function AnnouncementsPage() {
                           </div>
                         )}
                         {announcement.theaterGroupName && (
-                          <div className="flex items-center gap-1 text-theater-secondary-700">
+                          <div className="flex items-center gap-1 text-theater-primary-700">
                             <FaUsers />
                             <span>{announcement.theaterGroupName}</span>
                           </div>
