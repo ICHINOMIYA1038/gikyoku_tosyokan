@@ -14,6 +14,9 @@ on:
       - 'prisma/schema.prisma'
       - 'scripts/test-auth-*.ts'
       - 'scripts/test-features.ts'
+      - 'scripts/test-messaging.ts'
+      - 'pages/api/recruitments/**'
+      - 'pages/api/messages/**'
       - 'pages/api/favorites/**'
       - 'pages/api/account/**'
       - 'contexts/FavoritesContext.tsx'
@@ -31,6 +34,9 @@ on:
       - 'prisma/schema.prisma'
       - 'scripts/test-auth-*.ts'
       - 'scripts/test-features.ts'
+      - 'scripts/test-messaging.ts'
+      - 'pages/api/recruitments/**'
+      - 'pages/api/messages/**'
       - 'pages/api/favorites/**'
       - 'pages/api/account/**'
       - 'contexts/FavoritesContext.tsx'
@@ -95,6 +101,9 @@ jobs:
 
       - name: Run feature tests
         run: npx tsx scripts/test-features.ts
+
+      - name: Run messaging tests
+        run: npx tsx scripts/test-messaging.ts
 
       - name: TypeScript type check
         run: npx tsc --noEmit
