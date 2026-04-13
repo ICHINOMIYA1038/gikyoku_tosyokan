@@ -1,7 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
 import Layout from '@/components/Layout';
 import { useRouter } from 'next/router';
-import { FaTheaterMasks, FaCalendarAlt, FaMapMarkerAlt, FaYenSign, FaPhone, FaUser, FaInfoCircle, FaBook, FaUsers } from 'react-icons/fa';
+import { useSession } from 'next-auth/react';
+import Link from 'next/link';
+import { FaTheaterMasks, FaCalendarAlt, FaMapMarkerAlt, FaYenSign, FaPhone, FaUser, FaInfoCircle, FaBook, FaUsers, FaSignInAlt } from 'react-icons/fa';
 import Seo from '@/components/seo';
 
 type PostSuggestion = {
@@ -12,6 +14,7 @@ type PostSuggestion = {
 
 export default function NewAnnouncementPage() {
   const router = useRouter();
+  const { data: session, status } = useSession();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     title: '',
@@ -195,6 +198,40 @@ export default function NewAnnouncementPage() {
           </div>
 
           <div className="max-w-3xl mx-auto px-4 py-8">
+            {/* 未ログイン時: ログイン誘導 */}
+            {status !== 'loading' && !session && (
+              <div className="bg-white rounded-lg shadow-md p-8 text-center">
+                <div className="w-16 h-16 bg-theater-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <FaSignInAlt className="text-2xl text-theater-primary-600" />
+                </div>
+                <h2 className="text-xl font-bold text-gray-900 mb-2">ログインが必要です</h2>
+                <p className="text-sm text-gray-600 mb-6">
+                  公演告知を投稿するにはログインが必要です。<br />
+                  ログインすると、投稿した告知の管理や編集ができます。
+                </p>
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+                  <Link
+                    href="/auth/signin?callbackUrl=/announcements/new"
+                    className="inline-flex items-center gap-2 px-6 py-3 bg-theater-primary-600 hover:bg-theater-primary-700 text-white rounded-lg font-medium transition-colors"
+                  >
+                    <FaSignInAlt />
+                    ログインして投稿
+                  </Link>
+                  <Link
+                    href="/auth/signup?callbackUrl=/announcements/new"
+                    className="inline-flex items-center gap-2 px-6 py-3 border border-gray-300 text-gray-700 hover:bg-gray-50 rounded-lg font-medium transition-colors"
+                  >
+                    新規登録（無料）
+                  </Link>
+                </div>
+                <p className="text-xs text-gray-400 mt-4">
+                  Googleアカウントで簡単に登録できます
+                </p>
+              </div>
+            )}
+
+            {/* ログイン済み: 投稿フォーム */}
+            {session && (
             <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-md p-6 space-y-6">
               {/* 注意事項 */}
               <div className="bg-theater-accent-yellow/10 border-l-4 border-theater-accent-yellow p-4 rounded">
@@ -426,27 +463,22 @@ export default function NewAnnouncementPage() {
                 )}
               </div>
 
-              {/* 投稿者名 */}
+              {/* 投稿者情報（ログインユーザー） */}
               <div>
-                <label htmlFor="authorName" className="block text-sm font-bold text-theater-neutral-900 mb-2">
+                <label className="block text-sm font-bold text-theater-neutral-900 mb-2">
                   <FaUser className="inline mr-1" />
-                  投稿者名
+                  投稿者
                 </label>
-                <input
-                  type="text"
-                  id="authorName"
-                  name="authorName"
-                  value={formData.authorName}
-                  onChange={handleChange}
-                  placeholder="未入力の場合は「名無しさん」になります"
-                  className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-theater-primary-500 ${
-                    errors.authorName ? 'border-red-500' : 'border-gray-300'
-                  }`}
-                  maxLength={50}
-                />
-                {errors.authorName && (
-                  <p className="text-red-500 text-sm mt-1">{errors.authorName}</p>
-                )}
+                <div className="flex items-center gap-3 px-4 py-3 bg-theater-primary-50 border border-theater-primary-200 rounded-lg">
+                  {session.user.image && (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={session.user.image} alt="" className="w-8 h-8 rounded-full" />
+                  )}
+                  <div>
+                    <p className="text-sm font-medium text-gray-900">{session.user.name}</p>
+                    <p className="text-xs text-gray-500">ログイン中のアカウントで投稿されます</p>
+                  </div>
+                </div>
               </div>
 
               {/* 送信ボタン */}
@@ -467,6 +499,7 @@ export default function NewAnnouncementPage() {
                 </button>
               </div>
             </form>
+            )}
           </div>
         </div>
       </Layout>

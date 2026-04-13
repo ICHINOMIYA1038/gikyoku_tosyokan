@@ -118,7 +118,7 @@ export default function AnnouncementsPage() {
                 </Link>
               </div>
               <p className="text-theater-neutral-700 text-lg">
-                演劇・舞台の公演情報を自由に投稿できます。どなたでも無料でご利用いただけます。
+                演劇・舞台の公演情報を自由に投稿できます。投稿にはログインが必要です。
               </p>
             </div>
           </div>

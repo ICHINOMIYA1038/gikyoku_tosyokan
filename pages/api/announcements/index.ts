@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { prisma } from '@/lib/prisma';
-import { getAuth } from '@/lib/auth';
+import { getAuth, requireAuth } from '@/lib/auth';
 
 export default async function handler(
   req: NextApiRequest,
@@ -57,6 +57,10 @@ export default async function handler(
       res.status(500).json({ error: 'Failed to fetch announcements' });
     }
   } else if (req.method === 'POST') {
+    // ログイン必須
+    const session = await requireAuth(req, res);
+    if (!session) return;
+
     try {
       const {
         title,
@@ -65,7 +69,6 @@ export default async function handler(
         venue,
         ticketPrice,
         contactInfo,
-        authorName,
         postId,
         theaterGroupName,
         scriptTitle,
@@ -88,17 +91,13 @@ export default async function handler(
         }
       }
 
-      // ログインユーザーの場合、userIdとdisplayNameを紐付け
-      const session = await getAuth(req, res);
-      const userId = session?.user?.id ?? null;
-      let displayAuthor = authorName || '名無しさん';
-      if (userId) {
-        const dbUser = await prisma.user.findUnique({
-          where: { id: userId },
-          select: { displayName: true, name: true },
-        });
-        displayAuthor = dbUser?.displayName || dbUser?.name || displayAuthor;
-      }
+      // ログインユーザーのdisplayNameを使用
+      const userId = session.user.id;
+      const dbUser = await prisma.user.findUnique({
+        where: { id: userId },
+        select: { displayName: true, name: true },
+      });
+      const displayAuthor = dbUser?.displayName || dbUser?.name || session.user.name || 'ユーザー';
 
       const announcement = await prisma.announcement.create({
         data: {
