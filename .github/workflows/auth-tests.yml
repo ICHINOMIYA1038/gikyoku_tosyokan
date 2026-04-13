@@ -13,6 +13,10 @@ on:
       - 'components/Comments.tsx'
       - 'prisma/schema.prisma'
       - 'scripts/test-auth-*.ts'
+      - 'scripts/test-features.ts'
+      - 'pages/api/favorites/**'
+      - 'pages/api/account/**'
+      - 'contexts/FavoritesContext.tsx'
       - '.github/workflows/auth-tests.yml'
   pull_request:
     branches: [main]
@@ -26,6 +30,10 @@ on:
       - 'components/Comments.tsx'
       - 'prisma/schema.prisma'
       - 'scripts/test-auth-*.ts'
+      - 'scripts/test-features.ts'
+      - 'pages/api/favorites/**'
+      - 'pages/api/account/**'
+      - 'contexts/FavoritesContext.tsx'
 
 jobs:
   auth-tests:
@@ -84,6 +92,9 @@ jobs:
 
       - name: Run security tests
         run: npx tsx scripts/test-auth-security.ts
+
+      - name: Run feature tests
+        run: npx tsx scripts/test-features.ts
 
       - name: TypeScript type check
         run: npx tsc --noEmit
