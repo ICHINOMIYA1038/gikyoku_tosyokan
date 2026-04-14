@@ -4,10 +4,11 @@ import Seo from "@/components/seo";
 import SupportLayout from "@/components/SupportLayout";
 import StructuredData from "@/components/StructuredData";
 import Link from "next/link";
-import { useRouter } from "next/router";
+import { useSession } from "next-auth/react";
+import { FaSignInAlt } from "react-icons/fa";
 
 function Home() {
-  const router = useRouter();
+  const { data: session, status } = useSession();
 
   return (
     <SupportLayout now="posting-request">
@@ -52,7 +53,29 @@ function Home() {
         </p>
         <p>また、精査した結果、掲載できない場合もございます。</p>
         <div className="mb-5"></div>
-        <ContactForm />
+
+        {status !== 'loading' && !session ? (
+          <div className="bg-theater-primary-50 border border-theater-primary-200 rounded-lg p-6 text-center">
+            <p className="text-sm text-gray-700 mb-4">掲載依頼にはログインが必要です</p>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+              <Link
+                href="/auth/signin?callbackUrl=/support/posting-request"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-theater-primary-600 hover:bg-theater-primary-700 text-white rounded-lg font-medium transition-colors"
+              >
+                <FaSignInAlt />
+                ログインして依頼する
+              </Link>
+              <Link
+                href="/auth/signup?callbackUrl=/support/posting-request"
+                className="inline-flex items-center gap-2 px-6 py-3 border border-gray-300 text-gray-700 hover:bg-gray-50 rounded-lg font-medium transition-colors"
+              >
+                新規登録（無料）
+              </Link>
+            </div>
+          </div>
+        ) : session ? (
+          <ContactForm />
+        ) : null}
       </div>
     </SupportLayout>
   );

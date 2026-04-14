@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { NextApiRequest, NextApiResponse } from "next";
-import { getAuth } from "@/lib/auth";
+import { requireAuth } from "@/lib/auth";
 
 /**
  * コメント投稿API
@@ -29,18 +29,15 @@ export default async function handler(
     return res.status(400).json({ error: "投稿先IDが不正です" });
   }
 
-  const session = await getAuth(req, res);
-  const userId = session?.user?.id ?? null;
+  const session = await requireAuth(req, res);
+  if (!session) return;
 
-  // ログインユーザーはdisplayName > name の優先度でプロフィール名を使う（なりすまし防止）
-  let displayAuthor = author || "名無しさん";
-  if (userId) {
-    const dbUser = await prisma.user.findUnique({
-      where: { id: userId },
-      select: { displayName: true, name: true },
-    });
-    displayAuthor = dbUser?.displayName || dbUser?.name || displayAuthor;
-  }
+  const userId = session.user.id;
+  const dbUser = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { displayName: true, name: true },
+  });
+  const displayAuthor = dbUser?.displayName || dbUser?.name || session.user.name || "ユーザー";
 
   try {
     let comment;
@@ -52,7 +49,7 @@ export default async function handler(
           commentType: commentType || null,
           deleted: false,
           post: { connect: { id: targetid } },
-          ...(userId ? { user: { connect: { id: userId } } } : {}),
+          user: { connect: { id: userId } },
         },
         include: {
           user: { select: { id: true, name: true, displayName: true, image: true, avatarUrl: true } },
@@ -65,7 +62,7 @@ export default async function handler(
           content,
           deleted: false,
           parentComment: { connect: { id: targetid } },
-          ...(userId ? { user: { connect: { id: userId } } } : {}),
+          user: { connect: { id: userId } },
         },
         include: {
           user: { select: { id: true, name: true, displayName: true, image: true, avatarUrl: true } },

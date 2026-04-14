@@ -347,18 +347,29 @@ const Comments = ({ comments: initialComments, postid, postTitle, inline = false
           <p className="text-sm text-gray-400 mb-4">
             まだコメントはありません
           </p>
-          <button
-            className="inline-flex items-center gap-1.5 px-6 py-3 bg-theater-primary-600 hover:bg-theater-primary-700 active:bg-theater-primary-800 text-white text-sm font-bold rounded-full transition-colors min-h-[44px]"
-            onClick={() => setShowForm(true)}
-          >
-            <FontAwesomeIcon icon={faPaperPlane} className="w-3 h-3" />
-            最初のコメントを書く
-          </button>
+          {session ? (
+            <button
+              className="inline-flex items-center gap-1.5 px-6 py-3 bg-theater-primary-600 hover:bg-theater-primary-700 active:bg-theater-primary-800 text-white text-sm font-bold rounded-full transition-colors min-h-[44px]"
+              onClick={() => setShowForm(true)}
+            >
+              <FontAwesomeIcon icon={faPaperPlane} className="w-3 h-3" />
+              最初のコメントを書く
+            </button>
+          ) : (
+            <Link
+              href={`/auth/signup`}
+              className="inline-flex items-center gap-1.5 px-6 py-3 bg-theater-primary-600 hover:bg-theater-primary-700 text-white text-sm font-bold rounded-full transition-colors min-h-[44px]"
+            >
+              <FontAwesomeIcon icon={faSignInAlt} className="w-3 h-3" />
+              ログインしてコメントする
+            </Link>
+          )}
         </div>
       )}
 
-      {/* CTA: コメントがある場合 - テキスト入力風プロンプト */}
+      {/* CTA: コメントがある場合 */}
       {comments.length > 0 && !showForm && (
+        session ? (
         <button
           className="w-full mb-5 flex items-center gap-2.5 px-4 py-3 bg-gray-50 hover:bg-gray-100 active:bg-gray-200 rounded-lg text-left transition-colors min-h-[48px] group"
           onClick={() => setShowForm(true)}
@@ -368,10 +379,21 @@ const Comments = ({ comments: initialComments, postid, postTitle, inline = false
             コメントを書く...
           </span>
         </button>
+        ) : (
+        <Link
+          href="/auth/signup"
+          className="w-full mb-5 flex items-center gap-2.5 px-4 py-3 bg-theater-primary-50 hover:bg-theater-primary-100 rounded-lg text-left transition-colors min-h-[48px] border border-theater-primary-200"
+        >
+          <FontAwesomeIcon icon={faSignInAlt} className="text-theater-primary-500 w-3.5 h-3.5" />
+          <span className="text-sm text-theater-primary-600 font-medium">
+            ログインしてコメントする
+          </span>
+        </Link>
+        )
       )}
 
       {/* コメント入力フォーム */}
-      {showForm && (
+      {showForm && session && (
         <div className="bg-white shadow-md rounded-xl p-4 md:p-6 mb-6 border border-gray-100">
           {/* 返信先表示 */}
           {replyTo && (
@@ -445,27 +467,7 @@ const Comments = ({ comments: initialComments, postid, postTitle, inline = false
                 </p>
               </div>
             </div>
-          ) : (
-            <div className="mb-3">
-              <div className="flex items-center justify-between mb-1.5">
-                <p className="text-xs text-gray-400">名前（任意）</p>
-                <Link
-                  href="/auth/signup"
-                  className="flex items-center gap-1 text-xs text-blue-600 hover:text-blue-700 transition-colors"
-                >
-                  <FontAwesomeIcon icon={faSignInAlt} className="w-2.5 h-2.5" />
-                  ログインして投稿
-                </Link>
-              </div>
-              <input
-                type="text"
-                placeholder="名無しさん"
-                className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-theater-primary-300 focus:border-theater-primary-300 transition text-sm min-h-[44px]"
-                value={authorName}
-                onChange={(e) => setAuthorName(e.target.value)}
-              />
-            </div>
-          )}
+          ) : null}
 
           {/* コメント入力 */}
           <div className="mb-3 relative">
