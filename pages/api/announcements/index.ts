@@ -72,6 +72,7 @@ export default async function handler(
         postId,
         theaterGroupName,
         scriptTitle,
+        images,
       } = req.body;
 
       if (!title || !content) {
@@ -112,6 +113,7 @@ export default async function handler(
           userId,
           postId: postId ? parseInt(postId) : null,
           theaterGroupName: theaterGroupName || null,
+          images: images || [],
           scriptTitle: scriptTitle || null,
         },
       });

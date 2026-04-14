@@ -5,6 +5,7 @@ import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { FaTheaterMasks, FaCalendarAlt, FaMapMarkerAlt, FaYenSign, FaPhone, FaUser, FaInfoCircle, FaBook, FaUsers, FaSignInAlt } from 'react-icons/fa';
 import Seo from '@/components/seo';
+import ImageUploader from '@/components/ImageUploader';
 
 type PostSuggestion = {
   id: number;
@@ -26,6 +27,7 @@ export default function NewAnnouncementPage() {
     authorName: '',
     theaterGroupName: '',
     scriptTitle: '',
+    images: [] as string[],
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -479,6 +481,19 @@ export default function NewAnnouncementPage() {
                     <p className="text-xs text-gray-500">ログイン中のアカウントで投稿されます</p>
                   </div>
                 </div>
+              </div>
+
+              {/* 画像 */}
+              <div>
+                <label className="block text-sm font-bold text-theater-neutral-900 mb-2">
+                  公演画像（任意）
+                </label>
+                <ImageUploader
+                  images={formData.images}
+                  onChange={(imgs) => setFormData((prev) => ({ ...prev, images: imgs }))}
+                  maxImages={5}
+                  label="画像を追加"
+                />
               </div>
 
               {/* 送信ボタン */}
