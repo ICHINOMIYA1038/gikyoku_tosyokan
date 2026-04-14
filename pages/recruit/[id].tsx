@@ -212,13 +212,16 @@ export default function RecruitDetailPage({ recruitment: r, isOwner, hasApplied,
                     <FaPaperPlane /> 応募する
                   </button>
                   {!interested && (
-                    <button
-                      onClick={handleInterest}
-                      disabled={interestLoading}
-                      className="w-full py-3 border-2 border-theater-primary-300 text-theater-primary-600 hover:bg-theater-primary-50 rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
-                    >
-                      <FaHeart /> まずは興味ありを伝える
-                    </button>
+                    <div>
+                      <button
+                        onClick={handleInterest}
+                        disabled={interestLoading}
+                        className="w-full py-3 border-2 border-theater-primary-300 text-theater-primary-600 hover:bg-theater-primary-50 rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
+                      >
+                        <FaHeart /> まずは興味ありを伝える
+                      </button>
+                      <p className="text-xs text-gray-400 text-center mt-1.5">募集者にメッセージで通知されます</p>
+                    </div>
                   )}
                 </div>
               )}
