@@ -5,7 +5,7 @@ import Layout from '@/components/Layout';
 import Seo from '@/components/seo';
 import ImageUploader from '@/components/ImageUploader';
 import VenueSelector from '@/components/VenueSelector';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import {
@@ -143,6 +143,24 @@ export default function NewRecruitPage() {
     images: [] as string[],
   });
 
+  // 下書き自動保存
+  const DRAFT_KEY = 'recruit_draft';
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(DRAFT_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        setForm((prev) => ({ ...prev, ...parsed }));
+      }
+    } catch {}
+  }, []);
+
+  useEffect(() => {
+    try { localStorage.setItem(DRAFT_KEY, JSON.stringify(form)); } catch {}
+  }, [form]);
+
+  const clearDraft = () => { try { localStorage.removeItem(DRAFT_KEY); } catch {} };
+
   const toggleArrayField = (field: 'rolesWanted' | 'vibe', value: string) => {
     setForm((prev) => ({
       ...prev,
@@ -170,6 +188,7 @@ export default function NewRecruitPage() {
       });
       if (res.ok) {
         const data = await res.json();
+        clearDraft();
         router.push(`/recruit/${data.id}`);
       } else {
         const err = await res.json();

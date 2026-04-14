@@ -371,6 +371,7 @@ model User {
   announcements     Announcement[]
   recruitments      Recruitment[]
   applications      Application[]
+  interests         Interest[]
   sentMessages      Message[]       @relation("SentMessages")
   receivedMessages  Message[]       @relation("ReceivedMessages")
 
@@ -523,11 +524,26 @@ model Recruitment {
   createdAt           DateTime          @default(now())
   updatedAt           DateTime          @updatedAt
   applications        Application[]
+  interests           Interest[]
 
   @@index([status, publishedAt])
   @@index([postedBy])
   @@index([theaterGroupId])
   @@map("Recruitment")
+}
+
+model Interest {
+  id             String      @id @default(cuid())
+  recruitmentId  String
+  recruitment    Recruitment @relation(fields: [recruitmentId], references: [id], onDelete: Cascade)
+  userId         String
+  user           User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt      DateTime    @default(now())
+
+  @@unique([recruitmentId, userId])
+  @@index([recruitmentId])
+  @@index([userId])
+  @@map("Interest")
 }
 
 enum ApplicationStatus {

@@ -7,19 +7,22 @@ import { authOptions } from '@/lib/authOptions';
 import Link from 'next/link';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
-import { FaTheaterMasks, FaMapMarkerAlt, FaClock, FaYenSign, FaUsers, FaCalendarAlt, FaArrowLeft, FaPaperPlane, FaSignInAlt } from 'react-icons/fa';
+import { FaTheaterMasks, FaMapMarkerAlt, FaClock, FaYenSign, FaUsers, FaCalendarAlt, FaArrowLeft, FaPaperPlane, FaSignInAlt, FaHeart } from 'react-icons/fa';
 
 interface Props {
   recruitment: any;
   isOwner: boolean;
   hasApplied: boolean;
+  hasInterest: boolean;
   isLoggedIn: boolean;
 }
 
-export default function RecruitDetailPage({ recruitment: r, isOwner, hasApplied, isLoggedIn }: Props) {
+export default function RecruitDetailPage({ recruitment: r, isOwner, hasApplied, hasInterest: initialInterest, isLoggedIn }: Props) {
   const router = useRouter();
   const [showApplyForm, setShowApplyForm] = useState(false);
   const [applyMessage, setApplyMessage] = useState('');
+  const [interested, setInterested] = useState(initialInterest);
+  const [interestLoading, setInterestLoading] = useState(false);
   const [applying, setApplying] = useState(false);
   const [applied, setApplied] = useState(hasApplied);
   const [result, setResult] = useState('');
@@ -46,6 +49,19 @@ export default function RecruitDetailPage({ recruitment: r, isOwner, hasApplied,
       setResult('通信エラーが発生しました');
     }
     setApplying(false);
+  };
+
+  const handleInterest = async () => {
+    if (!isLoggedIn) { router.push(`/auth/signin?callbackUrl=/recruit/${r.id}`); return; }
+    setInterestLoading(true);
+    try {
+      const res = await fetch(`/api/recruitments/${r.id}/interest`, { method: 'POST' });
+      if (res.ok) {
+        const data = await res.json();
+        setInterested(data.interested);
+      }
+    } catch {}
+    setInterestLoading(false);
   };
 
   const poster = r.poster;
@@ -191,9 +207,25 @@ export default function RecruitDetailPage({ recruitment: r, isOwner, hasApplied,
                   </div>
                 </div>
               ) : (
-                <button onClick={() => setShowApplyForm(true)} className="w-full py-3 bg-theater-primary-600 hover:bg-theater-primary-700 text-white rounded-lg font-medium text-lg transition-colors flex items-center justify-center gap-2">
-                  <FaPaperPlane /> この募集に応募する
-                </button>
+                <div className="space-y-3">
+                  <button onClick={() => setShowApplyForm(true)} className="w-full py-3.5 bg-theater-primary-600 hover:bg-theater-primary-700 text-white rounded-lg font-medium text-lg transition-colors flex items-center justify-center gap-2">
+                    <FaPaperPlane /> 応募する
+                  </button>
+                  {!interested && (
+                    <button
+                      onClick={handleInterest}
+                      disabled={interestLoading}
+                      className="w-full py-3 border-2 border-theater-primary-300 text-theater-primary-600 hover:bg-theater-primary-50 rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
+                    >
+                      <FaHeart /> まずは興味ありを伝える
+                    </button>
+                  )}
+                </div>
+              )}
+              {interested && (
+                <p className="text-center text-sm text-theater-primary-600 font-medium mt-2">
+                  <FaHeart className="inline mr-1" /> 興味ありを送信しました
+                </p>
               )}
             </div>
           )}
@@ -219,11 +251,18 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
   if (!recruitment) return { notFound: true };
 
   let hasApplied = false;
+  let hasInterest = false;
   if (session) {
-    const app = await prisma.application.findUnique({
-      where: { recruitmentId_applicantId: { recruitmentId: id, applicantId: session.user.id } },
-    });
+    const [app, interest] = await Promise.all([
+      prisma.application.findUnique({
+        where: { recruitmentId_applicantId: { recruitmentId: id, applicantId: session.user.id } },
+      }),
+      prisma.interest.findUnique({
+        where: { recruitmentId_userId: { recruitmentId: id, userId: session.user.id } },
+      }),
+    ]);
     hasApplied = !!app;
+    hasInterest = !!interest;
   }
 
   return {
@@ -231,6 +270,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
       recruitment: JSON.parse(JSON.stringify(recruitment)),
       isOwner: session?.user?.id === recruitment.postedBy,
       hasApplied,
+      hasInterest,
       isLoggedIn: !!session,
     },
   };

@@ -132,18 +132,37 @@ export default function RecruitListPage() {
                   <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-5 hover:border-theater-primary-300 hover:shadow-md transition-all">
                     <div className="flex items-start justify-between gap-4">
                       <div className="flex-1 min-w-0">
-                        <h2 className="text-lg font-bold text-gray-900 mb-1">{r.title}</h2>
+                        <div className="flex items-center gap-2 mb-1 flex-wrap">
+                          <h2 className="text-lg font-bold text-gray-900">{r.title}</h2>
+                          {r.expiresAt && (() => {
+                            const days = Math.ceil((new Date(r.expiresAt).getTime() - Date.now()) / (1000*60*60*24));
+                            if (days <= 7) return <span className="px-2 py-0.5 bg-red-100 text-red-600 text-[10px] rounded-full font-bold">あと{days}日</span>;
+                            if (days <= 30) return <span className="px-2 py-0.5 bg-yellow-100 text-yellow-700 text-[10px] rounded-full font-medium">あと{days}日</span>;
+                            return null;
+                          })()}
+                        </div>
                         <p className="text-sm text-gray-600 flex items-center gap-1 mb-2">
                           <FaTheaterMasks className="text-xs text-gray-400" />
                           {r.theaterGroupName || r.theaterGroup?.name || r.poster?.name || '個人'}
+                          {r.genre && <span className="text-xs text-gray-400 ml-1">· {r.genre}</span>}
                         </p>
                         <p className="text-sm text-gray-500 line-clamp-2 mb-3">{r.description}</p>
-                        <div className="flex flex-wrap gap-2">
+                        <div className="flex flex-wrap gap-1.5">
                           {r.rolesWanted?.map((role: string) => (
                             <span key={role} className="px-2 py-0.5 bg-theater-primary-50 text-theater-primary-700 text-xs rounded-full font-medium">
                               {role}
                             </span>
                           ))}
+                          {r.vibe?.map((v: string) => (
+                            <span key={v} className="px-2 py-0.5 bg-gray-100 text-gray-500 text-xs rounded-full">
+                              {v}
+                            </span>
+                          ))}
+                          {r.experienceLevel && r.experienceLevel !== 'ANY' && (
+                            <span className="px-2 py-0.5 bg-green-50 text-green-700 text-xs rounded-full font-medium">
+                              {r.experienceLevel === 'BEGINNER' ? '未経験歓迎' : '経験者優遇'}
+                            </span>
+                          )}
                         </div>
                       </div>
                       <div className="text-right text-xs text-gray-400 flex-shrink-0">
