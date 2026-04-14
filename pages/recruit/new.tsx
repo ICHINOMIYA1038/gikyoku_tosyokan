@@ -85,7 +85,7 @@ function ChipSelect({ options, selected, onToggle, multi = false }: {
   const isSelected = (v: string) => multi ? (selected as string[]).includes(v) : selected === v;
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+    <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
       {options.map((opt) => {
         const Icon = opt.icon;
         const active = isSelected(opt.value);
@@ -94,25 +94,22 @@ function ChipSelect({ options, selected, onToggle, multi = false }: {
             key={opt.value}
             type="button"
             onClick={() => onToggle(opt.value)}
-            className={`flex items-center gap-3 p-3.5 rounded-lg border-2 text-left transition-all min-h-[52px] ${
+            className={`flex flex-col items-center gap-1.5 p-3 rounded-lg border-2 text-center transition-all min-h-[44px] ${
               active
-                ? 'border-theater-primary-500 bg-theater-primary-50 shadow-sm'
+                ? 'border-theater-primary-500 bg-theater-primary-50'
                 : 'border-gray-200 bg-white hover:border-gray-300 active:bg-gray-50'
             }`}
           >
             {Icon && (
-              <div className={`w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 ${
+              <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
                 active ? 'bg-theater-primary-100 text-theater-primary-600' : 'bg-gray-100 text-gray-400'
               }`}>
-                <Icon />
+                <Icon className="text-sm" />
               </div>
             )}
-            <div className="min-w-0">
-              <p className={`text-sm font-medium ${active ? 'text-theater-primary-700' : 'text-gray-700'}`}>
-                {opt.label || opt.value}
-              </p>
-              {opt.desc && <p className="text-[11px] text-gray-400 mt-0.5 leading-tight">{opt.desc}</p>}
-            </div>
+            <p className={`text-xs font-medium leading-tight ${active ? 'text-theater-primary-700' : 'text-gray-600'}`}>
+              {opt.label || opt.value}
+            </p>
           </button>
         );
       })}
@@ -123,6 +120,7 @@ function ChipSelect({ options, selected, onToggle, multi = false }: {
 export default function NewRecruitPage() {
   const router = useRouter();
   const [step, setStep] = useState(1);
+  const [activeRegion, setActiveRegion] = useState('関東');
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
   const [form, setForm] = useState({
@@ -258,22 +256,33 @@ export default function NewRecruitPage() {
                   </div>
                 )}
                 {!form.prefecture && (
-                  <div className="space-y-3">
-                    {REGIONS.map((region) => (
-                      <div key={region.name}>
-                        <p className="text-xs text-gray-500 font-medium mb-1.5">{region.name}</p>
-                        <div className="flex flex-wrap gap-1.5">
-                          {region.prefs.map((p) => (
-                            <button
-                              key={p}
-                              type="button"
-                              onClick={() => setForm({ ...form, prefecture: p })}
-                              className="px-3.5 py-2 text-sm border border-gray-200 rounded-full bg-white text-gray-600 hover:border-theater-primary-400 hover:text-theater-primary-600 active:bg-theater-primary-50 transition-colors min-h-[40px]"
-                            >{p.replace(/[都府県]$/, '')}</button>
-                          ))}
-                        </div>
-                      </div>
-                    ))}
+                  <div>
+                    {/* リージョンタブ */}
+                    <div className="flex gap-1 overflow-x-auto pb-2 mb-3 -mx-1 px-1 scrollbar-hide">
+                      {REGIONS.map((region) => (
+                        <button
+                          key={region.name}
+                          type="button"
+                          onClick={() => setActiveRegion(region.name)}
+                          className={`px-3 py-1.5 text-xs font-medium rounded-full whitespace-nowrap transition-colors ${
+                            activeRegion === region.name
+                              ? 'bg-theater-primary-600 text-white'
+                              : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
+                          }`}
+                        >{region.name}</button>
+                      ))}
+                    </div>
+                    {/* 選択中リージョンの都道府県 */}
+                    <div className="flex flex-wrap gap-1.5">
+                      {REGIONS.find((r) => r.name === activeRegion)?.prefs.map((p) => (
+                        <button
+                          key={p}
+                          type="button"
+                          onClick={() => setForm({ ...form, prefecture: p })}
+                          className="px-3.5 py-2 text-sm border border-gray-200 rounded-full bg-white text-gray-600 hover:border-theater-primary-400 hover:text-theater-primary-600 active:bg-theater-primary-50 transition-colors min-h-[40px]"
+                        >{p.replace(/[都府県]$/, '')}</button>
+                      ))}
+                    </div>
                   </div>
                 )}
               </section>
@@ -281,7 +290,7 @@ export default function NewRecruitPage() {
               {/* ジャンル */}
               <section>
                 <h2 className="text-base font-bold text-gray-900 mb-3">ジャンル</h2>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-1.5">
                   {GENRES.map((g) => {
                     const Icon = g.icon;
                     const active = form.genre === g.value;
