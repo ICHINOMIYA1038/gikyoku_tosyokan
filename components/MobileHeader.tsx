@@ -3,6 +3,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { FaBars, FaTimes } from "react-icons/fa";
 import AuthMenu from "@/components/AuthMenu";
+import { FEATURES } from "@/lib/feature-flags";
 
 export default function MobileHeader() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -17,7 +18,7 @@ export default function MobileHeader() {
 
   const menuItems: { href: string; label: string; isExternal?: boolean }[] = [
     { href: "/", label: "検索する" },
-    { href: "/recruit", label: "劇団員募集" },
+    { href: "/recruit", label: FEATURES.recruit ? "劇団員募集" : "劇団員募集（準備中）" },
     { href: "/university-theater", label: "大学演劇" },
     { href: "/shogekijo", label: "小劇場" },
     { href: "/announcements", label: "上演告知" },

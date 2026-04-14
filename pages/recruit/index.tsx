@@ -4,6 +4,8 @@ import Seo from '@/components/seo';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 import { FaTheaterMasks, FaPlus, FaMapMarkerAlt, FaUsers, FaClock, FaSearch } from 'react-icons/fa';
+import { FEATURES } from '@/lib/feature-flags';
+import ComingSoon from '@/components/ComingSoon';
 
 const ROLES = ['役者', '演出', '脚本', '音響', '照明', '舞台監督', '制作', 'スタッフ全般'];
 const PREFECTURES = ['東京都', '神奈川県', '大阪府', '京都府', '愛知県', '埼玉県', '千葉県', '福岡県', '北海道', '宮城県'];
@@ -45,6 +47,12 @@ export default function RecruitListPage() {
         pageDescription="演劇の仲間を探そう。劇団員・スタッフの募集情報を検索・投稿できます。"
         pagePath="/recruit"
       />
+      {!FEATURES.recruit ? (
+        <ComingSoon
+          title="劇団員募集（準備中）"
+          description="劇団員・スタッフの募集機能は現在準備中です。サービス開始までもうしばらくお待ちください。"
+        />
+      ) : (
       <div className="min-h-screen bg-gradient-to-b from-theater-primary-50 to-white">
         {/* ヘッダー */}
         <div className="bg-gradient-to-r from-theater-primary-100 via-theater-primary-50 to-theater-primary-100 py-8 px-4">
@@ -188,6 +196,7 @@ export default function RecruitListPage() {
           )}
         </div>
       </div>
+      )}
     </Layout>
   );
 }

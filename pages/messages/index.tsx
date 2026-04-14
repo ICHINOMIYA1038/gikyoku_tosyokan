@@ -6,6 +6,8 @@ import Seo from '@/components/seo';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { FaEnvelope, FaUser } from 'react-icons/fa';
+import { FEATURES } from '@/lib/feature-flags';
+import ComingSoon from '@/components/ComingSoon';
 
 export default function MessagesPage() {
   const [conversations, setConversations] = useState<any[]>([]);
@@ -17,6 +19,18 @@ export default function MessagesPage() {
       .then((data) => { setConversations(data); setLoading(false); })
       .catch(() => setLoading(false));
   }, []);
+
+  if (!FEATURES.messages) {
+    return (
+      <Layout>
+        <Seo pageTitle="メッセージ" pageDescription="戯曲図書館のメッセージ" pagePath="/messages" />
+        <ComingSoon
+          title="メッセージ（準備中）"
+          description="メッセージ機能は現在準備中です。サービス開始までもうしばらくお待ちください。"
+        />
+      </Layout>
+    );
+  }
 
   return (
     <Layout>
