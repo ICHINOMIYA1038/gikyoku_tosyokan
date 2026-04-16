@@ -7,12 +7,12 @@ import { Analytics } from "@vercel/analytics/react";
 import Script from "next/script";
 import * as gtag from "@/lib/gtag";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Noto_Sans_JP } from "next/font/google";
 import MobileOptimizations from "@/components/MobileOptimizations";
 import CookieConsent from "@/components/CookieConsent";
-import { isConsentAccepted } from "@/lib/cookie-consent";
+import { getConsent } from "@/lib/cookie-consent";
 import { FavoritesProvider } from "@/contexts/FavoritesContext";
 
 const notoSansJP = Noto_Sans_JP({
@@ -27,10 +27,18 @@ const queryClient = new QueryClient();
 
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
-  const [cookieAccepted, setCookieAccepted] = useState(false);
 
+  // 既に同意済みならConsent Modeをgrantedに上げる
   useEffect(() => {
-    setCookieAccepted(isConsentAccepted());
+    if (typeof window === "undefined") return;
+    if (getConsent() === "accepted" && (window as any).gtag) {
+      (window as any).gtag("consent", "update", {
+        ad_storage: "granted",
+        ad_user_data: "granted",
+        ad_personalization: "granted",
+        analytics_storage: "granted",
+      });
+    }
   }, []);
 
   useEffect(() => {
@@ -51,33 +59,52 @@ export default function App({ Component, pageProps }: AppProps) {
           font-family: ${notoSansJP.style.fontFamily};
         }
       `}</style>
-      {/* Cookie同意済みの場合のみ GA/AdSense を読み込む */}
-      {cookieAccepted && (
-        <>
-          <Script
-            async
-            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8691137965825158"
-            crossOrigin="anonymous"
-            strategy="lazyOnload"
-          />
-          <Script
-            strategy="afterInteractive"
-            src={`https://www.googletagmanager.com/gtag/js?id=${gtag.GA_MEASUREMENT_ID}`}
-          />
-          <Script
-            id="gtag-init"
-            strategy="afterInteractive"
-            dangerouslySetInnerHTML={{
-              __html: `
-               window.dataLayer = window.dataLayer || [];
-               function gtag(){dataLayer.push(arguments);}
-               gtag('js', new Date());
-               gtag('config', '${gtag.GA_MEASUREMENT_ID}');
-              `,
-            }}
-          />
-        </>
-      )}
+      {/* Consent Mode v2: 同意前でもタグはロードするが、
+          デフォルトでad/analyticsストレージをdenied にしてCookieを書かない。
+          同意後にgrantedに上げる（CookieConsent.tsx側）。
+          拒否時も匿名モデル化データが GA/Ads に送られる。 */}
+      <Script
+        id="gtag-consent-default"
+        strategy="beforeInteractive"
+        dangerouslySetInnerHTML={{
+          __html: `
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            window.gtag = gtag;
+            gtag('consent', 'default', {
+              ad_storage: 'denied',
+              ad_user_data: 'denied',
+              ad_personalization: 'denied',
+              analytics_storage: 'denied',
+              functionality_storage: 'granted',
+              security_storage: 'granted',
+              wait_for_update: 500
+            });
+            gtag('set', 'ads_data_redaction', true);
+            gtag('set', 'url_passthrough', true);
+          `,
+        }}
+      />
+      <Script
+        async
+        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8691137965825158"
+        crossOrigin="anonymous"
+        strategy="lazyOnload"
+      />
+      <Script
+        strategy="afterInteractive"
+        src={`https://www.googletagmanager.com/gtag/js?id=${gtag.GA_MEASUREMENT_ID}`}
+      />
+      <Script
+        id="gtag-init"
+        strategy="afterInteractive"
+        dangerouslySetInnerHTML={{
+          __html: `
+            gtag('js', new Date());
+            gtag('config', '${gtag.GA_MEASUREMENT_ID}');
+          `,
+        }}
+      />
       <SessionProvider session={pageProps.session}>
         <FavoritesProvider>
           <QueryClientProvider client={queryClient}>
