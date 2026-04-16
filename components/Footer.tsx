@@ -61,9 +61,25 @@ const Footer: React.FC = () => {
         </nav>
       </div>
       <div className="border-t border-gray-800">
-        <p className="text-center py-4 text-xs text-gray-500">
-          © 2026 戯曲図書館 All Rights Reserved.
-        </p>
+        <div className="container mx-auto px-4 py-6">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
+            <p className="text-xs text-gray-500">
+              © 2026 戯曲図書館 All Rights Reserved.
+            </p>
+            <div className="flex items-center gap-2 text-xs text-gray-500">
+              <span>姉妹サイト:</span>
+              <a
+                href="https://palette.gikyokutosyokan.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-400 hover:text-white transition-colors"
+              >
+                戯曲パレット
+              </a>
+              <span className="text-gray-600">（共通アカウントで利用可能）</span>
+            </div>
+          </div>
+        </div>
       </div>
     </footer>
   );
