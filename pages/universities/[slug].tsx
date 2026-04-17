@@ -151,6 +151,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 
   return {
     props: { university: JSON.parse(JSON.stringify(university)) },
-    revalidate: 86400,
+    // 大学情報は参考資料的で更新頻度低い。7日に延長してISR Writes削減。
+    revalidate: 604800,
   };
 };

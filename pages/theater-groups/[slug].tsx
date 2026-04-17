@@ -247,6 +247,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       group: JSON.parse(JSON.stringify(group)),
       relatedShogekijoGroups,
     },
-    revalidate: 86400,
+    // 劇団情報は参考資料的で更新頻度低い。7日に延長してISR Writes削減。
+    revalidate: 604800,
   };
 };

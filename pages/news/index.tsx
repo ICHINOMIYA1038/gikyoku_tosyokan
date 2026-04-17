@@ -67,6 +67,7 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
 
   return {
     props: { news },
-    revalidate: 3600,
+    // ニュースは1日1回の再生成で十分(編集時は on-demand revalidate を別途検討)
+    revalidate: 86400,
   };
 };

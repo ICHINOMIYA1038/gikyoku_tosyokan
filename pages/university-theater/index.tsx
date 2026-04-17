@@ -422,6 +422,7 @@ export const getStaticProps: GetStaticProps = async () => {
       regions: allRegions,
       prefectures: allPrefectures,
     },
-    revalidate: 86400,
+    // 大学演劇の集計は参考資料。7日でOK。
+    revalidate: 604800,
   };
 };

@@ -200,7 +200,8 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
         duration,
         config,
       },
-      revalidate: 86400,
+      // 集計ページ。作品の大量追加でもない限り7日でOK。
+      revalidate: 604800,
     };
   } catch (error) {
     console.error("Error:", error);

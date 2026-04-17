@@ -220,6 +220,7 @@ export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
   const readingTime = estimateReadingTime(displayContent);
   return {
     props: { post, alternateSlug, relatedPosts, metadata, readingTime, displayContent },
-    revalidate: 86400,
+    // 記事本文は公開後ほぼ変化なし。7日に延ばしてISR Writesを削減。
+    revalidate: 604800,
   };
 };

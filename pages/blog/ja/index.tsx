@@ -78,5 +78,6 @@ export default function BlogJaIndex({ posts }: Props) {
 
 export const getStaticProps: GetStaticProps<Props> = async () => {
   const posts = await getPostsByLanguage('ja');
-  return { props: { posts }, revalidate: 86400 };
+  // 新記事追加は手動オペレーション時に on-demand revalidate する想定。7日に延長。
+  return { props: { posts }, revalidate: 604800 };
 };
