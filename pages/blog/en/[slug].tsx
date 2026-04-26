@@ -1,5 +1,6 @@
 import { GetStaticPaths, GetStaticProps } from 'next';
 import Link from 'next/link';
+import { useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import Layout from '@/components/Layout';
@@ -44,6 +45,12 @@ export default function BlogEnPost({
   readingTime,
   displayContent,
 }: Props) {
+  // Set html lang to "en" for English blog pages
+  useEffect(() => {
+    document.documentElement.lang = 'en';
+    return () => { document.documentElement.lang = 'ja'; };
+  }, []);
+
   const siteUrl = 'https://gikyokutosyokan.com';
   const pageUrl = `${siteUrl}/blog/en/${post.slug}`;
   const ogImageUrl = post.ogImageUrl || `${siteUrl}/api/og?title=${encodeURIComponent(post.title)}&date=${encodeURIComponent(post.date)}&tags=${encodeURIComponent(post.tags.slice(0, 3).join(','))}`;
@@ -64,6 +71,7 @@ export default function BlogEnPost({
         pageKeywords={post.tags}
         pageType="article"
         hreflang={hreflangList}
+        locale="en_US"
       />
       <StructuredData
         type="Article"

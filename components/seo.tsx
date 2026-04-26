@@ -12,10 +12,13 @@ const Seo = ({
   pageKeywords,
   hreflang,
   noindex,
+  locale = "ja_JP",
 }: any) => {
-  const defaultTitle = "戯曲図書館";
-  const defaultDescription =
-    "上演する脚本を探しの方に。上演時間や人数などから検索ができます。戯曲を探す、戯曲図書館。";
+  const isEnglish = locale === "en_US";
+  const defaultTitle = isEnglish ? "Japanese Play Library" : "戯曲図書館";
+  const defaultDescription = isEnglish
+    ? "Discover Japanese plays by cast size, duration, and genre. Your guide to Japanese theater scripts."
+    : "上演する脚本を探しの方に。上演時間や人数などから検索ができます。戯曲を探す、戯曲図書館。";
   const defaultImg = "https://gikyokutosyokan.com/logo.png";
   const siteUrl = "https://gikyokutosyokan.com";
 
@@ -25,9 +28,11 @@ const Seo = ({
   const imgUrl = pageImg ? pageImg : defaultImg;
   const imgWidth = pageImgWidth ? pageImgWidth : 1280;
   const imgHeight = pageImgHeight ? pageImgHeight : 640;
-  
-  // キーワードの生成
-  const defaultKeywords = ["戯曲", "脚本", "演劇", "上演時間", "人数検索", "戯曲図書館", "演劇台本", "舞台脚本"];
+
+  // キーワードの生成（EN/JAで既定キーワードを分離）
+  const defaultKeywordsJa = ["戯曲", "脚本", "演劇", "上演時間", "人数検索", "戯曲図書館", "演劇台本", "舞台脚本"];
+  const defaultKeywordsEn = ["Japanese theater", "play scripts", "drama", "cast size search", "Japanese Play Library"];
+  const defaultKeywords = isEnglish ? defaultKeywordsEn : defaultKeywordsJa;
   const keywords = pageKeywords ? [...pageKeywords, ...defaultKeywords].join(",") : defaultKeywords.join(",");
 
   return (
@@ -47,7 +52,7 @@ const Seo = ({
       <meta property="og:image" content={imgUrl} />
       <meta property="og:image:width" content={String(imgWidth)} />
       <meta property="og:image:height" content={String(imgHeight)} />
-      <meta property="og:locale" content="ja_JP" />
+      <meta property="og:locale" content={locale} />
       
       <meta name="twitter:card" content={twitterCardType} />
       <meta name="twitter:site" content="@gikyokutosyokan" />

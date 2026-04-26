@@ -1,5 +1,6 @@
 import { GetStaticProps } from 'next';
 import Link from 'next/link';
+import { useEffect } from 'react';
 import Layout from '@/components/Layout';
 import BlogSidebar from '@/components/BlogSidebar';
 import Seo from '@/components/seo';
@@ -10,6 +11,12 @@ interface Props {
 }
 
 export default function BlogEnIndex({ posts }: Props) {
+  // Set html lang to "en" for English blog pages
+  useEffect(() => {
+    document.documentElement.lang = 'en';
+    return () => { document.documentElement.lang = 'ja'; };
+  }, []);
+
   return (
     <Layout>
       <Seo
@@ -22,6 +29,7 @@ export default function BlogEnIndex({ posts }: Props) {
           { lang: 'en', path: '/blog/en' },
           { lang: 'x-default', path: '/blog' },
         ]}
+        locale="en_US"
       />
       <div className="container mx-auto px-4 py-8">
         <div className="flex flex-col lg:flex-row gap-8">
