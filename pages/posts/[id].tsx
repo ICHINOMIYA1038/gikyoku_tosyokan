@@ -26,6 +26,7 @@ import CompareButton from "@/components/CompareButton";
 import { prisma } from "@/lib/prisma";
 import AdSlot from "@/components/Ad/AdSlot";
 import { AD_SLOTS } from "@/lib/adSlots";
+import AiDescription from "@/components/AiDescription";
 
 // メモ化されたコンポーネント
 const MemoizedPostHero = React.memo(PostHero);
@@ -258,6 +259,11 @@ function PostPage({ post }: any) {
                 <div className="mt-4">
                   <MemoizedPostDetails post={post} />
                 </div>
+
+                {/* AI概要（あらすじがない場合のみ表示） */}
+                {!post.synopsis && post.aiDescription && (
+                  <AiDescription description={post.aiDescription} />
+                )}
 
                 {/* Quick Reactions */}
                 <QuickReactions postId={post.id} />
@@ -626,6 +632,7 @@ export async function getStaticProps(context: any) {
         ISBN_13: true,
         buy_link: true,
         kangeki_url: true,
+        aiDescription: true,
         author_id: true,
         man: true,
         woman: true,
