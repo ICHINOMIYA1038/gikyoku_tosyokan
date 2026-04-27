@@ -24,6 +24,8 @@ import ReactionBadge from "@/components/ReactionBadge";
 import FavoriteButton from "@/components/FavoriteButton";
 import CompareButton from "@/components/CompareButton";
 import { prisma } from "@/lib/prisma";
+import AdSlot from "@/components/Ad/AdSlot";
+import { AD_SLOTS } from "@/lib/adSlots";
 
 // メモ化されたコンポーネント
 const MemoizedPostHero = React.memo(PostHero);
@@ -364,6 +366,9 @@ function PostPage({ post }: any) {
                     )}
                   </div>
                 </div>
+
+                {/* 広告: 本文後 */}
+                <AdSlot slot={AD_SLOTS.POST_AFTER_CONTENT} format="horizontal" />
 
                 {/* 5. この脚本を上演した劇団 */}
                 {post.theaterGroups && post.theaterGroups.length > 0 && (

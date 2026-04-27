@@ -85,11 +85,12 @@ export default function App({ Component, pageProps }: AppProps) {
           `,
         }}
       />
+      {/* AdSense: 手動広告ユニット用スクリプト（自動広告OFF） */}
       <Script
         async
         src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8691137965825158"
         crossOrigin="anonymous"
-        strategy="lazyOnload"
+        strategy="afterInteractive"
       />
       <Script
         strategy="afterInteractive"

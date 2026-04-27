@@ -18,6 +18,8 @@ import { FaHome, FaChevronRight, FaClock } from 'react-icons/fa';
 import BlogTableOfContents from '@/components/BlogTableOfContents';
 import BlogShareButtons from '@/components/BlogShareButtons';
 import BlogRelatedPosts from '@/components/BlogRelatedPosts';
+import AdSlot from '@/components/Ad/AdSlot';
+import { AD_SLOTS } from '@/lib/adSlots';
 import {
   extractBlogMetadata,
   stripMetadataComment,
@@ -133,6 +135,9 @@ export default function BlogJaPost({
 
               <BlogTableOfContents content={displayContent} />
 
+              {/* 広告: 目次後 */}
+              <AdSlot slot={AD_SLOTS.BLOG_AFTER_TOC} format="horizontal" />
+
               <div className="prose prose-lg max-w-none">
                 <ReactMarkdown
                   remarkPlugins={[remarkGfm]}
@@ -194,6 +199,8 @@ export default function BlogJaPost({
           </main>
 
           <aside className="lg:w-80">
+            {/* 広告: ブログサイドバー */}
+            <AdSlot slot={AD_SLOTS.BLOG_SIDEBAR} format="rectangle" />
             <BlogSidebar language="ja" />
           </aside>
         </div>

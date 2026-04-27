@@ -8,6 +8,8 @@ import {
   FaExternalLinkAlt, FaHeart,
   FaEye, FaCalendar, FaGlobe
 } from "react-icons/fa";
+import AdSlot from "./Ad/AdSlot";
+import { AD_SLOTS } from "@/lib/adSlots";
 
 type PostPageProps = {
   post: any;
@@ -254,6 +256,9 @@ export const PostSidebar: React.FC<PostPageProps> = ({ post }) => {
             )}
           </div>
         </div>
+
+        {/* 広告: サイドバー */}
+        <AdSlot slot={AD_SLOTS.POST_SIDEBAR} format="rectangle" className="my-0" />
 
         {/* 関連作品 */}
         <div className="bg-white rounded-xl shadow-lg p-5">

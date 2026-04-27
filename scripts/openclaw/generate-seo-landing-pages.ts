@@ -34,6 +34,7 @@ interface PlayRow {
   synopsis: string | null;
   man: number | null;
   woman: number | null;
+  others: number | null;
   totalNumber: number | null;
   playtime: number | null;
   averageRating: number | null;
@@ -560,6 +561,7 @@ async function main() {
       synopsis: p.synopsis,
       man: p.man,
       woman: p.woman,
+      others: p.others,
       totalNumber: p.totalNumber,
       playtime: p.playtime,
       averageRating: p.averageRating,

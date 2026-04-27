@@ -1,11 +1,13 @@
-/** @jsxImportSource @emotion/react */
-import { css } from "@emotion/react";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
-type GoogleAdsenseProps = {
-  client: string;
+const AD_CLIENT = "ca-pub-8691137965825158";
+
+type AdFormat = "horizontal" | "vertical" | "rectangle" | "auto";
+
+type DisplayAdProps = {
   slot: string;
-  style?: React.CSSProperties;
+  format?: AdFormat;
+  className?: string;
 };
 
 declare global {
@@ -14,39 +16,38 @@ declare global {
   }
 }
 
-const DisplayAd = ({ client, slot, style }: GoogleAdsenseProps) => {
-  useEffect(() => {
-    const adsScript = document.createElement("script");
-    adsScript.src =
-      "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js";
-    adsScript.async = true;
-    document.body.appendChild(adsScript);
+const formatStyles: Record<AdFormat, React.CSSProperties> = {
+  horizontal: { display: "block", width: "100%", height: "90px" },
+  vertical: { display: "block", width: "300px", height: "600px" },
+  rectangle: { display: "block", width: "100%", height: "250px" },
+  auto: { display: "block" },
+};
 
+const DisplayAd = ({ slot, format = "auto", className }: DisplayAdProps) => {
+  const adRef = useRef<HTMLModElement>(null);
+  const pushed = useRef(false);
+
+  useEffect(() => {
+    if (pushed.current) return;
+    pushed.current = true;
     try {
       (window.adsbygoogle = window.adsbygoogle || []).push({});
-    } catch (err) {
-      console.error(err);
+    } catch {
+      // adsbygoogle not loaded yet — silent fail
     }
-
-    return () => {
-      document.body.removeChild(adsScript);
-    };
   }, []);
 
   return (
-    <div
-      css={css`
-        text-align: center;
-      `}
-    >
+    <div className={`ad-container text-center ${className || ""}`}>
       <ins
+        ref={adRef}
         className="adsbygoogle"
-        style={style}
-        data-ad-client={client}
+        style={formatStyles[format]}
+        data-ad-client={AD_CLIENT}
         data-ad-slot={slot}
-        data-ad-format="auto"
-        data-full-width-responsive="true"
-      ></ins>
+        data-ad-format={format === "auto" ? "auto" : undefined}
+        data-full-width-responsive={format === "auto" ? "true" : undefined}
+      />
     </div>
   );
 };

@@ -19,6 +19,8 @@ import { FaHome, FaChevronRight, FaClock } from 'react-icons/fa';
 import BlogTableOfContents from '@/components/BlogTableOfContents';
 import BlogShareButtons from '@/components/BlogShareButtons';
 import BlogRelatedPosts from '@/components/BlogRelatedPosts';
+import AdSlot from '@/components/Ad/AdSlot';
+import { AD_SLOTS } from '@/lib/adSlots';
 import {
   extractBlogMetadata,
   stripMetadataComment,
@@ -141,6 +143,9 @@ export default function BlogEnPost({
 
               <BlogTableOfContents content={displayContent} />
 
+              {/* Ad: after TOC */}
+              <AdSlot slot={AD_SLOTS.BLOG_AFTER_TOC} format="horizontal" />
+
               <div className="prose prose-lg max-w-none">
                 <ReactMarkdown
                   remarkPlugins={[remarkGfm]}
@@ -202,6 +207,8 @@ export default function BlogEnPost({
           </main>
 
           <aside className="lg:w-80">
+            {/* Ad: blog sidebar */}
+            <AdSlot slot={AD_SLOTS.BLOG_SIDEBAR} format="rectangle" />
             <BlogSidebar language="en" />
           </aside>
         </div>

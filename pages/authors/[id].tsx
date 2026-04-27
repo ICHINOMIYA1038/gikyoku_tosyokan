@@ -8,6 +8,8 @@ import StructuredData from "@/components/StructuredData";
 import LinkCard from "@/components/LinkCard";
 import CustomMarkdown from "@/components/CustomMarkdown";
 import { FaUser, FaUsers, FaGlobe, FaBook, FaTheaterMasks, FaExternalLinkAlt } from "react-icons/fa";
+import AdSlot from "@/components/Ad/AdSlot";
+import { AD_SLOTS } from "@/lib/adSlots";
 const prisma = new PrismaClient();
 
 function AuthorPage({ author }: any) {
@@ -99,6 +101,9 @@ function AuthorPage({ author }: any) {
               )}
             </div>
           )}
+
+          {/* 広告: プロフィール後 */}
+          <AdSlot slot={AD_SLOTS.AUTHOR_AFTER_PROFILE} format="horizontal" />
 
           {/* 作品一覧セクション */}
           <div className="bg-white rounded-lg shadow-md p-6">

@@ -13,6 +13,8 @@ import Link from "next/link";
 import LatestBlogPosts from "@/components/LatestBlogPosts";
 import RecentComments from "@/components/RecentComments";
 import TrendingPosts from "@/components/TrendingPosts";
+import AdSlot from "@/components/Ad/AdSlot";
+import { AD_SLOTS } from "@/lib/adSlots";
 
 export default function Home({ news, authors, posts, categories, blogPosts, trendingPosts, announcements }: any) {
   const [data, setData] = useState<any>(null); // 取得したデータを格納
@@ -75,6 +77,11 @@ export default function Home({ news, authors, posts, categories, blogPosts, tren
         {/* 今週の人気作品 */}
         <TrendingPosts posts={trendingPosts} />
 
+        {/* 広告: トレンド後 */}
+        <div className="max-w-6xl mx-auto px-4">
+          <AdSlot slot={AD_SLOTS.HOME_AFTER_TRENDING} format="horizontal" />
+        </div>
+
         <div
           className="lg:flex relative box-border"
           id="registration-form"
@@ -104,6 +111,11 @@ export default function Home({ news, authors, posts, categories, blogPosts, tren
         
         {/* みんなの声（最新コメント） */}
         <RecentComments />
+
+        {/* 広告: コンテンツ中間 */}
+        <div className="max-w-6xl mx-auto px-4">
+          <AdSlot slot={AD_SLOTS.HOME_MID_CONTENT} format="horizontal" />
+        </div>
 
         {/* 最新の記事 */}
         <LatestBlogPosts posts={blogPosts} />
