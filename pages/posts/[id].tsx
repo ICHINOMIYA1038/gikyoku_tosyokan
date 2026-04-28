@@ -56,6 +56,7 @@ function PostPage({ post }: any) {
   const [success, setSuccess] = useState("");
   const [showShareButtons, setShowShareButtons] = useState(false);
   const [showReadButtons, setShowReadButtons] = useState(false);
+  const [activeTab, setActiveTab] = useState<"overview" | "community" | "related">("overview");
 
   useEffect(() => {
     fetch("/api/record-access", {
@@ -215,176 +216,108 @@ function PostPage({ post }: any) {
           ]}
         />
         <div className="w-full">
-          <div className="container mx-auto px-4 pt-6 pb-8">
-            <div className="flex flex-col lg:flex-row gap-6">
-              {/* メインカラム */}
-              <main className="flex-1 min-w-0">
-                {/* 1. ヒーロー */}
-                <MemoizedPostHero post={post} />
+          <div className="container mx-auto px-4 py-6 max-w-3xl">
 
-                {/* 受賞歴バッジ */}
-                {post.awards && post.awards.length > 0 && (
-                  <div className="mt-4 flex flex-wrap justify-center gap-2">
-                    {post.awards.map((award: any, idx: number) => (
-                      <span
-                        key={idx}
-                        className="inline-flex items-center gap-1 px-3 py-1.5 bg-amber-50 border border-amber-200 rounded-full text-sm font-medium text-amber-800"
-                      >
-                        <FaTrophy className="text-amber-500 text-xs" />
-                        {award.awardName} {award.awardType}（{award.awardYear}年）
-                      </span>
-                    ))}
-                  </div>
-                )}
+            {/* ヒーロー（常時表示） */}
+            <MemoizedPostHero post={post} />
 
-                {/* リアクションバッジ */}
-                <div className="mt-3 flex justify-center">
-                  <ReactionBadge postId={post.id} />
+            {post.awards && post.awards.length > 0 && (
+              <div className="flex flex-wrap gap-1.5 mt-3">
+                {post.awards.map((award: any, idx: number) => (
+                  <span key={idx} className="inline-flex items-center gap-1 px-2 py-0.5 bg-amber-50 text-[11px] font-bold text-amber-700 rounded">
+                    <FaTrophy className="text-amber-500 text-[9px]" />
+                    {award.awardName} {award.awardType}（{award.awardYear}年）
+                  </span>
+                ))}
+              </div>
+            )}
+
+            <div className="flex items-center gap-3 mt-3 text-gray-400">
+              <FavoriteButton postId={post.id} variant="floating" />
+              <CompareButton postId={post.id} variant="floating" />
+              <button onClick={toggleShareButtons} className="text-xs hover:text-gray-600 transition-colors" aria-label="共有">
+                <FaShareAlt />
+              </button>
+              {showShareButtons && (
+                <div className="flex gap-1">
+                  <TwitterShareButton url={URL} title={QUOTE}><TwitterIcon size={24} round /></TwitterShareButton>
+                  <LineShareButton url={URL} title={QUOTE}><LineIcon size={24} round /></LineShareButton>
+                  <FacebookShareButton url={URL} quote={QUOTE}><FacebookIcon size={24} round /></FacebookShareButton>
+                  <HatenaShareButton url={URL} title={QUOTE} windowWidth={660} windowHeight={460}><HatenaIcon size={24} round /></HatenaShareButton>
                 </div>
+              )}
+            </div>
 
-                {/* コメント数バッジ */}
-                {commentCount > 0 && (
-                  <div className="mt-3 flex justify-center">
-                    <button
-                      onClick={scrollToComments}
-                      className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-theater-primary-600 transition-colors"
-                    >
-                      <FaCommentDots className="text-xs" />
-                      <span>{commentCount}件のコメント</span>
-                    </button>
-                  </div>
-                )}
+            {/* タブナビゲーション */}
+            <nav className="flex gap-0 mt-6 border-b border-gray-200">
+              {([
+                { key: "overview" as const, label: "概要" },
+                { key: "community" as const, label: `みんなの声${commentCount > 0 ? `(${commentCount})` : ""}` },
+                { key: "related" as const, label: "関連情報" },
+              ]).map((tab) => (
+                <button
+                  key={tab.key}
+                  onClick={() => setActiveTab(tab.key)}
+                  className={`px-4 py-2.5 text-sm font-bold transition-colors relative
+                    ${activeTab === tab.key
+                      ? "text-theater-primary-600"
+                      : "text-gray-400 hover:text-gray-600"
+                    }`}
+                >
+                  {tab.label}
+                  {activeTab === tab.key && (
+                    <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-theater-primary-500" />
+                  )}
+                </button>
+              ))}
+            </nav>
 
-                {/* 2. 作品詳細（作品情報、あらすじ、詳細説明、作者について） */}
-                <div className="mt-4">
+            {/* タブコンテンツ */}
+            <div className="py-6">
+
+              {/* ━━━ 概要タブ ━━━ */}
+              {activeTab === "overview" && (
+                <div className="space-y-6">
                   <MemoizedPostDetails post={post} />
+
+                  {!post.synopsis && post.aiDescription && (
+                    <AiDescription description={post.aiDescription} />
+                  )}
+
+                  <AdSlot slot={AD_SLOTS.POST_AFTER_CONTENT} format="horizontal" />
                 </div>
+              )}
 
-                {/* AI概要（あらすじがない場合のみ表示） */}
-                {!post.synopsis && post.aiDescription && (
-                  <AiDescription description={post.aiDescription} />
-                )}
+              {/* ━━━ みんなの声タブ ━━━ */}
+              {activeTab === "community" && (
+                <div className="space-y-6" id="comments-section">
+                  <QuickReactions postId={post.id} />
 
-                {/* Quick Reactions */}
-                <QuickReactions postId={post.id} />
-
-                {/* コメントセクション */}
-                <div className="mt-4">
-                  <div className="bg-theater-primary-50/60 rounded-xl shadow-sm p-4 md:p-5 border border-theater-primary-100">
-                    {post.comments && (
-                      <MemoizedComments key={post.id} comments={post.comments} postid={post.id} postTitle={post.title} inline={true} />
-                    )}
-                  </div>
-                </div>
-
-                {/* 3. 読むボタンエリア */}
-                {!hasReadLinks && (
-                  <div className="mt-6 p-4 bg-gray-50 rounded-xl border border-gray-200 text-center">
-                    <p className="text-sm text-gray-500">
-                      <FaBook className="inline mr-1.5 text-gray-400" />
-                      この作品の台本の入手方法についてはまだ情報がありません。
-                    </p>
-                    <p className="text-xs text-gray-400 mt-1.5">
-                      当サイトでは台本自体の公開は行っておりません。入手先の情報をお持ちの方は
-                      <Link href="/support/contact" className="text-blue-500 hover:underline">お問い合わせ</Link>
-                      よりお知らせください。
-                    </p>
-                  </div>
-                )}
-                {(hasAmazonLink || hasFreeLink) && (
-                  <div className="mt-6 flex flex-col sm:flex-row justify-center gap-4">
-                  {hasAmazonLink && (
-                    <a
-                      href={post.amazon_text_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center justify-center px-6 py-3 rounded-lg shadow-md text-white font-bold text-lg w-full sm:w-auto bg-gray-900 hover:bg-gray-800 transition-all hover:-translate-y-0.5"
-                    >
-                      <FaBook className="mr-2" />
-                      この戯曲を読む (Amazon)
-                      <FaExternalLinkAlt className="ml-2 text-sm" />
-                    </a>
-                  )}
-
-                  {hasFreeLink && (
-                    <a
-                      href={post.link_to_plot}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center justify-center px-6 py-3 rounded-lg shadow-md font-bold text-lg w-full sm:w-auto bg-white text-gray-900 border-2 border-gray-900 hover:bg-gray-50 transition-all hover:-translate-y-0.5"
-                    >
-                      <FaBook className="mr-2" />
-                      この戯曲を無料で読む
-                      <FaExternalLinkAlt className="ml-2 text-sm" />
-                    </a>
-                  )}
-
-                  {hasKangekiLink && (
-                    <a
-                      href={post.kangeki_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center justify-center px-6 py-3 rounded-lg shadow-md font-bold text-lg w-full sm:w-auto bg-red-600 hover:bg-red-700 text-white transition-all hover:-translate-y-0.5"
-                    >
-                      <FaTheaterMasks className="mr-2" />
-                      観劇三昧で観る
-                      <FaExternalLinkAlt className="ml-2 text-sm" />
-                    </a>
-                  )}
-                  </div>
-                )}
-
-                {/* 3. 評価セクション */}
-                <div className="mt-6">
-                  <div className="bg-white rounded-xl shadow-sm px-4 py-4 md:px-6 md:py-4 border border-gray-100">
-                    <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
-                      <span className="text-sm font-bold text-gray-700 whitespace-nowrap">この作品を評価</span>
-                      <div className="flex items-center gap-0.5">
-                        {[1, 2, 3, 4, 5].map((value) => (
-                          <button
-                            key={value}
-                            type="button"
-                            onClick={() => handleStarClick(value)}
-                            className="p-0.5 hover:scale-110 transition-transform"
-                          >
-                            <FaStar
-                              className={
-                                value <= star
-                                  ? "text-yellow-500 text-2xl md:text-3xl cursor-pointer"
-                                  : "text-gray-300 text-2xl md:text-3xl cursor-pointer hover:text-yellow-300"
-                              }
-                            />
-                          </button>
-                        ))}
-                      </div>
-                      <button
-                        className="py-2 px-6 rounded-lg bg-gray-900 text-white font-bold text-sm hover:bg-gray-800 transition-all shadow-sm whitespace-nowrap"
-                        onClick={handleSubmit}
-                      >
-                        送信
-                      </button>
+                  <div className="flex items-center gap-3">
+                    <span className="text-sm text-gray-500">評価する</span>
+                    <div className="flex items-center">
+                      {[1, 2, 3, 4, 5].map((value) => (
+                        <button key={value} type="button" onClick={() => handleStarClick(value)} className="hover:scale-110 transition-transform">
+                          <FaStar className={value <= star ? "text-yellow-400 text-lg" : "text-gray-200 text-lg hover:text-yellow-300"} />
+                        </button>
+                      ))}
                     </div>
-                    {(error || success) && (
-                      <div className="mt-3 text-center text-sm">
-                        {error && <span className="text-red-600">{error}</span>}
-                        {success && <span className="text-green-600">{success}</span>}
-                      </div>
-                    )}
+                    <button className="py-1 px-3 bg-gray-800 text-white font-bold text-xs rounded hover:bg-gray-700 transition-colors" onClick={handleSubmit}>送信</button>
+                    {error && <span className="text-xs text-red-600">{error}</span>}
+                    {success && <span className="text-xs text-green-600">{success}</span>}
                   </div>
+
+                  <MemoizedComments key={post.id} comments={post.comments || []} postid={post.id} postTitle={post.title} inline={true} />
                 </div>
+              )}
 
-                {/* 広告: 本文後 */}
-                <AdSlot slot={AD_SLOTS.POST_AFTER_CONTENT} format="horizontal" />
-
-                {/* 5. この脚本を上演した劇団 */}
-                {post.theaterGroups && post.theaterGroups.length > 0 && (
-                  <div className="mt-6">
-                    <div className="bg-white rounded-xl shadow-sm p-5 md:p-6 border border-gray-100">
-                      <h2 className="text-xl md:text-2xl font-bold mb-4 text-center text-gray-800 font-serif flex items-center justify-center gap-2">
-                        <FaTheaterMasks className="text-theater-primary-500" />
-                        この脚本を上演した劇団
-                      </h2>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {/* ━━━ 関連情報タブ ━━━ */}
+              {activeTab === "related" && (
+                <div className="space-y-8">
+                  {post.theaterGroups && post.theaterGroups.length > 0 && (
+                    <div>
+                      <h2 className="text-base font-bold text-gray-900 mb-3">この脚本を上演した劇団（{post.theaterGroups.length}）</h2>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-1">
                         {post.theaterGroups.map((ptg: any) => {
                           const group = ptg.theaterGroup;
                           const typeLabels: Record<string, string> = {
@@ -392,206 +325,41 @@ function PostPage({ post }: any) {
                             AMATEUR: '社会人', PROFESSIONAL: 'プロ', YOUTH: 'ユース',
                           };
                           return (
-                            <div
-                              key={group.id}
-                              className="p-3 rounded-lg border border-gray-100 hover:border-theater-primary-200 hover:bg-theater-primary-50/50 transition-all"
-                            >
-                              <Link
-                                href={`/theater-groups/${group.slug}`}
-                                className="flex items-center gap-3 group"
-                              >
-                                <div className="w-10 h-10 bg-theater-primary-100 rounded-full flex items-center justify-center flex-shrink-0">
-                                  <FaTheaterMasks className="text-theater-primary-500" />
-                                </div>
-                                <div className="min-w-0 flex-1">
-                                  <p className="font-bold text-sm text-gray-800 group-hover:text-theater-primary-700 truncate">
-                                    {group.name}
-                                  </p>
-                                  <div className="flex items-center gap-2 text-xs text-gray-500">
-                                    <span>{typeLabels[group.groupType] || group.groupType}</span>
-                                    {group.prefecture && <span>{group.prefecture}</span>}
-                                    {ptg.performanceYear && (
-                                      <span className="text-theater-primary-600 font-medium">{ptg.performanceYear}年上演</span>
-                                    )}
-                                  </div>
-                                </div>
-                              </Link>
-                              {ptg.sourceUrl && (
-                                <div className="mt-1.5 ml-[52px]">
-                                  <a
-                                    href={ptg.sourceUrl}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="inline-flex items-center gap-1 text-[11px] px-2 py-0.5 rounded bg-theater-primary-50 text-theater-primary-600 hover:text-theater-primary-800 font-medium transition-colors"
-                                    onClick={(e) => e.stopPropagation()}
-                                  >
-                                    <FaExternalLinkAlt />
-                                    <span>参考</span>
-                                  </a>
-                                </div>
-                              )}
-                            </div>
+                            <Link key={group.id} href={`/theater-groups/${group.slug}`}
+                              className="flex items-center gap-2.5 p-2.5 rounded hover:bg-gray-50 transition-colors group">
+                              <div className="w-8 h-8 bg-theater-primary-100 rounded-full flex items-center justify-center flex-shrink-0">
+                                <FaTheaterMasks className="text-theater-primary-500 text-xs" />
+                              </div>
+                              <div className="min-w-0 flex-1">
+                                <p className="font-bold text-sm text-gray-800 group-hover:text-theater-primary-600 truncate">{group.name}</p>
+                                <p className="text-[11px] text-gray-400">
+                                  {typeLabels[group.groupType] || group.groupType}
+                                  {group.prefecture && ` · ${group.prefecture}`}
+                                  {ptg.performanceYear && ` · ${ptg.performanceYear}年`}
+                                </p>
+                              </div>
+                            </Link>
                           );
                         })}
                       </div>
                     </div>
-                  </div>
-                )}
+                  )}
 
-                {/* 7. 関連作品 */}
-                <div className="mt-6">
-                  <div className="bg-white rounded-xl shadow-sm p-5 md:p-6 lg:p-8 border border-gray-100">
-                    <h2 className="text-xl md:text-2xl font-bold mb-6 text-center text-gray-800 font-serif">
-                      関連作品
-                    </h2>
-                    <MemoizedOtherPosts
-                      authorId={post.author_id}
-                      postId={post.id}
-                      authorName={post.author.name}
-                    />
+                  <div>
+                    <h2 className="text-base font-bold text-gray-900 mb-3">関連作品</h2>
+                    <MemoizedOtherPosts authorId={post.author_id} postId={post.id} authorName={post.author.name} />
                   </div>
-                </div>
 
-                {/* 7. 劇団データベースへの誘導 */}
-                <div className="mt-6 bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl p-5 border border-gray-100">
-                  <div className="flex items-center gap-2 mb-2">
-                    <FaTheaterMasks className="text-gray-500" />
-                    <h3 className="font-bold text-sm text-gray-700">劇団を探す</h3>
-                  </div>
-                  <p className="text-xs text-gray-500 mb-3">
-                    この脚本を上演する劇団をお探しですか？全国の劇団情報を検索できます。
+                  <p className="text-sm text-gray-400">
+                    劇団を探す:
+                    <Link href="/university-theater" className="text-theater-primary-600 hover:underline ml-1">大学演劇</Link>
+                    <span className="mx-1">·</span>
+                    <Link href="/shogekijo" className="text-theater-primary-600 hover:underline">小劇場</Link>
                   </p>
-                  <div className="flex flex-wrap gap-3">
-                    <Link
-                      href="/university-theater"
-                      className="text-xs text-theater-primary-600 hover:text-theater-primary-800 font-medium transition-colors"
-                    >
-                      大学演劇データベース →
-                    </Link>
-                    <Link
-                      href="/shogekijo"
-                      className="text-xs text-orange-600 hover:text-orange-800 font-medium transition-colors"
-                    >
-                      小劇場データベース →
-                    </Link>
-                  </div>
                 </div>
-              </main>
-
-              {/* サイドバー */}
-              <MemoizedPostSidebar post={post} />
+              )}
             </div>
           </div>
-
-            {/* 固定ボタンエリア */}
-            <div className="fixed bottom-6 right-4 z-50 flex flex-col items-end space-y-3">
-              {/* 読むボタンメニュー */}
-              {hasReadLinks && showReadButtons && (
-                <div className="bg-white p-3 rounded-lg shadow-xl border border-gray-200 flex flex-col space-y-2 mb-2 animate-fadeIn relative w-48">
-                  {hasAmazonLink && (
-                    <a
-                      href={post.amazon_text_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center px-4 py-3 rounded-lg text-gray-800 hover:bg-gray-50 font-bold text-sm transition-colors border border-gray-200"
-                    >
-                      <FaBook className="mr-3 text-gray-400" />
-                      Amazonで読む
-                    </a>
-                  )}
-
-                  {hasFreeLink && (
-                    <a
-                      href={post.link_to_plot}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center px-4 py-3 rounded-lg text-gray-800 hover:bg-gray-50 font-bold text-sm transition-colors border border-gray-200"
-                    >
-                      <FaBook className="mr-3 text-gray-400" />
-                      無料で読む
-                    </a>
-                  )}
-
-                  {hasKangekiLink && (
-                    <a
-                      href={post.kangeki_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center px-4 py-3 rounded-lg text-gray-800 hover:bg-gray-50 font-bold text-sm transition-colors border border-gray-200"
-                    >
-                      <FaTheaterMasks className="mr-3 text-red-400" />
-                      観劇三昧で観る
-                    </a>
-                  )}
-                </div>
-              )}
-
-              {/* SNSシェアボタン */}
-              {showShareButtons && (
-                <div className="bg-white p-3 rounded-lg shadow-xl border border-gray-100 flex space-x-3 mb-2 animate-fadeIn relative">
-                  <FacebookShareButton url={URL} quote={QUOTE}>
-                    <FacebookIcon size={40} round />
-                  </FacebookShareButton>
-                  <TwitterShareButton url={URL} title={QUOTE}>
-                    <TwitterIcon size={40} round />
-                  </TwitterShareButton>
-                  <LineShareButton url={URL} title={QUOTE}>
-                    <LineIcon size={40} round />
-                  </LineShareButton>
-                  <HatenaShareButton
-                    url={URL}
-                    title={QUOTE}
-                    windowWidth={660}
-                    windowHeight={460}
-                  >
-                    <HatenaIcon size={40} round />
-                  </HatenaShareButton>
-                </div>
-              )}
-
-              {/* フローティングアクションボタン群 */}
-              <div className="flex flex-col gap-3">
-                {/* お気に入りボタン */}
-                <FavoriteButton postId={post.id} variant="floating" />
-
-                {/* 比較ボタン */}
-                <CompareButton postId={post.id} variant="floating" />
-
-                {/* 読むボタン */}
-                {hasReadLinks && (
-                  <button
-                    className="bg-gray-900 hover:bg-gray-800 text-white w-14 h-14 rounded-full shadow-lg flex items-center justify-center transition-all duration-200 hover:scale-105"
-                    onClick={toggleReadButtons}
-                    aria-label="この戯曲を読む"
-                  >
-                    {showReadButtons ? <FaExternalLinkAlt className="text-xl" /> : <FaBook className="text-xl" />}
-                  </button>
-                )}
-
-                {/* シェアボタン */}
-                <button
-                  className="bg-gray-800 hover:bg-gray-900 text-white w-12 h-12 rounded-full shadow-lg flex items-center justify-center transition-all duration-200 hover:scale-105"
-                  onClick={toggleShareButtons}
-                  aria-label="記事を共有"
-                >
-                  <FaShareAlt className="text-lg" />
-                </button>
-
-                {/* コメントボタン（スクロール先へ） */}
-                <button
-                  className="bg-theater-primary-600 hover:bg-theater-primary-700 text-white w-12 h-12 rounded-full shadow-lg flex items-center justify-center transition-all duration-200 hover:scale-105 relative"
-                  onClick={scrollToComments}
-                  aria-label="コメントへ移動"
-                >
-                  <FaCommentDots className="text-lg" />
-                  {commentCount > 0 && (
-                    <span className="absolute -top-1 -right-1 bg-gray-900 text-white text-xs font-bold rounded-full min-w-[20px] h-5 flex items-center justify-center px-1">
-                      {commentCount}
-                    </span>
-                  )}
-                </button>
-              </div>
-            </div>
           </div>
       </Layout>
     </>

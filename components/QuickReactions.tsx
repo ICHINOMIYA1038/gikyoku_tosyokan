@@ -1,19 +1,18 @@
 import React, { useState, useEffect } from "react";
 
 const REACTIONS = [
-  { key: "泣けた", emoji: "😢", label: "泣けた" },
-  { key: "笑えた", emoji: "😂", label: "笑えた" },
-  { key: "考えさせられた", emoji: "🤔", label: "考えさせられた" },
-  { key: "感動した", emoji: "✨", label: "感動した" },
-  { key: "演じたい", emoji: "🎭", label: "演じたい" },
-  { key: "おすすめ", emoji: "👍", label: "おすすめ" },
+  { key: "泣けた", emoji: "😢" },
+  { key: "笑えた", emoji: "😂" },
+  { key: "考えさせられた", emoji: "🤔" },
+  { key: "感動した", emoji: "✨" },
+  { key: "演じたい", emoji: "🎭" },
+  { key: "おすすめ", emoji: "👍" },
 ];
 
 const QuickReactions = ({ postId }: { postId: number }) => {
   const [counts, setCounts] = useState<Record<string, number>>({});
   const [reacted, setReacted] = useState<Set<string>>(new Set());
   const [animating, setAnimating] = useState<string | null>(null);
-  const [feedback, setFeedback] = useState<string | null>(null);
 
   useEffect(() => {
     fetch(`/api/reactions?postId=${postId}`)
@@ -27,21 +26,16 @@ const QuickReactions = ({ postId }: { postId: number }) => {
     } catch {}
   }, [postId]);
 
-  const handleReact = async (reaction: string, emoji: string) => {
+  const handleReact = async (reaction: string) => {
     if (reacted.has(reaction)) return;
 
     setAnimating(reaction);
-    setTimeout(() => setAnimating(null), 800);
+    setTimeout(() => setAnimating(null), 600);
 
-    // Optimistic update
     const newReacted = new Set(reacted);
     newReacted.add(reaction);
     setReacted(newReacted);
     setCounts((prev) => ({ ...prev, [reaction]: (prev[reaction] || 0) + 1 }));
-
-    // Show feedback
-    setFeedback(`${emoji} 送信しました！`);
-    setTimeout(() => setFeedback(null), 2000);
 
     try {
       localStorage.setItem(`reactions_${postId}`, JSON.stringify(Array.from(newReacted)));
@@ -60,53 +54,33 @@ const QuickReactions = ({ postId }: { postId: number }) => {
     } catch {}
   };
 
-  const totalReactions = Object.values(counts).reduce((sum, c) => sum + c, 0);
-
   return (
-    <div className="my-6">
-      <div className="flex items-center gap-2 mb-3">
-        <div className="w-1 h-5 bg-amber-500 rounded-full"></div>
-        <h3 className="text-sm font-bold text-gray-700">この作品どうだった？</h3>
-        {totalReactions > 0 && (
-          <span className="text-xs text-gray-400">{totalReactions}件のリアクション</span>
-        )}
-      </div>
-      <div className="flex flex-wrap gap-2">
-        {REACTIONS.map((r) => {
-          const isReacted = reacted.has(r.key);
-          const count = counts[r.key] || 0;
-          const isAnimating = animating === r.key;
-          return (
-            <button
-              key={r.key}
-              onClick={() => handleReact(r.key, r.emoji)}
-              disabled={isReacted}
-              className={`
-                inline-flex items-center gap-1.5 px-3 py-2 rounded-full text-sm font-medium
-                transition-all duration-300 min-h-[40px] border
-                ${isAnimating ? "scale-125 shadow-md" : "scale-100"}
-                ${isReacted
-                  ? "bg-amber-50 border-amber-400 text-amber-700 shadow-sm cursor-default"
-                  : "bg-white border-gray-200 text-gray-600 hover:border-amber-300 hover:bg-amber-50 active:scale-95 cursor-pointer"
-                }
-              `}
-            >
-              <span className={`text-base ${isAnimating ? "animate-bounce" : ""}`}>{r.emoji}</span>
-              <span className="text-xs">{r.label}</span>
-              {count > 0 && (
-                <span className={`text-xs font-bold ml-0.5 ${isReacted ? "text-amber-600" : "text-gray-400"}`}>
-                  {count}
-                </span>
-              )}
-            </button>
-          );
-        })}
-      </div>
-      {feedback && (
-        <div className="mt-3 inline-flex items-center gap-1.5 px-3 py-1.5 bg-green-50 border border-green-200 rounded-full text-sm text-green-700 animate-fade-in">
-          {feedback}
-        </div>
-      )}
+    <div className="flex flex-wrap items-center gap-1.5 my-4">
+      {REACTIONS.map((r) => {
+        const isReacted = reacted.has(r.key);
+        const count = counts[r.key] || 0;
+        const isAnimating = animating === r.key;
+        return (
+          <button
+            key={r.key}
+            onClick={() => handleReact(r.key)}
+            disabled={isReacted}
+            title={r.key}
+            className={`
+              inline-flex items-center gap-1 h-8 px-2.5 rounded-md text-xs
+              transition-all duration-200
+              ${isAnimating ? "scale-110" : "scale-100"}
+              ${isReacted
+                ? "bg-theater-primary-50 text-theater-primary-700 font-bold"
+                : "bg-gray-50 hover:bg-gray-100 text-gray-500 cursor-pointer"
+              }
+            `}
+          >
+            <span className={`text-sm ${isAnimating ? "animate-bounce" : ""}`}>{r.emoji}</span>
+            {count > 0 && <span>{count}</span>}
+          </button>
+        );
+      })}
     </div>
   );
 };

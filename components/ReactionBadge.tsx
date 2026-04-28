@@ -10,35 +10,31 @@ const REACTION_EMOJI: Record<string, string> = {
 };
 
 const ReactionBadge = ({ postId }: { postId: number }) => {
-  const [topReaction, setTopReaction] = useState<{ key: string; count: number } | null>(null);
-  const [totalCount, setTotalCount] = useState(0);
+  const [reactions, setReactions] = useState<[string, number][]>([]);
 
   useEffect(() => {
     fetch(`/api/reactions?postId=${postId}`)
       .then((r) => r.json())
       .then((counts: Record<string, number>) => {
-        const total = Object.values(counts).reduce((s, c) => s + c, 0);
-        setTotalCount(total);
-        if (total === 0) return;
-        const top = Object.entries(counts).sort((a, b) => b[1] - a[1])[0];
-        setTopReaction({ key: top[0], count: top[1] });
+        const sorted = Object.entries(counts)
+          .filter(([, c]) => c > 0)
+          .sort((a, b) => b[1] - a[1])
+          .slice(0, 3);
+        setReactions(sorted);
       })
       .catch(() => {});
   }, [postId]);
 
-  if (!topReaction || totalCount === 0) return null;
-
-  const emoji = REACTION_EMOJI[topReaction.key] || "";
+  if (reactions.length === 0) return null;
 
   return (
-    <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-amber-50 border border-amber-200 rounded-full text-sm">
-      <span>{emoji}</span>
-      <span className="text-amber-700 font-medium">
-        「{topReaction.key}」{topReaction.count > 1 ? ` × ${topReaction.count}` : ""}
-      </span>
-      {totalCount > topReaction.count && (
-        <span className="text-amber-500 text-xs">他{totalCount - topReaction.count}件</span>
-      )}
+    <div className="flex items-center gap-1 text-sm text-gray-500">
+      {reactions.map(([key, count]) => (
+        <span key={key} className="inline-flex items-center gap-0.5" title={key}>
+          <span>{REACTION_EMOJI[key] || ""}</span>
+          <span className="text-xs">{count}</span>
+        </span>
+      ))}
     </div>
   );
 };

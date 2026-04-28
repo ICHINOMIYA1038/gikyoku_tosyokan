@@ -40,7 +40,7 @@ const Comments = ({ comments: initialComments, postid, postTitle, inline = false
   const [showGuidelines, setShowGuidelines] = useState(false);
   const [selectedType, setSelectedType] = useState<string | null>(null);
   const [showAllComments, setShowAllComments] = useState(false);
-  const [showForm, setShowForm] = useState(false);
+  const [showForm, setShowForm] = useState(comments.length === 0);
   const [likedComments, setLikedComments] = useState<Set<string>>(new Set());
   const [sortMode, setSortMode] = useState<SortMode>("newest");
   const [filterType, setFilterType] = useState<FilterType>("all");
