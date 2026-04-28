@@ -147,33 +147,93 @@ export const PostHero: React.FC<PostPageProps> = ({ post }) => {
 
 // --- 作品詳細 ---
 export const PostDetails: React.FC<PostPageProps> = ({ post }) => {
+  const hasSynopsis = !!post.synopsis;
+  const hasDetails = !!post.details;
+  const hasAuthorProfile = !!post.author.profile;
+  const hasAiDescription = !!post.aiDescription;
+  const hasContent = hasSynopsis || hasDetails || hasAuthorProfile || hasAiDescription;
+
+  // スペックから自然文を生成
+  const specSentences: string[] = [];
+  if (post.author?.name) {
+    specSentences.push(`${post.author.name}${post.author.group ? `（${post.author.group}）` : ""}による作品です。`);
+  }
+  if (post.playtime != null && post.playtime > 0) {
+    specSentences.push(`上演時間は約${post.playtime}分。`);
+  }
+  const man = (post.man != null && post.man > 0) ? post.man : 0;
+  const woman = (post.woman != null && post.woman > 0) ? post.woman : 0;
+  const others = (post.others != null && post.others > 0) ? post.others : 0;
+  const total = post.totalNumber != null && post.totalNumber > 0 ? post.totalNumber : man + woman + others;
+  if (total > 0) {
+    const parts: string[] = [];
+    if (man > 0) parts.push(`男性${man}人`);
+    if (woman > 0) parts.push(`女性${woman}人`);
+    if (others > 0) parts.push(`その他${others}人`);
+    specSentences.push(`キャストは${parts.join("・")}の計${total}人で上演できます。`);
+  }
+
   return (
     <div className="space-y-6">
-      {post.synopsis && (
+      {hasSynopsis && (
         <section>
-          <h2 className="text-base font-bold text-gray-900 mb-2 text-lg font-bold text-gray-900">あらすじ</h2>
+          <h2 className="text-lg font-bold text-gray-900 mb-2">あらすじ</h2>
           <p className="text-gray-700 leading-[1.9] text-sm mt-3 whitespace-pre-wrap">{post.synopsis}</p>
         </section>
       )}
 
-      {post.details && (
+      {hasDetails && (
         <section>
-          <h2 className="text-base font-bold text-gray-900 mb-2 text-lg font-bold text-gray-900">詳細</h2>
+          <h2 className="text-lg font-bold text-gray-900 mb-2">詳細</h2>
           <div className="prose prose-sm max-w-none text-gray-700 mt-3">
             <CustomMarkdown content={post.details} />
           </div>
         </section>
       )}
 
-      {post.author.profile && (
+      {hasAuthorProfile && (
         <section>
-          <h2 className="text-base font-bold text-gray-900 mb-2 text-lg font-bold text-gray-900">作者について</h2>
+          <h2 className="text-lg font-bold text-gray-900 mb-2">作者について</h2>
           <div className="mt-3">
             <Link href={`/authors/${post.author_id}`}
               className="font-bold text-sm text-theater-primary-600 hover:underline">{post.author.name}</Link>
             <p className="text-sm text-gray-600 mt-1 leading-relaxed">{post.author.profile}</p>
           </div>
         </section>
+      )}
+
+      {/* コンテンツが何もない場合のフォールバック */}
+      {!hasContent && (
+        <div className="space-y-6">
+          {/* スペックから生成した自然文 */}
+          <section>
+            <h2 className="text-lg font-bold text-gray-900 mb-2">作品情報</h2>
+            <p className="text-sm text-gray-600 leading-relaxed">
+              {specSentences.join("")}
+            </p>
+            {post.categories && post.categories.length > 0 && (
+              <p className="text-sm text-gray-600 mt-2">
+                カテゴリ：{post.categories.map((c: any) => c.name).join("、")}
+              </p>
+            )}
+          </section>
+
+          {/* UGC CTA */}
+          <div className="bg-gray-50 rounded-lg p-5 text-center">
+            <p className="text-sm text-gray-500 mb-1">この作品の情報はまだ充実していません</p>
+            <p className="text-xs text-gray-400">
+              この作品を読んだことがある方は、
+              <Link href="#comments-section" className="text-theater-primary-600 hover:underline"
+                onClick={(e) => {
+                  e.preventDefault();
+                  document.getElementById("comments-section")?.scrollIntoView({ behavior: "smooth" });
+                }}>
+                コメント欄
+              </Link>
+              であらすじや感想を共有いただけると、他の方の参考になります。
+            </p>
+          </div>
+        </div>
       )}
     </div>
   );

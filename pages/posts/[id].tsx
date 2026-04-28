@@ -27,6 +27,7 @@ import { prisma } from "@/lib/prisma";
 import AdSlot from "@/components/Ad/AdSlot";
 import { AD_SLOTS } from "@/lib/adSlots";
 import AiDescription from "@/components/AiDescription";
+import UserSynopsis from "@/components/UserSynopsis";
 
 // メモ化されたコンポーネント
 const MemoizedPostHero = React.memo(PostHero);
@@ -283,6 +284,9 @@ function PostPage({ post }: any) {
                   {!post.synopsis && post.aiDescription && (
                     <AiDescription description={post.aiDescription} />
                   )}
+
+                  {/* ユーザー投稿概要 */}
+                  <UserSynopsis postId={post.id} />
 
                   <AdSlot slot={AD_SLOTS.POST_AFTER_CONTENT} format="horizontal" />
                 </div>

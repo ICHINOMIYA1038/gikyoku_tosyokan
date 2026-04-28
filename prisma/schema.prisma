@@ -57,6 +57,7 @@ model Post {
   awards              PostAward[]
   announcements       Announcement[]
   favorites           Favorite[]
+  userSynopses        UserSynopsis[]
 
   @@index([title])
   @@index([synopsis])
@@ -375,9 +376,28 @@ model User {
   interests         Interest[]
   sentMessages      Message[]       @relation("SentMessages")
   receivedMessages  Message[]       @relation("ReceivedMessages")
+  userSynopses      UserSynopsis[]
 
   @@index([email])
   @@map("User")
+}
+
+model UserSynopsis {
+  id        Int      @id @default(autoincrement())
+  content   String
+  status    String   @default("pending") // pending, approved, rejected
+  postId    Int
+  userId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  post Post @relation(fields: [postId], references: [id])
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([postId])
+  @@index([userId])
+  @@index([status])
+  @@map("UserSynopsis")
 }
 
 model Account {
