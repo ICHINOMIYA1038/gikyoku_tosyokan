@@ -20,6 +20,7 @@ type NearbyVenue = { name: string; slug: string; venueType: string; capacity: nu
 type AnnouncementItem = { id: number; title: string; performanceDate: string | null; theaterGroupName: string | null; post: { id: number; title: string } | null };
 type PerformanceItem = {
   performanceYear: number | null;
+  sourceUrl: string | null;
   post: { id: number; title: string; author: { name: string } };
   theaterGroup: { name: string; slug: string };
 };
@@ -245,12 +246,18 @@ export default function VenueDetail({ venue, nearbyVenues, announcements, perfor
                     <Link href={`/posts/${p.post.id}`} className="text-sm font-medium text-gray-800 hover:text-theater-primary-600">
                       {p.post.author.name}『{p.post.title}』
                     </Link>
-                    <div className="flex items-center gap-2 mt-0.5">
+                    <div className="flex items-center gap-2 mt-0.5 flex-wrap">
                       <Link href={`/theater-groups/${p.theaterGroup.slug}`} className="text-xs text-gray-400 hover:text-gray-600">
                         {p.theaterGroup.name}
                       </Link>
                       {p.performanceYear && (
-                        <span className="text-xs text-gray-400">{p.performanceYear}年</span>
+                        <span className="text-xs text-gray-400">{p.performanceYear}年上演</span>
+                      )}
+                      {p.sourceUrl && (
+                        <a href={p.sourceUrl} target="_blank" rel="noopener noreferrer"
+                          className="text-[10px] text-blue-400 hover:text-blue-600 flex items-center gap-0.5">
+                          <FaExternalLinkAlt className="text-[8px]" />出典
+                        </a>
                       )}
                     </div>
                   </div>
@@ -329,6 +336,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     where: { venueId: venue.id },
     select: {
       performanceYear: true,
+      sourceUrl: true,
       post: { select: { id: true, title: true, author: { select: { name: true } } } },
       theaterGroup: { select: { name: true, slug: true } },
     },
