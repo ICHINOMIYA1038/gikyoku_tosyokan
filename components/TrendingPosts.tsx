@@ -1,6 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { FaFire, FaStar, FaClock, FaUsers, FaEye } from "react-icons/fa";
+import AiImageBadge from "./AiImageBadge";
 
 type TrendingPost = {
   id: number;
@@ -63,13 +64,14 @@ const TrendingPosts: React.FC<Props> = ({ posts }) => {
                     {index + 1}
                   </div>
                   {post.image_url ? (
-                    <div className="w-full h-32 bg-gray-100 overflow-hidden">
+                    <div className="relative w-full h-32 bg-gray-100 overflow-hidden">
                       <img
                         src={post.image_url}
                         alt={post.title}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform"
                         loading="lazy"
                       />
+                      <AiImageBadge imageUrl={post.image_url} size="xs" />
                     </div>
                   ) : (
                     <div className="w-full h-32 bg-gradient-to-br from-orange-100 to-pink-100 flex items-center justify-center">

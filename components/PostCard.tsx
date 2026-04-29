@@ -3,6 +3,7 @@ import Image from "next/image";
 import { Post as PostType } from "@prisma/client";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import AiImageBadge from "./AiImageBadge";
 import { FaClock, FaUsers, FaMale, FaFemale, FaTag, FaPen, FaTheaterMasks, FaCommentDots, FaStar } from "react-icons/fa";
 import FavoriteButton from "@/components/FavoriteButton";
 
@@ -33,6 +34,7 @@ const PostCard: React.FC<PostPageProps> = ({ post }: any) => {
                 <span className="text-xs font-serif opacity-70">No Image</span>
               </div>
             )}
+            <AiImageBadge imageUrl={post.image_url} size="xs" />
             {/* お気に入りボタン（右上） */}
             <div className="absolute top-3 right-3 z-10">
               <FavoriteButton postId={post.id} size="sm" />

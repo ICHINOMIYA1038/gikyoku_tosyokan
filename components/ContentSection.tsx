@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import LoadingIndicator from "@/components/LoadingIndicator";
 import { useRouter } from "next/router";
+import AiImageBadge from "./AiImageBadge";
 import { FaTrophy, FaPen, FaTag, FaChevronRight, FaFire, FaCrown, FaMedal, FaStar, FaHeart, FaTheaterMasks, FaClock, FaUsers } from "react-icons/fa";
 import PostCardSmall from "./PostCardSmall";
 import { useQuery } from "@tanstack/react-query";
@@ -97,10 +98,10 @@ const ContentSection: React.FC<ContentSectionProps> = ({ posts, authors, categor
                                             </div>
                                             
                                             {/* サムネイル */}
-                                            <div className="w-20 h-20 flex-shrink-0 rounded-lg overflow-hidden bg-theater-neutral-100">
+                                            <div className="relative w-20 h-20 flex-shrink-0 rounded-lg overflow-hidden bg-theater-neutral-100">
                                                 {post.image_url ? (
-                                                    <img 
-                                                        src={post.image_url} 
+                                                    <img
+                                                        src={post.image_url}
                                                         alt={post.title}
                                                         className="w-full h-full object-cover group-hover:scale-110 transition-transform"
                                                     />
@@ -109,6 +110,7 @@ const ContentSection: React.FC<ContentSectionProps> = ({ posts, authors, categor
                                                         <FaTheaterMasks className="text-2xl text-theater-primary-300" />
                                                     </div>
                                                 )}
+                                                <AiImageBadge imageUrl={post.image_url} size="xs" />
                                             </div>
                                             
                                             {/* 作品情報 */}

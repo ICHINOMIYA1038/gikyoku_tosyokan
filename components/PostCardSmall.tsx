@@ -3,6 +3,7 @@ import Image from "next/image";
 import { Post as PostType } from "@prisma/client";
 import Link from "next/link";
 import { FaClock, FaUsers, FaTag, FaPen, FaMale, FaFemale, FaTheaterMasks, FaStar, FaCommentDots } from "react-icons/fa";
+import AiImageBadge from "./AiImageBadge";
 
 type PostPageProps = {
   post: PostType & { author: { id: number; name: string } };
@@ -35,6 +36,7 @@ const PostCardSmall: React.FC<PostPageProps> = ({ post }: any) => {
             </div>
           )}
           
+          <AiImageBadge imageUrl={post.image_url} size="xs" />
           {/* カテゴリーバッジ */}
           {primaryCategory && (
             <div className="absolute top-2 right-2">

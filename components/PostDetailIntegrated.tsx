@@ -10,6 +10,7 @@ import {
 } from "react-icons/fa";
 import AdSlot from "./Ad/AdSlot";
 import { AD_SLOTS } from "@/lib/adSlots";
+import AiImageBadge from "./AiImageBadge";
 
 type PostPageProps = {
   post: any;
@@ -27,14 +28,17 @@ export const PostHero: React.FC<PostPageProps> = ({ post }) => {
     <div className="flex flex-col sm:flex-row gap-5 md:gap-6">
       {/* ポスター */}
       <div className="flex-shrink-0 self-center sm:self-start">
-        {post.image_url ? (
-          <img src={post.image_url} alt={post.title}
-            className="w-36 h-[200px] md:w-40 md:h-[220px] object-cover rounded-lg shadow-md" />
-        ) : (
-          <div className="w-36 h-[200px] md:w-40 md:h-[220px] bg-gradient-to-br from-theater-primary-400 via-pink-400 to-purple-500 rounded-lg shadow-md flex items-center justify-center">
-            <span className="text-5xl font-serif font-bold text-white/90 drop-shadow">{initial}</span>
-          </div>
-        )}
+        <div className="relative">
+          {post.image_url ? (
+            <img src={post.image_url} alt={post.title}
+              className="w-36 h-[200px] md:w-40 md:h-[220px] object-cover rounded-lg shadow-md" />
+          ) : (
+            <div className="w-36 h-[200px] md:w-40 md:h-[220px] bg-gradient-to-br from-theater-primary-400 via-pink-400 to-purple-500 rounded-lg shadow-md flex items-center justify-center">
+              <span className="text-5xl font-serif font-bold text-white/90 drop-shadow">{initial}</span>
+            </div>
+          )}
+          <AiImageBadge imageUrl={post.image_url} />
+        </div>
         {/* 閲覧数・評価数 */}
         <div className="flex justify-center gap-4 mt-2 text-xs text-gray-400">
           <span className="flex items-center gap-1"><FaEye />{post._count?.accesses || 0}</span>
