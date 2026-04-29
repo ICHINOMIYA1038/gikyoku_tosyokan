@@ -1,5 +1,5 @@
 import { GetStaticProps } from 'next';
-import { useState, useMemo, useCallback, useRef } from 'react';
+import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import Layout from '@/components/Layout';
@@ -43,21 +43,43 @@ export default function VenuesIndex({ venues, stats, prefectures, prefectureCoun
   const [search, setSearch] = useState('');
   const [selectedType, setSelectedType] = useState('');
   const [selectedPrefecture, setSelectedPrefecture] = useState('');
+  const [selectedCapacity, setSelectedCapacity] = useState<'' | 'small' | 'medium' | 'large'>('');
+  const [sortBy, setSortBy] = useState<'name' | 'capacity-asc' | 'capacity-desc'>('name');
   const [viewMode, setViewMode] = useState<'map' | 'list'>('map');
   const [expandedVenue, setExpandedVenue] = useState<number | null>(null);
   const detailRef = useRef<HTMLDivElement>(null);
 
+  // Default to list view on mobile
+  useEffect(() => {
+    if (window.innerWidth < 768) {
+      setViewMode('list');
+    }
+  }, []);
+
   const filtered = useMemo(() => {
-    return venues.filter((v) => {
+    const result = venues.filter((v) => {
       if (search) {
         const q = search.toLowerCase();
         if (!v.name.toLowerCase().includes(q) && !v.prefecture.includes(q) && !(v.address || '').includes(q)) return false;
       }
       if (selectedType && v.venueType !== selectedType) return false;
       if (selectedPrefecture && v.prefecture !== selectedPrefecture) return false;
+      if (selectedCapacity) {
+        const cap = v.capacity || 0;
+        if (selectedCapacity === 'small' && cap > 100) return false;
+        if (selectedCapacity === 'medium' && (cap <= 100 || cap > 300)) return false;
+        if (selectedCapacity === 'large' && cap <= 300) return false;
+      }
       return true;
     });
-  }, [venues, search, selectedType, selectedPrefecture]);
+    if (sortBy === 'capacity-asc') {
+      result.sort((a, b) => (a.capacity || 0) - (b.capacity || 0));
+    } else if (sortBy === 'capacity-desc') {
+      result.sort((a, b) => (b.capacity || 0) - (a.capacity || 0));
+    }
+    // 'name' keeps the default order (prefecture + name from server)
+    return result;
+  }, [venues, search, selectedType, selectedPrefecture, selectedCapacity, sortBy]);
 
   const hasData = useCallback((prefName: string) => {
     return (prefectureCounts[prefName] || 0) > 0;
@@ -229,6 +251,19 @@ export default function VenuesIndex({ venues, stats, prefectures, prefectureCoun
               ))}
             </div>
 
+            {/* 座席数フィルター */}
+            <div className="flex flex-wrap gap-2 mb-3">
+              {([['', '全て'], ['small', '〜100席'], ['medium', '100〜300席'], ['large', '300〜']] as const).map(([key, label]) => (
+                <button
+                  key={key}
+                  onClick={() => setSelectedCapacity(key)}
+                  className={`px-3 py-1 text-xs font-bold rounded-full transition-colors ${selectedCapacity === key ? 'bg-theater-primary-500 text-white' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'}`}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+
             {/* 検索 */}
             <div className="flex flex-col sm:flex-row gap-3 mb-5">
               <div className="relative flex-1">
@@ -241,6 +276,12 @@ export default function VenuesIndex({ venues, stats, prefectures, prefectureCoun
                 className="px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-theater-primary-200">
                 <option value="">全都道府県</option>
                 {prefectures.map((p) => <option key={p} value={p}>{p}（{prefectureCounts[p] || 0}）</option>)}
+              </select>
+              <select value={sortBy} onChange={(e) => setSortBy(e.target.value as typeof sortBy)}
+                className="px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-theater-primary-200">
+                <option value="name">名前順</option>
+                <option value="capacity-asc">座席数（少→多）</option>
+                <option value="capacity-desc">座席数（多→少）</option>
               </select>
             </div>
 

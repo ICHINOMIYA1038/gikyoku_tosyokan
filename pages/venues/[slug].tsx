@@ -25,6 +25,13 @@ const venueTypeColors: Record<string, string> = {
   LARGE: 'bg-purple-100 text-purple-700',
 };
 
+type NearbyVenue = {
+  name: string;
+  slug: string;
+  venueType: string;
+  capacity: number | null;
+};
+
 type Props = {
   venue: {
     id: number;
@@ -40,9 +47,10 @@ type Props = {
     latitude: number | null;
     longitude: number | null;
   };
+  nearbyVenues: NearbyVenue[];
 };
 
-export default function VenueDetail({ venue }: Props) {
+export default function VenueDetail({ venue, nearbyVenues }: Props) {
   if (!venue) return null;
 
   const placeJsonLd = {
@@ -139,8 +147,8 @@ export default function VenueDetail({ venue }: Props) {
 
         {/* 住所 + 地図 */}
         {(venue.address || venue.prefecture) && (
-          <section className="mb-4">
-            <h2 className="font-bold text-base text-gray-800 mb-3 flex items-center gap-2">
+          <section className="bg-white rounded-xl border border-gray-100 shadow-sm p-5 mb-4">
+            <h2 className="font-serif font-bold text-lg text-gray-800 mb-3 flex items-center gap-2">
               <FaMapMarkerAlt className="text-red-500" />
               アクセス
             </h2>
@@ -202,6 +210,29 @@ export default function VenueDetail({ venue }: Props) {
             </div>
           </section>
         )}
+
+        {/* 近くの劇場 */}
+        {nearbyVenues.length > 0 && (
+          <section className="bg-white rounded-xl border border-gray-100 shadow-sm p-5 mb-4">
+            <h2 className="font-serif font-bold text-lg text-gray-800 mb-3">
+              {venue.prefecture}の他の劇場
+            </h2>
+            <ul className="space-y-2">
+              {nearbyVenues.map((nv) => (
+                <li key={nv.slug}>
+                  <Link href={`/venues/${nv.slug}`} className="flex items-center gap-2 text-sm text-gray-700 hover:text-theater-primary-600 transition-colors">
+                    <span className="text-gray-400">›</span>
+                    <span className="font-medium">{nv.name}</span>
+                    <span className="text-xs text-gray-400">
+                      {venueTypeLabels[nv.venueType] || nv.venueType}
+                      {nv.capacity ? ` · ${nv.capacity}席` : ''}
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
       </div>
     </Layout>
   );
@@ -223,9 +254,22 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 
   if (!venue) return { notFound: true };
 
+  const nearbyVenues = venue.prefecture
+    ? await prisma.venue.findMany({
+        where: {
+          prefecture: venue.prefecture,
+          id: { not: venue.id },
+        },
+        select: { name: true, slug: true, venueType: true, capacity: true },
+        orderBy: { name: 'asc' },
+        take: 5,
+      })
+    : [];
+
   return {
     props: {
       venue: JSON.parse(JSON.stringify(venue)),
+      nearbyVenues: JSON.parse(JSON.stringify(nearbyVenues)),
     },
     revalidate: 604800,
   };
