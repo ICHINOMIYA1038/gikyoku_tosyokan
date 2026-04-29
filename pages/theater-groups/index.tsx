@@ -3,120 +3,140 @@ import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import Layout from '@/components/Layout';
 import Seo from '@/components/seo';
+import StructuredData from '@/components/StructuredData';
 import TheaterGroupCard from '@/components/TheaterGroupCard';
 import { prisma } from '@/lib/prisma';
-import { regionLabels, groupTypeLabels } from '@/lib/university-theater-constants';
-import { FaSearch, FaFilter, FaChevronRight } from 'react-icons/fa';
+import { groupTypeLabels } from '@/lib/university-theater-constants';
+import { FaSearch, FaChevronRight, FaTheaterMasks } from 'react-icons/fa';
+
+const TYPE_TABS = [
+  { key: '', label: 'すべて' },
+  { key: 'STUDENT,INTERCOLLEGE,ACADEMIC', label: '大学演劇' },
+  { key: 'PROFESSIONAL', label: 'プロ劇団' },
+  { key: 'AMATEUR', label: '社会人劇団' },
+  { key: 'YOUTH', label: 'ユース' },
+];
+
+const PREFECTURES = [
+  '北海道','青森県','岩手県','宮城県','秋田県','山形県','福島県',
+  '茨城県','栃木県','群馬県','埼玉県','千葉県','東京都','神奈川県',
+  '新潟県','富山県','石川県','福井県','山梨県','長野県','岐阜県','静岡県','愛知県',
+  '三重県','滋賀県','京都府','大阪府','兵庫県','奈良県','和歌山県',
+  '鳥取県','島根県','岡山県','広島県','山口県',
+  '徳島県','香川県','愛媛県','高知県',
+  '福岡県','佐賀県','長崎県','熊本県','大分県','宮崎県','鹿児島県','沖縄県',
+];
 
 type Props = {
   theaterGroups: any[];
-  regions: string[];
-  prefectures: string[];
+  prefecturesWithData: string[];
+  stats: { total: number; student: number; pro: number; amateur: number };
 };
 
-export default function TheaterGroupsIndex({ theaterGroups, regions, prefectures }: Props) {
+export default function TheaterGroupsIndex({ theaterGroups, prefecturesWithData, stats }: Props) {
   const [search, setSearch] = useState('');
-  const [selectedRegion, setSelectedRegion] = useState('');
-  const [selectedPrefecture, setSelectedPrefecture] = useState('');
   const [selectedType, setSelectedType] = useState('');
-
-  const filteredPrefectures = useMemo(() => {
-    if (!selectedRegion) return prefectures;
-    return Array.from(new Set(
-      theaterGroups
-        .filter((g) => g.universities?.some((u: any) => u.university.region === selectedRegion))
-        .flatMap((g) => g.universities?.map((u: any) => u.university.prefecture) ?? [])
-    )).sort();
-  }, [selectedRegion, theaterGroups, prefectures]);
+  const [selectedPrefecture, setSelectedPrefecture] = useState('');
 
   const filtered = useMemo(() => {
-    return theaterGroups.filter((g) => {
-      if (search && !g.name.toLowerCase().includes(search.toLowerCase()) &&
-          !g.universities?.some((u: any) => u.university.name.includes(search))) return false;
-      if (selectedType && g.groupType !== selectedType) return false;
-      if (selectedRegion && !g.universities?.some((u: any) => u.university.region === selectedRegion)) return false;
-      if (selectedPrefecture && !g.universities?.some((u: any) => u.university.prefecture === selectedPrefecture)) return false;
+    return theaterGroups.filter((g: any) => {
+      if (search) {
+        const q = search.toLowerCase();
+        const nameMatch = g.name.toLowerCase().includes(q);
+        const prefMatch = g.prefecture?.toLowerCase().includes(q);
+        const uniMatch = g.universities?.some((u: any) => u.university.name.toLowerCase().includes(q));
+        if (!nameMatch && !prefMatch && !uniMatch) return false;
+      }
+      if (selectedType) {
+        const types = selectedType.split(',');
+        if (!types.includes(g.groupType)) return false;
+      }
+      if (selectedPrefecture && g.prefecture !== selectedPrefecture) return false;
       return true;
     });
-  }, [theaterGroups, search, selectedRegion, selectedPrefecture, selectedType]);
+  }, [theaterGroups, search, selectedType, selectedPrefecture]);
 
   return (
     <Layout>
       <Seo
-        pageTitle="大学演劇 劇団一覧"
-        pageDescription="全国の大学学生劇団・演劇サークルの一覧です。地域、都道府県、種別で検索できます。"
+        pageTitle="劇団データベース | 全国の劇団・演劇団体を検索"
+        pageDescription={`全国${stats.total}団体の劇団情報を掲載。大学演劇${stats.student}団体、プロ劇団${stats.pro}団体、社会人劇団${stats.amateur}団体を検索できます。`}
         pagePath="/theater-groups"
-        pageKeywords={['大学演劇', '学生劇団', '演劇サークル', '劇団一覧']}
+        pageKeywords={['劇団', '演劇', '大学演劇', '学生劇団', '小劇場', '劇団一覧', '演劇団体']}
+      />
+      <StructuredData
+        type="BreadcrumbList"
+        breadcrumbs={[
+          { name: 'ホーム', url: 'https://gikyokutosyokan.com' },
+          { name: '劇団データベース', url: 'https://gikyokutosyokan.com/theater-groups' },
+        ]}
       />
 
-      <div className="px-4 py-6">
+      <div className="container mx-auto px-4 py-6 max-w-6xl">
         {/* パンくず */}
         <nav className="flex items-center gap-1 text-xs text-gray-500 mb-4">
           <Link href="/" className="hover:text-theater-primary-600">ホーム</Link>
           <FaChevronRight className="text-[8px]" />
-          <Link href="/university-theater" className="hover:text-theater-primary-600">大学演劇</Link>
-          <FaChevronRight className="text-[8px]" />
-          <span className="text-gray-700">劇団一覧</span>
+          <span className="text-gray-700">劇団データベース</span>
         </nav>
 
-        {/* ヒーロー */}
-        <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl p-6 md:p-8 mb-6">
-          <h1 className="font-serif text-2xl md:text-3xl font-bold text-gray-800 mb-2">
-            大学演劇 劇団一覧
+        {/* ヘッダー */}
+        <div className="mb-6">
+          <h1 className="text-2xl md:text-3xl font-bold text-gray-900 flex items-center gap-2">
+            <FaTheaterMasks className="text-theater-primary-500" />
+            劇団データベース
           </h1>
-          <p className="text-sm text-gray-600">
-            全国{theaterGroups.length}団体の学生劇団・演劇サークル情報
+          <p className="text-sm text-gray-500 mt-1">
+            全国{stats.total}団体の演劇団体を検索できます
           </p>
         </div>
 
-        {/* フィルタ */}
-        <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4 mb-6">
-          <div className="flex items-center gap-2 mb-3">
-            <FaFilter className="text-gray-400" />
-            <span className="text-sm font-semibold text-gray-700">絞り込み</span>
+        {/* 統計バー */}
+        <div className="flex flex-wrap gap-3 mb-5 text-sm">
+          <span className="px-3 py-1 bg-purple-50 text-purple-700 rounded-full font-bold">大学演劇 {stats.student}</span>
+          <span className="px-3 py-1 bg-blue-50 text-blue-700 rounded-full font-bold">プロ {stats.pro}</span>
+          <span className="px-3 py-1 bg-green-50 text-green-700 rounded-full font-bold">社会人 {stats.amateur}</span>
+        </div>
+
+        {/* タイプタブ */}
+        <div className="flex gap-0 border-b border-gray-200 mb-4">
+          {TYPE_TABS.map((tab) => (
+            <button
+              key={tab.key}
+              onClick={() => setSelectedType(tab.key)}
+              className={`px-3 py-2 text-sm font-bold transition-colors relative whitespace-nowrap
+                ${selectedType === tab.key ? 'text-theater-primary-600' : 'text-gray-400 hover:text-gray-600'}`}
+            >
+              {tab.label}
+              {selectedType === tab.key && (
+                <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-theater-primary-500" />
+              )}
+            </button>
+          ))}
+        </div>
+
+        {/* 検索 + 都道府県フィルター */}
+        <div className="flex flex-col sm:flex-row gap-3 mb-5">
+          <div className="relative flex-1">
+            <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm" />
+            <input
+              type="text"
+              placeholder="劇団名・大学名・地域で検索"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full pl-9 pr-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-theater-primary-200"
+            />
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-            <div className="relative">
-              <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm" />
-              <input
-                type="text"
-                placeholder="劇団名・大学名で検索"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="w-full pl-9 pr-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-200"
-              />
-            </div>
-            <select
-              value={selectedRegion}
-              onChange={(e) => { setSelectedRegion(e.target.value); setSelectedPrefecture(''); }}
-              className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-200"
-            >
-              <option value="">全地域</option>
-              {regions.map((r) => (
-                <option key={r} value={r}>{regionLabels[r] || r}</option>
-              ))}
-            </select>
-            <select
-              value={selectedPrefecture}
-              onChange={(e) => setSelectedPrefecture(e.target.value)}
-              className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-200"
-            >
-              <option value="">全都道府県</option>
-              {filteredPrefectures.map((p) => (
-                <option key={p} value={p}>{p}</option>
-              ))}
-            </select>
-            <select
-              value={selectedType}
-              onChange={(e) => setSelectedType(e.target.value)}
-              className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-200"
-            >
-              <option value="">全種別</option>
-              {Object.entries(groupTypeLabels).map(([k, v]) => (
-                <option key={k} value={k}>{v.label}</option>
-              ))}
-            </select>
-          </div>
+          <select
+            value={selectedPrefecture}
+            onChange={(e) => setSelectedPrefecture(e.target.value)}
+            className="px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-theater-primary-200"
+          >
+            <option value="">全都道府県</option>
+            {prefecturesWithData.map((p) => (
+              <option key={p} value={p}>{p}</option>
+            ))}
+          </select>
         </div>
 
         {/* 件数 */}
@@ -124,7 +144,7 @@ export default function TheaterGroupsIndex({ theaterGroups, regions, prefectures
 
         {/* カード一覧 */}
         {filtered.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {filtered.map((g: any) => (
               <TheaterGroupCard key={g.slug} group={g} />
             ))}
@@ -147,15 +167,13 @@ export const getStaticProps: GetStaticProps = async () => {
       slug: true,
       groupType: true,
       description: true,
-      memberCount: true,
+      prefecture: true,
       website: true,
       twitter: true,
-      instagram: true,
-      corich: true,
       universities: {
         include: {
           university: {
-            select: { name: true, slug: true, prefecture: true, region: true },
+            select: { name: true, slug: true, prefecture: true },
           },
         },
       },
@@ -163,15 +181,17 @@ export const getStaticProps: GetStaticProps = async () => {
     orderBy: { name: 'asc' },
   });
 
-  const allPrefectures = Array.from(new Set(
-    theaterGroups.flatMap((g) => g.universities.map((u) => u.university.prefecture))
-  )).sort();
+  const prefecturesWithData = Array.from(new Set(
+    theaterGroups.map((g) => g.prefecture).filter(Boolean)
+  )).sort() as string[];
 
-  const allRegions = Array.from(new Set(
-    theaterGroups.flatMap((g) => g.universities.map((u) => u.university.region))
-  ));
+  const stats = {
+    total: theaterGroups.length,
+    student: theaterGroups.filter((g) => ['STUDENT', 'INTERCOLLEGE', 'ACADEMIC'].includes(g.groupType)).length,
+    pro: theaterGroups.filter((g) => g.groupType === 'PROFESSIONAL').length,
+    amateur: theaterGroups.filter((g) => g.groupType === 'AMATEUR').length,
+  };
 
-  // descriptionを100文字に切り詰めてデータ転送量を削減
   const slimGroups = theaterGroups.map((g) => ({
     ...g,
     description: g.description ? g.description.substring(0, 100) : null,
@@ -180,10 +200,9 @@ export const getStaticProps: GetStaticProps = async () => {
   return {
     props: {
       theaterGroups: JSON.parse(JSON.stringify(slimGroups)),
-      regions: allRegions,
-      prefectures: allPrefectures,
+      prefecturesWithData,
+      stats,
     },
-    // 劇団一覧は seed 追加時だけ更新。7日でOK。
     revalidate: 604800,
   };
 };

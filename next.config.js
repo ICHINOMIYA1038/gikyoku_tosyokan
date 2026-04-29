@@ -64,6 +64,22 @@ const nextConfig = {
         destination: '/blog/ja/:slug',
         permanent: true,
       },
+      // 劇団データベース統合リダイレクト
+      {
+        source: '/university-theater',
+        destination: '/theater-groups',
+        permanent: true,
+      },
+      {
+        source: '/shogekijo',
+        destination: '/theater-groups',
+        permanent: true,
+      },
+      {
+        source: '/shogekijo/:slug',
+        destination: '/theater-groups/:slug',
+        permanent: true,
+      },
       // トレイリングスラッシュの統一
       {
         source: '/posts/:id/',
