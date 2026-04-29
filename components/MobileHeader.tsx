@@ -1,6 +1,7 @@
 import * as React from "react";
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { FaBars, FaTimes } from "react-icons/fa";
 import AuthMenu from "@/components/AuthMenu";
 import { FEATURES } from "@/lib/feature-flags";
@@ -30,7 +31,7 @@ export default function MobileHeader() {
     <>
       <header className="flex items-center justify-between p-3 bg-theater-primary-300">
         <Link className="flex items-center cursor-pointer min-w-0" href={"/"} onClick={closeMenu}>
-          <img src="/logo.png" alt="Logo" className="w-10 h-10 mr-4 flex-shrink-0" />
+          <Image src="/logo.png" alt="" width={28} height={28} className="mr-4 flex-shrink-0" />
           <span className="text-xl font-bold truncate">戯曲図書館</span>
         </Link>
         

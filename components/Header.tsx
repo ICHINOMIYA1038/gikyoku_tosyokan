@@ -2,12 +2,13 @@ import * as React from "react";
 import { useEffect } from "react";
 import router from "next/router";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Header() {
   return (
     <header className="flex items-center justify-between p-4 bg-theater-primary-300">
       <Link className="flex items-center cursor-pointer" href={"/"}>
-        <img src="/logo.png" alt="Logo" className="w-12 h-12 mr-4" />
+        <Image src="/logo.png" alt="" width={28} height={28} className="mr-4" />
         <span className="text-xl font-bold">戯曲図書館</span>
       </Link>
       <nav className="space-x-4 hidden md:block font-semibold">

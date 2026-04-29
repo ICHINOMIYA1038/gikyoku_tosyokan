@@ -16,8 +16,8 @@ export default function Document() {
         <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Shippori+Mincho:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 
         {/* Favicon with sizes for better caching */}
-        <link rel="icon" href="/favicon.ico" sizes="any" />
-        <link rel="apple-touch-icon" href="/logo.png" />
+        <link rel="icon" href="/icon.png" sizes="32x32" type="image/png" />
+        <link rel="apple-touch-icon" href="/apple-icon.png" />
 
         {/* Theme color for mobile browsers */}
         <meta name="theme-color" content="#ec4899" />
