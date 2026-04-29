@@ -172,8 +172,13 @@ function PostPage({ post }: any) {
           pageDescription={
             post.synopsis
               ? post.synopsis
-              : "上演する脚本を探しの方に。上演時間や人数などから検索ができます。戯曲を探す、戯曲図書館。"
+              : `${post.author.name}作『${post.title}』の詳細情報。${post.playtime > 0 ? `上演時間${post.playtime}分、` : ''}${post.totalNumber > 0 ? `${post.totalNumber}人で上演可能。` : ''}感想やレビューを募集中。`
           }
+          hreflang={[
+            { lang: "ja", path: `/posts/${post.id}` },
+            { lang: "x-default", path: `/posts/${post.id}` },
+          ]}
+          descriptionEn={`Japanese theater script "${post.title}" by ${post.author.name}. ${post.playtime > 0 ? `Duration: ${post.playtime} min. ` : ''}${post.totalNumber > 0 ? `Cast: ${post.totalNumber} people.` : ''}`}
           pageImg={
             post.image_url
               ? post.image_url
@@ -420,6 +425,23 @@ function PostPage({ post }: any) {
                 </div>
               )}
             </div>
+
+            {/* レビュー促進CTA */}
+            {activeTab !== "community" && (
+              <div className="border-t border-gray-100 pt-6 pb-2">
+                <div className="bg-gray-50 rounded-lg p-5 text-center">
+                  <p className="text-sm font-bold text-gray-700 mb-1">この作品を上演したことがある方へ</p>
+                  <p className="text-xs text-gray-500 mb-3">上演した感想や演出のポイントをコメントで共有しませんか？他の演劇人の参考になります。</p>
+                  <button
+                    onClick={() => setActiveTab("community")}
+                    className="inline-flex items-center gap-1 px-4 py-2 bg-theater-primary-500 text-white text-xs font-bold rounded hover:bg-theater-primary-600 transition-colors"
+                  >
+                    <FaCommentDots className="text-[10px]" />
+                    みんなの声タブへ
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
           </div>
       </Layout>

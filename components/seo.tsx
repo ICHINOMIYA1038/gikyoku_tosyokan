@@ -13,6 +13,7 @@ const Seo = ({
   hreflang,
   noindex,
   locale = "ja_JP",
+  descriptionEn,
 }: any) => {
   const isEnglish = locale === "en_US";
   const defaultTitle = isEnglish ? "Japanese Play Library" : "戯曲図書館";
@@ -62,6 +63,7 @@ const Seo = ({
       <meta name="twitter:image" content={imgUrl} />
       <meta name="twitter:domain" content="gikyokutosyokan.com" />
 
+      {descriptionEn && <meta name="description" lang="en" content={descriptionEn} />}
       {noindex && <meta name="robots" content="noindex, nofollow" />}
 
       {hreflang && hreflang.map((h: { lang: string; path: string }) => (
