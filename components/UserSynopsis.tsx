@@ -24,7 +24,7 @@ const UserSynopsis = ({ postId }: UserSynopsisProps) => {
   const [hasSubmitted, setHasSubmitted] = useState(false);
 
   useEffect(() => {
-    fetch(`/api/posts/${postId}/synopsis`)
+    fetch(`/api/user-synopsis?postId=${postId}`)
       .then((r) => r.json())
       .then(setEntries)
       .catch(() => {});
@@ -36,7 +36,7 @@ const UserSynopsis = ({ postId }: UserSynopsisProps) => {
     setMessage(null);
 
     try {
-      const res = await fetch(`/api/posts/${postId}/synopsis`, {
+      const res = await fetch(`/api/user-synopsis?postId=${postId}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ content: content.trim() }),
