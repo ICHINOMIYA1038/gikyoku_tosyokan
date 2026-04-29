@@ -15,6 +15,7 @@ import RecentComments from "@/components/RecentComments";
 import TrendingPosts from "@/components/TrendingPosts";
 import AdSlot from "@/components/Ad/AdSlot";
 import { AD_SLOTS } from "@/lib/adSlots";
+import Image from "next/image";
 
 export default function Home({ news, authors, posts, categories, blogPosts, trendingPosts, announcements }: any) {
   const [data, setData] = useState<any>(null); // 取得したデータを格納
@@ -73,6 +74,25 @@ export default function Home({ news, authors, posts, categories, blogPosts, tren
         <StructuredData type="FAQPage" faqItems={faqItems} />
         <TopImage buttonClick={handleScrollToRegistrationForm} />
         <NewsList news={news} />
+
+        {/* 戯曲パレット プロモーションバナー */}
+        <div className="max-w-6xl mx-auto px-4 py-6">
+          <a
+            href="https://palette.gikyokutosyokan.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block cursor-pointer hover:opacity-90 transition-opacity"
+          >
+            <Image
+              src="https://gikyokutosyokan-public.s3.ap-northeast-1.amazonaws.com/assets/banners/palette-wide.png"
+              alt="戯曲パレット - 戯曲の投稿・公開・上演許可プラットフォーム"
+              width={970}
+              height={250}
+              className="w-full h-auto rounded-lg shadow-md"
+              priority={false}
+            />
+          </a>
+        </div>
 
         {/* 今週の人気作品 */}
         <TrendingPosts posts={trendingPosts} />

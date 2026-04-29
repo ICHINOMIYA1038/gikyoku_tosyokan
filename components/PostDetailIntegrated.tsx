@@ -11,6 +11,7 @@ import {
 import AdSlot from "./Ad/AdSlot";
 import { AD_SLOTS } from "@/lib/adSlots";
 import AiImageBadge from "./AiImageBadge";
+import Image from "next/image";
 
 type PostPageProps = {
   post: any;
@@ -280,6 +281,22 @@ export const PostSidebar: React.FC<PostPageProps> = ({ post }) => {
             </ul>
           </div>
         )}
+
+        {/* 戯曲パレット バナー */}
+        <a
+          href="https://palette.gikyokutosyokan.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="block cursor-pointer hover:opacity-90 transition-opacity"
+        >
+          <Image
+            src="https://gikyokutosyokan-public.s3.ap-northeast-1.amazonaws.com/assets/banners/palette-rect.png"
+            alt="戯曲パレット - 戯曲の投稿・公開・上演許可プラットフォーム"
+            width={300}
+            height={250}
+            className="w-full h-auto rounded-lg shadow-md"
+          />
+        </a>
 
         {/* CTA */}
         <div className="bg-theater-primary-50 rounded-lg p-4">
