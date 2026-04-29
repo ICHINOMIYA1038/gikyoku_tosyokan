@@ -162,7 +162,13 @@ function PostPage({ post }: any) {
         `}</style>
 
         <Seo
-          pageTitle={`${post.author.name}『${post.title}』`}
+          pageTitle={(() => {
+            const parts: string[] = [`『${post.title}』あらすじ`];
+            if (post.playtime > 0) parts.push(`上演時間${post.playtime}分`);
+            if (post.totalNumber > 0) parts.push(`${post.totalNumber}人`);
+            const optimized = parts.join('・') + ' | 戯曲図書館';
+            return optimized;
+          })()}
           pageDescription={
             post.synopsis
               ? post.synopsis
@@ -215,6 +221,56 @@ function PostPage({ post }: any) {
             { name: "作品一覧", url: "https://gikyokutosyokan.com/posts" },
             { name: post.title, url: `https://gikyokutosyokan.com/posts/${post.id}` }
           ]}
+        />
+        <StructuredData
+          type="FAQPage"
+          faqItems={(() => {
+            const items: { question: string; answer: string }[] = [];
+            if (post.playtime > 0) {
+              items.push({
+                question: "この作品の上演時間は？",
+                answer: `約${post.playtime}分です。`
+              });
+            }
+            if (post.totalNumber > 0) {
+              const castParts: string[] = [];
+              if (post.man > 0) castParts.push(`男性${post.man}人`);
+              if (post.woman > 0) castParts.push(`女性${post.woman}人`);
+              if (post.others > 0) castParts.push(`その他${post.others}人`);
+              items.push({
+                question: "何人で上演できますか？",
+                answer: castParts.length > 0
+                  ? `${castParts.join('、')}の計${post.totalNumber}人で上演できます。`
+                  : `${post.totalNumber}人で上演できます。`
+              });
+            }
+            if (post.categories && post.categories.length > 0) {
+              items.push({
+                question: "この作品のカテゴリは？",
+                answer: `${post.categories.map((c: any) => c.name).join('、')}に分類されています。`
+              });
+            }
+            if (hasAmazonLink || hasFreeLink || hasKangekiLink) {
+              const sources: string[] = [];
+              if (hasAmazonLink) sources.push('Amazon');
+              if (hasFreeLink) sources.push('無料公開ページ');
+              if (hasKangekiLink) sources.push('観劇三昧');
+              items.push({
+                question: "台本はどこで入手できますか？",
+                answer: `この作品の台本は${sources.join('、')}で入手できます。詳しくは作品ページ内のリンクをご確認ください。`
+              });
+            } else {
+              items.push({
+                question: "台本はどこで入手できますか？",
+                answer: "台本の入手方法については、出版社や作者に直接お問い合わせください。"
+              });
+            }
+            items.push({
+              question: "著作権使用料はどのくらい？",
+              answer: "著作権使用料は作品や上演規模により異なります。一般的には入場無料の公演で5,000円〜20,000円程度が目安です。"
+            });
+            return items;
+          })()}
         />
         <div className="w-full">
           <div className="container mx-auto px-4 py-6 max-w-3xl">
