@@ -32,6 +32,20 @@ type NearbyVenue = {
   capacity: number | null;
 };
 
+type AnnouncementItem = {
+  id: number;
+  title: string;
+  performanceDate: string | null;
+  theaterGroupName: string | null;
+  post: { id: number; title: string } | null;
+};
+
+type TheaterGroupItem = {
+  name: string;
+  slug: string;
+  groupType: string;
+};
+
 type Props = {
   venue: {
     id: number;
@@ -48,9 +62,16 @@ type Props = {
     longitude: number | null;
   };
   nearbyVenues: NearbyVenue[];
+  announcements: AnnouncementItem[];
+  theaterGroups: TheaterGroupItem[];
 };
 
-export default function VenueDetail({ venue, nearbyVenues }: Props) {
+const groupTypeLabelsShort: Record<string, string> = {
+  PROFESSIONAL: 'プロ', AMATEUR: '社会人', STUDENT: '学生',
+  INTERCOLLEGE: 'インカレ', ACADEMIC: '大学学科', YOUTH: 'ユース',
+};
+
+export default function VenueDetail({ venue, nearbyVenues, announcements, theaterGroups }: Props) {
   if (!venue) return null;
 
   const placeJsonLd = {
@@ -211,6 +232,47 @@ export default function VenueDetail({ venue, nearbyVenues }: Props) {
           </section>
         )}
 
+        {/* この劇場での上演 */}
+        {announcements.length > 0 && (
+          <section className="bg-white rounded-xl border border-gray-100 shadow-sm p-5 mb-4">
+            <h2 className="font-serif font-bold text-lg text-gray-800 mb-3">この劇場での上演</h2>
+            <ul className="space-y-2">
+              {announcements.map((a) => (
+                <li key={a.id}>
+                  <Link href={`/announcements/${a.id}`} className="text-sm text-gray-700 hover:text-theater-primary-600 transition-colors">
+                    <span className="font-medium">{a.title}</span>
+                    {a.theaterGroupName && <span className="text-xs text-gray-400 ml-2">{a.theaterGroupName}</span>}
+                    {a.performanceDate && <span className="text-xs text-gray-400 ml-2">{new Date(a.performanceDate).toLocaleDateString('ja-JP')}</span>}
+                  </Link>
+                  {a.post && (
+                    <Link href={`/posts/${a.post.id}`} className="text-xs text-theater-primary-500 hover:underline ml-2">
+                      {a.post.title}
+                    </Link>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+
+        {/* この地域の劇団 */}
+        {theaterGroups.length > 0 && (
+          <section className="bg-white rounded-xl border border-gray-100 shadow-sm p-5 mb-4">
+            <h2 className="font-serif font-bold text-lg text-gray-800 mb-3">
+              {venue.prefecture}の劇団
+            </h2>
+            <div className="flex flex-wrap gap-2">
+              {theaterGroups.map((g) => (
+                <Link key={g.slug} href={`/theater-groups/${g.slug}`}
+                  className="inline-flex items-center gap-1 px-2.5 py-1 bg-gray-50 hover:bg-theater-primary-50 rounded-lg text-xs font-medium text-gray-700 hover:text-theater-primary-600 transition-colors">
+                  {g.name}
+                  <span className="text-[10px] text-gray-400">{groupTypeLabelsShort[g.groupType] || ''}</span>
+                </Link>
+              ))}
+            </div>
+          </section>
+        )}
+
         {/* 近くの劇場 */}
         {nearbyVenues.length > 0 && (
           <section className="bg-white rounded-xl border border-gray-100 shadow-sm p-5 mb-4">
@@ -266,10 +328,33 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       })
     : [];
 
+  // この劇場での上演告知
+  const announcements = await prisma.announcement.findMany({
+    where: { venueId: venue.id },
+    select: {
+      id: true, title: true, performanceDate: true, theaterGroupName: true,
+      post: { select: { id: true, title: true } },
+    },
+    orderBy: { performanceDate: 'desc' },
+    take: 10,
+  });
+
+  // この地域の劇団
+  const theaterGroups = venue.prefecture
+    ? await prisma.theaterGroup.findMany({
+        where: { prefecture: venue.prefecture, isActive: true },
+        select: { name: true, slug: true, groupType: true },
+        orderBy: { name: 'asc' },
+        take: 10,
+      })
+    : [];
+
   return {
     props: {
       venue: JSON.parse(JSON.stringify(venue)),
       nearbyVenues: JSON.parse(JSON.stringify(nearbyVenues)),
+      announcements: JSON.parse(JSON.stringify(announcements)),
+      theaterGroups: JSON.parse(JSON.stringify(theaterGroups)),
     },
     revalidate: 604800,
   };
