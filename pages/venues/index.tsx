@@ -1,12 +1,12 @@
 import { GetStaticProps } from 'next';
-import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
+import { useState, useMemo, useCallback, useRef } from 'react';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import Layout from '@/components/Layout';
 import Seo from '@/components/seo';
 import StructuredData from '@/components/StructuredData';
 import { prisma } from '@/lib/prisma';
-import { FaSearch, FaChevronRight, FaMapMarkerAlt, FaUsers, FaGlobe, FaMap, FaList } from 'react-icons/fa';
+import { FaSearch, FaChevronRight, FaMapMarkerAlt, FaUsers, FaGlobe, FaMap, FaList, FaChevronDown, FaExternalLinkAlt } from 'react-icons/fa';
 
 const JapanMap = dynamic(() => import('@/components/map/JapanMap'), {
   ssr: false,
@@ -44,6 +44,7 @@ export default function VenuesIndex({ venues, stats, prefectures, prefectureCoun
   const [selectedType, setSelectedType] = useState('');
   const [selectedPrefecture, setSelectedPrefecture] = useState('');
   const [viewMode, setViewMode] = useState<'map' | 'list'>('map');
+  const [expandedVenue, setExpandedVenue] = useState<number | null>(null);
   const detailRef = useRef<HTMLDivElement>(null);
 
   const filtered = useMemo(() => {
@@ -124,8 +125,9 @@ export default function VenuesIndex({ venues, stats, prefectures, prefectureCoun
 
         {/* 地図ビュー */}
         {viewMode === 'map' && (
-          <div className="flex flex-col md:flex-row gap-6 mb-6">
-            <div className="md:w-1/2">
+          <div className="mb-6">
+            {/* 地図（大きく表示） */}
+            <div className="max-w-2xl mx-auto mb-6">
               <JapanMap
                 onClick={handlePrefClick}
                 onHover={() => {}}
@@ -135,33 +137,74 @@ export default function VenuesIndex({ venues, stats, prefectures, prefectureCoun
                 hoveredPref={null}
               />
             </div>
-            <div className="md:w-1/2" ref={detailRef}>
+
+            {/* 都道府県の劇場一覧（地図の下） */}
+            <div ref={detailRef}>
               {selectedPrefecture ? (
                 <div>
-                  <h2 className="text-lg font-bold text-gray-900 mb-3">
-                    {selectedPrefecture}の劇場（{prefectureCounts[selectedPrefecture] || 0}件）
-                  </h2>
-                  <div className="space-y-1 max-h-[500px] overflow-y-auto">
+                  <div className="flex items-center justify-between mb-3">
+                    <h2 className="text-lg font-bold text-gray-900">
+                      {selectedPrefecture}の劇場（{prefectureCounts[selectedPrefecture] || 0}件）
+                    </h2>
+                    <button onClick={() => setSelectedPrefecture('')} className="text-xs text-gray-400 hover:text-gray-600">
+                      クリア
+                    </button>
+                  </div>
+                  <div className="space-y-1">
                     {venues
                       .filter((v) => v.prefecture === selectedPrefecture)
-                      .map((v) => (
-                        <Link key={v.id} href={`/venues/${v.slug}`} className="block group">
-                          <div className="flex items-center gap-2 p-2 rounded hover:bg-gray-50 transition-colors">
-                            <div className={`w-1 h-8 rounded-full flex-shrink-0 ${TYPE_COLORS[v.venueType] || 'bg-gray-300'}`} />
-                            <div className="flex-1 min-w-0">
-                              <p className="text-sm font-bold text-gray-800 group-hover:text-theater-primary-600 truncate">{v.name}</p>
-                              <p className="text-[11px] text-gray-400">{TYPE_LABELS[v.venueType]}{v.capacity ? ` · ${v.capacity}席` : ''}</p>
-                            </div>
+                      .map((v) => {
+                        const isExpanded = expandedVenue === v.id;
+                        return (
+                          <div key={v.id} className="border border-gray-100 rounded-lg overflow-hidden">
+                            <button
+                              onClick={() => setExpandedVenue(isExpanded ? null : v.id)}
+                              className="w-full flex items-center gap-3 p-3 hover:bg-gray-50 transition-colors text-left"
+                            >
+                              <div className={`w-1 h-8 rounded-full flex-shrink-0 ${TYPE_COLORS[v.venueType] || 'bg-gray-300'}`} />
+                              <div className="flex-1 min-w-0">
+                                <p className="text-sm font-bold text-gray-800 truncate">{v.name}</p>
+                                <p className="text-[11px] text-gray-400">{TYPE_LABELS[v.venueType]}{v.capacity ? ` · ${v.capacity}席` : ''}</p>
+                              </div>
+                              <FaChevronDown className={`text-gray-300 text-xs transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
+                            </button>
+                            {isExpanded && (
+                              <div className="px-4 pb-4 pt-1 bg-gray-50 border-t border-gray-100">
+                                {v.description && <p className="text-xs text-gray-600 mb-2">{v.description}</p>}
+                                {v.address && (
+                                  <p className="text-xs text-gray-500 mb-2">
+                                    <FaMapMarkerAlt className="inline text-red-400 mr-1" />
+                                    {v.prefecture} {v.address}
+                                  </p>
+                                )}
+                                <div className="flex gap-3">
+                                  <Link href={`/venues/${v.slug}`} className="text-xs text-theater-primary-600 hover:underline font-bold">
+                                    詳細を見る →
+                                  </Link>
+                                  {v.website && (
+                                    <a href={v.website} target="_blank" rel="noopener noreferrer" className="text-xs text-gray-500 hover:underline flex items-center gap-1">
+                                      <FaExternalLinkAlt className="text-[9px]" /> 公式サイト
+                                    </a>
+                                  )}
+                                  <a
+                                    href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(v.name + ' ' + (v.address || v.prefecture))}`}
+                                    target="_blank" rel="noopener noreferrer"
+                                    className="text-xs text-gray-500 hover:underline flex items-center gap-1"
+                                  >
+                                    <FaMapMarkerAlt className="text-[9px]" /> 地図
+                                  </a>
+                                </div>
+                              </div>
+                            )}
                           </div>
-                        </Link>
-                      ))
+                        );
+                      })
                     }
                   </div>
                 </div>
               ) : (
-                <div className="text-center py-12 text-gray-400">
-                  <FaMapMarkerAlt className="text-3xl mx-auto mb-2 opacity-30" />
-                  <p className="text-sm">地図の都道府県をクリックすると<br />劇場一覧が表示されます</p>
+                <div className="text-center py-8 text-gray-400">
+                  <p className="text-sm">地図の都道府県をクリックすると劇場一覧が表示されます</p>
                 </div>
               )}
             </div>
