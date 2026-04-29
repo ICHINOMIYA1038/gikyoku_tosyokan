@@ -8,15 +8,21 @@ import { prisma } from '@/lib/prisma';
 import { FaChevronRight, FaMapMarkerAlt, FaUsers, FaExternalLinkAlt, FaTwitter } from 'react-icons/fa';
 
 const venueTypeLabels: Record<string, string> = {
+  small: '小劇場',
+  medium: '中劇場',
+  large: '大劇場',
   SMALL: '小劇場',
   MEDIUM: '中劇場',
   LARGE: '大劇場',
 };
 
 const venueTypeColors: Record<string, string> = {
-  SMALL: 'bg-emerald-100 text-emerald-800',
-  MEDIUM: 'bg-blue-100 text-blue-800',
-  LARGE: 'bg-purple-100 text-purple-800',
+  small: 'bg-blue-100 text-blue-700',
+  medium: 'bg-green-100 text-green-700',
+  large: 'bg-purple-100 text-purple-700',
+  SMALL: 'bg-blue-100 text-blue-700',
+  MEDIUM: 'bg-green-100 text-green-700',
+  LARGE: 'bg-purple-100 text-purple-700',
 };
 
 type Props = {
@@ -131,14 +137,38 @@ export default function VenueDetail({ venue }: Props) {
           </div>
         </div>
 
-        {/* 住所 */}
-        {venue.address && (
-          <section className="bg-white rounded-xl border border-gray-100 shadow-sm p-5 mb-4">
-            <h2 className="font-serif font-bold text-lg text-gray-800 mb-3 flex items-center gap-2">
+        {/* 住所 + 地図 */}
+        {(venue.address || venue.prefecture) && (
+          <section className="mb-4">
+            <h2 className="font-bold text-base text-gray-800 mb-3 flex items-center gap-2">
               <FaMapMarkerAlt className="text-red-500" />
               アクセス
             </h2>
-            <p className="text-sm text-gray-700">{venue.address}</p>
+            {venue.address && (
+              <p className="text-sm text-gray-700 mb-3">{venue.prefecture} {venue.address}</p>
+            )}
+            {/* Google Maps 埋め込み */}
+            <div className="rounded-lg overflow-hidden border border-gray-200">
+              <iframe
+                src={`https://www.google.com/maps?q=${encodeURIComponent(venue.name + ' ' + (venue.address || venue.prefecture || ''))}&output=embed&hl=ja`}
+                width="100%"
+                height="300"
+                style={{ border: 0 }}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                title={`${venue.name}の地図`}
+              />
+            </div>
+            <a
+              href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(venue.name + ' ' + (venue.address || venue.prefecture || ''))}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 text-xs text-theater-primary-600 hover:underline mt-2"
+            >
+              <FaExternalLinkAlt className="text-[10px]" />
+              Google Mapsで開く
+            </a>
           </section>
         )}
 
