@@ -18,6 +18,11 @@ const venueTypeColors: Record<string, string> = {
 
 type NearbyVenue = { name: string; slug: string; venueType: string; capacity: number | null };
 type AnnouncementItem = { id: number; title: string; performanceDate: string | null; theaterGroupName: string | null; post: { id: number; title: string } | null };
+type PerformanceItem = {
+  performanceYear: number | null;
+  post: { id: number; title: string; author: { name: string } };
+  theaterGroup: { name: string; slug: string };
+};
 type TheaterGroupItem = { name: string; slug: string; groupType: string };
 
 type Props = {
@@ -28,6 +33,7 @@ type Props = {
   };
   nearbyVenues: NearbyVenue[];
   announcements: AnnouncementItem[];
+  performances: PerformanceItem[];
   theaterGroups: TheaterGroupItem[];
 };
 
@@ -60,7 +66,7 @@ function getVenueInsight(venue: Props['venue']): string[] {
   return insights;
 }
 
-export default function VenueDetail({ venue, nearbyVenues, announcements, theaterGroups }: Props) {
+export default function VenueDetail({ venue, nearbyVenues, announcements, performances, theaterGroups }: Props) {
   if (!venue) return null;
 
   const typeLabel = venueTypeLabels[venue.venueType] || venue.venueType;
@@ -226,6 +232,34 @@ export default function VenueDetail({ venue, nearbyVenues, announcements, theate
           </section>
         )}
 
+        {/* この劇場で上演された作品 */}
+        {performances.length > 0 && (
+          <section className="mb-6">
+            <h2 className="text-lg font-bold text-gray-900 mb-3 flex items-center gap-2">
+              <FaTheaterMasks className="text-theater-primary-500" />この劇場で上演された作品
+            </h2>
+            <div className="space-y-2">
+              {performances.map((p, i) => (
+                <div key={i} className="flex items-start gap-3 py-2 border-b border-gray-50 last:border-0">
+                  <div className="flex-1 min-w-0">
+                    <Link href={`/posts/${p.post.id}`} className="text-sm font-medium text-gray-800 hover:text-theater-primary-600">
+                      {p.post.author.name}『{p.post.title}』
+                    </Link>
+                    <div className="flex items-center gap-2 mt-0.5">
+                      <Link href={`/theater-groups/${p.theaterGroup.slug}`} className="text-xs text-gray-400 hover:text-gray-600">
+                        {p.theaterGroup.name}
+                      </Link>
+                      {p.performanceYear && (
+                        <span className="text-xs text-gray-400">{p.performanceYear}年</span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
         {/* この地域の劇団 */}
         {theaterGroups.length > 0 && (
           <section className="mb-6">
@@ -290,6 +324,18 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     orderBy: { performanceDate: 'desc' }, take: 10,
   });
 
+  // この劇場で上演された作品（PostTheaterGroup経由）
+  const performances = await prisma.postTheaterGroup.findMany({
+    where: { venueId: venue.id },
+    select: {
+      performanceYear: true,
+      post: { select: { id: true, title: true, author: { select: { name: true } } } },
+      theaterGroup: { select: { name: true, slug: true } },
+    },
+    orderBy: { performanceYear: 'desc' },
+    take: 20,
+  });
+
   const theaterGroups = venue.prefecture
     ? await prisma.theaterGroup.findMany({
         where: { prefecture: venue.prefecture, isActive: true },
@@ -303,6 +349,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       venue: JSON.parse(JSON.stringify(venue)),
       nearbyVenues: JSON.parse(JSON.stringify(nearbyVenues)),
       announcements: JSON.parse(JSON.stringify(announcements)),
+      performances: JSON.parse(JSON.stringify(performances)),
       theaterGroups: JSON.parse(JSON.stringify(theaterGroups)),
     },
     revalidate: 604800,

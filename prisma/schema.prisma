@@ -256,7 +256,8 @@ model Venue {
   longitude   Float?
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
-  announcements Announcement[]
+  announcements    Announcement[]
+  performances     PostTheaterGroup[]
 
   @@index([prefecture])
   @@index([venueType])
@@ -341,8 +342,10 @@ model PostTheaterGroup {
   sourceUrl       String?      // 上演の根拠となるURL（公式サイト・SNS等）
   sourceType      String?      // 根拠の種類: official, twitter, instagram, corich, other
   performanceYear Int?         // 上演年
+  venueId         Int?         // 上演劇場
   post            Post         @relation(fields: [postId], references: [id])
   theaterGroup    TheaterGroup @relation(fields: [theaterGroupId], references: [id])
+  venue           Venue?       @relation(fields: [venueId], references: [id])
 
   @@unique([postId, theaterGroupId])
   @@index([postId])
