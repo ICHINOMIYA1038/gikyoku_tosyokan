@@ -19,6 +19,7 @@ export default function MobileHeader() {
   const menuItems: { href: string; label: string; isExternal?: boolean }[] = [
     { href: "/", label: "検索する" },
     { href: "/theater-groups", label: "劇団データベース" },
+    { href: "/venues", label: "劇場データベース" },
     { href: "/announcements", label: "上演告知" },
     { href: "/blog/ja", label: "ブログ" },
     { href: "/support/about", label: "概要" },

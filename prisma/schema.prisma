@@ -241,6 +241,28 @@ model TheaterGroup {
   @@map("TheaterGroup")
 }
 
+model Venue {
+  id          Int       @id @default(autoincrement())
+  name        String
+  slug        String    @unique
+  venueType   String    @default("small") // small, medium, large, outdoor, other
+  capacity    Int?
+  prefecture  String
+  address     String?
+  website     String?
+  twitter     String?
+  description String?
+  latitude    Float?
+  longitude   Float?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([prefecture])
+  @@index([venueType])
+  @@index([slug])
+  @@map("Venue")
+}
+
 model TheaterGroupUniversity {
   id              Int          @id @default(autoincrement())
   theaterGroupId  Int
