@@ -130,7 +130,7 @@ async function main() {
     process.exit(1);
   }
 
-  // 画像がない作品を取得
+  // 画像がない作品を閲覧数順に取得（人気作品を優先）
   const posts = await prisma.post.findMany({
     where: {
       OR: [{ image_url: null }, { image_url: "" }],
@@ -143,8 +143,9 @@ async function main() {
       playtime: true,
       author: { select: { name: true } },
       categories: { select: { name: true } },
+      _count: { select: { access: true } },
     },
-    orderBy: { id: "asc" },
+    orderBy: { access: { _count: "desc" } },
   });
 
   console.log(`画像なし作品: ${posts.length}件\n`);
@@ -184,8 +185,8 @@ async function main() {
       failed++;
     }
 
-    // レート制限対策: 1秒待機
-    await new Promise((r) => setTimeout(r, 1000));
+    // レート制限対策: 3秒待機
+    await new Promise((r) => setTimeout(r, 3000));
   }
 
   console.log(`\n完了! 成功: ${success}, 失敗: ${failed}`);

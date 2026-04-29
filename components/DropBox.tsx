@@ -73,7 +73,7 @@ const SortDropdown = ({
 }: any) => {
   const sortOptions = [
     { value: "1", label: "最新順" },
-    { value: "2", label: "人気順" },
+    { value: "2", label: "評価順" },
     { value: "3", label: "男性人数" },
     { value: "4", label: "女性人数" },
     { value: "5", label: "総人数" },

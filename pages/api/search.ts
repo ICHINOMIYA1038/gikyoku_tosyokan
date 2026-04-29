@@ -68,8 +68,7 @@ export default async function handler(
         case "1":
           return { id: sortDirection === "1" ? "desc" : "asc" };
         case "2":
-          // アクセス数でのソートは重いので、idで代替
-          return { id: sortDirection === "1" ? "desc" : "asc" };
+          return { averageRating: sortDirection === "1" ? "desc" : "asc" };
         case "3":
           return { man: sortDirection === "1" ? "desc" : "asc" };
         case "4":

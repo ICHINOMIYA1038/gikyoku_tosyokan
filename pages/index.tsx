@@ -19,7 +19,7 @@ import { AD_SLOTS } from "@/lib/adSlots";
 export default function Home({ news, authors, posts, categories, blogPosts, trendingPosts, announcements }: any) {
   const [data, setData] = useState<any>(null); // 取得したデータを格納
   const [page, setPage] = useState(1);
-  const [sort_by, setSortIndex] = useState<number>(1);
+  const [sort_by, setSortIndex] = useState<number>(2);
   const [sortDirection, setSortDirection] = useState<number>(1);
   const searchFormRef = useRef<HTMLDivElement | null>(null);
 
