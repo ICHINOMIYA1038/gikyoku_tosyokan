@@ -41,3 +41,6 @@ next-env.d.ts
 .env.production
 .env.development
 .backup
+
+# SEO daily reports (regenerated daily, large JSON files)
+/data/seo-reports/
