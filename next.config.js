@@ -15,6 +15,7 @@ const nextConfig = {
     domains: [
       "www.hanmoto.com",
       "playwright.s3.ap-northeast-1.amazonaws.com",
+      "gikyokutosyokan-public.s3.ap-northeast-1.amazonaws.com",
       "shukou.org",
       "www.geigeki.jp",
     ],
