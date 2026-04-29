@@ -222,19 +222,10 @@ export const PostDetails: React.FC<PostPageProps> = ({ post }) => {
             )}
           </section>
 
-          {/* UGC CTA */}
-          <div className="bg-gray-50 rounded-lg p-5 text-center">
-            <p className="text-sm text-gray-500 mb-1">この作品の情報はまだ充実していません</p>
+          {/* 情報が少ない場合の補足 */}
+          <div className="text-center py-4">
             <p className="text-xs text-gray-400">
-              この作品を読んだことがある方は、
-              <Link href="#comments-section" className="text-theater-primary-600 hover:underline"
-                onClick={(e) => {
-                  e.preventDefault();
-                  document.getElementById("comments-section")?.scrollIntoView({ behavior: "smooth" });
-                }}>
-                コメント欄
-              </Link>
-              であらすじや感想を共有いただけると、他の方の参考になります。
+              この作品についての情報は現在限られています。
             </p>
           </div>
         </div>

@@ -68,7 +68,10 @@ export default async function handler(
         case "1":
           return { id: sortDirection === "1" ? "desc" : "asc" };
         case "2":
-          return { averageRating: sortDirection === "1" ? "desc" : "asc" };
+          return [
+            { averageRating: { sort: sortDirection === "1" ? "desc" : "asc", nulls: "last" } },
+            { id: "desc" },
+          ];
         case "3":
           return { man: sortDirection === "1" ? "desc" : "asc" };
         case "4":
@@ -128,28 +131,13 @@ export default async function handler(
       if (maxPlay < 999) whereCondition.playtime.lte = maxPlay;
     }
 
-    // キーワード検索（最適化: タイトルのみに限定してパフォーマンス向上）
+    // キーワード検索（タイトル・作者名・あらすじを検索）
     if (keyword && keyword !== "") {
-      // 短いキーワードの場合はタイトルのみ検索
-      if ((keyword as string).length <= 3) {
-        whereCondition.title = {
-          contains: keyword as string,
-        };
-      } else {
-        // 長いキーワードの場合はタイトルとあらすじを検索
-        whereCondition.OR = [
-          {
-            title: {
-              contains: keyword as string,
-            },
-          },
-          {
-            synopsis: {
-              contains: keyword as string,
-            },
-          },
-        ];
-      }
+      whereCondition.OR = [
+        { title: { contains: keyword as string, mode: "insensitive" } },
+        { author: { name: { contains: keyword as string, mode: "insensitive" } } },
+        { synopsis: { contains: keyword as string, mode: "insensitive" } },
+      ];
     }
 
     // カテゴリフィルター（最適化）
