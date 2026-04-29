@@ -31,8 +31,7 @@ export default function MobileHeader() {
     <>
       <header className="flex items-center justify-between p-3 bg-theater-primary-300">
         <Link className="flex items-center cursor-pointer min-w-0" href={"/"} onClick={closeMenu}>
-          <Image src="/logo.png" alt="" width={28} height={28} className="mr-4 flex-shrink-0" />
-          <span className="text-xl font-bold truncate">戯曲図書館</span>
+          <Image src="/logo.png" alt="戯曲図書館" width={160} height={32} className="h-8 w-auto" priority />
         </Link>
         
         {/* デスクトップメニュー */}
