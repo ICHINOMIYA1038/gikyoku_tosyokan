@@ -58,6 +58,7 @@ model Post {
   announcements       Announcement[]
   favorites           Favorite[]
   userSynopses        UserSynopsis[]
+  venuePerformances   VenuePerformance[]
 
   @@index([title])
   @@index([synopsis])
@@ -229,10 +230,11 @@ model TheaterGroup {
   isActive      Boolean                  @default(true)
   blogPostSlug  String?
   universities  TheaterGroupUniversity[]
-  posts         PostTheaterGroup[]
-  recruitments  Recruitment[]
-  createdAt     DateTime                 @default(now())
-  updatedAt     DateTime                 @updatedAt
+  posts              PostTheaterGroup[]
+  recruitments       Recruitment[]
+  venuePerformances  VenuePerformance[]
+  createdAt          DateTime                 @default(now())
+  updatedAt          DateTime                 @updatedAt
 
   @@index([groupType])
   @@index([isActive])
@@ -256,13 +258,38 @@ model Venue {
   longitude   Float?
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
-  announcements    Announcement[]
-  performances     PostTheaterGroup[]
+  announcements       Announcement[]
+  performances        PostTheaterGroup[]
+  venuePerformances   VenuePerformance[]
 
   @@index([prefecture])
   @@index([venueType])
   @@index([slug])
   @@map("Venue")
+}
+
+model VenuePerformance {
+  id              Int          @id @default(autoincrement())
+  venueId         Int
+  title           String       // 作品名・公演名
+  artistName      String?      // 作家名・演出家名・団体名
+  performanceType String       @default("play") // play, reading, festival, workshop, other
+  year            Int?         // 上演年
+  month           Int?         // 上演月
+  description     String?      // 補足情報（演劇祭名、企画名など）
+  sourceUrl       String?      // エビデンスURL
+  postId          Int?         // サイト内作品への紐付け（任意）
+  theaterGroupId  Int?         // 劇団への紐付け（任意）
+  post            Post?        @relation(fields: [postId], references: [id])
+  theaterGroup    TheaterGroup? @relation(fields: [theaterGroupId], references: [id])
+  venue           Venue        @relation(fields: [venueId], references: [id])
+  createdAt       DateTime     @default(now())
+
+  @@index([venueId])
+  @@index([postId])
+  @@index([theaterGroupId])
+  @@index([year])
+  @@map("VenuePerformance")
 }
 
 model TheaterGroupUniversity {

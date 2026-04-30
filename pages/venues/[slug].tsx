@@ -21,8 +21,13 @@ type AnnouncementItem = { id: number; title: string; performanceDate: string | n
 type PerformanceItem = {
   performanceYear: number | null;
   sourceUrl: string | null;
-  post: { id: number; title: string; author: { name: string } };
-  theaterGroup: { name: string; slug: string };
+  post: { id: number; title: string; author: { name: string } } | null;
+  theaterGroup: { name: string; slug: string } | null;
+  // VenuePerformance用フィールド
+  title?: string;
+  artistName?: string | null;
+  performanceType?: string;
+  description?: string | null;
 };
 type TheaterGroupItem = { name: string; slug: string; groupType: string };
 
@@ -363,13 +368,28 @@ export default function VenueDetail({ venue, nearbyVenues, announcements, perfor
                     <div className="flex-1 pb-5">
                       {byYear[year].map((p, i) => (
                         <div key={i} className="py-1.5 first:pt-0">
-                          <Link href={`/posts/${p.post.id}`} className="text-sm font-medium text-gray-800 hover:text-theater-primary-600">
-                            {p.post.author.name}『{p.post.title}』
-                          </Link>
-                          <div className="flex items-center gap-2 mt-0.5 flex-wrap">
-                            <Link href={`/theater-groups/${p.theaterGroup.slug}`} className="text-xs text-gray-400 hover:text-gray-600">
-                              {p.theaterGroup.name}
+                          {p.post ? (
+                            <Link href={`/posts/${p.post.id}`} className="text-sm font-medium text-gray-800 hover:text-theater-primary-600">
+                              {p.post.author.name}『{p.post.title}』
                             </Link>
+                          ) : (
+                            <span className="text-sm font-medium text-gray-800">
+                              {p.artistName && `${p.artistName} `}『{p.title || ''}』
+                              {p.performanceType && p.performanceType !== 'play' && (
+                                <span className="ml-1 text-[10px] px-1.5 py-0.5 rounded bg-amber-50 text-amber-600 font-bold">
+                                  {p.performanceType === 'reading' ? 'リーディング' : p.performanceType === 'festival' ? '演劇祭' : p.performanceType === 'workshop' ? 'ワークショップ' : p.performanceType}
+                                </span>
+                              )}
+                            </span>
+                          )}
+                          <div className="flex items-center gap-2 mt-0.5 flex-wrap">
+                            {p.theaterGroup ? (
+                              <Link href={`/theater-groups/${p.theaterGroup.slug}`} className="text-xs text-gray-400 hover:text-gray-600">
+                                {p.theaterGroup.name}
+                              </Link>
+                            ) : p.description ? (
+                              <span className="text-xs text-gray-400">{p.description}</span>
+                            ) : null}
                             {p.sourceUrl && (
                               <a href={p.sourceUrl} target="_blank" rel="noopener noreferrer"
                                 className="text-[10px] text-blue-400 hover:text-blue-600 flex items-center gap-0.5">
@@ -451,8 +471,8 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     orderBy: { performanceDate: 'desc' }, take: 10,
   });
 
-  // この劇場で上演された作品（PostTheaterGroup経由）
-  const performances = await prisma.postTheaterGroup.findMany({
+  // この劇場で上演された作品（PostTheaterGroup + VenuePerformance統合）
+  const postPerformances = await prisma.postTheaterGroup.findMany({
     where: { venueId: venue.id },
     select: {
       performanceYear: true,
@@ -461,7 +481,44 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       theaterGroup: { select: { name: true, slug: true } },
     },
     orderBy: { performanceYear: 'desc' },
-    take: 20,
+    take: 30,
+  });
+
+  const venuePerformances = await prisma.venuePerformance.findMany({
+    where: { venueId: venue.id },
+    select: {
+      title: true, artistName: true, performanceType: true, description: true,
+      year: true, sourceUrl: true,
+      post: { select: { id: true, title: true, author: { select: { name: true } } } },
+      theaterGroup: { select: { name: true, slug: true } },
+    },
+    orderBy: { year: 'desc' },
+    take: 50,
+  });
+
+  // 統合: PostTheaterGroupのデータとVenuePerformanceのデータをマージ
+  const performances: PerformanceItem[] = [
+    ...postPerformances.map(p => ({
+      performanceYear: p.performanceYear,
+      sourceUrl: p.sourceUrl,
+      post: p.post,
+      theaterGroup: p.theaterGroup,
+    })),
+    ...venuePerformances.map(vp => ({
+      performanceYear: vp.year,
+      sourceUrl: vp.sourceUrl,
+      post: vp.post,
+      theaterGroup: vp.theaterGroup,
+      title: vp.title,
+      artistName: vp.artistName,
+      performanceType: vp.performanceType,
+      description: vp.description,
+    })),
+  ].sort((a, b) => {
+    if (!a.performanceYear && !b.performanceYear) return 0;
+    if (!a.performanceYear) return 1;
+    if (!b.performanceYear) return -1;
+    return b.performanceYear - a.performanceYear;
   });
 
   const theaterGroups = venue.prefecture
