@@ -6,7 +6,7 @@ import Layout from '@/components/Layout';
 import Seo from '@/components/seo';
 import StructuredData from '@/components/StructuredData';
 import { prisma } from '@/lib/prisma';
-import { FaSearch, FaChevronRight, FaMapMarkerAlt, FaUsers, FaGlobe, FaMap, FaList, FaChevronDown, FaExternalLinkAlt } from 'react-icons/fa';
+import { FaSearch, FaChevronRight, FaMapMarkerAlt, FaUsers, FaGlobe, FaMap, FaList, FaChevronDown, FaExternalLinkAlt, FaFire } from 'react-icons/fa';
 
 const JapanMap = dynamic(() => import('@/components/map/JapanMap'), {
   ssr: false,
@@ -18,6 +18,9 @@ const TYPE_LABELS: Record<string, string> = {
 };
 const TYPE_COLORS: Record<string, string> = {
   small: 'bg-blue-500', medium: 'bg-green-500', large: 'bg-purple-500',
+};
+const TYPE_TEXT_COLORS: Record<string, string> = {
+  small: 'text-blue-500', medium: 'text-green-500', large: 'text-purple-500',
 };
 const TYPE_TABS = [
   { key: '', label: 'すべて' },
@@ -37,9 +40,27 @@ type Props = {
   stats: { total: number; small: number; medium: number; large: number };
   prefectures: string[];
   prefectureCounts: Record<string, number>;
+  popularVenues: Venue[];
 };
 
-export default function VenuesIndex({ venues, stats, prefectures, prefectureCounts }: Props) {
+// 小さなキャパシティバー（リスト表示用）
+function MiniCapacityBar({ capacity, venueType }: { capacity: number | null; venueType: string }) {
+  if (!capacity) return null;
+  const minLog = Math.log(30);
+  const maxLog = Math.log(2500);
+  const pct = Math.min(100, Math.max(8, ((Math.log(capacity) - minLog) / (maxLog - minLog)) * 100));
+  const color = TYPE_COLORS[venueType] || 'bg-gray-400';
+  return (
+    <div className="w-16 flex items-center gap-1.5 flex-shrink-0">
+      <div className="flex-1 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+        <div className={`h-full rounded-full ${color}`} style={{ width: `${pct}%` }} />
+      </div>
+      <span className="text-[10px] text-gray-400 tabular-nums">{capacity}</span>
+    </div>
+  );
+}
+
+export default function VenuesIndex({ venues, stats, prefectures, prefectureCounts, popularVenues }: Props) {
   const [search, setSearch] = useState('');
   const [selectedType, setSelectedType] = useState('');
   const [selectedPrefecture, setSelectedPrefecture] = useState('');
@@ -181,7 +202,7 @@ export default function VenuesIndex({ venues, stats, prefectures, prefectureCoun
                           <div key={v.id} className="border border-gray-100 rounded-lg overflow-hidden">
                             <button
                               onClick={() => setExpandedVenue(isExpanded ? null : v.id)}
-                              className="w-full flex items-center gap-3 p-3 hover:bg-gray-50 transition-colors text-left"
+                              className="w-full flex items-center gap-3 p-3.5 hover:bg-gray-50 transition-colors text-left min-h-[52px]"
                             >
                               <div className={`w-1 h-8 rounded-full flex-shrink-0 ${TYPE_COLORS[v.venueType] || 'bg-gray-300'}`} />
                               <div className="flex-1 min-w-0">
@@ -191,7 +212,7 @@ export default function VenuesIndex({ venues, stats, prefectures, prefectureCoun
                               <FaChevronDown className={`text-gray-300 text-xs transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
                             </button>
                             {isExpanded && (
-                              <div className="px-4 pb-4 pt-1 bg-gray-50 border-t border-gray-100">
+                              <div className="px-4 pb-4 pt-2 bg-gray-50 border-t border-gray-100">
                                 {v.description && <p className="text-xs text-gray-600 mb-2">{v.description}</p>}
                                 {v.address && (
                                   <p className="text-xs text-gray-500 mb-2">
@@ -199,19 +220,24 @@ export default function VenuesIndex({ venues, stats, prefectures, prefectureCoun
                                     {v.prefecture} {v.address}
                                   </p>
                                 )}
-                                <div className="flex gap-3">
-                                  <Link href={`/venues/${v.slug}`} className="text-xs text-theater-primary-600 hover:underline font-bold">
-                                    詳細を見る →
+                                {v.capacity && (
+                                  <div className="mb-3">
+                                    <MiniCapacityBar capacity={v.capacity} venueType={v.venueType} />
+                                  </div>
+                                )}
+                                <div className="flex gap-2 flex-wrap">
+                                  <Link href={`/venues/${v.slug}`} className="inline-flex items-center px-3 py-1.5 bg-theater-primary-500 text-white text-xs font-bold rounded-lg hover:bg-theater-primary-600 transition-colors min-h-[36px]">
+                                    詳細を見る
                                   </Link>
                                   {v.website && (
-                                    <a href={v.website} target="_blank" rel="noopener noreferrer" className="text-xs text-gray-500 hover:underline flex items-center gap-1">
+                                    <a href={v.website} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 px-3 py-1.5 text-xs text-gray-600 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors min-h-[36px]">
                                       <FaExternalLinkAlt className="text-[9px]" /> 公式サイト
                                     </a>
                                   )}
                                   <a
                                     href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(v.name + ' ' + (v.address || v.prefecture))}`}
                                     target="_blank" rel="noopener noreferrer"
-                                    className="text-xs text-gray-500 hover:underline flex items-center gap-1"
+                                    className="inline-flex items-center gap-1 px-3 py-1.5 text-xs text-gray-600 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors min-h-[36px]"
                                   >
                                     <FaMapMarkerAlt className="text-[9px]" /> 地図
                                   </a>
@@ -236,6 +262,30 @@ export default function VenuesIndex({ venues, stats, prefectures, prefectureCoun
         {/* リストビュー */}
         {viewMode === 'list' && (
           <>
+            {/* 人気の劇場セクション（フィルタ未使用時のみ表示） */}
+            {!search && !selectedType && !selectedPrefecture && !selectedCapacity && popularVenues.length > 0 && (
+              <section className="mb-6">
+                <h2 className="text-sm font-bold text-gray-700 mb-3 flex items-center gap-1.5">
+                  <FaFire className="text-orange-400" />注目の劇場
+                </h2>
+                <div className="flex gap-3 overflow-x-auto pb-2 -mx-1 px-1 scrollbar-hide">
+                  {popularVenues.map((v) => (
+                    <Link key={v.id} href={`/venues/${v.slug}`} className="flex-shrink-0 w-44 group">
+                      <div className="border border-gray-150 rounded-lg p-3 hover:border-theater-primary-300 hover:shadow-sm transition-all h-full">
+                        <div className={`w-8 h-1 rounded-full mb-2 ${TYPE_COLORS[v.venueType] || 'bg-gray-300'}`} />
+                        <p className="text-sm font-bold text-gray-800 group-hover:text-theater-primary-600 truncate">{v.name}</p>
+                        <p className="text-[11px] text-gray-400 mt-0.5">{v.prefecture}</p>
+                        <div className="flex items-center gap-1.5 mt-1.5">
+                          <span className="text-[10px] text-gray-400">{TYPE_LABELS[v.venueType]}</span>
+                          {v.capacity && <span className="text-[10px] text-gray-300">· {v.capacity}席</span>}
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </section>
+            )}
+
             {/* タブ */}
             <div className="flex gap-0 border-b border-gray-200 mb-4">
               {TYPE_TABS.map((tab) => (
@@ -257,7 +307,7 @@ export default function VenuesIndex({ venues, stats, prefectures, prefectureCoun
                 <button
                   key={key}
                   onClick={() => setSelectedCapacity(key)}
-                  className={`px-3 py-1 text-xs font-bold rounded-full transition-colors ${selectedCapacity === key ? 'bg-theater-primary-500 text-white' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'}`}
+                  className={`px-3 py-1.5 text-xs font-bold rounded-full transition-colors min-h-[36px] ${selectedCapacity === key ? 'bg-theater-primary-500 text-white' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'}`}
                 >
                   {label}
                 </button>
@@ -270,15 +320,15 @@ export default function VenuesIndex({ venues, stats, prefectures, prefectureCoun
                 <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm" />
                 <input type="text" placeholder="劇場名・地域で検索" value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="w-full pl-9 pr-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-theater-primary-200" />
+                  className="w-full pl-9 pr-3 py-2.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-theater-primary-200" />
               </div>
               <select value={selectedPrefecture} onChange={(e) => setSelectedPrefecture(e.target.value)}
-                className="px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-theater-primary-200">
+                className="px-3 py-2.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-theater-primary-200">
                 <option value="">全都道府県</option>
                 {prefectures.map((p) => <option key={p} value={p}>{p}（{prefectureCounts[p] || 0}）</option>)}
               </select>
               <select value={sortBy} onChange={(e) => setSortBy(e.target.value as typeof sortBy)}
-                className="px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-theater-primary-200">
+                className="px-3 py-2.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-theater-primary-200">
                 <option value="name">名前順</option>
                 <option value="capacity-asc">座席数（少→多）</option>
                 <option value="capacity-desc">座席数（多→少）</option>
@@ -288,22 +338,24 @@ export default function VenuesIndex({ venues, stats, prefectures, prefectureCoun
             <p className="text-sm text-gray-500 mb-4">{filtered.length}件の劇場</p>
 
             {filtered.length > 0 ? (
-              <div className="space-y-1">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 {filtered.map((v) => (
                   <Link key={v.id} href={`/venues/${v.slug}`} className="block group">
-                    <div className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
-                      <div className={`w-1 h-10 rounded-full flex-shrink-0 ${TYPE_COLORS[v.venueType] || 'bg-gray-300'}`} />
+                    <div className="flex items-center gap-3 p-3 rounded-lg border border-gray-100 hover:border-theater-primary-200 hover:shadow-sm transition-all">
+                      <div className={`w-1.5 self-stretch rounded-full flex-shrink-0 ${TYPE_COLORS[v.venueType] || 'bg-gray-300'}`} />
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
                           <h2 className="font-bold text-sm text-gray-900 group-hover:text-theater-primary-600 truncate">{v.name}</h2>
-                          <span className="text-[10px] text-gray-400 whitespace-nowrap">{TYPE_LABELS[v.venueType]}</span>
                         </div>
                         <div className="flex items-center gap-3 text-xs text-gray-400 mt-0.5">
-                          <span>{v.prefecture}</span>
-                          {v.capacity && <span>{v.capacity}席</span>}
+                          <span className="flex items-center gap-0.5"><FaMapMarkerAlt className="text-[9px] text-gray-300" />{v.prefecture}</span>
+                          <span className={`text-[10px] font-medium ${TYPE_TEXT_COLORS[v.venueType] || 'text-gray-400'}`}>{TYPE_LABELS[v.venueType]}</span>
                         </div>
                       </div>
-                      {v.website && <FaGlobe className="text-gray-300 text-xs flex-shrink-0" />}
+                      <div className="flex items-center gap-2 flex-shrink-0">
+                        <MiniCapacityBar capacity={v.capacity} venueType={v.venueType} />
+                        {v.website && <FaGlobe className="text-gray-300 text-xs" />}
+                      </div>
                     </div>
                   </Link>
                 ))}
@@ -338,8 +390,31 @@ export const getStaticProps: GetStaticProps = async () => {
     large: venues.filter((v) => v.venueType === 'large').length,
   };
 
+  // 注目の劇場: 各タイプから代表的な劇場を選出（キャパシティありのもの優先）
+  const popularVenues: Venue[] = [];
+  const types = ['small', 'medium', 'large'] as const;
+  for (const t of types) {
+    const ofType = venues
+      .filter((v) => v.venueType === t && v.capacity)
+      .sort((a, b) => (b.capacity || 0) - (a.capacity || 0));
+    // 各タイプから上位2件ずつ
+    popularVenues.push(...ofType.slice(0, 2));
+  }
+  // 足りなければキャパ順で補充
+  if (popularVenues.length < 6) {
+    const ids = new Set(popularVenues.map((v) => v.id));
+    const rest = venues.filter((v) => !ids.has(v.id) && v.capacity).sort((a, b) => (b.capacity || 0) - (a.capacity || 0));
+    popularVenues.push(...rest.slice(0, 6 - popularVenues.length));
+  }
+
   return {
-    props: { venues: JSON.parse(JSON.stringify(venues)), stats, prefectures, prefectureCounts },
+    props: {
+      venues: JSON.parse(JSON.stringify(venues)),
+      stats,
+      prefectures,
+      prefectureCounts,
+      popularVenues: JSON.parse(JSON.stringify(popularVenues.slice(0, 6))),
+    },
     revalidate: 604800,
   };
 };

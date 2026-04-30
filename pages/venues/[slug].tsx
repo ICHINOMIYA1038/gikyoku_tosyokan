@@ -5,7 +5,7 @@ import Layout from '@/components/Layout';
 import Seo from '@/components/seo';
 import StructuredData from '@/components/StructuredData';
 import { prisma } from '@/lib/prisma';
-import { FaChevronRight, FaMapMarkerAlt, FaUsers, FaExternalLinkAlt, FaTwitter, FaTheaterMasks, FaInfoCircle } from 'react-icons/fa';
+import { FaChevronRight, FaMapMarkerAlt, FaUsers, FaExternalLinkAlt, FaTwitter, FaTheaterMasks, FaInfoCircle, FaShareAlt, FaCalendarAlt, FaCheckCircle, FaPhoneAlt, FaFileAlt } from 'react-icons/fa';
 
 const venueTypeLabels: Record<string, string> = {
   small: '小劇場', medium: '中劇場', large: '大劇場',
@@ -42,6 +42,65 @@ const groupTypeLabelsShort: Record<string, string> = {
   PROFESSIONAL: 'プロ', AMATEUR: '社会人', STUDENT: '学生',
   INTERCOLLEGE: 'インカレ', ACADEMIC: '大学学科', YOUTH: 'ユース',
 };
+
+// キャパシティの視覚化コンポーネント
+function CapacityBar({ capacity, venueType }: { capacity: number | null; venueType: string }) {
+  if (!capacity) return null;
+  // 対数スケールで表示 (50席 → 大体左端, 2000席 → 大体右端)
+  const minLog = Math.log(30);
+  const maxLog = Math.log(2500);
+  const pct = Math.min(100, Math.max(5, ((Math.log(capacity) - minLog) / (maxLog - minLog)) * 100));
+
+  const labels = [
+    { pos: 0, text: '50席' },
+    { pos: 33, text: '150席' },
+    { pos: 66, text: '500席' },
+    { pos: 100, text: '2000席+' },
+  ];
+
+  const barColor = venueType === 'large' || venueType === 'LARGE'
+    ? 'bg-purple-500' : venueType === 'medium' || venueType === 'MEDIUM'
+    ? 'bg-green-500' : 'bg-blue-500';
+
+  return (
+    <div className="mt-3 mb-1">
+      <p className="text-[11px] text-gray-400 mb-1.5 font-medium">劇場の規模感</p>
+      <div className="relative h-2 bg-gray-100 rounded-full overflow-visible">
+        <div className={`absolute left-0 top-0 h-full rounded-full ${barColor} transition-all`} style={{ width: `${pct}%` }} />
+        <div className={`absolute top-1/2 -translate-y-1/2 w-4 h-4 rounded-full border-2 border-white shadow-md ${barColor}`} style={{ left: `calc(${pct}% - 8px)` }} />
+      </div>
+      <div className="relative flex justify-between mt-1">
+        {labels.map((l) => (
+          <span key={l.pos} className="text-[10px] text-gray-300" style={{ position: 'absolute', left: `${l.pos}%`, transform: 'translateX(-50%)' }}>{l.text}</span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// シェアボタンコンポーネント
+function ShareButtons({ venue }: { venue: Props['venue'] }) {
+  const url = `https://gikyokutosyokan.com/venues/${venue.slug}`;
+  const text = `${venue.name}（${venue.prefecture}）- 劇場データベース｜戯曲図書館`;
+  const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
+  const lineUrl = `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(url)}`;
+
+  return (
+    <div className="flex items-center gap-2">
+      <span className="text-[11px] text-gray-400"><FaShareAlt className="inline mr-0.5" />共有</span>
+      <a href={twitterUrl} target="_blank" rel="noopener noreferrer"
+        className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-gray-100 hover:bg-blue-50 text-gray-500 hover:text-blue-500 transition-colors"
+        title="Twitterでシェア">
+        <FaTwitter className="text-sm" />
+      </a>
+      <a href={lineUrl} target="_blank" rel="noopener noreferrer"
+        className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-gray-100 hover:bg-green-50 text-gray-500 hover:text-green-500 transition-colors"
+        title="LINEでシェア">
+        <svg viewBox="0 0 24 24" className="w-4 h-4 fill-current"><path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63h2.386c.346 0 .627.285.627.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63.346 0 .628.285.628.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.282.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314" /></svg>
+      </a>
+    </div>
+  );
+}
 
 // 劇場の規模に応じた補足情報を生成
 function getVenueInsight(venue: Props['venue']): string[] {
@@ -125,15 +184,18 @@ export default function VenueDetail({ venue, nearbyVenues, announcements, perfor
 
         {/* ヘッダー */}
         <div className="mb-8">
-          <div className="flex items-start gap-3 mb-2">
-            <h1 className="text-2xl md:text-3xl font-bold text-gray-900">{venue.name}</h1>
-            <span className={`shrink-0 mt-1.5 px-2 py-0.5 text-xs font-bold rounded ${venueTypeColors[venue.venueType] || 'bg-gray-100 text-gray-700'}`}>
-              {typeLabel}
-            </span>
+          <div className="flex items-start justify-between gap-3 mb-2">
+            <div className="flex items-start gap-3">
+              <h1 className="text-2xl md:text-3xl font-bold text-gray-900">{venue.name}</h1>
+              <span className={`shrink-0 mt-1.5 px-2 py-0.5 text-xs font-bold rounded ${venueTypeColors[venue.venueType] || 'bg-gray-100 text-gray-700'}`}>
+                {typeLabel}
+              </span>
+            </div>
+            <ShareButtons venue={venue} />
           </div>
 
           {/* スペック */}
-          <div className="flex flex-wrap gap-4 text-sm text-gray-500 mb-4">
+          <div className="flex flex-wrap gap-4 text-sm text-gray-500 mb-2">
             {venue.capacity && (
               <span className="flex items-center gap-1"><FaUsers className="text-blue-400" />{venue.capacity}席</span>
             )}
@@ -141,6 +203,9 @@ export default function VenueDetail({ venue, nearbyVenues, announcements, perfor
               <span className="flex items-center gap-1"><FaMapMarkerAlt className="text-red-400" />{venue.prefecture}</span>
             )}
           </div>
+
+          {/* キャパシティ視覚化 */}
+          <CapacityBar capacity={venue.capacity} venueType={venue.venueType} />
 
           {/* 紹介文 */}
           <div className="text-sm text-gray-700 leading-relaxed space-y-2">
@@ -196,18 +261,47 @@ export default function VenueDetail({ venue, nearbyVenues, announcements, perfor
 
         {/* この劇場を利用するには */}
         <section className="mb-6 bg-amber-50/50 rounded-lg p-5">
-          <h2 className="text-base font-bold text-gray-800 mb-2 flex items-center gap-2">
+          <h2 className="text-base font-bold text-gray-800 mb-3 flex items-center gap-2">
             <FaInfoCircle className="text-amber-500" />この劇場で公演するには
           </h2>
-          <p className="text-sm text-gray-600 leading-relaxed">
-            {venue.website
-              ? `利用料金や空き状況については、公式サイトをご確認ください。多くの劇場では、利用申込書の提出と事前の打ち合わせが必要です。`
-              : `利用については劇場に直接お問い合わせください。多くの劇場では、利用申込書の提出と事前の打ち合わせが必要です。`
-            }
-          </p>
+          <div className="space-y-3">
+            <div className="flex items-start gap-2.5">
+              <FaCalendarAlt className="text-amber-400 mt-0.5 flex-shrink-0 text-xs" />
+              <div>
+                <p className="text-sm font-medium text-gray-700">空き状況の確認</p>
+                <p className="text-xs text-gray-500">公演希望日の6〜12ヶ月前からの予約が一般的です。人気の劇場は早めの問い合わせを推奨します。</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-2.5">
+              <FaFileAlt className="text-amber-400 mt-0.5 flex-shrink-0 text-xs" />
+              <div>
+                <p className="text-sm font-medium text-gray-700">利用申込</p>
+                <p className="text-xs text-gray-500">利用申込書の提出と、公演内容・舞台プラン等についての事前打ち合わせが必要です。</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-2.5">
+              <FaPhoneAlt className="text-amber-400 mt-0.5 flex-shrink-0 text-xs" />
+              <div>
+                <p className="text-sm font-medium text-gray-700">問い合わせ先</p>
+                <p className="text-xs text-gray-500">
+                  {venue.website
+                    ? '料金・設備・技術スタッフの有無などは公式サイトをご確認ください。'
+                    : '料金・設備については劇場に直接お問い合わせください。'
+                  }
+                </p>
+              </div>
+            </div>
+            <div className="flex items-start gap-2.5">
+              <FaCheckCircle className="text-amber-400 mt-0.5 flex-shrink-0 text-xs" />
+              <div>
+                <p className="text-sm font-medium text-gray-700">確認しておきたいポイント</p>
+                <p className="text-xs text-gray-500">搬入口の大きさ、楽屋の数、音響・照明設備、客席の配置変更可否、ピアノ等の備品。</p>
+              </div>
+            </div>
+          </div>
           {venue.website && (
             <a href={venue.website} target="_blank" rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-sm text-theater-primary-600 hover:underline mt-2 font-medium">
+              className="inline-flex items-center gap-1.5 text-sm text-white bg-theater-primary-500 hover:bg-theater-primary-600 rounded-lg px-4 py-2 mt-4 font-medium transition-colors">
               <FaExternalLinkAlt className="text-xs" /> 公式サイトで詳細を確認
             </a>
           )}
@@ -233,39 +327,65 @@ export default function VenueDetail({ venue, nearbyVenues, announcements, perfor
           </section>
         )}
 
-        {/* この劇場で上演された作品 */}
-        {performances.length > 0 && (
-          <section className="mb-6">
-            <h2 className="text-lg font-bold text-gray-900 mb-3 flex items-center gap-2">
-              <FaTheaterMasks className="text-theater-primary-500" />この劇場で上演された作品
-            </h2>
-            <div className="space-y-2">
-              {performances.map((p, i) => (
-                <div key={i} className="flex items-start gap-3 py-2 border-b border-gray-50 last:border-0">
-                  <div className="flex-1 min-w-0">
-                    <Link href={`/posts/${p.post.id}`} className="text-sm font-medium text-gray-800 hover:text-theater-primary-600">
-                      {p.post.author.name}『{p.post.title}』
-                    </Link>
-                    <div className="flex items-center gap-2 mt-0.5 flex-wrap">
-                      <Link href={`/theater-groups/${p.theaterGroup.slug}`} className="text-xs text-gray-400 hover:text-gray-600">
-                        {p.theaterGroup.name}
-                      </Link>
-                      {p.performanceYear && (
-                        <span className="text-xs text-gray-400">{p.performanceYear}年上演</span>
-                      )}
-                      {p.sourceUrl && (
-                        <a href={p.sourceUrl} target="_blank" rel="noopener noreferrer"
-                          className="text-[10px] text-blue-400 hover:text-blue-600 flex items-center gap-0.5">
-                          <FaExternalLinkAlt className="text-[8px]" />出典
-                        </a>
-                      )}
+        {/* この劇場で上演された作品 - タイムライン */}
+        {performances.length > 0 && (() => {
+          // 年ごとにグループ化
+          const byYear: Record<string, typeof performances> = {};
+          performances.forEach((p) => {
+            const yr = p.performanceYear ? String(p.performanceYear) : '年不明';
+            if (!byYear[yr]) byYear[yr] = [];
+            byYear[yr].push(p);
+          });
+          const years = Object.keys(byYear).sort((a, b) => {
+            if (a === '年不明') return 1;
+            if (b === '年不明') return -1;
+            return Number(b) - Number(a);
+          });
+
+          return (
+            <section className="mb-6">
+              <h2 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                <FaTheaterMasks className="text-theater-primary-500" />この劇場で上演された作品
+              </h2>
+              <div className="relative">
+                {years.map((year, yi) => (
+                  <div key={year} className="flex gap-4 mb-0 last:mb-0">
+                    {/* 年ラベル */}
+                    <div className="w-14 flex-shrink-0 pt-1 text-right">
+                      <span className="text-sm font-bold text-gray-400">{year === '年不明' ? '—' : year}</span>
+                    </div>
+                    {/* タイムラインの線とドット */}
+                    <div className="flex flex-col items-center flex-shrink-0">
+                      <div className="w-2.5 h-2.5 rounded-full bg-theater-primary-400 border-2 border-theater-primary-100 mt-2 z-10" />
+                      {yi < years.length - 1 && <div className="w-px flex-1 bg-gray-200" />}
+                    </div>
+                    {/* コンテンツ */}
+                    <div className="flex-1 pb-5">
+                      {byYear[year].map((p, i) => (
+                        <div key={i} className="py-1.5 first:pt-0">
+                          <Link href={`/posts/${p.post.id}`} className="text-sm font-medium text-gray-800 hover:text-theater-primary-600">
+                            {p.post.author.name}『{p.post.title}』
+                          </Link>
+                          <div className="flex items-center gap-2 mt-0.5 flex-wrap">
+                            <Link href={`/theater-groups/${p.theaterGroup.slug}`} className="text-xs text-gray-400 hover:text-gray-600">
+                              {p.theaterGroup.name}
+                            </Link>
+                            {p.sourceUrl && (
+                              <a href={p.sourceUrl} target="_blank" rel="noopener noreferrer"
+                                className="text-[10px] text-blue-400 hover:text-blue-600 flex items-center gap-0.5">
+                                <FaExternalLinkAlt className="text-[8px]" />出典
+                              </a>
+                            )}
+                          </div>
+                        </div>
+                      ))}
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
-          </section>
-        )}
+                ))}
+              </div>
+            </section>
+          );
+        })()}
 
         {/* この地域の劇団 */}
         {theaterGroups.length > 0 && (
