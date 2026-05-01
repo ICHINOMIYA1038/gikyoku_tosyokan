@@ -205,7 +205,7 @@ export default function BlogEnPost({
                       return (
                         <h2
                           id={id}
-                          className="text-2xl font-bold mt-12 mb-5 pl-4 py-2 border-l-4 border-blue-500 bg-gradient-to-r from-blue-50 to-transparent scroll-mt-20"
+                          className="text-xl font-bold mt-12 mb-5 scroll-mt-20 text-gray-700"
                         >
                           {children}
                         </h2>
@@ -216,7 +216,7 @@ export default function BlogEnPost({
                       return (
                         <h3
                           id={id}
-                          className="text-xl font-bold mt-8 mb-4 pb-2 border-b-2 border-gray-200 scroll-mt-20"
+                          className="text-lg font-bold mt-8 mb-4 scroll-mt-20 text-gray-700"
                         >
                           {children}
                         </h3>
@@ -239,7 +239,7 @@ export default function BlogEnPost({
                     ),
                     li: ({ children }: any) => (
                       <li className="relative pl-6 text-gray-700 leading-relaxed">
-                        <span className="absolute left-0 top-[0.65em] w-2 h-2 rounded-full bg-blue-400" />
+                        <span className="absolute left-0 top-[0.65em] w-1.5 h-1.5 rounded-full bg-gray-400" />
                         {children}
                       </li>
                     ),
@@ -247,13 +247,13 @@ export default function BlogEnPost({
                       const isInternal = href?.startsWith('/');
                       if (isInternal) {
                         return (
-                          <Link href={href || '#'} className="text-blue-600 hover:text-blue-800 underline decoration-blue-300 underline-offset-2 hover:decoration-blue-600 transition-colors">
+                          <Link href={href || '#'} className="text-theater-primary-600 hover:text-theater-primary-800 underline underline-offset-2 transition-colors">
                             {children}
                           </Link>
                         );
                       }
                       return (
-                        <a href={href} className="text-blue-600 hover:text-blue-800 underline decoration-blue-300 underline-offset-2 hover:decoration-blue-600 transition-colors" target="_blank" rel="noopener noreferrer">
+                        <a href={href} className="text-theater-primary-600 hover:text-theater-primary-800 underline underline-offset-2 transition-colors" target="_blank" rel="noopener noreferrer">
                           {children}
                         </a>
                       );
@@ -263,8 +263,7 @@ export default function BlogEnPost({
                     ),
                     strong: ({ children }) => <strong className="font-bold text-gray-900">{children}</strong>,
                     blockquote: ({ children }) => (
-                      <blockquote className="relative border-l-4 border-blue-400 bg-gradient-to-r from-blue-50 to-transparent pl-5 pr-4 py-4 my-6 text-gray-600 italic rounded-r-lg">
-                        <div className="absolute -left-3 -top-2 text-blue-300 text-3xl font-serif select-none">&ldquo;</div>
+                      <blockquote className="border-l-4 border-gray-300 pl-5 pr-4 py-3 my-6 text-gray-500 italic">
                         {children}
                       </blockquote>
                     ),

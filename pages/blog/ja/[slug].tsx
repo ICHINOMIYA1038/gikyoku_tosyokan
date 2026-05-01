@@ -161,7 +161,7 @@ export default function BlogJaPost({
                       return (
                         <h2
                           id={id}
-                          className="text-xl font-bold mt-12 mb-5 pb-2 border-b border-gray-200 scroll-mt-20 text-gray-800"
+                          className="text-xl font-bold mt-12 mb-5 scroll-mt-20 text-gray-700"
                         >
                           {children}
                         </h2>

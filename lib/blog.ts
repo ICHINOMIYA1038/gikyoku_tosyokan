@@ -35,7 +35,7 @@ export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
     where: { slug },
   });
 
-  if (!post || !post.published) {
+  if (!post || !post.published || post.publishedAt > new Date()) {
     return null;
   }
 
@@ -52,7 +52,7 @@ export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
 
 export async function getAllPosts(): Promise<BlogPostMeta[]> {
   const posts = await prisma.blogPost.findMany({
-    where: { published: true },
+    where: { published: true, publishedAt: { lte: new Date() } },
     orderBy: { publishedAt: 'desc' },
     select: {
       slug: true,
@@ -76,6 +76,7 @@ export async function getPostsByTag(tag: string): Promise<BlogPostMeta[]> {
   const posts = await prisma.blogPost.findMany({
     where: {
       published: true,
+      publishedAt: { lte: new Date() },
       tags: { has: tag },
     },
     orderBy: { publishedAt: 'desc' },
@@ -99,7 +100,7 @@ export async function getPostsByTag(tag: string): Promise<BlogPostMeta[]> {
 
 export async function getPostsByLanguage(lang: string): Promise<BlogPostMeta[]> {
   const posts = await prisma.blogPost.findMany({
-    where: { published: true, language: lang },
+    where: { published: true, publishedAt: { lte: new Date() }, language: lang },
     orderBy: { publishedAt: 'desc' },
     select: {
       slug: true,
