@@ -161,7 +161,7 @@ export default function BlogJaPost({
                       return (
                         <h2
                           id={id}
-                          className="text-2xl font-bold mt-12 mb-5 pl-4 py-2 border-l-4 border-gray-800 scroll-mt-20"
+                          className="text-xl font-bold mt-12 mb-5 pb-2 border-b border-gray-200 scroll-mt-20 text-gray-800"
                         >
                           {children}
                         </h2>
@@ -172,7 +172,7 @@ export default function BlogJaPost({
                       return (
                         <h3
                           id={id}
-                          className="text-xl font-bold mt-8 mb-4 pb-2 border-b-2 border-gray-200 scroll-mt-20"
+                          className="text-lg font-bold mt-8 mb-4 scroll-mt-20 text-gray-700"
                         >
                           {children}
                         </h3>
