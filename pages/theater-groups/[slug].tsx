@@ -52,6 +52,7 @@ export default function TheaterGroupDetail({ group, relatedShogekijoGroups, acti
   if (!group) return null;
 
   const prefecture = group.universities?.[0]?.university.prefecture || '';
+  const isUniversity = ['STUDENT', 'INTERCOLLEGE', 'ACADEMIC'].includes(group.groupType);
 
   return (
     <Layout>
@@ -59,14 +60,16 @@ export default function TheaterGroupDetail({ group, relatedShogekijoGroups, acti
         pageTitle={group.name}
         pageDescription={group.description || `${group.name}の情報ページ`}
         pagePath={`/theater-groups/${group.slug}`}
-        pageKeywords={['大学演劇', '学生劇団', group.name]}
+        pageKeywords={[isUniversity ? '大学演劇' : '劇団', group.name]}
       />
       <StructuredData
         type="BreadcrumbList"
         breadcrumbs={[
           { name: 'ホーム', url: 'https://gikyokutosyokan.com' },
-          { name: '大学演劇', url: 'https://gikyokutosyokan.com/university-theater' },
-          { name: '劇団一覧', url: 'https://gikyokutosyokan.com/theater-groups' },
+          ...(isUniversity
+            ? [{ name: '大学演劇', url: 'https://gikyokutosyokan.com/university-theater' }]
+            : []),
+          { name: '劇団データベース', url: 'https://gikyokutosyokan.com/theater-groups' },
           { name: group.name, url: `https://gikyokutosyokan.com/theater-groups/${group.slug}` },
         ]}
       />
@@ -76,9 +79,13 @@ export default function TheaterGroupDetail({ group, relatedShogekijoGroups, acti
         <nav className="flex items-center gap-1 text-xs text-gray-500 mb-4 flex-wrap">
           <Link href="/" className="hover:text-theater-primary-700">ホーム</Link>
           <FaChevronRight className="text-[8px]" />
-          <Link href="/university-theater" className="hover:text-theater-primary-700">大学演劇</Link>
-          <FaChevronRight className="text-[8px]" />
-          <Link href="/theater-groups" className="hover:text-theater-primary-700">劇団一覧</Link>
+          {isUniversity && (
+            <>
+              <Link href="/university-theater" className="hover:text-theater-primary-700">大学演劇</Link>
+              <FaChevronRight className="text-[8px]" />
+            </>
+          )}
+          <Link href="/theater-groups" className="hover:text-theater-primary-700">劇団データベース</Link>
           <FaChevronRight className="text-[8px]" />
           <span className="text-gray-800">{group.name}</span>
         </nav>
