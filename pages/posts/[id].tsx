@@ -18,7 +18,7 @@ import Seo from "@/components/seo";
 import StructuredData from "@/components/StructuredData";
 import OtherPosts from "@/components/Widget/OtherPosts";
 import { useState, useCallback, useEffect } from "react";
-import { FaStar, FaCommentDots, FaShareAlt, FaBook, FaExternalLinkAlt, FaTheaterMasks, FaHeart, FaBalanceScale, FaTrophy } from "react-icons/fa";
+import { FaStar, FaCommentDots, FaShareAlt, FaBook, FaExternalLinkAlt, FaTheaterMasks, FaHeart, FaBalanceScale, FaTrophy, FaMapMarkerAlt } from "react-icons/fa";
 import QuickReactions from "@/components/QuickReactions";
 import ReactionBadge from "@/components/ReactionBadge";
 import FavoriteButton from "@/components/FavoriteButton";
@@ -411,6 +411,46 @@ function PostPage({ post }: any) {
                     </div>
                   )}
 
+                  {post.performedVenues && post.performedVenues.length > 0 && (
+                    <div>
+                      <h2 className="text-base font-bold text-gray-900 mb-3">この作品が上演された劇場（{post.performedVenues.length}）</h2>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-1">
+                        {post.performedVenues.map((pv: any) => {
+                          const venueTypeLabels: Record<string, string> = {
+                            small: '小劇場', medium: '中劇場', large: '大劇場',
+                            SMALL: '小劇場', MEDIUM: '中劇場', LARGE: '大劇場',
+                          };
+                          const venueTypeColors: Record<string, string> = {
+                            small: 'bg-blue-100 text-blue-700', medium: 'bg-green-100 text-green-700', large: 'bg-purple-100 text-purple-700',
+                            SMALL: 'bg-blue-100 text-blue-700', MEDIUM: 'bg-green-100 text-green-700', LARGE: 'bg-purple-100 text-purple-700',
+                          };
+                          const typeLabel = venueTypeLabels[pv.venueType] || pv.venueType;
+                          const typeColor = venueTypeColors[pv.venueType] || 'bg-gray-100 text-gray-700';
+                          return (
+                            <Link key={pv.venueId} href={`/venues/${pv.venueSlug}`}
+                              className="flex items-center gap-2.5 p-2.5 rounded hover:bg-gray-50 transition-colors group">
+                              <div className="w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center flex-shrink-0">
+                                <FaMapMarkerAlt className="text-indigo-500 text-xs" />
+                              </div>
+                              <div className="min-w-0 flex-1">
+                                <div className="flex items-center gap-1.5">
+                                  <p className="font-bold text-sm text-gray-800 group-hover:text-indigo-600 truncate">{pv.venueName}</p>
+                                  <span className={`shrink-0 px-1.5 py-0.5 text-[10px] font-bold rounded ${typeColor}`}>{typeLabel}</span>
+                                </div>
+                                <p className="text-[11px] text-gray-400">
+                                  {pv.prefecture}
+                                  {pv.performers && pv.performers.length > 0 && (
+                                    <>{' · '}{pv.performers.map((p: any) => `${p.name}${p.year ? `(${p.year}年)` : ''}`).join('、')}</>
+                                  )}
+                                </p>
+                              </div>
+                            </Link>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+
                   <div>
                     <h2 className="text-base font-bold text-gray-900 mb-3">関連作品</h2>
                     <MemoizedOtherPosts authorId={post.author_id} postId={post.id} authorName={post.author.name} />
@@ -560,6 +600,16 @@ export async function getStaticProps(context: any) {
             sourceUrl: true,
             sourceType: true,
             performanceYear: true,
+            venueId: true,
+            venue: {
+              select: {
+                id: true,
+                name: true,
+                slug: true,
+                venueType: true,
+                prefecture: true,
+              }
+            },
             theaterGroup: {
               select: {
                 id: true,
@@ -569,6 +619,30 @@ export async function getStaticProps(context: any) {
                 prefecture: true,
               }
             }
+          }
+        },
+        venuePerformances: {
+          select: {
+            id: true,
+            year: true,
+            artistName: true,
+            theaterGroupId: true,
+            theaterGroup: {
+              select: {
+                id: true,
+                name: true,
+                slug: true,
+              }
+            },
+            venue: {
+              select: {
+                id: true,
+                name: true,
+                slug: true,
+                venueType: true,
+                prefecture: true,
+              }
+            },
           }
         },
         awards: {
@@ -591,9 +665,70 @@ export async function getStaticProps(context: any) {
       return { notFound: true };
     }
 
+    // 上演劇場を集約（PostTheaterGroup + VenuePerformance から重複排除）
+    const venueMap = new Map<number, {
+      venueId: number;
+      venueName: string;
+      venueSlug: string;
+      venueType: string;
+      prefecture: string;
+      performers: { name: string; year: number | null }[];
+    }>();
+
+    // PostTheaterGroup 経由の劇場
+    for (const ptg of post.theaterGroups) {
+      if (ptg.venue && ptg.venueId) {
+        const v = ptg.venue;
+        if (!venueMap.has(v.id)) {
+          venueMap.set(v.id, {
+            venueId: v.id,
+            venueName: v.name,
+            venueSlug: v.slug,
+            venueType: v.venueType,
+            prefecture: v.prefecture,
+            performers: [],
+          });
+        }
+        const entry = venueMap.get(v.id)!;
+        entry.performers.push({
+          name: ptg.theaterGroup.name,
+          year: ptg.performanceYear,
+        });
+      }
+    }
+
+    // VenuePerformance 経由の劇場
+    for (const vp of post.venuePerformances) {
+      const v = vp.venue;
+      if (!venueMap.has(v.id)) {
+        venueMap.set(v.id, {
+          venueId: v.id,
+          venueName: v.name,
+          venueSlug: v.slug,
+          venueType: v.venueType,
+          prefecture: v.prefecture,
+          performers: [],
+        });
+      }
+      const entry = venueMap.get(v.id)!;
+      const performerName = vp.theaterGroup?.name || vp.artistName;
+      if (performerName) {
+        // 重複チェック
+        const alreadyExists = entry.performers.some(
+          (p) => p.name === performerName && p.year === vp.year
+        );
+        if (!alreadyExists) {
+          entry.performers.push({ name: performerName, year: vp.year });
+        }
+      }
+    }
+
+    const performedVenues = Array.from(venueMap.values());
+
     // 日時フォーマット変換
     const formattedPost = {
       ...post,
+      performedVenues,
       comments: post.comments.map((comment: any) => ({
         ...comment,
         name: comment.author,

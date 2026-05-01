@@ -16,7 +16,7 @@ const venueTypeColors: Record<string, string> = {
   SMALL: 'bg-blue-100 text-blue-700', MEDIUM: 'bg-green-100 text-green-700', LARGE: 'bg-purple-100 text-purple-700',
 };
 
-type NearbyVenue = { name: string; slug: string; venueType: string; capacity: number | null };
+type NearbyVenue = { name: string; slug: string; venueType: string; capacity: number | null; distance: number | null };
 type AnnouncementItem = { id: number; title: string; performanceDate: string | null; theaterGroupName: string | null; post: { id: number; title: string } | null };
 type PerformanceItem = {
   performanceYear: number | null;
@@ -136,7 +136,14 @@ export default function VenueDetail({ venue, nearbyVenues, announcements, perfor
 
   const typeLabel = venueTypeLabels[venue.venueType] || venue.venueType;
   const insights = getVenueInsight(venue);
+  const hasCoords = venue.latitude !== null && venue.longitude !== null;
   const mapQuery = encodeURIComponent(venue.name + ' ' + (venue.address || venue.prefecture || ''));
+  const mapSrc = hasCoords
+    ? `https://maps.google.com/maps?q=${venue.latitude},${venue.longitude}&z=16&output=embed&hl=ja`
+    : `https://www.google.com/maps?q=${mapQuery}&output=embed&hl=ja`;
+  const mapLink = hasCoords
+    ? `https://www.google.com/maps/search/?api=1&query=${venue.latitude},${venue.longitude}`
+    : `https://www.google.com/maps/search/?api=1&query=${mapQuery}`;
 
   const placeJsonLd = {
     '@context': 'https://schema.org',
@@ -251,12 +258,12 @@ export default function VenueDetail({ venue, nearbyVenues, announcements, perfor
             )}
             <div className="rounded-lg overflow-hidden border border-gray-200">
               <iframe
-                src={`https://www.google.com/maps?q=${mapQuery}&output=embed&hl=ja`}
+                src={mapSrc}
                 width="100%" height="300" style={{ border: 0 }} allowFullScreen loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade" title={`${venue.name}の地図`}
               />
             </div>
-            <a href={`https://www.google.com/maps/search/?api=1&query=${mapQuery}`}
+            <a href={mapLink}
               target="_blank" rel="noopener noreferrer"
               className="inline-flex items-center gap-1 text-xs text-theater-primary-600 hover:underline mt-2">
               <FaExternalLinkAlt className="text-[10px]" /> Google Mapsで大きく表示
@@ -426,7 +433,9 @@ export default function VenueDetail({ venue, nearbyVenues, announcements, perfor
         {/* 近くの劇場 */}
         {nearbyVenues.length > 0 && (
           <section className="mb-6">
-            <h2 className="text-lg font-bold text-gray-900 mb-3">{venue.prefecture}の他の劇場</h2>
+            <h2 className="text-lg font-bold text-gray-900 mb-3">
+              {nearbyVenues[0].distance !== null ? '近くの劇場' : `${venue.prefecture}の他の劇場`}
+            </h2>
             <ul className="space-y-2">
               {nearbyVenues.map((nv) => (
                 <li key={nv.slug}>
@@ -436,6 +445,7 @@ export default function VenueDetail({ venue, nearbyVenues, announcements, perfor
                     <span className="text-xs text-gray-400">
                       {venueTypeLabels[nv.venueType] || nv.venueType}
                       {nv.capacity ? ` · ${nv.capacity}席` : ''}
+                      {nv.distance !== null && ` · ${nv.distance < 0.1 ? '0.1km未満' : `${Math.round(nv.distance * 10) / 10}km`}`}
                     </span>
                   </Link>
                 </li>
@@ -457,13 +467,40 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   const venue = await prisma.venue.findUnique({ where: { slug } });
   if (!venue) return { notFound: true };
 
-  const nearbyVenues = venue.prefecture
-    ? await prisma.venue.findMany({
-        where: { prefecture: venue.prefecture, id: { not: venue.id } },
-        select: { name: true, slug: true, venueType: true, capacity: true },
-        orderBy: { name: 'asc' }, take: 5,
-      })
-    : [];
+  // 近くの劇場: 座標があれば距離計算、なければ同県フォールバック
+  let nearbyVenues: NearbyVenue[] = [];
+  if (venue.latitude && venue.longitude) {
+    // Haversine formula で距離計算
+    const allVenues = await prisma.venue.findMany({
+      where: { id: { not: venue.id }, latitude: { not: null }, longitude: { not: null } },
+      select: { name: true, slug: true, venueType: true, capacity: true, latitude: true, longitude: true },
+    });
+    const toRad = (deg: number) => (deg * Math.PI) / 180;
+    const haversine = (lat1: number, lng1: number, lat2: number, lng2: number): number => {
+      const R = 6371; // km
+      const dLat = toRad(lat2 - lat1);
+      const dLng = toRad(lng2 - lng1);
+      const a = Math.sin(dLat / 2) ** 2 + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLng / 2) ** 2;
+      return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    };
+    nearbyVenues = allVenues
+      .map((v) => ({
+        name: v.name,
+        slug: v.slug,
+        venueType: v.venueType,
+        capacity: v.capacity,
+        distance: Math.round(haversine(venue.latitude!, venue.longitude!, v.latitude!, v.longitude!) * 10) / 10,
+      }))
+      .sort((a, b) => a.distance! - b.distance!)
+      .slice(0, 5);
+  } else if (venue.prefecture) {
+    const prefectureVenues = await prisma.venue.findMany({
+      where: { prefecture: venue.prefecture, id: { not: venue.id } },
+      select: { name: true, slug: true, venueType: true, capacity: true },
+      orderBy: { name: 'asc' }, take: 5,
+    });
+    nearbyVenues = prefectureVenues.map((v) => ({ ...v, distance: null }));
+  }
 
   const announcements = await prisma.announcement.findMany({
     where: { venueId: venue.id },

@@ -2,7 +2,7 @@ import { PrismaClient } from "@prisma/client";
 
 const EXTERNAL_DATA_URL = "https://gikyokutosyokan.com";
 const prisma = new PrismaClient();
-function generateSiteMap(posts, authors, categories, blogPosts, studentGroups, shogekijoGroups) {
+function generateSiteMap(posts, authors, categories, blogPosts, studentGroups, shogekijoGroups, venues) {
   const currentDate = new Date().toISOString();
   
   return `<?xml version="1.0" encoding="UTF-8"?>
@@ -239,6 +239,26 @@ function generateSiteMap(posts, authors, categories, blogPosts, studentGroups, s
        })
        .join("")}
 
+     <!-- 劇場・ホール一覧ページ -->
+     <url>
+       <loc>${EXTERNAL_DATA_URL}/venues</loc>
+       <lastmod>${currentDate}</lastmod>
+       <changefreq>weekly</changefreq>
+       <priority>0.7</priority>
+     </url>
+     ${venues
+       .map(({ slug, updatedAt }) => {
+         return `
+       <url>
+           <loc>${EXTERNAL_DATA_URL}/venues/${slug}</loc>
+           <lastmod>${updatedAt ? new Date(updatedAt).toISOString() : currentDate}</lastmod>
+           <changefreq>monthly</changefreq>
+           <priority>0.6</priority>
+       </url>
+     `;
+       })
+       .join("")}
+
      <!-- サポートページ -->
      <url>
        <loc>${`${EXTERNAL_DATA_URL}/support/about`}</loc>
@@ -331,8 +351,13 @@ export async function getServerSideProps({ res }) {
     select: { slug: true },
   });
 
+  // 劇場・ホール（venues）
+  const venues = await prisma.venue.findMany({
+    select: { slug: true, updatedAt: true },
+  });
+
   // We generate the XML sitemap with the data
-  const sitemap = generateSiteMap(posts, authors, categories, blogPosts, studentGroups, shogekijoGroups);
+  const sitemap = generateSiteMap(posts, authors, categories, blogPosts, studentGroups, shogekijoGroups, venues);
   res.statusCode = 200;
   res.setHeader("Cache-Control", "s-maxage=86400, stale-while-revalidate"); // 24時間のキャッシュ
   res.setHeader("Content-Type", "text/xml");
