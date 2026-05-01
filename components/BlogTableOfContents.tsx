@@ -69,23 +69,28 @@ const BlogTableOfContents: React.FC<BlogTableOfContentsProps> = ({ content }) =>
   };
 
   return (
-    <nav className="bg-gray-50 border border-gray-200 rounded-lg p-4 my-6">
-      <div className="flex items-center gap-2 mb-3 text-gray-700 font-bold text-sm">
-        <FaListUl />
+    <nav className="bg-gradient-to-br from-gray-50 to-blue-50/30 border border-gray-200 rounded-xl p-5 my-8 shadow-sm">
+      <div className="flex items-center gap-2 mb-4 text-gray-800 font-bold text-sm">
+        <div className="flex items-center justify-center w-7 h-7 rounded-lg bg-blue-100 text-blue-600">
+          <FaListUl className="text-xs" />
+        </div>
         <span>目次</span>
       </div>
-      <ul className="space-y-1.5 text-sm">
+      <ul className="space-y-0.5 text-sm">
         {headings.map((heading, i) => (
-          <li key={i} style={{ paddingLeft: heading.level === 3 ? '1rem' : 0 }}>
+          <li key={i} className={heading.level === 3 ? 'ml-4' : ''}>
             <a
               href={`#${heading.id}`}
               onClick={(e) => handleClick(e, heading.id)}
-              className={`block py-0.5 transition-colors hover:text-blue-600 ${
+              className={`block px-3 py-1.5 rounded-lg transition-all duration-200 ${
                 activeId === heading.id
-                  ? 'text-blue-600 font-medium'
-                  : 'text-gray-600'
-              }`}
+                  ? 'text-blue-700 font-semibold bg-blue-100/60'
+                  : 'text-gray-600 hover:text-blue-600 hover:bg-gray-100/60'
+              } ${heading.level === 2 ? 'font-medium' : ''}`}
             >
+              {heading.level === 3 && (
+                <span className="inline-block w-1.5 h-1.5 rounded-full bg-gray-300 mr-2 align-middle" />
+              )}
               {heading.text}
             </a>
           </li>

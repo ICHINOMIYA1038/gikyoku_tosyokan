@@ -14,7 +14,7 @@ import {
   BlogPost,
   BlogPostMeta,
 } from '@/lib/blog';
-import { FaHome, FaChevronRight, FaClock } from 'react-icons/fa';
+import { FaHome, FaChevronRight, FaClock, FaPen, FaTag } from 'react-icons/fa';
 import BlogTableOfContents from '@/components/BlogTableOfContents';
 import BlogShareButtons from '@/components/BlogShareButtons';
 import BlogRelatedPosts from '@/components/BlogRelatedPosts';
@@ -38,6 +38,29 @@ interface Props {
   displayContent: string;
 }
 
+/** Hash a string to a hue value 0-360 */
+function tagToHue(tag: string): number {
+  let hash = 0;
+  for (let i = 0; i < tag.length; i++) {
+    hash = tag.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  return ((hash % 360) + 360) % 360;
+}
+
+/** Generate a gradient CSS string from tags */
+function tagsToGradient(tags: string[]): string {
+  if (tags.length === 0) {
+    return 'linear-gradient(135deg, hsl(220, 60%, 50%), hsl(260, 60%, 50%))';
+  }
+  if (tags.length === 1) {
+    const h = tagToHue(tags[0]);
+    return `linear-gradient(135deg, hsl(${h}, 55%, 45%), hsl(${(h + 40) % 360}, 60%, 55%))`;
+  }
+  const hues = tags.slice(0, 3).map(tagToHue);
+  const stops = hues.map((h, i) => `hsl(${h}, 55%, ${45 + i * 5}%) ${Math.round((i / (hues.length - 1)) * 100)}%`);
+  return `linear-gradient(135deg, ${stops.join(', ')})`;
+}
+
 export default function BlogJaPost({
   post,
   alternateSlug,
@@ -54,6 +77,8 @@ export default function BlogJaPost({
     { lang: 'x-default', path: `/blog/ja/${post.slug}` },
     ...(alternateSlug ? [{ lang: 'en', path: `/blog/en/${alternateSlug}` }] : []),
   ];
+  const gradient = tagsToGradient(post.tags);
+
   return (
     <Layout>
       <Seo
@@ -90,107 +115,192 @@ export default function BlogJaPost({
       {metadata.faq && metadata.faq.length > 0 && (
         <StructuredData type="FAQPage" faqItems={metadata.faq} />
       )}
-      <div className="container mx-auto px-4 py-8">
-        <nav className="mb-6">
-          <ol className="flex items-center flex-wrap gap-1 text-sm text-gray-600">
-            <li className="flex items-center">
-              <Link href="/" className="hover:text-blue-600 transition-colors">
-                <FaHome className="inline mr-1" />ホーム
-              </Link>
-            </li>
-            <li className="flex items-center">
-              <FaChevronRight className="mx-2 text-gray-400" size={10} />
-              <Link href="/blog/ja" className="hover:text-blue-600 transition-colors">
-                ブログ
-              </Link>
-            </li>
-            <li className="flex items-center">
-              <FaChevronRight className="mx-2 text-gray-400" size={10} />
-              <span className="text-gray-900 font-medium truncate max-w-xs">{post.title}</span>
-            </li>
-          </ol>
-        </nav>
 
+      {/* Hero header */}
+      <div
+        className="relative overflow-hidden"
+        style={{ background: gradient }}
+      >
+        {/* Decorative overlay pattern */}
+        <div className="absolute inset-0 opacity-10" style={{
+          backgroundImage: 'radial-gradient(circle at 20% 50%, white 1px, transparent 1px), radial-gradient(circle at 80% 20%, white 1px, transparent 1px)',
+          backgroundSize: '60px 60px, 40px 40px',
+        }} />
+        <div className="container mx-auto px-4 pt-6 pb-10 md:pt-8 md:pb-14 relative z-10">
+          {/* Breadcrumb on hero */}
+          <nav className="mb-6">
+            <ol className="flex items-center flex-wrap gap-1 text-sm text-white/80">
+              <li className="flex items-center">
+                <Link href="/" className="hover:text-white transition-colors">
+                  <FaHome className="inline mr-1" />ホーム
+                </Link>
+              </li>
+              <li className="flex items-center">
+                <FaChevronRight className="mx-2 text-white/50" size={10} />
+                <Link href="/blog/ja" className="hover:text-white transition-colors">
+                  ブログ
+                </Link>
+              </li>
+              <li className="flex items-center">
+                <FaChevronRight className="mx-2 text-white/50" size={10} />
+                <span className="text-white font-medium truncate max-w-xs">{post.title}</span>
+              </li>
+            </ol>
+          </nav>
+
+          <h1 className="text-2xl md:text-4xl font-bold text-white leading-tight mb-5 max-w-3xl drop-shadow-sm">
+            {post.title}
+          </h1>
+
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-2 mb-5">
+            <time className="text-sm text-white/90 font-medium">{post.date}</time>
+            <span className="flex items-center gap-1.5 text-sm text-white/90">
+              <FaClock className="text-white/70" />
+              約{readingTime}分で読めます
+            </span>
+          </div>
+
+          {post.tags.length > 0 && (
+            <div className="flex flex-wrap gap-2">
+              {post.tags.map((tag) => (
+                <span
+                  key={tag}
+                  className="inline-flex items-center gap-1 text-sm px-3 py-1 rounded-full bg-white/20 text-white backdrop-blur-sm border border-white/20"
+                >
+                  <FaTag className="text-[10px] opacity-70" />
+                  {tag}
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div className="container mx-auto px-4 py-8">
         <div className="flex flex-col lg:flex-row gap-8">
           <main className="flex-1 min-w-0">
-            <article className="bg-white rounded-lg shadow-sm p-6 lg:p-8">
-              <header className="mb-8">
-                <h1 className="text-3xl font-bold mb-4">{post.title}</h1>
-                <div className="flex flex-wrap items-center gap-4 mb-4">
-                  <p className="text-gray-500">{post.date}</p>
-                  <span className="flex items-center gap-1 text-sm text-gray-500">
-                    <FaClock />
-                    約{readingTime}分で読めます
-                  </span>
-                  <BlogShareButtons url={pageUrl} title={post.title} />
-                </div>
-                {post.tags.length > 0 && (
-                  <div className="flex flex-wrap gap-2">
-                    {post.tags.map((tag) => (
-                      <span key={tag} className="bg-blue-100 text-blue-700 text-sm px-3 py-1 rounded">{tag}</span>
-                    ))}
-                  </div>
-                )}
-              </header>
+            <article className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 lg:p-10 -mt-6 relative z-10">
+              {/* Share buttons at top */}
+              <div className="flex justify-end mb-6">
+                <BlogShareButtons url={pageUrl} title={post.title} />
+              </div>
 
               <BlogTableOfContents content={displayContent} />
 
-              {/* 広告: 目次後 */}
-              <AdSlot slot={AD_SLOTS.BLOG_AFTER_TOC} format="horizontal" />
+              {/* Ad: after TOC */}
+              <div className="my-8 rounded-lg overflow-hidden bg-gray-50 border border-gray-100">
+                <AdSlot slot={AD_SLOTS.BLOG_AFTER_TOC} format="horizontal" className="!my-0" />
+              </div>
 
-              <div className="prose prose-lg max-w-none">
+              <div className="prose prose-lg max-w-none prose-headings:font-bold prose-p:leading-[1.85] prose-p:text-gray-700">
                 <ReactMarkdown
                   remarkPlugins={[remarkGfm]}
                   components={{
                     h2: ({ children }) => {
                       const id = slugifyHeading(flattenReactChildren(children));
-                      return <h2 id={id} className="text-2xl font-bold mt-8 mb-4 pb-2 border-b border-gray-200 scroll-mt-20">{children}</h2>;
+                      return (
+                        <h2
+                          id={id}
+                          className="text-2xl font-bold mt-12 mb-5 pl-4 py-2 border-l-4 border-blue-500 bg-gradient-to-r from-blue-50 to-transparent scroll-mt-20"
+                        >
+                          {children}
+                        </h2>
+                      );
                     },
                     h3: ({ children }) => {
                       const id = slugifyHeading(flattenReactChildren(children));
-                      return <h3 id={id} className="text-xl font-bold mt-6 mb-3 scroll-mt-20">{children}</h3>;
+                      return (
+                        <h3
+                          id={id}
+                          className="text-xl font-bold mt-8 mb-4 pb-2 border-b-2 border-gray-200 scroll-mt-20"
+                        >
+                          {children}
+                        </h3>
+                      );
                     },
-                    p: ({ children }) => <p className="my-4 leading-relaxed">{children}</p>,
-                    ul: ({ children }) => <ul className="my-4 pl-6 space-y-2">{children}</ul>,
-                    li: ({ children }) => <li className="list-disc">{children}</li>,
+                    p: ({ children }) => (
+                      <p className="my-5 leading-[1.9] text-gray-700 tracking-wide">
+                        {children}
+                      </p>
+                    ),
+                    ul: ({ children }) => (
+                      <ul className="my-5 pl-0 space-y-2.5 list-none">
+                        {children}
+                      </ul>
+                    ),
+                    ol: ({ children }) => (
+                      <ol className="my-5 pl-0 space-y-2.5 list-none counter-reset-item">
+                        {children}
+                      </ol>
+                    ),
+                    li: ({ children }: any) => (
+                      <li className="relative pl-6 text-gray-700 leading-relaxed">
+                        <span className="absolute left-0 top-[0.65em] w-2 h-2 rounded-full bg-blue-400" />
+                        {children}
+                      </li>
+                    ),
                     a: ({ href, children }) => {
                       const isInternal = href?.startsWith('/');
                       if (isInternal) {
                         return (
-                          <Link href={href || '#'} className="text-blue-600 hover:text-blue-800 underline">
+                          <Link href={href || '#'} className="text-blue-600 hover:text-blue-800 underline decoration-blue-300 underline-offset-2 hover:decoration-blue-600 transition-colors">
                             {children}
                           </Link>
                         );
                       }
                       return (
-                        <a href={href} className="text-blue-600 hover:text-blue-800 underline" target="_blank" rel="noopener noreferrer">{children}</a>
+                        <a href={href} className="text-blue-600 hover:text-blue-800 underline decoration-blue-300 underline-offset-2 hover:decoration-blue-600 transition-colors" target="_blank" rel="noopener noreferrer">
+                          {children}
+                        </a>
                       );
                     },
-                    hr: () => <hr className="my-8 border-gray-300" />,
-                    strong: ({ children }) => <strong className="font-bold">{children}</strong>,
+                    hr: () => (
+                      <hr className="my-10 border-0 h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent" />
+                    ),
+                    strong: ({ children }) => <strong className="font-bold text-gray-900">{children}</strong>,
                     blockquote: ({ children }) => (
-                      <blockquote className="border-l-4 border-blue-300 bg-blue-50 pl-4 py-2 my-4 text-gray-700 italic">
+                      <blockquote className="relative border-l-4 border-blue-400 bg-gradient-to-r from-blue-50 to-transparent pl-5 pr-4 py-4 my-6 text-gray-600 italic rounded-r-lg">
+                        <div className="absolute -left-3 -top-2 text-blue-300 text-3xl font-serif select-none">&ldquo;</div>
                         {children}
                       </blockquote>
                     ),
                     table: ({ children }) => (
-                      <div className="overflow-x-auto my-6">
-                        <table className="min-w-full border-collapse border border-gray-300 text-sm">{children}</table>
+                      <div className="overflow-x-auto my-8 rounded-lg border border-gray-200">
+                        <table className="min-w-full border-collapse text-sm">{children}</table>
                       </div>
                     ),
-                    thead: ({ children }) => <thead className="bg-gray-50">{children}</thead>,
-                    th: ({ children }) => <th className="border border-gray-300 px-4 py-2 text-left font-semibold">{children}</th>,
-                    td: ({ children }) => <td className="border border-gray-300 px-4 py-2">{children}</td>,
+                    thead: ({ children }) => <thead className="bg-gray-50 border-b border-gray-200">{children}</thead>,
+                    th: ({ children }) => <th className="px-4 py-3 text-left font-semibold text-gray-700">{children}</th>,
+                    td: ({ children }) => <td className="px-4 py-3 border-t border-gray-100 text-gray-600">{children}</td>,
                   }}
                 >
                   {displayContent}
                 </ReactMarkdown>
               </div>
 
+              {/* Author / meta section */}
+              <div className="mt-14 pt-8 border-t border-gray-200">
+                <div className="flex items-center gap-4 p-5 bg-gray-50 rounded-xl">
+                  <div
+                    className="flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-lg"
+                    style={{ background: gradient }}
+                  >
+                    <FaPen className="text-sm" />
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-500 mb-0.5">Written by</p>
+                    <p className="font-bold text-gray-900">戯曲図書館 編集部</p>
+                    <p className="text-sm text-gray-500 mt-0.5">
+                      演劇・戯曲に関する情報を発信しています
+                    </p>
+                  </div>
+                </div>
+              </div>
+
               <BlogRelatedPosts posts={relatedPosts} language="ja" />
 
               <div className="mt-12 pt-6 border-t border-gray-200 flex flex-wrap items-center justify-between gap-4">
-                <Link href="/blog/ja" className="text-blue-600 hover:text-blue-800">
+                <Link href="/blog/ja" className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-800 font-medium transition-colors">
                   &larr; ブログ一覧に戻る
                 </Link>
                 <BlogShareButtons url={pageUrl} title={post.title} />
@@ -199,8 +309,10 @@ export default function BlogJaPost({
           </main>
 
           <aside className="lg:w-80">
-            {/* 広告: ブログサイドバー */}
-            <AdSlot slot={AD_SLOTS.BLOG_SIDEBAR} format="rectangle" />
+            {/* Ad: blog sidebar */}
+            <div className="rounded-lg overflow-hidden bg-gray-50 border border-gray-100 mb-4">
+              <AdSlot slot={AD_SLOTS.BLOG_SIDEBAR} format="rectangle" className="!my-0" />
+            </div>
             <BlogSidebar language="ja" />
           </aside>
         </div>
