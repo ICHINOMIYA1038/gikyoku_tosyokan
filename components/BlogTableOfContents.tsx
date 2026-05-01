@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { FaListUl } from 'react-icons/fa';
 import { slugifyHeading } from '@/lib/blogMetadata';
 
 interface TocItem {
@@ -20,7 +19,6 @@ function extractHeadings(markdown: string): TocItem[] {
     const match = line.match(/^(#{2,3})\s+(.+)$/);
     if (match) {
       const level = match[1].length;
-      // バッジ（inline code）やリンクのMarkdown記法を除去してプレーンテキスト化
       const text = match[2]
         .replace(/\*\*/g, '')
         .replace(/`([^`]*)`/g, '$1')
@@ -69,27 +67,22 @@ const BlogTableOfContents: React.FC<BlogTableOfContentsProps> = ({ content }) =>
   };
 
   return (
-    <nav className="bg-gradient-to-br from-gray-50 to-blue-50/30 border border-gray-200 rounded-xl p-5 my-8 shadow-sm">
-      <div className="flex items-center gap-2 mb-4 text-gray-800 font-bold text-sm">
-        <div className="flex items-center justify-center w-7 h-7 rounded-lg bg-blue-100 text-blue-600">
-          <FaListUl className="text-xs" />
-        </div>
-        <span>目次</span>
-      </div>
+    <nav className="border border-gray-200 rounded-lg p-5 my-8">
+      <p className="text-sm font-bold text-gray-700 mb-3">目次</p>
       <ul className="space-y-0.5 text-sm">
         {headings.map((heading, i) => (
           <li key={i} className={heading.level === 3 ? 'ml-4' : ''}>
             <a
               href={`#${heading.id}`}
               onClick={(e) => handleClick(e, heading.id)}
-              className={`block px-3 py-1.5 rounded-lg transition-all duration-200 ${
+              className={`block py-1.5 transition-colors ${
                 activeId === heading.id
-                  ? 'text-blue-700 font-semibold bg-blue-100/60'
-                  : 'text-gray-600 hover:text-blue-600 hover:bg-gray-100/60'
-              } ${heading.level === 2 ? 'font-medium' : ''}`}
+                  ? 'text-gray-900 font-semibold'
+                  : 'text-gray-500 hover:text-gray-800'
+              }`}
             >
               {heading.level === 3 && (
-                <span className="inline-block w-1.5 h-1.5 rounded-full bg-gray-300 mr-2 align-middle" />
+                <span className="inline-block w-1 h-1 rounded-full bg-gray-300 mr-2 align-middle" />
               )}
               {heading.text}
             </a>
