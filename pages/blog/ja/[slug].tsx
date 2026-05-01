@@ -38,28 +38,6 @@ interface Props {
   displayContent: string;
 }
 
-/** Hash a string to a hue value 0-360 */
-function tagToHue(tag: string): number {
-  let hash = 0;
-  for (let i = 0; i < tag.length; i++) {
-    hash = tag.charCodeAt(i) + ((hash << 5) - hash);
-  }
-  return ((hash % 360) + 360) % 360;
-}
-
-/** Generate a gradient CSS string from tags */
-function tagsToGradient(tags: string[]): string {
-  if (tags.length === 0) {
-    return 'linear-gradient(135deg, hsl(220, 60%, 50%), hsl(260, 60%, 50%))';
-  }
-  if (tags.length === 1) {
-    const h = tagToHue(tags[0]);
-    return `linear-gradient(135deg, hsl(${h}, 55%, 45%), hsl(${(h + 40) % 360}, 60%, 55%))`;
-  }
-  const hues = tags.slice(0, 3).map(tagToHue);
-  const stops = hues.map((h, i) => `hsl(${h}, 55%, ${45 + i * 5}%) ${Math.round((i / (hues.length - 1)) * 100)}%`);
-  return `linear-gradient(135deg, ${stops.join(', ')})`;
-}
 
 export default function BlogJaPost({
   post,
@@ -77,8 +55,6 @@ export default function BlogJaPost({
     { lang: 'x-default', path: `/blog/ja/${post.slug}` },
     ...(alternateSlug ? [{ lang: 'en', path: `/blog/en/${alternateSlug}` }] : []),
   ];
-  const gradient = tagsToGradient(post.tags);
-
   return (
     <Layout>
       <Seo
@@ -116,46 +92,34 @@ export default function BlogJaPost({
         <StructuredData type="FAQPage" faqItems={metadata.faq} />
       )}
 
-      {/* Hero header */}
-      <div
-        className="relative overflow-hidden"
-        style={{ background: gradient }}
-      >
-        {/* Decorative overlay pattern */}
-        <div className="absolute inset-0 opacity-10" style={{
-          backgroundImage: 'radial-gradient(circle at 20% 50%, white 1px, transparent 1px), radial-gradient(circle at 80% 20%, white 1px, transparent 1px)',
-          backgroundSize: '60px 60px, 40px 40px',
-        }} />
-        <div className="container mx-auto px-4 pt-6 pb-10 md:pt-8 md:pb-14 relative z-10">
-          {/* Breadcrumb on hero */}
-          <nav className="mb-6">
-            <ol className="flex items-center flex-wrap gap-1 text-sm text-white/80">
+      {/* Header */}
+      <div className="bg-gray-50 border-b border-gray-100">
+        <div className="container mx-auto px-4 pt-6 pb-8 md:pt-8 md:pb-10">
+          {/* Breadcrumb */}
+          <nav className="mb-5">
+            <ol className="flex items-center flex-wrap gap-1 text-sm text-gray-400">
               <li className="flex items-center">
-                <Link href="/" className="hover:text-white transition-colors">
+                <Link href="/" className="hover:text-gray-600 transition-colors">
                   <FaHome className="inline mr-1" />ホーム
                 </Link>
               </li>
               <li className="flex items-center">
-                <FaChevronRight className="mx-2 text-white/50" size={10} />
-                <Link href="/blog/ja" className="hover:text-white transition-colors">
+                <FaChevronRight className="mx-2 text-gray-300" size={10} />
+                <Link href="/blog/ja" className="hover:text-gray-600 transition-colors">
                   ブログ
                 </Link>
-              </li>
-              <li className="flex items-center">
-                <FaChevronRight className="mx-2 text-white/50" size={10} />
-                <span className="text-white font-medium truncate max-w-xs">{post.title}</span>
               </li>
             </ol>
           </nav>
 
-          <h1 className="text-2xl md:text-4xl font-bold text-white leading-tight mb-5 max-w-3xl drop-shadow-sm">
+          <h1 className="text-2xl md:text-3xl font-bold text-gray-900 leading-tight mb-4 max-w-3xl">
             {post.title}
           </h1>
 
-          <div className="flex flex-wrap items-center gap-x-5 gap-y-2 mb-5">
-            <time className="text-sm text-white/90 font-medium">{post.date}</time>
-            <span className="flex items-center gap-1.5 text-sm text-white/90">
-              <FaClock className="text-white/70" />
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mb-4">
+            <time className="text-sm text-gray-400">{post.date}</time>
+            <span className="flex items-center gap-1.5 text-sm text-gray-400">
+              <FaClock className="text-gray-300" />
               約{readingTime}分で読めます
             </span>
           </div>
@@ -163,12 +127,8 @@ export default function BlogJaPost({
           {post.tags.length > 0 && (
             <div className="flex flex-wrap gap-2">
               {post.tags.map((tag) => (
-                <span
-                  key={tag}
-                  className="inline-flex items-center gap-1 text-sm px-3 py-1 rounded-full bg-white/20 text-white backdrop-blur-sm border border-white/20"
-                >
-                  <FaTag className="text-[10px] opacity-70" />
-                  {tag}
+                <span key={tag} className="text-xs text-gray-400 bg-white px-2.5 py-1 rounded border border-gray-200">
+                  #{tag}
                 </span>
               ))}
             </div>
@@ -179,7 +139,7 @@ export default function BlogJaPost({
       <div className="container mx-auto px-4 py-8">
         <div className="flex flex-col lg:flex-row gap-8">
           <main className="flex-1 min-w-0">
-            <article className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 lg:p-10 -mt-6 relative z-10">
+            <article className="bg-white p-6 lg:p-10">
               {/* Share buttons at top */}
               <div className="flex justify-end mb-6">
                 <BlogShareButtons url={pageUrl} title={post.title} />
@@ -201,7 +161,7 @@ export default function BlogJaPost({
                       return (
                         <h2
                           id={id}
-                          className="text-2xl font-bold mt-12 mb-5 pl-4 py-2 border-l-4 border-blue-500 bg-gradient-to-r from-blue-50 to-transparent scroll-mt-20"
+                          className="text-2xl font-bold mt-12 mb-5 pl-4 py-2 border-l-4 border-gray-800 scroll-mt-20"
                         >
                           {children}
                         </h2>
@@ -235,7 +195,7 @@ export default function BlogJaPost({
                     ),
                     li: ({ children }: any) => (
                       <li className="relative pl-6 text-gray-700 leading-relaxed">
-                        <span className="absolute left-0 top-[0.65em] w-2 h-2 rounded-full bg-blue-400" />
+                        <span className="absolute left-0 top-[0.65em] w-1.5 h-1.5 rounded-full bg-gray-400" />
                         {children}
                       </li>
                     ),
@@ -243,13 +203,13 @@ export default function BlogJaPost({
                       const isInternal = href?.startsWith('/');
                       if (isInternal) {
                         return (
-                          <Link href={href || '#'} className="text-blue-600 hover:text-blue-800 underline decoration-blue-300 underline-offset-2 hover:decoration-blue-600 transition-colors">
+                          <Link href={href || '#'} className="text-theater-primary-600 hover:text-theater-primary-800 underline underline-offset-2 transition-colors">
                             {children}
                           </Link>
                         );
                       }
                       return (
-                        <a href={href} className="text-blue-600 hover:text-blue-800 underline decoration-blue-300 underline-offset-2 hover:decoration-blue-600 transition-colors" target="_blank" rel="noopener noreferrer">
+                        <a href={href} className="text-theater-primary-600 hover:text-theater-primary-800 underline underline-offset-2 transition-colors" target="_blank" rel="noopener noreferrer">
                           {children}
                         </a>
                       );
@@ -259,8 +219,7 @@ export default function BlogJaPost({
                     ),
                     strong: ({ children }) => <strong className="font-bold text-gray-900">{children}</strong>,
                     blockquote: ({ children }) => (
-                      <blockquote className="relative border-l-4 border-blue-400 bg-gradient-to-r from-blue-50 to-transparent pl-5 pr-4 py-4 my-6 text-gray-600 italic rounded-r-lg">
-                        <div className="absolute -left-3 -top-2 text-blue-300 text-3xl font-serif select-none">&ldquo;</div>
+                      <blockquote className="border-l-4 border-gray-300 pl-5 pr-4 py-3 my-6 text-gray-500 italic">
                         {children}
                       </blockquote>
                     ),
@@ -281,11 +240,8 @@ export default function BlogJaPost({
               {/* Author / meta section */}
               <div className="mt-14 pt-8 border-t border-gray-200">
                 <div className="flex items-center gap-4 p-5 bg-gray-50 rounded-xl">
-                  <div
-                    className="flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-lg"
-                    style={{ background: gradient }}
-                  >
-                    <FaPen className="text-sm" />
+                  <div className="flex-shrink-0 w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500">
+                    <FaPen className="text-xs" />
                   </div>
                   <div>
                     <p className="text-sm text-gray-500 mb-0.5">Written by</p>
@@ -300,7 +256,7 @@ export default function BlogJaPost({
               <BlogRelatedPosts posts={relatedPosts} language="ja" />
 
               <div className="mt-12 pt-6 border-t border-gray-200 flex flex-wrap items-center justify-between gap-4">
-                <Link href="/blog/ja" className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-800 font-medium transition-colors">
+                <Link href="/blog/ja" className="inline-flex items-center gap-2 text-gray-500 hover:text-gray-800 font-medium transition-colors">
                   &larr; ブログ一覧に戻る
                 </Link>
                 <BlogShareButtons url={pageUrl} title={post.title} />
