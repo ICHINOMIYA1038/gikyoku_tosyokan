@@ -312,6 +312,7 @@ async function fetchPerformanceDetail(url) {
       if (
         href &&
         !href.includes('corich.jp') &&
+        !href.includes('corich.co') &&
         !href.includes('twitter.com') &&
         !href.includes('x.com') &&
         !href.includes('facebook.com') &&
