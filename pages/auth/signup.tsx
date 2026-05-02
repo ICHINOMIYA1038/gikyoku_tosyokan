@@ -46,7 +46,7 @@ export default function SignUp({ providers, callbackUrl }: Props) {
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
           {/* ヘッダー */}
           <div className="bg-gradient-to-br from-theater-primary-300 to-pink-200 px-8 py-8 text-center">
-            <img src="/logo.png" alt="戯曲図書館" className="w-20 h-20 mx-auto mb-4" />
+            <img src="/logo.png" alt="戯曲図書館" className="h-14 w-auto mx-auto mb-4" />
             <h1 className="text-2xl font-bold text-gray-900">戯曲図書館に登録</h1>
             <p className="text-sm text-gray-700 mt-2">
               無料で登録して、演劇の世界をもっと楽しもう
