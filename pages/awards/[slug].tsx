@@ -13,12 +13,16 @@ type Winner = {
   postTitle: string;
   authorId: number;
   authorName: string;
-  awardDetail: string | null;
 };
 
 type TopAuthor = {
   name: string;
   authorId: number;
+  count: number;
+};
+
+type TypeCount = {
+  type: string;
   count: number;
 };
 
@@ -34,10 +38,20 @@ type Props = {
     totalWinners: number;
     yearRange: string;
     uniqueAuthors: number;
+    typeCounts: TypeCount[];
   };
   topAuthors: TopAuthor[];
   yearGroups: { year: number; winners: Winner[] }[];
 };
+
+const AWARD_NAV: { slug: string; name: string; shortName: string }[] = [
+  { slug: 'kishida', name: '岸田國士戯曲賞', shortName: '岸田國士' },
+  { slug: 'tsuruyaNanboku', name: '鶴屋南北戯曲賞', shortName: '鶴屋南北' },
+  { slug: 'gekisakka-shinjin', name: '日本劇作家協会新人戯曲賞', shortName: '劇作家新人' },
+  { slug: 'oms', name: 'OMS戯曲賞', shortName: 'OMS' },
+  { slug: 'yomiuri', name: '読売演劇大賞', shortName: '読売演劇' },
+  { slug: 'aaf', name: 'AAF戯曲賞', shortName: 'AAF' },
+];
 
 const AWARD_CONFIG: Record<string, { name: string; description: string; organizer: string; longDescription: string }> = {
   kishida: {
@@ -78,7 +92,97 @@ const AWARD_CONFIG: Record<string, { name: string; description: string; organize
   },
 };
 
-export default function AwardDetailPage({ award, winners, stats, topAuthors, yearGroups }: Props) {
+/** Sort order for award types */
+function awardTypeSortOrder(type: string): number {
+  switch (type) {
+    case '大賞': return 0;
+    case '受賞': return 1;
+    case '佳作': return 2;
+    case '最終候補': return 3;
+    default: return 4;
+  }
+}
+
+/** Group label for non-winner types */
+function awardTypeGroupLabel(type: string): string {
+  switch (type) {
+    case '最終候補': return '最終候補作品';
+    case '佳作': return '佳作';
+    default: return type;
+  }
+}
+
+/** Check if this type is a "winner" (main award) */
+function isWinnerType(type: string): boolean {
+  return type === '受賞' || type === '大賞';
+}
+
+function WinnerEntry({ winner, showGrandPrize }: { winner: Winner; showGrandPrize: boolean }) {
+  return (
+    <div className="flex items-start gap-3 py-1.5">
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center gap-2 flex-wrap">
+          <Link
+            href={`/posts/${winner.postId}`}
+            className="text-sm font-bold text-gray-800 hover:text-theater-primary-600 transition-colors"
+          >
+            {winner.postTitle}
+          </Link>
+          {showGrandPrize && winner.awardType === '大賞' && (
+            <span className="text-[10px] px-1.5 py-0.5 bg-amber-50 text-amber-700 border border-amber-200 rounded font-medium">
+              大賞
+            </span>
+          )}
+        </div>
+        <Link
+          href={`/authors/${winner.authorId}`}
+          className="text-xs text-gray-500 hover:text-theater-primary-600 transition-colors mt-0.5 inline-block"
+        >
+          {winner.authorName}
+        </Link>
+      </div>
+      <Link
+        href={`/posts/${winner.postId}`}
+        className="flex-shrink-0 text-gray-300 hover:text-theater-primary-500 transition-colors mt-1"
+        title="作品ページを見る"
+      >
+        <FaBook className="text-xs" />
+      </Link>
+    </div>
+  );
+}
+
+function SubEntry({ winner }: { winner: Winner }) {
+  return (
+    <div className="flex items-start gap-3 py-1">
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center gap-2">
+          <Link
+            href={`/posts/${winner.postId}`}
+            className="text-xs text-gray-600 hover:text-theater-primary-600 transition-colors"
+          >
+            {winner.postTitle}
+          </Link>
+        </div>
+        <Link
+          href={`/authors/${winner.authorId}`}
+          className="text-[11px] text-gray-400 hover:text-theater-primary-600 transition-colors inline-block"
+        >
+          {winner.authorName}
+        </Link>
+      </div>
+      <Link
+        href={`/posts/${winner.postId}`}
+        className="flex-shrink-0 text-gray-200 hover:text-theater-primary-500 transition-colors mt-0.5"
+        title="作品ページを見る"
+      >
+        <FaBook className="text-[10px]" />
+      </Link>
+    </div>
+  );
+}
+
+export default function AwardDetailPage({ award, stats, topAuthors, yearGroups }: Props) {
   return (
     <Layout>
       <Seo
@@ -91,25 +195,49 @@ export default function AwardDetailPage({ award, winners, stats, topAuthors, yea
         type="BreadcrumbList"
         breadcrumbs={[
           { name: 'ホーム', url: 'https://gikyokutosyokan.com' },
-          { name: '戯曲賞・演劇賞', url: 'https://gikyokutosyokan.com/awards' },
+          { name: '戯曲賞データベース', url: 'https://gikyokutosyokan.com/awards' },
           { name: award.name, url: `https://gikyokutosyokan.com/awards/${award.slug}` },
         ]}
       />
 
       <div className="container mx-auto px-4 py-6 max-w-4xl">
         {/* パンくずリスト */}
-        <nav className="flex items-center gap-1 text-xs text-gray-500 mb-6">
+        <nav className="flex items-center gap-1 text-xs text-gray-500 mb-4">
           <Link href="/" className="hover:text-theater-primary-600">ホーム</Link>
           <FaChevronRight className="text-[8px]" />
-          <Link href="/awards" className="hover:text-theater-primary-600">戯曲賞・演劇賞</Link>
+          <Link href="/awards" className="hover:text-theater-primary-600">戯曲賞データベース</Link>
           <FaChevronRight className="text-[8px]" />
           <span className="text-gray-700">{award.name}</span>
         </nav>
 
+        {/* 賞ナビゲーションタブ */}
+        <div className="mb-6 -mx-4 px-4 sticky top-0 z-10 bg-white border-b border-gray-200">
+          <nav className="flex overflow-x-auto no-scrollbar gap-0" aria-label="賞の切り替え">
+            {AWARD_NAV.map((nav) => {
+              const isCurrent = nav.slug === award.slug;
+              return (
+                <Link
+                  key={nav.slug}
+                  href={`/awards/${nav.slug}`}
+                  className={`flex-shrink-0 px-3 py-2.5 text-xs font-medium border-b-2 transition-colors whitespace-nowrap ${
+                    isCurrent
+                      ? 'border-amber-500 text-amber-700 bg-amber-50/50'
+                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  }`}
+                  aria-current={isCurrent ? 'page' : undefined}
+                >
+                  <span className="hidden sm:inline">{nav.name}</span>
+                  <span className="sm:hidden">{nav.shortName}</span>
+                </Link>
+              );
+            })}
+          </nav>
+        </div>
+
         {/* ヒーローセクション */}
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-3">
-            <FaTrophy className="text-gray-400 text-lg" />
+            <FaTrophy className="text-amber-400 text-lg" />
             <h1 className="text-2xl md:text-3xl font-bold text-gray-900">{award.name}</h1>
           </div>
           <p className="text-sm text-gray-600 leading-relaxed mb-4">
@@ -121,20 +249,31 @@ export default function AwardDetailPage({ award, winners, stats, topAuthors, yea
         </div>
 
         {/* 統計セクション */}
-        <div className="grid grid-cols-3 gap-4 mb-8">
+        <div className="grid grid-cols-3 gap-4 mb-6">
           <div className="text-center py-4 bg-gray-50 rounded-lg">
             <p className="text-2xl font-bold text-gray-900">{stats.totalWinners}</p>
-            <p className="text-xs text-gray-500 mt-1">受賞記録</p>
+            <p className="text-xs text-gray-500 mt-1">掲載作品</p>
           </div>
           <div className="text-center py-4 bg-gray-50 rounded-lg">
             <p className="text-2xl font-bold text-gray-900">{stats.uniqueAuthors}</p>
-            <p className="text-xs text-gray-500 mt-1">受賞作家</p>
+            <p className="text-xs text-gray-500 mt-1">作家数</p>
           </div>
           <div className="text-center py-4 bg-gray-50 rounded-lg">
             <p className="text-sm font-bold text-gray-900 leading-tight">{stats.yearRange}</p>
             <p className="text-xs text-gray-500 mt-1">掲載期間</p>
           </div>
         </div>
+
+        {/* タイプ別件数 */}
+        {stats.typeCounts.length > 0 && (
+          <div className="flex flex-wrap gap-3 mb-8 text-xs text-gray-500">
+            {stats.typeCounts.map((tc) => (
+              <span key={tc.type}>
+                {tc.type}: <span className="font-bold text-gray-700">{tc.count}件</span>
+              </span>
+            ))}
+          </div>
+        )}
 
         {/* 最多受賞作家 */}
         {topAuthors.length > 0 && (
@@ -164,80 +303,59 @@ export default function AwardDetailPage({ award, winners, stats, topAuthors, yea
             <FaCalendarAlt className="text-gray-400 text-sm" />
             受賞作品一覧
           </h2>
-          <div className="space-y-1">
-            {yearGroups.map((group) => (
-              <div key={group.year} className="border-b border-gray-100 last:border-b-0">
-                {group.winners.map((winner, idx) => (
-                  <div key={`${group.year}-${idx}`} className="flex items-start gap-4 py-3">
-                    {/* 年表示（グループ最初のみ） */}
+          <div className="space-y-0">
+            {yearGroups.map((group) => {
+              const mainWinners = group.winners.filter((w) => isWinnerType(w.awardType));
+              // Group non-winners by type
+              const othersByType = new Map<string, Winner[]>();
+              group.winners.forEach((w) => {
+                if (!isWinnerType(w.awardType)) {
+                  const list = othersByType.get(w.awardType) || [];
+                  list.push(w);
+                  othersByType.set(w.awardType, list);
+                }
+              });
+              const hasGrandPrize = mainWinners.some((w) => w.awardType === '大賞');
+
+              return (
+                <div key={group.year} className="border-b border-gray-100 last:border-b-0 py-3">
+                  {/* Year header */}
+                  <div className="flex items-start gap-4">
                     <div className="w-14 flex-shrink-0">
-                      {idx === 0 ? (
-                        <span className="text-sm font-bold text-gray-900 tabular-nums">{group.year}</span>
-                      ) : (
-                        <span className="text-sm text-gray-300 tabular-nums">{group.year}</span>
-                      )}
+                      <span className="text-sm font-bold text-gray-900 tabular-nums">{group.year}</span>
                     </div>
-
-                    {/* 受賞情報 */}
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <Link
-                          href={`/posts/${winner.postId}`}
-                          className="text-sm font-bold text-gray-800 hover:text-theater-primary-600 transition-colors"
-                        >
-                          {winner.postTitle}
-                        </Link>
-                        {winner.awardType !== '受賞' && (
-                          <span className="text-[10px] px-1.5 py-0.5 bg-gray-100 text-gray-500 rounded">
-                            {winner.awardType}
-                          </span>
-                        )}
-                      </div>
-                      <div className="flex items-center gap-2 mt-0.5">
-                        <Link
-                          href={`/authors/${winner.authorId}`}
-                          className="text-xs text-gray-500 hover:text-theater-primary-600 transition-colors"
-                        >
-                          {winner.authorName}
-                        </Link>
-                        {winner.awardDetail && (
-                          <span className="text-xs text-gray-400">
-                            {winner.awardDetail}
-                          </span>
-                        )}
-                      </div>
+                      {/* 受賞 / 大賞 */}
+                      {mainWinners.length > 0 && (
+                        <div>
+                          {mainWinners.map((winner, idx) => (
+                            <WinnerEntry
+                              key={`main-${idx}`}
+                              winner={winner}
+                              showGrandPrize={hasGrandPrize}
+                            />
+                          ))}
+                        </div>
+                      )}
+
+                      {/* Non-winner sections, each clearly labeled */}
+                      {Array.from(othersByType.entries())
+                        .sort(([a], [b]) => awardTypeSortOrder(a) - awardTypeSortOrder(b))
+                        .map(([type, entries]) => (
+                          <div key={type} className="mt-2 pt-2 border-t border-gray-50">
+                            <p className="text-[10px] font-medium text-gray-400 uppercase tracking-wider mb-1">
+                              {awardTypeGroupLabel(type)}
+                            </p>
+                            {entries.map((winner, idx) => (
+                              <SubEntry key={`sub-${idx}`} winner={winner} />
+                            ))}
+                          </div>
+                        ))}
                     </div>
-
-                    {/* 作品リンクアイコン */}
-                    <Link
-                      href={`/posts/${winner.postId}`}
-                      className="flex-shrink-0 text-gray-300 hover:text-theater-primary-500 transition-colors mt-0.5"
-                      title="作品ページを見る"
-                    >
-                      <FaBook className="text-xs" />
-                    </Link>
                   </div>
-                ))}
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* 他の賞へのリンク */}
-        <div className="mt-10 pt-6 border-t border-gray-100">
-          <h3 className="text-sm font-bold text-gray-700 mb-3">他の戯曲賞・演劇賞</h3>
-          <div className="flex flex-wrap gap-2">
-            {Object.entries(AWARD_CONFIG)
-              .filter(([slug]) => slug !== award.slug)
-              .map(([slug, config]) => (
-                <Link
-                  key={slug}
-                  href={`/awards/${slug}`}
-                  className="text-xs px-3 py-1.5 border border-gray-200 rounded-full text-gray-600 hover:border-theater-primary-300 hover:text-theater-primary-600 transition-colors"
-                >
-                  {config.name}
-                </Link>
-              ))}
+                </div>
+              );
+            })}
           </div>
         </div>
 
@@ -292,10 +410,9 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     postTitle: pa.post.title,
     authorId: pa.post.author.id,
     authorName: pa.post.author.name,
-    awardDetail: null,
   }));
 
-  // 年別グループ化
+  // 年別グループ化 (sort winners within each year by type)
   const yearMap = new Map<number, Winner[]>();
   winners.forEach((w) => {
     const existing = yearMap.get(w.awardYear) || [];
@@ -304,7 +421,10 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   });
   const yearGroups = Array.from(yearMap.entries())
     .sort(([a], [b]) => b - a)
-    .map(([year, ws]) => ({ year, winners: ws }));
+    .map(([year, ws]) => ({
+      year,
+      winners: ws.sort((a, b) => awardTypeSortOrder(a.awardType) - awardTypeSortOrder(b.awardType)),
+    }));
 
   // 統計
   const uniqueAuthors = new Set(winners.map((w) => w.authorId)).size;
@@ -314,6 +434,15 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   const yearRange = minYear && maxYear
     ? minYear === maxYear ? `${minYear}年` : `${minYear}年 - ${maxYear}年`
     : '';
+
+  // タイプ別件数
+  const typeCountMap = new Map<string, number>();
+  winners.forEach((w) => {
+    typeCountMap.set(w.awardType, (typeCountMap.get(w.awardType) || 0) + 1);
+  });
+  const typeCounts: { type: string; count: number }[] = Array.from(typeCountMap.entries())
+    .sort(([a], [b]) => awardTypeSortOrder(a) - awardTypeSortOrder(b))
+    .map(([type, count]) => ({ type, count }));
 
   // 複数受賞の作家
   const authorCountMap = new Map<number, { name: string; count: number }>();
@@ -343,6 +472,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
         totalWinners: winners.length,
         yearRange,
         uniqueAuthors,
+        typeCounts,
       },
       topAuthors,
       yearGroups,
