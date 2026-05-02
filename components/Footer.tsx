@@ -36,7 +36,7 @@ const Footer: React.FC = () => {
     <footer className="bg-theater-neutral-900 text-gray-300" role="contentinfo" aria-label="サイトフッター">
       <div className="container mx-auto px-4 py-10">
         <Link href="/" className="block mb-6" aria-label="戯曲図書館ホームへ">
-          <img src="/logo.png" alt="戯曲図書館ロゴ" className="w-14 h-auto opacity-80" width="56" height="56" />
+          <img src="/icon.png" alt="戯曲図書館ロゴ" className="w-14 h-auto opacity-80" width="56" height="56" />
         </Link>
         <nav className="grid grid-cols-1 md:grid-cols-3 gap-8" aria-label="フッターナビゲーション">
           {footerLinks.map((section) => (
