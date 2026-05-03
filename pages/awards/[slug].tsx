@@ -336,7 +336,7 @@ export default function AwardDetailPage({ award, stats, topAuthors, yearGroups }
                     </div>
                     <div className="flex-1 min-w-0">
                       {/* 受賞 / 大賞 */}
-                      {mainWinners.length > 0 && (
+                      {mainWinners.length > 0 ? (
                         <div>
                           {mainWinners.map((winner, idx) => (
                             <WinnerEntry
@@ -346,6 +346,8 @@ export default function AwardDetailPage({ award, stats, topAuthors, yearGroups }
                             />
                           ))}
                         </div>
+                      ) : (
+                        <p className="text-sm text-gray-400 italic py-1">該当作品なし</p>
                       )}
 
                       {/* Non-winner sections, each clearly labeled */}
