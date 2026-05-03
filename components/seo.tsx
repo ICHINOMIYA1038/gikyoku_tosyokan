@@ -18,8 +18,8 @@ const Seo = ({
   const isEnglish = locale === "en_US";
   const defaultTitle = isEnglish ? "Japanese Play Library" : "戯曲図書館";
   const defaultDescription = isEnglish
-    ? "Discover Japanese plays by cast size, duration, and genre. Your guide to Japanese theater scripts."
-    : "上演する脚本を探しの方に。上演時間や人数などから検索ができます。戯曲を探す、戯曲図書館。";
+    ? "Search Japanese play scripts by cast size, duration, and genre. Read reviews, find performance reports, and discover your next theater production. Japan's largest play script search service."
+    : "戯曲図書館は、演劇の脚本を上演時間・人数・ジャンルで検索できる日本最大級の戯曲検索サービスです。レビューや上演報告も共有できます。";
   const defaultImg = "https://gikyokutosyokan.com/logo.png";
   const siteUrl = "https://gikyokutosyokan.com";
 
@@ -64,11 +64,22 @@ const Seo = ({
       <meta name="twitter:domain" content="gikyokutosyokan.com" />
 
       {descriptionEn && <meta name="description" lang="en" content={descriptionEn} />}
-      {noindex && <meta name="robots" content="noindex, nofollow" />}
+      {noindex ? (
+        <meta name="robots" content="noindex, nofollow" />
+      ) : (
+        <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+      )}
 
       {hreflang && hreflang.map((h: { lang: string; path: string }) => (
         <link key={h.lang} rel="alternate" hrefLang={h.lang} href={`${siteUrl}${h.path}`} />
       ))}
+      {/* Default hreflang if none provided */}
+      {!hreflang && (
+        <>
+          <link rel="alternate" hrefLang="ja" href={url} />
+          <link rel="alternate" hrefLang="x-default" href={url} />
+        </>
+      )}
       <link rel="icon" href="/favicon.ico" />
       <link rel="apple-touch-icon" href="/logo.png" />
       <link rel="alternate" type="application/rss+xml" title="戯曲図書館 RSS Feed" href="/api/feed.xml" />

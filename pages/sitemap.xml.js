@@ -2,7 +2,7 @@ import { PrismaClient } from "@prisma/client";
 
 const EXTERNAL_DATA_URL = "https://gikyokutosyokan.com";
 const prisma = new PrismaClient();
-function generateSiteMap(posts, authors, categories, blogPosts, studentGroups, shogekijoGroups, venues, awardSlugs) {
+function generateSiteMap(posts, authors, categories, blogPosts, studentGroups, shogekijoGroups, venues, awardSlugs, venuePrefectureSlugs) {
   const currentDate = new Date().toISOString();
   
   return `<?xml version="1.0" encoding="UTF-8"?>
@@ -259,6 +259,20 @@ function generateSiteMap(posts, authors, categories, blogPosts, studentGroups, s
        })
        .join("")}
 
+     <!-- 劇場・都道府県別ページ -->
+     ${venuePrefectureSlugs
+       .map((prefSlug) => {
+         return `
+       <url>
+           <loc>${EXTERNAL_DATA_URL}/venues/region/${prefSlug}</loc>
+           <lastmod>${currentDate}</lastmod>
+           <changefreq>monthly</changefreq>
+           <priority>0.6</priority>
+       </url>
+     `;
+       })
+       .join("")}
+
      <!-- 戯曲賞ページ -->
      <url>
        <loc>${EXTERNAL_DATA_URL}/awards</loc>
@@ -399,8 +413,33 @@ export async function getServerSideProps({ res }) {
   // 戯曲賞スラッグ（PostAwardのawardNameからユニーク値を取得）
   const awardSlugs = ['kishida', 'tsuruyaNanboku', 'gekisakka-shinjin', 'oms', 'yomiuri', 'aaf'];
 
+  // 劇場・都道府県別ページのスラッグ
+  const PREFECTURE_SLUG_MAP = {
+    '北海道': 'hokkaido', '青森県': 'aomori', '岩手県': 'iwate', '宮城県': 'miyagi',
+    '秋田県': 'akita', '山形県': 'yamagata', '福島県': 'fukushima',
+    '茨城県': 'ibaraki', '栃木県': 'tochigi', '群馬県': 'gunma',
+    '埼玉県': 'saitama', '千葉県': 'chiba', '東京都': 'tokyo', '神奈川県': 'kanagawa',
+    '新潟県': 'niigata', '富山県': 'toyama', '石川県': 'ishikawa', '福井県': 'fukui',
+    '山梨県': 'yamanashi', '長野県': 'nagano', '岐阜県': 'gifu', '静岡県': 'shizuoka', '愛知県': 'aichi',
+    '三重県': 'mie', '滋賀県': 'shiga', '京都府': 'kyoto',
+    '大阪府': 'osaka', '兵庫県': 'hyogo', '奈良県': 'nara', '和歌山県': 'wakayama',
+    '鳥取県': 'tottori', '島根県': 'shimane', '岡山県': 'okayama',
+    '広島県': 'hiroshima', '山口県': 'yamaguchi',
+    '徳島県': 'tokushima', '香川県': 'kagawa', '愛媛県': 'ehime', '高知県': 'kochi',
+    '福岡県': 'fukuoka', '佐賀県': 'saga', '長崎県': 'nagasaki',
+    '熊本県': 'kumamoto', '大分県': 'oita', '宮崎県': 'miyazaki',
+    '鹿児島県': 'kagoshima', '沖縄県': 'okinawa',
+  };
+  const venuePrefectures = await prisma.venue.findMany({
+    select: { prefecture: true },
+    distinct: ['prefecture'],
+  });
+  const venuePrefectureSlugs = venuePrefectures
+    .map((p) => PREFECTURE_SLUG_MAP[p.prefecture])
+    .filter(Boolean);
+
   // We generate the XML sitemap with the data
-  const sitemap = generateSiteMap(posts, authors, categories, blogPosts, studentGroups, shogekijoGroups, venues, awardSlugs);
+  const sitemap = generateSiteMap(posts, authors, categories, blogPosts, studentGroups, shogekijoGroups, venues, awardSlugs, venuePrefectureSlugs);
   res.statusCode = 200;
   res.setHeader("Cache-Control", "s-maxage=86400, stale-while-revalidate"); // 24時間のキャッシュ
   res.setHeader("Content-Type", "text/xml");

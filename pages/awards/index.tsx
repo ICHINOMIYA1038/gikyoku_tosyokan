@@ -89,6 +89,18 @@ export default function AwardsIndex({ awards, totalRecords }: Props) {
           { name: '戯曲賞データベース', url: 'https://gikyokutosyokan.com/awards' },
         ]}
       />
+      <StructuredData
+        type="CollectionPage"
+        title="戯曲賞データベース"
+        description={`日本の主要な戯曲賞・演劇賞の受賞作品を網羅。${awards.length}つの賞、${totalRecords}件の記録を掲載。`}
+        url="https://gikyokutosyokan.com/awards"
+        numberOfItems={totalRecords}
+        collectionItems={awards.map(a => ({
+          name: a.name,
+          url: `https://gikyokutosyokan.com/awards/${a.slug}`,
+          description: a.description,
+        }))}
+      />
 
       <div className="container mx-auto px-4 py-6 max-w-4xl">
         {/* パンくずリスト */}

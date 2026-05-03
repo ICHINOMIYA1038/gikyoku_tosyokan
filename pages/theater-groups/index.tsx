@@ -83,6 +83,13 @@ export default function TheaterGroupsIndex({ theaterGroups, prefecturesWithData,
           { name: '劇団データベース', url: 'https://gikyokutosyokan.com/theater-groups' },
         ]}
       />
+      <StructuredData
+        type="CollectionPage"
+        title="劇団データベース | 全国の劇団・演劇団体を検索"
+        description={`全国${stats.total}団体の劇団情報を掲載。大学演劇・プロ劇団・社会人劇団を検索できます。`}
+        url="https://gikyokutosyokan.com/theater-groups"
+        numberOfItems={stats.total}
+      />
 
       <div className="container mx-auto px-4 py-6 max-w-6xl">
         {/* パンくず */}

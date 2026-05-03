@@ -6,7 +6,24 @@ import Layout from '@/components/Layout';
 import Seo from '@/components/seo';
 import StructuredData from '@/components/StructuredData';
 import { prisma } from '@/lib/prisma';
-import { FaSearch, FaChevronRight, FaMapMarkerAlt, FaUsers, FaGlobe, FaMap, FaList, FaChevronDown, FaExternalLinkAlt, FaFire } from 'react-icons/fa';
+import { FaSearch, FaChevronRight, FaMapMarkerAlt, FaUsers, FaGlobe, FaMap, FaList, FaChevronDown, FaExternalLinkAlt, FaFire, FaArrowRight } from 'react-icons/fa';
+
+const PREFECTURE_SLUG_MAP: Record<string, string> = {
+  '北海道': 'hokkaido', '青森県': 'aomori', '岩手県': 'iwate', '宮城県': 'miyagi',
+  '秋田県': 'akita', '山形県': 'yamagata', '福島県': 'fukushima',
+  '茨城県': 'ibaraki', '栃木県': 'tochigi', '群馬県': 'gunma',
+  '埼玉県': 'saitama', '千葉県': 'chiba', '東京都': 'tokyo', '神奈川県': 'kanagawa',
+  '新潟県': 'niigata', '富山県': 'toyama', '石川県': 'ishikawa', '福井県': 'fukui',
+  '山梨県': 'yamanashi', '長野県': 'nagano', '岐阜県': 'gifu', '静岡県': 'shizuoka', '愛知県': 'aichi',
+  '三重県': 'mie', '滋賀県': 'shiga', '京都府': 'kyoto',
+  '大阪府': 'osaka', '兵庫県': 'hyogo', '奈良県': 'nara', '和歌山県': 'wakayama',
+  '鳥取県': 'tottori', '島根県': 'shimane', '岡山県': 'okayama',
+  '広島県': 'hiroshima', '山口県': 'yamaguchi',
+  '徳島県': 'tokushima', '香川県': 'kagawa', '愛媛県': 'ehime', '高知県': 'kochi',
+  '福岡県': 'fukuoka', '佐賀県': 'saga', '長崎県': 'nagasaki',
+  '熊本県': 'kumamoto', '大分県': 'oita', '宮崎県': 'miyazaki',
+  '鹿児島県': 'kagoshima', '沖縄県': 'okinawa',
+};
 
 const JapanMap = dynamic(() => import('@/components/map/JapanMap'), {
   ssr: false,
@@ -153,6 +170,13 @@ export default function VenuesIndex({ venues, venueDetails, stats, prefectures, 
           { name: '劇場データベース', url: 'https://gikyokutosyokan.com/venues' },
         ]}
       />
+      <StructuredData
+        type="CollectionPage"
+        title="劇場データベース | 全国の劇場・ホールを検索"
+        description={`全国${stats.total}件の劇場・ホール情報を掲載。小劇場から大劇場まで、座席数・アクセス情報を網羅。`}
+        url="https://gikyokutosyokan.com/venues"
+        numberOfItems={stats.total}
+      />
 
       <div className="container mx-auto px-4 py-6 max-w-6xl">
         <nav className="flex items-center gap-1 text-xs text-gray-500 mb-4">
@@ -206,9 +230,16 @@ export default function VenuesIndex({ venues, venueDetails, stats, prefectures, 
                     <h2 className="text-lg font-bold text-gray-900">
                       {selectedPrefecture}の劇場（{prefectureCounts[selectedPrefecture] || 0}件）
                     </h2>
-                    <button onClick={() => setSelectedPrefecture('')} className="text-xs text-gray-400 hover:text-gray-600">
-                      クリア
-                    </button>
+                    <div className="flex items-center gap-3">
+                      {PREFECTURE_SLUG_MAP[selectedPrefecture] && (
+                        <Link href={`/venues/region/${PREFECTURE_SLUG_MAP[selectedPrefecture]}`} className="text-xs text-theater-primary-600 hover:text-theater-primary-700 font-bold flex items-center gap-1">
+                          一覧を見る <FaArrowRight className="text-[9px]" />
+                        </Link>
+                      )}
+                      <button onClick={() => setSelectedPrefecture('')} className="text-xs text-gray-400 hover:text-gray-600">
+                        クリア
+                      </button>
+                    </div>
                   </div>
                   <div className="space-y-1">
                     {venues
@@ -271,6 +302,21 @@ export default function VenuesIndex({ venues, venueDetails, stats, prefectures, 
               ) : (
                 <div className="text-center py-8 text-gray-400">
                   <p className="text-sm">地図の都道府県をクリックすると劇場一覧が表示されます</p>
+                  {/* Prefecture quick links */}
+                  <div className="mt-6 text-left">
+                    <h3 className="text-xs font-bold text-gray-500 mb-2 text-center">都道府県から探す</h3>
+                    <div className="flex flex-wrap gap-1.5 justify-center">
+                      {prefectures.map((p) => (
+                        <Link
+                          key={p}
+                          href={`/venues/region/${PREFECTURE_SLUG_MAP[p] || ''}`}
+                          className="text-xs px-2 py-1 bg-gray-50 hover:bg-theater-primary-50 text-gray-600 hover:text-theater-primary-600 rounded transition-colors"
+                        >
+                          {p}({prefectureCounts[p] || 0})
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
                 </div>
               )}
             </div>

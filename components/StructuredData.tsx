@@ -62,8 +62,15 @@ interface PlayInfo {
   datePublished?: string;
 }
 
+interface CollectionItem {
+  name: string;
+  url: string;
+  description?: string;
+  image?: string;
+}
+
 interface StructuredDataProps {
-  type?: "WebSite" | "Article" | "BreadcrumbList" | "Organization" | "Play" | "FAQPage" | "EventList";
+  type?: "WebSite" | "Article" | "BreadcrumbList" | "Organization" | "Play" | "FAQPage" | "EventList" | "CollectionPage";
   title?: string;
   description?: string;
   url?: string;
@@ -83,6 +90,9 @@ interface StructuredDataProps {
   faqItems?: FAQItem[];
   // EventList用の追加プロパティ
   events?: EventItem[];
+  // CollectionPage用の追加プロパティ
+  collectionItems?: CollectionItem[];
+  numberOfItems?: number;
 }
 
 const StructuredData = ({
@@ -99,7 +109,9 @@ const StructuredData = ({
   logo = "https://gikyokutosyokan.com/logo.png",
   playInfo,
   faqItems,
-  events
+  events,
+  collectionItems,
+  numberOfItems,
 }: StructuredDataProps) => {
   const siteUrl = "https://gikyokutosyokan.com";
   
@@ -187,16 +199,34 @@ const StructuredData = ({
           "@context": "https://schema.org",
           "@type": "Organization",
           "name": organizationName,
+          "alternateName": "Gikyoku Tosyokan",
           "url": siteUrl,
-          "logo": logo,
-          "description": "戯曲図書館は、演劇・舞台の脚本を検索できるサービスです。",
+          "logo": {
+            "@type": "ImageObject",
+            "url": logo,
+            "width": 512,
+            "height": 512
+          },
+          "description": "戯曲図書館は、演劇・舞台の脚本を上演時間・人数・ジャンルで検索できる日本最大級の戯曲検索サービスです。レビュー・上演報告の共有を通じて演劇文化の発展に貢献しています。",
           "foundingDate": "2024",
+          "sameAs": [
+            "https://twitter.com/gikyokutosyokan",
+            "https://twitter.com/theater_portal"
+          ],
           "contactPoint": {
             "@type": "ContactPoint",
             "contactType": "customer support",
             "email": "gekidankatakago@gmail.com",
-            "availableLanguage": ["Japanese"]
-          }
+            "availableLanguage": ["Japanese", "English"]
+          },
+          "knowsAbout": [
+            "Japanese theater",
+            "Play scripts",
+            "Theater performance",
+            "演劇",
+            "戯曲",
+            "脚本"
+          ]
         };
 
       case "Play":
@@ -359,6 +389,39 @@ const StructuredData = ({
               "text": item.answer
             }
           }))
+        };
+
+      case "CollectionPage":
+        return {
+          "@context": "https://schema.org",
+          "@type": "CollectionPage",
+          "name": title,
+          "description": description,
+          "url": url || siteUrl,
+          "isPartOf": {
+            "@type": "WebSite",
+            "name": organizationName,
+            "url": siteUrl
+          },
+          "provider": {
+            "@type": "Organization",
+            "name": organizationName,
+            "url": siteUrl
+          },
+          ...(numberOfItems ? { "numberOfItems": numberOfItems } : {}),
+          ...(collectionItems && collectionItems.length > 0 ? {
+            "mainEntity": {
+              "@type": "ItemList",
+              "numberOfItems": numberOfItems || collectionItems.length,
+              "itemListElement": collectionItems.slice(0, 10).map((item, index) => ({
+                "@type": "ListItem",
+                "position": index + 1,
+                "name": item.name,
+                "url": item.url,
+                ...(item.description ? { "description": item.description } : {})
+              }))
+            }
+          } : {})
         };
 
       default:

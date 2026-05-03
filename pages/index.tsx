@@ -59,7 +59,7 @@ export default function Home({ news, authors, posts, categories, blogPosts, tren
       <Layout>
         <Seo
           pageDescription={
-            "上演する脚本を探しの方に。上演時間や人数などから検索ができます。戯曲を探す、戯曲図書館。"
+            "戯曲図書館は、演劇の脚本を上演時間・人数・ジャンルで検索できる日本最大級の戯曲検索サービスです。文化祭・学園祭の台本探し、劇団の次回公演の脚本選びに。レビューや上演報告も共有できます。"
           }
           pageImg={"https://gikyokutosyokan.com/logo.png"}
           pagePath="/"
@@ -67,7 +67,7 @@ export default function Home({ news, authors, posts, categories, blogPosts, tren
         <StructuredData
           type="WebSite"
           title="戯曲図書館"
-          description="上演する脚本を探しの方に。上演時間や人数などから検索ができます。戯曲を探す、戯曲図書館。"
+          description="戯曲図書館は、演劇の脚本を上演時間・人数・ジャンルで検索できる日本最大級の戯曲検索サービスです。レビューや上演報告も共有できます。"
           url="https://gikyokutosyokan.com"
         />
         <StructuredData type="Organization" />

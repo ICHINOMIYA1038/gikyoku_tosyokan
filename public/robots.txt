@@ -5,6 +5,7 @@ Disallow: /admin/
 Disallow: /api/
 Disallow: /_next/
 Disallow: /node_modules/
+Disallow: /debug/
 
 # Google bot specific
 User-agent: Googlebot
@@ -19,6 +20,46 @@ Allow: /
 Disallow: /admin/
 Disallow: /api/
 Crawl-delay: 1
+
+# AI Search Engine Crawlers - Explicitly allowed
+# These crawlers power AI-assisted search (ChatGPT, Perplexity, Gemini, etc.)
+User-agent: GPTBot
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+
+User-agent: ChatGPT-User
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+
+User-agent: Applebot-Extended
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+
+User-agent: anthropic-ai
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+
+User-agent: ClaudeBot
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+
+User-agent: cohere-ai
+Allow: /
+Disallow: /admin/
+Disallow: /api/
 
 # Block bad bots
 User-agent: AhrefsBot

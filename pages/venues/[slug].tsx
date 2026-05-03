@@ -145,32 +145,48 @@ export default function VenueDetail({ venue, nearbyVenues, announcements, perfor
     ? `https://www.google.com/maps/search/?api=1&query=${venue.latitude},${venue.longitude}`
     : `https://www.google.com/maps/search/?api=1&query=${mapQuery}`;
 
+  const twitterUrl = venue.twitter
+    ? (venue.twitter.startsWith('http') ? venue.twitter : `https://twitter.com/${venue.twitter.replace('@', '')}`)
+    : null;
+
   const placeJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'PerformingArtsTheater',
     name: venue.name,
     ...(venue.description && { description: venue.description }),
     ...(venue.address && {
-      address: { '@type': 'PostalAddress', streetAddress: venue.address, addressRegion: venue.prefecture || undefined, addressCountry: 'JP' },
+      address: {
+        '@type': 'PostalAddress',
+        streetAddress: venue.address,
+        addressRegion: venue.prefecture || undefined,
+        addressCountry: 'JP',
+      },
     }),
     ...(venue.latitude && venue.longitude && {
       geo: { '@type': 'GeoCoordinates', latitude: venue.latitude, longitude: venue.longitude },
     }),
     ...(venue.capacity && { maximumAttendeeCapacity: venue.capacity }),
     ...(venue.website && { url: venue.website }),
+    image: 'https://gikyokutosyokan.com/logo.png',
+    ...(twitterUrl && { sameAs: [twitterUrl] }),
   };
+
+  // 住所からエリア名を抽出（例: "世田谷区北沢2-10-15" → "世田谷区"）
+  const areaMatch = venue.address?.match(/^(.+?[区市町村])/);
+  const areaName = areaMatch ? areaMatch[1] : null;
+  const locationLabel = areaName ? `${venue.prefecture}・${areaName}` : venue.prefecture || '';
 
   return (
     <Layout>
       <Seo
-        pageTitle={`${venue.name}（${typeLabel}・${venue.prefecture}）| 劇場データベース`}
+        pageTitle={`${venue.name}（${locationLabel}）| 劇場データベース`}
         pageDescription={
           venue.description
-            ? `${venue.description} ${venue.capacity ? `座席数${venue.capacity}席。` : ''}${venue.prefecture}の${typeLabel}。`
-            : `${venue.name}は${venue.prefecture}にある${typeLabel}です。${venue.capacity ? `座席数${venue.capacity}席。` : ''}アクセス・施設情報をご紹介。`
+            ? `${venue.description} ${venue.capacity ? `座席数${venue.capacity}席。` : ''}${venue.prefecture}の${typeLabel}。アクセス・地図・上演実績など。`
+            : `${venue.name}は${locationLabel}にある${typeLabel}です。${venue.capacity ? `座席数${venue.capacity}席。` : ''}アクセス・地図・施設情報・上演実績をご紹介。`
         }
         pagePath={`/venues/${venue.slug}`}
-        pageKeywords={[venue.name, typeLabel, venue.prefecture || '', '劇場', '演劇', 'ホール'].filter(Boolean)}
+        pageKeywords={[venue.name, typeLabel, venue.prefecture || '', areaName || '', '劇場', '演劇', 'ホール', 'アクセス', '座席数'].filter(Boolean)}
       />
       <StructuredData
         type="BreadcrumbList"

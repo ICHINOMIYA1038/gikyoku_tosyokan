@@ -229,6 +229,15 @@ If you care more about intensity and proximity than giant spectacle, this is you
 
 Small theater prices are often friendlier than major large-house productions, though this varies by company and cast popularity.
 
+### Key venues in Shimokitazawa
+
+- [Honda Gekijo](/venues/honda-gekijo) (386 seats) — the flagship venue of the neighborhood
+- [The Suzunari](/venues/the-suzunari) (240 seats) — a legendary small-theater space
+- [Ekimae Gekijo](/venues/ekimae-gekijo) (150 seats) — steps from the station
+- [OFF OFF Theatre](/venues/off-off-theatre) (88 seats) — experimental and intimate
+
+For a full list of Shimokitazawa venues, see the [venue database](/venues).
+
 ### Navigation tip
 
 Do not rely on “I’ll find it when I get there.” In Shimokitazawa’s smaller streets, pre-saving exact building pin + entrance photo can save you 15 stressful minutes.
@@ -478,17 +487,20 @@ These three give you very different flavors of modern Japanese theater language,
 
 If this guide helped, continue here:
 
-- **How to Watch Japanese Theater as a Non-Japanese Speaker**  
+- **How to Watch Japanese Theater as a Non-Japanese Speaker**
   https://gikyokutosyokan.com/blog/en/guide-watching-japanese-theater
 
-- **Shimokitazawa: Tokyo's Theater District Guide**  
+- **Shimokitazawa: Tokyo’s Theater District Guide**
   https://gikyokutosyokan.com/blog/en/guide-shimokitazawa-theater-district
 
-- **What’s Playing in Tokyo: April 2026 Theater Guide**  
+- **What’s Playing in Tokyo: April 2026 Theater Guide**
   https://gikyokutosyokan.com/blog/en/guide-tokyo-theater-2026-april
 
-- **Theater Etiquette in Japan (Practical Rules)**  
+- **Theater Etiquette in Japan (Practical Rules)**
   https://gikyokutosyokan.com/blog/en/guide-theater-etiquette-japan
+
+- **Venue Database (search all theaters by region and capacity)**
+  [https://gikyokutosyokan.com/venues](/venues)
 
 ---
 

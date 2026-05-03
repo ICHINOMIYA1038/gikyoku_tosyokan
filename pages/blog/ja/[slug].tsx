@@ -239,17 +239,30 @@ export default function BlogJaPost({
 
               {/* Author / meta section */}
               <div className="mt-14 pt-8 border-t border-gray-200">
-                <div className="flex items-center gap-4 p-5 bg-gray-50 rounded-xl">
-                  <div className="flex-shrink-0 w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500">
-                    <FaPen className="text-xs" />
+                <div className="flex items-start gap-4 p-5 bg-gray-50 rounded-xl">
+                  <div className="flex-shrink-0 w-12 h-12 rounded-full bg-theater-primary-100 flex items-center justify-center text-theater-primary-600">
+                    <FaPen className="text-sm" />
                   </div>
-                  <div>
-                    <p className="text-sm text-gray-500 mb-0.5">Written by</p>
+                  <div className="flex-1">
+                    <p className="text-xs text-gray-400 mb-0.5">Written by</p>
                     <p className="font-bold text-gray-900">戯曲図書館 編集部</p>
-                    <p className="text-sm text-gray-500 mt-0.5">
-                      演劇・戯曲に関する情報を発信しています
+                    <p className="text-sm text-gray-600 mt-1 leading-relaxed">
+                      演劇経験者が運営する戯曲検索サービス「戯曲図書館」の編集チームです。
+                      脚本選びのノウハウ、演劇業界の最新情報、公演レポートなどを発信しています。
                     </p>
+                    <div className="flex items-center gap-3 mt-2">
+                      <Link href="/support/about" className="text-xs text-theater-primary-600 hover:underline">
+                        サイトについて
+                      </Link>
+                      <a href="https://twitter.com/gikyokutosyokan" target="_blank" rel="noopener noreferrer" className="text-xs text-gray-400 hover:text-blue-500">
+                        @gikyokutosyokan
+                      </a>
+                    </div>
                   </div>
+                </div>
+                {/* 公開日・更新日 */}
+                <div className="mt-3 text-xs text-gray-400 flex items-center gap-4">
+                  <span>公開日: {post.date}</span>
                 </div>
               </div>
 
