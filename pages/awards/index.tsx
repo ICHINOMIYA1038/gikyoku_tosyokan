@@ -218,9 +218,9 @@ export const getStaticProps: GetStaticProps = async () => {
       const latestWinner: LatestWinner | null = latestWinnerEntry
         ? {
             awardYear: latestWinnerEntry.awardYear,
-            postId: latestWinnerEntry.post.id,
-            postTitle: latestWinnerEntry.post.title,
-            authorName: latestWinnerEntry.post.author.name,
+            postId: latestWinnerEntry.post?.id ?? 0,
+            postTitle: latestWinnerEntry.post?.title ?? latestWinnerEntry.title ?? '',
+            authorName: latestWinnerEntry.post?.author?.name ?? latestWinnerEntry.authorName ?? '',
           }
         : null;
 

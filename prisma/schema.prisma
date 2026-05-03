@@ -381,16 +381,19 @@ model PostTheaterGroup {
 }
 
 model PostAward {
-  id         Int    @id @default(autoincrement())
-  postId     Int
-  awardName  String
-  awardYear  Int
-  awardType  String @default("受賞")
-  post       Post   @relation(fields: [postId], references: [id])
+  id           Int     @id @default(autoincrement())
+  postId       Int?
+  awardName    String
+  awardYear    Int
+  awardType    String  @default("受賞")
+  title        String?
+  authorName   String?
+  post         Post?   @relation(fields: [postId], references: [id])
 
-  @@unique([postId, awardName, awardYear])
+  @@unique([awardName, awardYear, title])
   @@index([postId])
   @@index([awardName])
+  @@index([awardYear])
   @@map("PostAward")
 }
 

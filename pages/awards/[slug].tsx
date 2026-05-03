@@ -9,9 +9,9 @@ import { FaChevronRight, FaTrophy, FaUser, FaBook, FaCalendarAlt } from 'react-i
 type Winner = {
   awardYear: number;
   awardType: string;
-  postId: number;
+  postId: number | null;
   postTitle: string;
-  authorId: number;
+  authorId: number | null;
   authorName: string;
 };
 
@@ -118,66 +118,68 @@ function isWinnerType(type: string): boolean {
 }
 
 function WinnerEntry({ winner, showGrandPrize }: { winner: Winner; showGrandPrize: boolean }) {
+  const titleEl = winner.postId ? (
+    <Link href={`/posts/${winner.postId}`} className="text-sm font-bold text-gray-800 hover:text-theater-primary-600 transition-colors">
+      {winner.postTitle}
+    </Link>
+  ) : (
+    <span className="text-sm font-bold text-gray-800">{winner.postTitle}</span>
+  );
+  const authorEl = winner.authorId ? (
+    <Link href={`/authors/${winner.authorId}`} className="text-xs text-gray-500 hover:text-theater-primary-600 transition-colors mt-0.5 inline-block">
+      {winner.authorName}
+    </Link>
+  ) : (
+    <span className="text-xs text-gray-500 mt-0.5 inline-block">{winner.authorName}</span>
+  );
+
   return (
     <div className="flex items-start gap-3 py-1.5">
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 flex-wrap">
-          <Link
-            href={`/posts/${winner.postId}`}
-            className="text-sm font-bold text-gray-800 hover:text-theater-primary-600 transition-colors"
-          >
-            {winner.postTitle}
-          </Link>
+          {titleEl}
           {showGrandPrize && winner.awardType === '大賞' && (
-            <span className="text-[10px] px-1.5 py-0.5 bg-amber-50 text-amber-700 border border-amber-200 rounded font-medium">
-              大賞
-            </span>
+            <span className="text-[10px] px-1.5 py-0.5 bg-amber-50 text-amber-700 border border-amber-200 rounded font-medium">大賞</span>
           )}
         </div>
-        <Link
-          href={`/authors/${winner.authorId}`}
-          className="text-xs text-gray-500 hover:text-theater-primary-600 transition-colors mt-0.5 inline-block"
-        >
-          {winner.authorName}
-        </Link>
+        {authorEl}
       </div>
-      <Link
-        href={`/posts/${winner.postId}`}
-        className="flex-shrink-0 text-gray-300 hover:text-theater-primary-500 transition-colors mt-1"
-        title="作品ページを見る"
-      >
-        <FaBook className="text-xs" />
-      </Link>
+      {winner.postId && (
+        <Link href={`/posts/${winner.postId}`} className="flex-shrink-0 text-gray-300 hover:text-theater-primary-500 transition-colors mt-1" title="作品ページを見る">
+          <FaBook className="text-xs" />
+        </Link>
+      )}
     </div>
   );
 }
 
 function SubEntry({ winner }: { winner: Winner }) {
+  const titleEl = winner.postId ? (
+    <Link href={`/posts/${winner.postId}`} className="text-xs text-gray-600 hover:text-theater-primary-600 transition-colors">
+      {winner.postTitle}
+    </Link>
+  ) : (
+    <span className="text-xs text-gray-600">{winner.postTitle}</span>
+  );
+  const authorEl = winner.authorId ? (
+    <Link href={`/authors/${winner.authorId}`} className="text-[11px] text-gray-400 hover:text-theater-primary-600 transition-colors inline-block">
+      {winner.authorName}
+    </Link>
+  ) : (
+    <span className="text-[11px] text-gray-400 inline-block">{winner.authorName}</span>
+  );
+
   return (
     <div className="flex items-start gap-3 py-1">
       <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-2">
-          <Link
-            href={`/posts/${winner.postId}`}
-            className="text-xs text-gray-600 hover:text-theater-primary-600 transition-colors"
-          >
-            {winner.postTitle}
-          </Link>
-        </div>
-        <Link
-          href={`/authors/${winner.authorId}`}
-          className="text-[11px] text-gray-400 hover:text-theater-primary-600 transition-colors inline-block"
-        >
-          {winner.authorName}
-        </Link>
+        <div className="flex items-center gap-2">{titleEl}</div>
+        {authorEl}
       </div>
-      <Link
-        href={`/posts/${winner.postId}`}
-        className="flex-shrink-0 text-gray-200 hover:text-theater-primary-500 transition-colors mt-0.5"
-        title="作品ページを見る"
-      >
-        <FaBook className="text-[10px]" />
-      </Link>
+      {winner.postId && (
+        <Link href={`/posts/${winner.postId}`} className="flex-shrink-0 text-gray-200 hover:text-theater-primary-500 transition-colors mt-0.5" title="作品ページを見る">
+          <FaBook className="text-[10px]" />
+        </Link>
+      )}
     </div>
   );
 }
@@ -283,16 +285,24 @@ export default function AwardDetailPage({ award, stats, topAuthors, yearGroups }
               複数受賞の作家
             </h2>
             <div className="flex flex-wrap gap-2">
-              {topAuthors.map((author) => (
-                <Link
-                  key={author.authorId}
-                  href={`/authors/${author.authorId}`}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gray-50 border border-gray-150 rounded-full text-sm text-gray-700 hover:border-theater-primary-300 hover:text-theater-primary-600 transition-colors"
-                >
-                  {author.name}
-                  <span className="text-xs text-gray-400">{author.count}回</span>
-                </Link>
-              ))}
+              {topAuthors.map((author, i) => {
+                const inner = (
+                  <>
+                    {author.name}
+                    <span className="text-xs text-gray-400">{author.count}回</span>
+                  </>
+                );
+                return author.authorId ? (
+                  <Link key={i} href={`/authors/${author.authorId}`}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gray-50 border border-gray-150 rounded-full text-sm text-gray-700 hover:border-theater-primary-300 hover:text-theater-primary-600 transition-colors">
+                    {inner}
+                  </Link>
+                ) : (
+                  <span key={i} className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gray-50 border border-gray-150 rounded-full text-sm text-gray-700">
+                    {inner}
+                  </span>
+                );
+              })}
             </div>
           </div>
         )}
@@ -406,10 +416,10 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   const winners: Winner[] = postAwards.map((pa) => ({
     awardYear: pa.awardYear,
     awardType: pa.awardType,
-    postId: pa.post.id,
-    postTitle: pa.post.title,
-    authorId: pa.post.author.id,
-    authorName: pa.post.author.name,
+    postId: pa.post?.id ?? null,
+    postTitle: pa.post?.title ?? pa.title ?? '（作品名不明）',
+    authorId: pa.post?.author?.id ?? null,
+    authorName: pa.post?.author?.name ?? pa.authorName ?? '（作者不明）',
   }));
 
   // 年別グループ化 (sort winners within each year by type)
@@ -427,7 +437,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     }));
 
   // 統計
-  const uniqueAuthors = new Set(winners.map((w) => w.authorId)).size;
+  const uniqueAuthors = new Set(winners.map((w) => w.authorId ?? w.authorName)).size;
   const years = winners.map((w) => w.awardYear);
   const minYear = years.length > 0 ? Math.min(...years) : 0;
   const maxYear = years.length > 0 ? Math.max(...years) : 0;
@@ -445,19 +455,20 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     .map(([type, count]) => ({ type, count }));
 
   // 複数受賞の作家
-  const authorCountMap = new Map<number, { name: string; count: number }>();
+  const authorCountMap = new Map<string, { name: string; authorId: number | null; count: number }>();
   winners.forEach((w) => {
-    const existing = authorCountMap.get(w.authorId);
+    const key = w.authorId ? String(w.authorId) : w.authorName;
+    const existing = authorCountMap.get(key);
     if (existing) {
       existing.count++;
     } else {
-      authorCountMap.set(w.authorId, { name: w.authorName, count: 1 });
+      authorCountMap.set(key, { name: w.authorName, authorId: w.authorId, count: 1 });
     }
   });
-  const topAuthors: TopAuthor[] = Array.from(authorCountMap.entries())
-    .filter(([, v]) => v.count >= 2)
-    .sort(([, a], [, b]) => b.count - a.count)
-    .map(([authorId, v]) => ({ authorId, name: v.name, count: v.count }));
+  const topAuthors: TopAuthor[] = Array.from(authorCountMap.values())
+    .filter((v) => v.count >= 2)
+    .sort((a, b) => b.count - a.count)
+    .map((v) => ({ authorId: v.authorId ?? 0, name: v.name, count: v.count }));
 
   return {
     props: {
