@@ -1,10 +1,13 @@
 import { GetStaticProps, GetStaticPaths } from 'next';
+import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import Layout from '@/components/Layout';
 import Seo from '@/components/seo';
 import StructuredData from '@/components/StructuredData';
 import { prisma } from '@/lib/prisma';
 import { FaChevronRight, FaTrophy, FaUser, FaBook, FaCalendarAlt } from 'react-icons/fa';
+
+const INITIAL_YEARS = 15;
 
 type Winner = {
   awardYear: number;
@@ -33,7 +36,6 @@ type Props = {
     description: string;
     organizer: string;
   };
-  winners: Winner[];
   stats: {
     totalWinners: number;
     yearRange: string;
@@ -185,6 +187,13 @@ function SubEntry({ winner }: { winner: Winner }) {
 }
 
 export default function AwardDetailPage({ award, stats, topAuthors, yearGroups }: Props) {
+  const [showAll, setShowAll] = useState(false);
+  const displayedYearGroups = useMemo(
+    () => showAll ? yearGroups : yearGroups.slice(0, INITIAL_YEARS),
+    [yearGroups, showAll]
+  );
+  const hiddenYearCount = yearGroups.length - INITIAL_YEARS;
+
   return (
     <Layout>
       <Seo
@@ -314,7 +323,7 @@ export default function AwardDetailPage({ award, stats, topAuthors, yearGroups }
             受賞作品一覧
           </h2>
           <div className="space-y-0">
-            {yearGroups.map((group) => {
+            {displayedYearGroups.map((group) => {
               const mainWinners = group.winners.filter((w) => isWinnerType(w.awardType));
               // Group non-winners by type
               const othersByType = new Map<string, Winner[]>();
@@ -368,6 +377,16 @@ export default function AwardDetailPage({ award, stats, topAuthors, yearGroups }
                 </div>
               );
             })}
+            {!showAll && hiddenYearCount > 0 && (
+              <div className="text-center pt-6 pb-2">
+                <button
+                  onClick={() => setShowAll(true)}
+                  className="px-6 py-2.5 bg-white border border-gray-200 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 hover:border-gray-300 transition-colors shadow-sm"
+                >
+                  すべて表示する（残り{hiddenYearCount}年分）
+                </button>
+              </div>
+            )}
           </div>
         </div>
 
@@ -480,7 +499,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
         description: config.description,
         organizer: config.organizer,
       },
-      winners,
       stats: {
         totalWinners: winners.length,
         yearRange,

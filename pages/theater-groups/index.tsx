@@ -1,5 +1,5 @@
 import { GetStaticProps } from 'next';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import Link from 'next/link';
 import Layout from '@/components/Layout';
 import Seo from '@/components/seo';
@@ -8,6 +8,8 @@ import TheaterGroupCard from '@/components/TheaterGroupCard';
 import { prisma } from '@/lib/prisma';
 import { groupTypeLabels } from '@/lib/university-theater-constants';
 import { FaSearch, FaChevronRight, FaTheaterMasks } from 'react-icons/fa';
+
+const PAGE_SIZE = 60;
 
 const TYPE_TABS = [
   { key: '', label: 'すべて' },
@@ -37,6 +39,7 @@ export default function TheaterGroupsIndex({ theaterGroups, prefecturesWithData,
   const [search, setSearch] = useState('');
   const [selectedType, setSelectedType] = useState('');
   const [selectedPrefecture, setSelectedPrefecture] = useState('');
+  const [displayCount, setDisplayCount] = useState(PAGE_SIZE);
 
   const filtered = useMemo(() => {
     return theaterGroups.filter((g: any) => {
@@ -55,6 +58,15 @@ export default function TheaterGroupsIndex({ theaterGroups, prefecturesWithData,
       return true;
     });
   }, [theaterGroups, search, selectedType, selectedPrefecture]);
+
+  const displayed = useMemo(() => filtered.slice(0, displayCount), [filtered, displayCount]);
+  const hasMore = filtered.length > displayCount;
+
+  // Reset display count when filters change
+  const handleFilterChange = useCallback((setter: (v: string) => void, value: string) => {
+    setter(value);
+    setDisplayCount(PAGE_SIZE);
+  }, []);
 
   return (
     <Layout>
@@ -103,7 +115,7 @@ export default function TheaterGroupsIndex({ theaterGroups, prefecturesWithData,
           {TYPE_TABS.map((tab) => (
             <button
               key={tab.key}
-              onClick={() => setSelectedType(tab.key)}
+              onClick={() => handleFilterChange(setSelectedType, tab.key)}
               className={`px-3 py-2 text-sm font-bold transition-colors relative whitespace-nowrap
                 ${selectedType === tab.key ? 'text-theater-primary-600' : 'text-gray-400 hover:text-gray-600'}`}
             >
@@ -123,13 +135,13 @@ export default function TheaterGroupsIndex({ theaterGroups, prefecturesWithData,
               type="text"
               placeholder="劇団名・大学名・地域で検索"
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={(e) => { setSearch(e.target.value); setDisplayCount(PAGE_SIZE); }}
               className="w-full pl-9 pr-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-theater-primary-200"
             />
           </div>
           <select
             value={selectedPrefecture}
-            onChange={(e) => setSelectedPrefecture(e.target.value)}
+            onChange={(e) => handleFilterChange(setSelectedPrefecture, e.target.value)}
             className="px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-theater-primary-200"
           >
             <option value="">全都道府県</option>
@@ -144,11 +156,23 @@ export default function TheaterGroupsIndex({ theaterGroups, prefecturesWithData,
 
         {/* カード一覧 */}
         {filtered.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {filtered.map((g: any) => (
-              <TheaterGroupCard key={g.slug} group={g} />
-            ))}
-          </div>
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {displayed.map((g: any) => (
+                <TheaterGroupCard key={g.slug} group={g} />
+              ))}
+            </div>
+            {hasMore && (
+              <div className="text-center mt-8">
+                <button
+                  onClick={() => setDisplayCount((prev) => prev + PAGE_SIZE)}
+                  className="px-6 py-2.5 bg-white border border-gray-200 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 hover:border-gray-300 transition-colors shadow-sm"
+                >
+                  さらに表示する（残り{filtered.length - displayCount}件）
+                </button>
+              </div>
+            )}
+          </>
         ) : (
           <div className="text-center py-12 text-gray-400">
             <p>条件に一致する劇団が見つかりませんでした</p>
@@ -173,7 +197,7 @@ export const getStaticProps: GetStaticProps = async () => {
       universities: {
         include: {
           university: {
-            select: { name: true, slug: true, prefecture: true },
+            select: { name: true, prefecture: true },
           },
         },
       },
@@ -193,8 +217,16 @@ export const getStaticProps: GetStaticProps = async () => {
   };
 
   const slimGroups = theaterGroups.map((g) => ({
-    ...g,
-    description: g.description ? g.description.substring(0, 100) : null,
+    name: g.name,
+    slug: g.slug,
+    groupType: g.groupType,
+    description: g.description ? g.description.substring(0, 80) : null,
+    prefecture: g.prefecture,
+    website: g.website || null,
+    twitter: g.twitter || null,
+    universities: g.universities?.map((u: any) => ({
+      university: { name: u.university.name, prefecture: u.university.prefecture },
+    })),
   }));
 
   return {

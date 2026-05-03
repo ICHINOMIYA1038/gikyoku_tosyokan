@@ -213,7 +213,19 @@ export const getStaticProps: GetStaticProps = async () => {
           { link_to_plot: { not: null } },
         ],
       },
-      include: {
+      select: {
+        id: true,
+        title: true,
+        synopsis: true,
+        image_url: true,
+        playtime: true,
+        totalNumber: true,
+        man: true,
+        woman: true,
+        averageRating: true,
+        website1: true,
+        website2: true,
+        link_to_plot: true,
         author: {
           select: {
             id: true,

@@ -1,12 +1,16 @@
 import { GetStaticProps } from 'next';
 import Link from 'next/link';
+import { useState, useCallback } from 'react';
 import Layout from '@/components/Layout';
 import BlogSidebar from '@/components/BlogSidebar';
 import Seo from '@/components/seo';
-import { getPostsByLanguage, BlogPostMeta } from '@/lib/blog';
+import { getPostsByLanguagePaginated, BlogPostMeta } from '@/lib/blog';
+
+const PER_PAGE = 20;
 
 interface Props {
   posts: BlogPostMeta[];
+  total: number;
 }
 
 function formatDateNice(dateStr: string): string {
@@ -83,7 +87,30 @@ function PostCard({ post }: { post: BlogPostMeta }) {
   );
 }
 
-export default function BlogJaIndex({ posts }: Props) {
+export default function BlogJaIndex({ posts: initialPosts, total }: Props) {
+  const [posts, setPosts] = useState<BlogPostMeta[]>(initialPosts);
+  const [loading, setLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const hasMore = posts.length < total;
+
+  const loadMore = useCallback(async () => {
+    if (loading || !hasMore) return;
+    setLoading(true);
+    try {
+      const nextPage = currentPage + 1;
+      const res = await fetch(`/api/blog-posts?lang=ja&page=${nextPage}`);
+      if (!res.ok) throw new Error('Failed to fetch');
+      const data = await res.json();
+      setPosts((prev) => [...prev, ...data.posts]);
+      setCurrentPage(nextPage);
+    } catch (err) {
+      console.error('Failed to load more posts:', err);
+    } finally {
+      setLoading(false);
+    }
+  }, [currentPage, loading, hasMore]);
+
   const [featured, ...rest] = posts;
 
   return (
@@ -104,7 +131,10 @@ export default function BlogJaIndex({ posts }: Props) {
           <main className="flex-1 min-w-0">
             {/* Header */}
             <div className="flex items-center justify-between mb-8">
-              <h1 className="text-2xl font-bold text-gray-900">ブログ</h1>
+              <div>
+                <h1 className="text-2xl font-bold text-gray-900">ブログ</h1>
+                <p className="text-sm text-gray-400 mt-1">{total}件の記事</p>
+              </div>
               <Link href="/blog/en" className="text-sm text-gray-400 hover:text-theater-primary-600 transition-colors">
                 English &rarr;
               </Link>
@@ -125,6 +155,29 @@ export default function BlogJaIndex({ posts }: Props) {
                     ))}
                   </div>
                 )}
+
+                {/* Load More */}
+                {hasMore && (
+                  <div className="mt-8 text-center">
+                    <button
+                      onClick={loadMore}
+                      disabled={loading}
+                      className="inline-flex items-center gap-2 px-6 py-3 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 hover:border-gray-300 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {loading ? (
+                        <>
+                          <svg className="animate-spin h-4 w-4 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                          </svg>
+                          読み込み中...
+                        </>
+                      ) : (
+                        <>もっと見る ({posts.length} / {total})</>
+                      )}
+                    </button>
+                  </div>
+                )}
               </>
             )}
           </main>
@@ -139,6 +192,6 @@ export default function BlogJaIndex({ posts }: Props) {
 }
 
 export const getStaticProps: GetStaticProps<Props> = async () => {
-  const posts = await getPostsByLanguage('ja');
-  return { props: { posts }, revalidate: 604800 };
+  const { posts, total } = await getPostsByLanguagePaginated('ja', 1, PER_PAGE);
+  return { props: { posts, total }, revalidate: 604800 };
 };

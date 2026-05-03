@@ -29,18 +29,27 @@ const TYPE_TABS = [
   { key: 'large', label: '大劇場' },
 ];
 
-type Venue = {
+// Slim venue for list view: no description, website is boolean, no address
+type VenueSlim = {
   id: number; name: string; slug: string; venueType: string;
-  capacity: number | null; prefecture: string; address: string | null;
-  website: string | null; description: string | null;
+  capacity: number | null; prefecture: string;
+  hasWebsite: boolean;
+};
+
+// Extra fields for map expanded view, keyed by venue id
+type VenueDetail = {
+  address: string | null;
+  website: string | null;
+  description: string | null;
 };
 
 type Props = {
-  venues: Venue[];
+  venues: VenueSlim[];
+  venueDetails: Record<number, VenueDetail>;
   stats: { total: number; small: number; medium: number; large: number };
   prefectures: string[];
   prefectureCounts: Record<string, number>;
-  popularVenues: Venue[];
+  popularVenueIds: number[];
 };
 
 // 小さなキャパシティバー（リスト表示用）
@@ -60,7 +69,14 @@ function MiniCapacityBar({ capacity, venueType }: { capacity: number | null; ven
   );
 }
 
-export default function VenuesIndex({ venues, stats, prefectures, prefectureCounts, popularVenues }: Props) {
+export default function VenuesIndex({ venues, venueDetails, stats, prefectures, prefectureCounts, popularVenueIds }: Props) {
+  // Build lookup map for detail fields (only used in map expanded view)
+  const detailMap = useMemo(() => venueDetails, [venueDetails]);
+  // Build popular venues list from ids
+  const popularVenues = useMemo(() => {
+    const venueMap = new Map(venues.map((v) => [v.id, v]));
+    return popularVenueIds.map((id) => venueMap.get(id)).filter(Boolean) as VenueSlim[];
+  }, [venues, popularVenueIds]);
   const [search, setSearch] = useState('');
   const [selectedType, setSelectedType] = useState('');
   const [selectedPrefecture, setSelectedPrefecture] = useState('');
@@ -81,7 +97,8 @@ export default function VenuesIndex({ venues, stats, prefectures, prefectureCoun
     const result = venues.filter((v) => {
       if (search) {
         const q = search.toLowerCase();
-        if (!v.name.toLowerCase().includes(q) && !v.prefecture.includes(q) && !(v.address || '').includes(q)) return false;
+        const detail = detailMap[v.id];
+        if (!v.name.toLowerCase().includes(q) && !v.prefecture.includes(q) && !(detail?.address || '').includes(q)) return false;
       }
       if (selectedType && v.venueType !== selectedType) return false;
       if (selectedPrefecture && v.prefecture !== selectedPrefecture) return false;
@@ -100,7 +117,7 @@ export default function VenuesIndex({ venues, stats, prefectures, prefectureCoun
     }
     // 'name' keeps the default order (prefecture + name from server)
     return result;
-  }, [venues, search, selectedType, selectedPrefecture, selectedCapacity, sortBy]);
+  }, [venues, detailMap, search, selectedType, selectedPrefecture, selectedCapacity, sortBy]);
 
   const hasData = useCallback((prefName: string) => {
     return (prefectureCounts[prefName] || 0) > 0;
@@ -198,6 +215,7 @@ export default function VenuesIndex({ venues, stats, prefectures, prefectureCoun
                       .filter((v) => v.prefecture === selectedPrefecture)
                       .map((v) => {
                         const isExpanded = expandedVenue === v.id;
+                        const detail = isExpanded ? detailMap[v.id] : null;
                         return (
                           <div key={v.id} className="border border-gray-100 rounded-lg overflow-hidden">
                             <button
@@ -211,13 +229,13 @@ export default function VenuesIndex({ venues, stats, prefectures, prefectureCoun
                               </div>
                               <FaChevronDown className={`text-gray-300 text-xs transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
                             </button>
-                            {isExpanded && (
+                            {isExpanded && detail && (
                               <div className="px-4 pb-4 pt-2 bg-gray-50 border-t border-gray-100">
-                                {v.description && <p className="text-xs text-gray-600 mb-2">{v.description}</p>}
-                                {v.address && (
+                                {detail.description && <p className="text-xs text-gray-600 mb-2">{detail.description}</p>}
+                                {detail.address && (
                                   <p className="text-xs text-gray-500 mb-2">
                                     <FaMapMarkerAlt className="inline text-red-400 mr-1" />
-                                    {v.prefecture} {v.address}
+                                    {v.prefecture} {detail.address}
                                   </p>
                                 )}
                                 {v.capacity && (
@@ -229,13 +247,13 @@ export default function VenuesIndex({ venues, stats, prefectures, prefectureCoun
                                   <Link href={`/venues/${v.slug}`} className="inline-flex items-center px-3 py-1.5 bg-theater-primary-500 text-white text-xs font-bold rounded-lg hover:bg-theater-primary-600 transition-colors min-h-[36px]">
                                     詳細を見る
                                   </Link>
-                                  {v.website && (
-                                    <a href={v.website} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 px-3 py-1.5 text-xs text-gray-600 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors min-h-[36px]">
+                                  {detail.website && (
+                                    <a href={detail.website} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 px-3 py-1.5 text-xs text-gray-600 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors min-h-[36px]">
                                       <FaExternalLinkAlt className="text-[9px]" /> 公式サイト
                                     </a>
                                   )}
                                   <a
-                                    href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(v.name + ' ' + (v.address || v.prefecture))}`}
+                                    href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(v.name + ' ' + (detail.address || v.prefecture))}`}
                                     target="_blank" rel="noopener noreferrer"
                                     className="inline-flex items-center gap-1 px-3 py-1.5 text-xs text-gray-600 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors min-h-[36px]"
                                   >
@@ -354,7 +372,7 @@ export default function VenuesIndex({ venues, stats, prefectures, prefectureCoun
                       </div>
                       <div className="flex items-center gap-2 flex-shrink-0">
                         <MiniCapacityBar capacity={v.capacity} venueType={v.venueType} />
-                        {v.website && <FaGlobe className="text-gray-300 text-xs" />}
+                        {v.hasWebsite && <FaGlobe className="text-gray-300 text-xs" />}
                       </div>
                     </div>
                   </Link>
@@ -371,7 +389,7 @@ export default function VenuesIndex({ venues, stats, prefectures, prefectureCoun
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  const venues = await prisma.venue.findMany({
+  const rawVenues = await prisma.venue.findMany({
     select: {
       id: true, name: true, slug: true, venueType: true, capacity: true,
       prefecture: true, address: true, website: true, description: true,
@@ -379,41 +397,63 @@ export const getStaticProps: GetStaticProps = async () => {
     orderBy: [{ prefecture: 'asc' }, { name: 'asc' }],
   });
 
-  const prefectures = Array.from(new Set(venues.map((v) => v.prefecture))).sort();
+  // Slim venue array: only fields needed for list rendering
+  const venues: VenueSlim[] = rawVenues.map((v) => ({
+    id: v.id,
+    name: v.name,
+    slug: v.slug,
+    venueType: v.venueType,
+    capacity: v.capacity,
+    prefecture: v.prefecture,
+    hasWebsite: !!v.website,
+  }));
+
+  // Detail fields keyed by id: only include venues that have at least one detail field
+  const venueDetails: Record<number, VenueDetail> = {};
+  for (const v of rawVenues) {
+    if (v.address || v.website || v.description) {
+      venueDetails[v.id] = {
+        address: v.address,
+        website: v.website,
+        description: v.description,
+      };
+    }
+  }
+
+  const prefectures = Array.from(new Set(rawVenues.map((v) => v.prefecture))).sort();
   const prefectureCounts: Record<string, number> = {};
-  venues.forEach((v) => { prefectureCounts[v.prefecture] = (prefectureCounts[v.prefecture] || 0) + 1; });
+  rawVenues.forEach((v) => { prefectureCounts[v.prefecture] = (prefectureCounts[v.prefecture] || 0) + 1; });
 
   const stats = {
-    total: venues.length,
-    small: venues.filter((v) => v.venueType === 'small').length,
-    medium: venues.filter((v) => v.venueType === 'medium').length,
-    large: venues.filter((v) => v.venueType === 'large').length,
+    total: rawVenues.length,
+    small: rawVenues.filter((v) => v.venueType === 'small').length,
+    medium: rawVenues.filter((v) => v.venueType === 'medium').length,
+    large: rawVenues.filter((v) => v.venueType === 'large').length,
   };
 
   // 注目の劇場: 各タイプから代表的な劇場を選出（キャパシティありのもの優先）
-  const popularVenues: Venue[] = [];
+  const popularVenueIds: number[] = [];
   const types = ['small', 'medium', 'large'] as const;
   for (const t of types) {
-    const ofType = venues
+    const ofType = rawVenues
       .filter((v) => v.venueType === t && v.capacity)
       .sort((a, b) => (b.capacity || 0) - (a.capacity || 0));
-    // 各タイプから上位2件ずつ
-    popularVenues.push(...ofType.slice(0, 2));
+    popularVenueIds.push(...ofType.slice(0, 2).map((v) => v.id));
   }
-  // 足りなければキャパ順で補充
-  if (popularVenues.length < 6) {
-    const ids = new Set(popularVenues.map((v) => v.id));
-    const rest = venues.filter((v) => !ids.has(v.id) && v.capacity).sort((a, b) => (b.capacity || 0) - (a.capacity || 0));
-    popularVenues.push(...rest.slice(0, 6 - popularVenues.length));
+  if (popularVenueIds.length < 6) {
+    const ids = new Set(popularVenueIds);
+    const rest = rawVenues.filter((v) => !ids.has(v.id) && v.capacity).sort((a, b) => (b.capacity || 0) - (a.capacity || 0));
+    popularVenueIds.push(...rest.slice(0, 6 - popularVenueIds.length).map((v) => v.id));
   }
 
   return {
     props: {
-      venues: JSON.parse(JSON.stringify(venues)),
+      venues,
+      venueDetails,
       stats,
       prefectures,
       prefectureCounts,
-      popularVenues: JSON.parse(JSON.stringify(popularVenues.slice(0, 6))),
+      popularVenueIds: popularVenueIds.slice(0, 6),
     },
     revalidate: 604800,
   };

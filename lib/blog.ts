@@ -120,6 +120,42 @@ export async function getPostsByLanguage(lang: string): Promise<BlogPostMeta[]> 
   }));
 }
 
+export async function getPostsByLanguagePaginated(
+  lang: string,
+  page: number = 1,
+  perPage: number = 20
+): Promise<{ posts: BlogPostMeta[]; total: number }> {
+  const where = { published: true, publishedAt: { lte: new Date() }, language: lang };
+
+  const [posts, total] = await Promise.all([
+    prisma.blogPost.findMany({
+      where,
+      orderBy: { publishedAt: 'desc' },
+      select: {
+        slug: true,
+        title: true,
+        publishedAt: true,
+        description: true,
+        tags: true,
+      },
+      skip: (page - 1) * perPage,
+      take: perPage,
+    }),
+    prisma.blogPost.count({ where }),
+  ]);
+
+  return {
+    posts: posts.map((post) => ({
+      slug: post.slug,
+      title: post.title,
+      date: formatDate(post.publishedAt),
+      description: post.description || '',
+      tags: post.tags,
+    })),
+    total,
+  };
+}
+
 export async function getPostSlugsByLanguage(lang: string): Promise<string[]> {
   const posts = await prisma.blogPost.findMany({
     where: { published: true, language: lang },
