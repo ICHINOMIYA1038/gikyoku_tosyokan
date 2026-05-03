@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
+import { useRouter } from "next/router";
 import Layout from "@/components/Layout";
 import Seo from "@/components/seo";
 import {
@@ -139,6 +140,8 @@ function playBeep() {
 // ---------------------------------------------------------------------------
 
 export default function RehearsalTimer() {
+  const router = useRouter();
+
   // -- State ----------------------------------------------------------------
 
   const [segments, setSegments] = useState<Segment[]>(() =>
@@ -187,6 +190,31 @@ export default function RehearsalTimer() {
       localStorage.setItem(DARK_KEY, String(dark));
     } catch {}
   }, [dark]);
+
+  // Auto-load from ?load=ID query parameter
+  useEffect(() => {
+    const loadId = router.query.load;
+    if (!loadId || !toolData.isLoggedIn) return;
+    fetch(`/api/tool-data?toolType=timer`)
+      .then((r) => r.json())
+      .then((data) => {
+        const items = data.items || [];
+        const target = items.find((item: any) => item.id === Number(loadId));
+        if (target) {
+          const parsed = typeof target.data === "string" ? JSON.parse(target.data) : target.data;
+          if (parsed?.segments) {
+            const segs = toSegments(parsed.segments);
+            setSegments(segs);
+            setRunning(false);
+            setStarted(false);
+            setCurrentIdx(0);
+            if (segs.length > 0) setRemainSec(segs[0].durationMin * 60);
+            setEditingCustom(false);
+          }
+        }
+      })
+      .catch(() => {});
+  }, [router.query.load, toolData.isLoggedIn]);
 
   // -- Timer logic ----------------------------------------------------------
 

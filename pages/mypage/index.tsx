@@ -6,8 +6,8 @@ import Layout from '@/components/Layout';
 import Seo from '@/components/seo';
 import { prisma } from '@/lib/prisma';
 import Link from 'next/link';
-import { useState } from 'react';
-import { FaUser, FaCommentDots, FaTrash, FaExclamationTriangle, FaHeart, FaPen, FaTheaterMasks } from 'react-icons/fa';
+import { useState, useEffect, useCallback } from 'react';
+import { FaUser, FaCommentDots, FaTrash, FaExclamationTriangle, FaHeart, FaPen, FaTheaterMasks, FaCalendarAlt, FaClock } from 'react-icons/fa';
 
 interface Props {
   user: {
@@ -39,11 +39,55 @@ interface Props {
   }>;
 }
 
+interface SavedToolDataItem {
+  id: number;
+  name: string;
+  data: any;
+  updatedAt: string;
+}
+
 export default function MyPage({ user, stats, recentComments, favoriteCount, favoritePosts }: Props) {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [deleteConfirmText, setDeleteConfirmText] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState('');
+
+  // Saved tool data
+  const [savedSchedules, setSavedSchedules] = useState<SavedToolDataItem[]>([]);
+  const [savedTimers, setSavedTimers] = useState<SavedToolDataItem[]>([]);
+  const [toolDataLoading, setToolDataLoading] = useState(true);
+
+  useEffect(() => {
+    Promise.all([
+      fetch('/api/tool-data?toolType=schedule').then(r => r.json()).catch(() => ({ items: [] })),
+      fetch('/api/tool-data?toolType=timer').then(r => r.json()).catch(() => ({ items: [] })),
+    ]).then(([scheduleData, timerData]) => {
+      setSavedSchedules((scheduleData.items || []).map((item: any) => ({
+        ...item,
+        data: typeof item.data === 'string' ? JSON.parse(item.data) : item.data,
+      })));
+      setSavedTimers((timerData.items || []).map((item: any) => ({
+        ...item,
+        data: typeof item.data === 'string' ? JSON.parse(item.data) : item.data,
+      })));
+      setToolDataLoading(false);
+    });
+  }, []);
+
+  const handleDeleteToolData = useCallback(async (id: number, type: 'schedule' | 'timer') => {
+    try {
+      const res = await fetch(`/api/tool-data?id=${id}`, { method: 'DELETE' });
+      if (res.ok) {
+        if (type === 'schedule') {
+          setSavedSchedules(prev => prev.filter(s => s.id !== id));
+        } else {
+          setSavedTimers(prev => prev.filter(s => s.id !== id));
+        }
+      }
+    } catch {
+      // ignore
+    }
+  }, []);
 
   const handleDeleteAccount = async () => {
     if (deleteConfirmText !== '削除する') return;
@@ -187,6 +231,100 @@ export default function MyPage({ user, stats, recentComments, favoriteCount, fav
                 </li>
               ))}
             </ul>
+          )}
+        </div>
+
+        {/* 保存したツールデータ */}
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+          <h3 className="text-lg font-bold mb-4">保存したツールデータ</h3>
+          {toolDataLoading ? (
+            <p className="text-sm text-gray-400">読み込み中...</p>
+          ) : savedSchedules.length === 0 && savedTimers.length === 0 ? (
+            <p className="text-sm text-gray-500">保存したデータはありません</p>
+          ) : (
+            <div className="space-y-4">
+              {/* Schedules */}
+              {savedSchedules.length > 0 && (
+                <div>
+                  <h4 className="text-sm font-semibold text-gray-700 flex items-center gap-1.5 mb-2">
+                    <FaCalendarAlt className="text-gray-400" />
+                    スケジュール
+                  </h4>
+                  <ul className="space-y-2">
+                    {savedSchedules.map((item) => (
+                      <li key={item.id} className="flex items-center justify-between border border-gray-100 rounded-lg px-3 py-2 group">
+                        <div className="flex-1 min-w-0 mr-2">
+                          <span className="text-sm font-medium text-gray-800">{item.name}</span>
+                          <p className="text-xs text-gray-400 mt-0.5">
+                            {new Date(item.updatedAt).toLocaleDateString('ja-JP')}
+                            {item.data?.performanceDate && ` / 本番: ${item.data.performanceDate}`}
+                          </p>
+                        </div>
+                        <div className="flex items-center gap-2 flex-shrink-0">
+                          <Link
+                            href={`/tools/schedule-generator?load=${item.id}`}
+                            className="text-xs text-blue-600 hover:underline px-2 py-1"
+                          >
+                            開く
+                          </Link>
+                          <button
+                            onClick={() => handleDeleteToolData(item.id, 'schedule')}
+                            className="text-gray-300 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100 text-xs px-1"
+                            aria-label="削除"
+                          >
+                            <FaTrash />
+                          </button>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {/* Timers */}
+              {savedTimers.length > 0 && (
+                <div>
+                  <h4 className="text-sm font-semibold text-gray-700 flex items-center gap-1.5 mb-2">
+                    <FaClock className="text-gray-400" />
+                    タイマーメニュー
+                  </h4>
+                  <ul className="space-y-2">
+                    {savedTimers.map((item) => {
+                      const segments = item.data?.segments || [];
+                      const totalMin = segments.reduce((s: number, seg: any) => s + (seg.durationMin || 0), 0);
+                      const preview = segments.slice(0, 3).map((seg: any) => seg.name).join('・');
+                      return (
+                        <li key={item.id} className="flex items-center justify-between border border-gray-100 rounded-lg px-3 py-2 group">
+                          <div className="flex-1 min-w-0 mr-2">
+                            <span className="text-sm font-medium text-gray-800">{item.name}</span>
+                            <p className="text-xs text-gray-400 mt-0.5">
+                              {new Date(item.updatedAt).toLocaleDateString('ja-JP')}
+                              {totalMin > 0 && ` / ${totalMin}分`}
+                              {preview && ` / ${preview}${segments.length > 3 ? '...' : ''}`}
+                            </p>
+                          </div>
+                          <div className="flex items-center gap-2 flex-shrink-0">
+                            <Link
+                              href={`/tools/rehearsal-timer?load=${item.id}`}
+                              className="text-xs text-blue-600 hover:underline px-2 py-1"
+                            >
+                              開く
+                            </Link>
+                            <button
+                              onClick={() => handleDeleteToolData(item.id, 'timer')}
+                              className="text-gray-300 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100 text-xs px-1"
+                              aria-label="削除"
+                            >
+                              <FaTrash />
+                            </button>
+                          </div>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+              )}
+            </div>
           )}
         </div>
 

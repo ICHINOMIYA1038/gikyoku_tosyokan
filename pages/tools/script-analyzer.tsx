@@ -1,8 +1,6 @@
 import React, { useState, useMemo, useCallback } from "react";
 import Layout from "@/components/Layout";
 import Seo from "@/components/seo";
-import { useToolData, SavedToolItem } from "@/lib/useToolData";
-import MyDataSection from "@/components/MyDataSection";
 
 // ---- Types ----
 
@@ -161,8 +159,6 @@ export default function ScriptAnalyzerPage() {
   const [newName, setNewName] = useState("");
   const [copied, setCopied] = useState(false);
 
-  const toolData = useToolData("analyzer");
-
   const analysis = useMemo(() => {
     if (!scriptText.trim()) return null;
 
@@ -252,29 +248,6 @@ export default function ScriptAnalyzerPage() {
       setTimeout(() => setCopied(false), 2000);
     });
   }, [analysis]);
-
-  const handleToolDataSave = useCallback(
-    async (name: string) => {
-      return toolData.saveItem(name, {
-        scriptText,
-        manualNames,
-        analysis: analysis
-          ? {
-              characterCount: analysis.stats.length,
-              totalLines: analysis.totalLines,
-              totalChars: analysis.totalChars,
-              stats: analysis.stats,
-            }
-          : null,
-      });
-    },
-    [toolData, scriptText, manualNames, analysis]
-  );
-
-  const handleToolDataLoad = useCallback((item: SavedToolItem) => {
-    if (item.data.scriptText != null) setScriptText(item.data.scriptText);
-    if (Array.isArray(item.data.manualNames)) setManualNames(item.data.manualNames);
-  }, []);
 
   return (
     <Layout>
@@ -369,27 +342,6 @@ export default function ScriptAnalyzerPage() {
             </div>
           )}
         </div>
-
-        {/* My Data */}
-        <MyDataSection
-          isLoggedIn={toolData.isLoggedIn}
-          isLoading={toolData.isLoading}
-          items={toolData.items}
-          fetching={toolData.fetching}
-          saving={toolData.saving}
-          error={toolData.error}
-          onSave={handleToolDataSave}
-          onLoad={handleToolDataLoad}
-          onDelete={toolData.deleteItem}
-          itemLabel="分析"
-          renderItemDetail={(item) => {
-            const d = item.data;
-            if (d?.analysis) {
-              return `${d.analysis.characterCount ?? "?"}人 / ${d.analysis.totalChars?.toLocaleString() ?? "?"}字`;
-            }
-            return null;
-          }}
-        />
 
         {/* Results */}
         {analysis && analysis.stats.length > 0 && (

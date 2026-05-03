@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useCallback, useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import Layout from "@/components/Layout";
 import Seo from "@/components/seo";
 import { useSession } from "next-auth/react";
@@ -225,6 +226,7 @@ function toInputDateString(date: Date): string {
 
 export default function ScheduleGenerator() {
   const { data: session } = useSession();
+  const router = useRouter();
   const defaultPerformanceDate = addDays(new Date(), 56);
 
   const [performanceDate, setPerformanceDate] = useState(
@@ -261,6 +263,27 @@ export default function ScheduleGenerator() {
       })
       .catch(() => {});
   }, [session]);
+
+  // Auto-load from ?load=ID query parameter
+  useEffect(() => {
+    const loadId = router.query.load;
+    if (!loadId || !session?.user) return;
+    fetch(`/api/tool-data?toolType=schedule`)
+      .then((r) => r.json())
+      .then((data) => {
+        const items = data.items || [];
+        const target = items.find((item: any) => item.id === Number(loadId));
+        if (target) {
+          const config: ScheduleConfig =
+            typeof target.data === "string" ? JSON.parse(target.data) : target.data;
+          setPerformanceDate(config.performanceDate);
+          setTotalWeeks(config.totalWeeks);
+          setDaysPerWeek(config.daysPerWeek);
+          setMilestones(config.milestones || []);
+        }
+      })
+      .catch(() => {});
+  }, [router.query.load, session]);
 
   // Generate schedule (always, no button needed)
   const schedule = useMemo((): WeekSchedule[] => {
