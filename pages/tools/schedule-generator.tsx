@@ -345,8 +345,10 @@ export default function ScheduleGenerator() {
     setMilestones((prev) => prev.filter((m) => m.id !== id));
   }, []);
 
+  const [saving, setSaving] = useState(false);
   const handleSave = useCallback(async () => {
-    if (!saveName.trim()) return;
+    if (!saveName.trim() || saving) return;
+    setSaving(true);
     const config: ScheduleConfig = {
       performanceDate,
       totalWeeks,
@@ -378,8 +380,9 @@ export default function ScheduleGenerator() {
     } catch {
       setSaveStatus("保存に失敗しました");
     }
+    setSaving(false);
     setTimeout(() => setSaveStatus(null), 2000);
-  }, [saveName, performanceDate, totalWeeks, daysPerWeek, milestones]);
+  }, [saveName, performanceDate, totalWeeks, daysPerWeek, milestones, saving]);
 
   const handleLoad = useCallback((item: SavedSchedule) => {
     try {
@@ -604,12 +607,12 @@ export default function ScheduleGenerator() {
                   placeholder="スケジュール名"
                   className="border border-gray-200 rounded-lg px-3 py-1.5 text-xs outline-none focus:ring-2 focus:ring-blue-500 w-40"
                   onKeyDown={(e) => {
-                    if (e.key === "Enter") handleSave();
+                    if (e.key === "Enter") { e.preventDefault(); handleSave(); }
                   }}
                 />
                 <button
                   onClick={handleSave}
-                  disabled={!saveName.trim()}
+                  disabled={!saveName.trim() || saving}
                   className="px-3 py-1.5 text-xs bg-gray-800 text-white rounded-lg hover:bg-gray-900 disabled:opacity-40 transition-colors"
                 >
                   保存

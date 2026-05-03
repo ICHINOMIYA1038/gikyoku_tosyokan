@@ -526,7 +526,7 @@ export default function RehearsalTimer() {
                           type="text"
                           value={cloudSaveName}
                           onChange={(e) => setCloudSaveName(e.target.value)}
-                          onKeyDown={(e) => e.key === "Enter" && saveCurrentMenuCloud()}
+                          onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); saveCurrentMenuCloud(); } }}
                           placeholder="メニュー名を入力"
                           className={`flex-1 px-3 py-1.5 rounded-md border text-sm ${
                             dark
