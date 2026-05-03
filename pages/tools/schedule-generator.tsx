@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useCallback } from "react";
+import Link from "next/link";
 import Layout from "@/components/Layout";
 import Seo from "@/components/seo";
 import {
@@ -750,9 +751,9 @@ export default function ScheduleGenerator() {
               <span className="text-gray-400 mt-0.5 shrink-0">5.</span>
               <span>
                 台本探しは{" "}
-                <a href="/" className="text-blue-600 hover:underline">
+                <Link href="/" className="text-blue-600 hover:underline">
                   戯曲図書館のトップページ
-                </a>{" "}
+                </Link>{" "}
                 から。人数・上演時間で検索できます。
               </span>
             </li>
