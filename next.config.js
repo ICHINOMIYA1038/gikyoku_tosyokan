@@ -20,7 +20,7 @@ const nextConfig = {
       "www.geigeki.jp",
     ],
     formats: ['image/avif', 'image/webp'],
-    minimumCacheTTL: 60,
+    minimumCacheTTL: 2592000, // 30日
   },
   experimental: {
     optimizeCss: true,
