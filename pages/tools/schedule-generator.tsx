@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import Layout from "@/components/Layout";
 import Seo from "@/components/seo";
+import ToolsSidebar from "@/components/ToolsSidebar";
 import { useSession } from "next-auth/react";
 import {
   FaCalendarAlt,
@@ -484,7 +485,10 @@ export default function ScheduleGenerator() {
         ]}
       />
 
-      <div className="container mx-auto px-4 py-8 max-w-3xl">
+      <div className="container mx-auto px-4 py-8 max-w-6xl">
+        <div className="flex flex-col lg:flex-row gap-6">
+          <ToolsSidebar currentTool="schedule-generator" />
+          <main className="flex-1 min-w-0 max-w-3xl">
         {/* Header */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center gap-2 text-sm text-gray-400 mb-2">
@@ -937,6 +941,8 @@ export default function ScheduleGenerator() {
               </li>
             </ul>
           )}
+        </div>
+          </main>
         </div>
       </div>
     </Layout>

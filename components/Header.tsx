@@ -26,6 +26,9 @@ export default function Header() {
         >
           概要
         </Link>
+        <Link href="/tools" className="text-theater-neutral-800 hover:text-theater-neutral-600">
+          ツール
+        </Link>
         <Link href="/diary/plot" className="text-theater-neutral-800 hover:text-theater-neutral-600">
           オリジナル作品
         </Link>

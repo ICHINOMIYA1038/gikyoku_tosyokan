@@ -3,6 +3,7 @@ import { GetStaticProps } from "next";
 import Layout from "@/components/Layout";
 import Seo from "@/components/seo";
 import StructuredData from "@/components/StructuredData";
+import ToolsSidebar from "@/components/ToolsSidebar";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 
@@ -145,7 +146,10 @@ export default function PlaytimeEstimator({ referencePlays }: Props) {
         ]}
       />
 
-      <div className="max-w-4xl mx-auto px-4 py-8">
+      <div className="max-w-6xl mx-auto px-4 py-8">
+        <div className="flex flex-col lg:flex-row gap-6">
+          <ToolsSidebar currentTool="playtime-estimator" />
+          <main className="flex-1 min-w-0">
         {/* Header */}
         <div className="mb-8">
           <nav className="text-sm text-gray-500 mb-4">
@@ -153,7 +157,11 @@ export default function PlaytimeEstimator({ referencePlays }: Props) {
               ホーム
             </Link>
             <span className="mx-2">/</span>
-            <span>上演時間見積もりツール</span>
+            <Link href="/tools" className="hover:text-blue-600">
+              演劇ツール
+            </Link>
+            <span className="mx-2">/</span>
+            <span>上演時間見積もり</span>
           </nav>
           <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
             上演時間見積もりツール
@@ -417,6 +425,8 @@ export default function PlaytimeEstimator({ referencePlays }: Props) {
               </div>
             )}
           </div>
+        </div>
+          </main>
         </div>
       </div>
     </Layout>

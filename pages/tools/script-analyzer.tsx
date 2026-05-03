@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useCallback } from "react";
 import Layout from "@/components/Layout";
 import Seo from "@/components/seo";
+import ToolsSidebar from "@/components/ToolsSidebar";
 
 // ---- Types ----
 
@@ -258,7 +259,10 @@ export default function ScriptAnalyzerPage() {
         pageKeywords={["セリフ量", "台本分析", "脚本分析", "セリフ分析", "戯曲", "演劇ツール", "台本ツール"]}
       />
 
-      <div className="container mx-auto px-4 py-8 max-w-4xl">
+      <div className="container mx-auto px-4 py-8 max-w-6xl">
+        <div className="flex flex-col lg:flex-row gap-6">
+          <ToolsSidebar currentTool="script-analyzer" />
+          <main className="flex-1 min-w-0">
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
@@ -599,6 +603,8 @@ export default function ScriptAnalyzerPage() {
               推定発話時間は400字/分で計算しています。実際の上演では演技・間・演出により異なります。
             </p>
           </div>
+        </div>
+          </main>
         </div>
       </div>
     </Layout>

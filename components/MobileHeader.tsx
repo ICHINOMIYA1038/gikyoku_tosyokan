@@ -22,6 +22,7 @@ export default function MobileHeader() {
     { href: "/theater-groups", label: "劇団データベース" },
     { href: "/venues", label: "劇場データベース" },
     { href: "/announcements", label: "上演告知" },
+    { href: "/tools", label: "ツール" },
     { href: "/blog/ja", label: "ブログ" },
     { href: "/support/about", label: "概要" },
     { href: "/support/contact", label: "お問い合わせ" },

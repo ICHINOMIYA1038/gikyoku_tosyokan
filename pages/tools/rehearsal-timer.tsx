@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/router";
 import Layout from "@/components/Layout";
 import Seo from "@/components/seo";
+import ToolsSidebar from "@/components/ToolsSidebar";
 import {
   FaPlay,
   FaPause,
@@ -434,7 +435,10 @@ export default function RehearsalTimer() {
       />
 
       <div className={`min-h-screen ${bg} ${text} transition-colors duration-300`}>
-        <div className="container mx-auto px-4 py-8 max-w-3xl">
+        <div className="container mx-auto px-4 py-8 max-w-6xl">
+          <div className="flex flex-col lg:flex-row gap-6">
+            <ToolsSidebar currentTool="rehearsal-timer" />
+            <main className="flex-1 min-w-0 max-w-3xl">
           {/* Header */}
           <div className="flex items-center justify-between mb-6">
             <h1 className="text-2xl md:text-3xl font-bold">稽古タイマー</h1>
@@ -841,6 +845,8 @@ export default function RehearsalTimer() {
               <li>稽古場での視認性を上げるにはダークモードがおすすめ</li>
             </ol>
           </section>
+            </main>
+          </div>
         </div>
       </div>
     </Layout>
