@@ -635,7 +635,7 @@ export default function ScriptAnalyzerPage() {
           <div className="text-sm text-gray-600 space-y-2">
             <p>
               セリフ量分析ツールは、台本テキストから登場人物ごとのセリフ量を自動で分析するツールです。
-              すべての処理はブラウザ上で行われ、入力テキストがサーバーに送信されることはありません。
+              分析処理はすべてブラウザ上で行われます。「保存」機能を使用した場合のみ、データがサーバーに保存されます。
             </p>
             <p className="font-medium text-gray-700">こんな方におすすめ:</p>
             <ul className="list-disc list-inside space-y-1 text-gray-600">
