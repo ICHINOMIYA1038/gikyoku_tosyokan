@@ -27,14 +27,6 @@ function Home() {
               <p className="text-sm text-gray-500">戯曲図書館 運営者・開発者</p>
               <div className="flex gap-3 mt-2">
                 <a
-                  href="https://twitter.com/adafwgwagwagagw"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sm text-blue-600 hover:underline"
-                >
-                  Twitter (個人)
-                </a>
-                <a
                   href="https://twitter.com/gikyokutosyokan"
                   target="_blank"
                   rel="noopener noreferrer"

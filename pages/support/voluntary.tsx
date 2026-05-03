@@ -23,7 +23,7 @@ function Home() {
         <p> 詳細は応募していただいた際にご説明いたします。</p>
         <p>応募はtwitterのDMにてお待ちしています。</p>
         <div className="text-blue-600 my-5">
-          <Link href="https://twitter.com/adafwgwagwagagw">twitter</Link>
+          <Link href="https://twitter.com/gikyokutosyokan">Twitter（公式）</Link>
         </div>
       </div>
     </SupportLayout>
