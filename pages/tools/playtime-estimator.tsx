@@ -68,7 +68,8 @@ export default function PlaytimeEstimator({ referencePlays }: Props) {
     const directionChars = totalChars - dialogueChars;
 
     const rate = PACE_CONFIG[pace].rate;
-    const estimatedMinutes = Math.round(dialogueChars / rate);
+    const rawMinutes = dialogueChars / rate;
+    const estimatedMinutes = rawMinutes > 0 && rawMinutes < 1 ? 1 : Math.round(rawMinutes);
 
     return {
       totalChars,
@@ -102,7 +103,8 @@ export default function PlaytimeEstimator({ referencePlays }: Props) {
   }, []);
 
   const formatTime = (minutes: number): string => {
-    if (minutes < 60) return `${minutes}分`;
+    if (minutes === 0) return `0分`;
+    if (minutes < 60) return `約${minutes}分`;
     const hours = Math.floor(minutes / 60);
     const mins = minutes % 60;
     if (mins === 0) return `${hours}時間`;
