@@ -7,7 +7,7 @@ import Seo from '@/components/seo';
 import { prisma } from '@/lib/prisma';
 import Link from 'next/link';
 import { useState, useEffect, useCallback } from 'react';
-import { FaUser, FaCommentDots, FaTrash, FaExclamationTriangle, FaHeart, FaPen, FaTheaterMasks, FaCalendarAlt, FaClock } from 'react-icons/fa';
+import { FaUser, FaCommentDots, FaTrash, FaExclamationTriangle, FaHeart, FaPen, FaTheaterMasks, FaCalendarAlt, FaClock, FaArrowRight, FaTools } from 'react-icons/fa';
 
 interface Props {
   user: {
@@ -58,18 +58,40 @@ export default function MyPage({ user, stats, recentComments, favoriteCount, fav
   const [toolDataLoading, setToolDataLoading] = useState(true);
 
   useEffect(() => {
+    const safeParse = (raw: any): any => {
+      // Handle double-stringified JSON: if after parsing we still have a string, parse again
+      if (typeof raw !== 'string') return raw;
+      try {
+        const first = JSON.parse(raw);
+        if (typeof first === 'string') {
+          try { return JSON.parse(first); } catch { return first; }
+        }
+        return first;
+      } catch {
+        return raw;
+      }
+    };
+
     Promise.all([
-      fetch('/api/tool-data?toolType=schedule').then(r => r.json()).catch(() => ({ items: [] })),
-      fetch('/api/tool-data?toolType=timer').then(r => r.json()).catch(() => ({ items: [] })),
+      fetch('/api/tool-data?toolType=schedule').then(r => r.json()).catch((e) => { console.log('[MyPage] schedule fetch error:', e); return { items: [] }; }),
+      fetch('/api/tool-data?toolType=timer').then(r => r.json()).catch((e) => { console.log('[MyPage] timer fetch error:', e); return { items: [] }; }),
     ]).then(([scheduleData, timerData]) => {
-      setSavedSchedules((scheduleData.items || []).map((item: any) => ({
-        ...item,
-        data: typeof item.data === 'string' ? JSON.parse(item.data) : item.data,
-      })));
-      setSavedTimers((timerData.items || []).map((item: any) => ({
-        ...item,
-        data: typeof item.data === 'string' ? JSON.parse(item.data) : item.data,
-      })));
+      console.log('[MyPage] Raw schedule data:', JSON.stringify(scheduleData).slice(0, 500));
+      console.log('[MyPage] Raw timer data:', JSON.stringify(timerData).slice(0, 500));
+
+      const parsedSchedules = (scheduleData.items || []).map((item: any) => {
+        const parsed = safeParse(item.data);
+        console.log('[MyPage] Schedule item:', item.id, item.name, 'dataType:', typeof item.data, 'parsed:', parsed);
+        return { ...item, data: parsed };
+      });
+      const parsedTimers = (timerData.items || []).map((item: any) => {
+        const parsed = safeParse(item.data);
+        console.log('[MyPage] Timer item:', item.id, item.name, 'dataType:', typeof item.data, 'parsed:', parsed);
+        return { ...item, data: parsed };
+      });
+
+      setSavedSchedules(parsedSchedules);
+      setSavedTimers(parsedTimers);
       setToolDataLoading(false);
     });
   }, []);
@@ -234,96 +256,126 @@ export default function MyPage({ user, stats, recentComments, favoriteCount, fav
           )}
         </div>
 
-        {/* 保存したツールデータ */}
+        {/* マイツール */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
-          <h3 className="text-lg font-bold mb-4">保存したツールデータ</h3>
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-bold flex items-center gap-2">
+              <FaTools className="text-gray-400" />
+              マイツール
+            </h3>
+            <Link href="/tools" className="text-sm text-theater-primary-600 hover:underline flex items-center gap-1">
+              ツール一覧を見る <FaArrowRight className="text-xs" />
+            </Link>
+          </div>
           {toolDataLoading ? (
             <p className="text-sm text-gray-400">読み込み中...</p>
           ) : savedSchedules.length === 0 && savedTimers.length === 0 ? (
-            <p className="text-sm text-gray-500">保存したデータはありません</p>
+            <div className="text-center py-6">
+              <p className="text-sm text-gray-500 mb-3">
+                まだ保存したデータはありません。<br />
+                ツールページで作成したスケジュールやタイマーメニューを保存できます。
+              </p>
+              <Link
+                href="/tools"
+                className="inline-flex items-center gap-2 px-4 py-2 bg-theater-primary-50 text-theater-primary-700 rounded-lg text-sm font-medium hover:bg-theater-primary-100 transition-colors"
+              >
+                <FaTools className="text-xs" />
+                ツールページへ
+              </Link>
+            </div>
           ) : (
-            <div className="space-y-4">
-              {/* Schedules */}
-              {savedSchedules.length > 0 && (
-                <div>
-                  <h4 className="text-sm font-semibold text-gray-700 flex items-center gap-1.5 mb-2">
-                    <FaCalendarAlt className="text-gray-400" />
-                    スケジュール
-                  </h4>
-                  <ul className="space-y-2">
-                    {savedSchedules.map((item) => (
-                      <li key={item.id} className="flex items-center justify-between border border-gray-100 rounded-lg px-3 py-2 group">
-                        <div className="flex-1 min-w-0 mr-2">
-                          <span className="text-sm font-medium text-gray-800">{item.name}</span>
-                          <p className="text-xs text-gray-400 mt-0.5">
-                            {new Date(item.updatedAt).toLocaleDateString('ja-JP')}
-                            {item.data?.performanceDate && ` / 本番: ${item.data.performanceDate}`}
-                          </p>
-                        </div>
-                        <div className="flex items-center gap-2 flex-shrink-0">
-                          <Link
-                            href={`/tools/schedule-generator?load=${item.id}`}
-                            className="text-xs text-blue-600 hover:underline px-2 py-1"
-                          >
-                            開く
-                          </Link>
+            <div className="space-y-3">
+              {/* Schedule cards */}
+              {savedSchedules.map((item) => {
+                const perfDate = item.data?.performanceDate;
+                const weeks = item.data?.weeksBefore || item.data?.weeks;
+                const updatedStr = new Date(item.updatedAt).toLocaleDateString('ja-JP', { month: 'numeric', day: 'numeric' });
+                return (
+                  <div key={`schedule-${item.id}`} className="border border-gray-200 rounded-lg pl-0 overflow-hidden group">
+                    <div className="flex border-l-4 border-blue-400">
+                      <div className="flex-1 p-4">
+                        <div className="flex items-start justify-between">
+                          <div className="flex items-center gap-2 min-w-0">
+                            <FaCalendarAlt className="text-blue-500 flex-shrink-0" />
+                            <span className="font-semibold text-gray-900 truncate">{item.name}</span>
+                          </div>
                           <button
                             onClick={() => handleDeleteToolData(item.id, 'schedule')}
-                            className="text-gray-300 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100 text-xs px-1"
+                            className="text-gray-300 hover:text-red-500 transition-colors ml-2 flex-shrink-0 opacity-0 group-hover:opacity-100 sm:opacity-100"
                             aria-label="削除"
+                            title="削除"
                           >
-                            <FaTrash />
+                            <FaTrash className="text-xs" />
                           </button>
                         </div>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
+                        <div className="mt-1.5 text-sm text-gray-600 flex flex-wrap gap-x-4 gap-y-0.5">
+                          {perfDate && <span>本番日: {perfDate}</span>}
+                          {weeks && <span>期間: {weeks}週間</span>}
+                        </div>
+                        <div className="mt-2 flex items-center justify-between">
+                          <span className="text-xs text-gray-400">最終更新: {updatedStr}</span>
+                          <Link
+                            href={`/tools/schedule-generator?load=${item.id}`}
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 text-blue-700 rounded-md text-sm font-medium hover:bg-blue-100 transition-colors"
+                          >
+                            スケジュールを開く <FaArrowRight className="text-xs" />
+                          </Link>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
 
-              {/* Timers */}
-              {savedTimers.length > 0 && (
-                <div>
-                  <h4 className="text-sm font-semibold text-gray-700 flex items-center gap-1.5 mb-2">
-                    <FaClock className="text-gray-400" />
-                    タイマーメニュー
-                  </h4>
-                  <ul className="space-y-2">
-                    {savedTimers.map((item) => {
-                      const segments = item.data?.segments || [];
-                      const totalMin = segments.reduce((s: number, seg: any) => s + (seg.durationMin || 0), 0);
-                      const preview = segments.slice(0, 3).map((seg: any) => seg.name).join('・');
-                      return (
-                        <li key={item.id} className="flex items-center justify-between border border-gray-100 rounded-lg px-3 py-2 group">
-                          <div className="flex-1 min-w-0 mr-2">
-                            <span className="text-sm font-medium text-gray-800">{item.name}</span>
-                            <p className="text-xs text-gray-400 mt-0.5">
-                              {new Date(item.updatedAt).toLocaleDateString('ja-JP')}
-                              {totalMin > 0 && ` / ${totalMin}分`}
-                              {preview && ` / ${preview}${segments.length > 3 ? '...' : ''}`}
-                            </p>
+              {/* Timer cards */}
+              {savedTimers.map((item) => {
+                const segments = item.data?.segments || item.data?.menus || [];
+                const totalMin = segments.reduce((s: number, seg: any) => s + (seg.durationMin || seg.duration || 0), 0);
+                const segmentPreview = segments.slice(0, 4).map((seg: any) => {
+                  const dur = seg.durationMin || seg.duration || 0;
+                  return `${seg.name || seg.label || '?'}(${dur}分)`;
+                });
+                const updatedStr = new Date(item.updatedAt).toLocaleDateString('ja-JP', { month: 'numeric', day: 'numeric' });
+                return (
+                  <div key={`timer-${item.id}`} className="border border-gray-200 rounded-lg pl-0 overflow-hidden group">
+                    <div className="flex border-l-4 border-orange-400">
+                      <div className="flex-1 p-4">
+                        <div className="flex items-start justify-between">
+                          <div className="flex items-center gap-2 min-w-0">
+                            <FaClock className="text-orange-500 flex-shrink-0" />
+                            <span className="font-semibold text-gray-900 truncate">{item.name}</span>
                           </div>
-                          <div className="flex items-center gap-2 flex-shrink-0">
-                            <Link
-                              href={`/tools/rehearsal-timer?load=${item.id}`}
-                              className="text-xs text-blue-600 hover:underline px-2 py-1"
-                            >
-                              開く
-                            </Link>
-                            <button
-                              onClick={() => handleDeleteToolData(item.id, 'timer')}
-                              className="text-gray-300 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100 text-xs px-1"
-                              aria-label="削除"
-                            >
-                              <FaTrash />
-                            </button>
-                          </div>
-                        </li>
-                      );
-                    })}
-                  </ul>
-                </div>
-              )}
+                          <button
+                            onClick={() => handleDeleteToolData(item.id, 'timer')}
+                            className="text-gray-300 hover:text-red-500 transition-colors ml-2 flex-shrink-0 opacity-0 group-hover:opacity-100 sm:opacity-100"
+                            aria-label="削除"
+                            title="削除"
+                          >
+                            <FaTrash className="text-xs" />
+                          </button>
+                        </div>
+                        {segmentPreview.length > 0 && (
+                          <p className="mt-1.5 text-sm text-gray-600">
+                            {segmentPreview.join(' → ')}{segments.length > 4 ? ' …' : ''}
+                          </p>
+                        )}
+                        <div className="mt-2 flex items-center justify-between">
+                          <span className="text-xs text-gray-400">
+                            {totalMin > 0 && <span className="mr-3">合計: {totalMin}分</span>}
+                            最終更新: {updatedStr}
+                          </span>
+                          <Link
+                            href={`/tools/rehearsal-timer?load=${item.id}`}
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-orange-50 text-orange-700 rounded-md text-sm font-medium hover:bg-orange-100 transition-colors"
+                          >
+                            タイマーを開く <FaArrowRight className="text-xs" />
+                          </Link>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           )}
         </div>
