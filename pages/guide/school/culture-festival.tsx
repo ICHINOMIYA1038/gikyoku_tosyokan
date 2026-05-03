@@ -20,8 +20,8 @@ export default function CultureFestivalGuide() {
   return (
     <Layout>
       <Seo
-        pageTitle="文化祭演劇を成功させる完全ガイド | 準備から本番まで"
-        pageDescription="文化祭での演劇を成功させるための8週間スケジュール、予算管理、練習方法を詳しく解説。初めてでも安心の実践ガイド。"
+        pageTitle="文化祭の演劇台本おすすめ15選｜8週間スケジュール・予算・練習法まで完全ガイド"
+        pageDescription="文化祭で演劇を成功させたい高校生・中学生必見！台本の選び方、8週間の準備スケジュール、3万円の予算配分、効率的な練習方法をすべて解説。初心者でも本番で失敗しない実践ガイド。"
         pagePath="/guide/school/culture-festival"
         pageType="article"
       />

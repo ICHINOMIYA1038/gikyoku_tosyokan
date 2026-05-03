@@ -273,6 +273,48 @@ export default function Home({ news, authors, posts, categories, blogPosts, tren
           </div>
         </section>
 
+        {/* 戯曲賞・劇場データベースセクション */}
+        <section className="bg-gray-50 py-8 px-4">
+          <div className="max-w-6xl mx-auto">
+            <h2 className="text-2xl md:text-3xl font-bold text-center mb-3">
+              もっと演劇を知る
+            </h2>
+            <p className="text-gray-600 text-center mb-6 text-sm">
+              戯曲賞の受賞作品や全国の劇場情報を調べられます
+            </p>
+            <div className="grid md:grid-cols-2 gap-6">
+              <Link href="/awards" className="block group">
+                <div className="bg-gradient-to-r from-yellow-50 to-amber-50 p-5 rounded-xl border border-yellow-100 hover:shadow-lg transition-all hover:-translate-y-1">
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="w-10 h-10 bg-yellow-100 rounded-full flex items-center justify-center">
+                      <span className="text-lg">{"\uD83C\uDFC6"}</span>
+                    </div>
+                    <h3 className="text-xl font-bold text-gray-800 group-hover:text-yellow-700 transition-colors">戯曲賞データベース</h3>
+                  </div>
+                  <p className="text-sm text-gray-600 mb-3">
+                    岸田國士戯曲賞、鶴屋南北戯曲賞など主要な戯曲賞の受賞作品・最終候補作を一覧で検索できます。
+                  </p>
+                  <span className="text-sm text-yellow-700 font-medium">受賞作品を見る {"\u2192"}</span>
+                </div>
+              </Link>
+              <Link href="/venues" className="block group">
+                <div className="bg-gradient-to-r from-teal-50 to-cyan-50 p-5 rounded-xl border border-teal-100 hover:shadow-lg transition-all hover:-translate-y-1">
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="w-10 h-10 bg-teal-100 rounded-full flex items-center justify-center">
+                      <span className="text-lg">{"\uD83C\uDFED"}</span>
+                    </div>
+                    <h3 className="text-xl font-bold text-gray-800 group-hover:text-teal-700 transition-colors">劇場データベース</h3>
+                  </div>
+                  <p className="text-sm text-gray-600 mb-3">
+                    全国の劇場・ホールの座席数、アクセス、設備情報を検索。公演会場選びに役立ちます。
+                  </p>
+                  <span className="text-sm text-teal-700 font-medium">劇場を探す {"\u2192"}</span>
+                </div>
+              </Link>
+            </div>
+          </div>
+        </section>
+
         <ContentSection posts={posts} authors={authors} categories={categories} />
         
         {/* FAQセクション */}

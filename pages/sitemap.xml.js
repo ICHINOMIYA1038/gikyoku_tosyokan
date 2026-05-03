@@ -2,7 +2,7 @@ import { PrismaClient } from "@prisma/client";
 
 const EXTERNAL_DATA_URL = "https://gikyokutosyokan.com";
 const prisma = new PrismaClient();
-function generateSiteMap(posts, authors, categories, blogPosts, studentGroups, shogekijoGroups, venues) {
+function generateSiteMap(posts, authors, categories, blogPosts, studentGroups, shogekijoGroups, venues, awardSlugs) {
   const currentDate = new Date().toISOString();
   
   return `<?xml version="1.0" encoding="UTF-8"?>
@@ -259,6 +259,46 @@ function generateSiteMap(posts, authors, categories, blogPosts, studentGroups, s
        })
        .join("")}
 
+     <!-- 戯曲賞ページ -->
+     <url>
+       <loc>${EXTERNAL_DATA_URL}/awards</loc>
+       <lastmod>${currentDate}</lastmod>
+       <changefreq>monthly</changefreq>
+       <priority>0.8</priority>
+     </url>
+     ${awardSlugs
+       .map((slug) => {
+         return `
+       <url>
+           <loc>${EXTERNAL_DATA_URL}/awards/${slug}</loc>
+           <lastmod>${currentDate}</lastmod>
+           <changefreq>monthly</changefreq>
+           <priority>0.7</priority>
+       </url>
+     `;
+       })
+       .join("")}
+
+     <!-- 追加検索ランディングページ -->
+     <url>
+       <loc>${EXTERNAL_DATA_URL}/search/futarishibai</loc>
+       <lastmod>${currentDate}</lastmod>
+       <changefreq>weekly</changefreq>
+       <priority>0.8</priority>
+     </url>
+     <url>
+       <loc>${EXTERNAL_DATA_URL}/search/bunkasai</loc>
+       <lastmod>${currentDate}</lastmod>
+       <changefreq>weekly</changefreq>
+       <priority>0.8</priority>
+     </url>
+     <url>
+       <loc>${EXTERNAL_DATA_URL}/search/short-plays</loc>
+       <lastmod>${currentDate}</lastmod>
+       <changefreq>weekly</changefreq>
+       <priority>0.8</priority>
+     </url>
+
      <!-- サポートページ -->
      <url>
        <loc>${`${EXTERNAL_DATA_URL}/support/about`}</loc>
@@ -356,8 +396,11 @@ export async function getServerSideProps({ res }) {
     select: { slug: true, updatedAt: true },
   });
 
+  // 戯曲賞スラッグ（PostAwardのawardNameからユニーク値を取得）
+  const awardSlugs = ['kishida', 'tsuruyaNanboku', 'gekisakka-shinjin', 'oms', 'yomiuri', 'aaf'];
+
   // We generate the XML sitemap with the data
-  const sitemap = generateSiteMap(posts, authors, categories, blogPosts, studentGroups, shogekijoGroups, venues);
+  const sitemap = generateSiteMap(posts, authors, categories, blogPosts, studentGroups, shogekijoGroups, venues, awardSlugs);
   res.statusCode = 200;
   res.setHeader("Cache-Control", "s-maxage=86400, stale-while-revalidate"); // 24時間のキャッシュ
   res.setHeader("Content-Type", "text/xml");
