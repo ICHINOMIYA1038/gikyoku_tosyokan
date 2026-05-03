@@ -543,7 +543,7 @@ export async function getStaticProps(context: any) {
       props: {
         category: slimCategory,
       },
-      revalidate: 86400,
+      revalidate: 604800,
     };
   } catch {
     return {

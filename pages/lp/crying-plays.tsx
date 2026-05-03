@@ -246,7 +246,7 @@ export const getStaticProps: GetStaticProps = async () => {
         posts: JSON.parse(JSON.stringify(posts)),
         totalCount: posts.length,
       },
-      revalidate: 86400,
+      revalidate: 604800,
     };
   } catch (error) {
     console.error("Error fetching crying plays:", error);

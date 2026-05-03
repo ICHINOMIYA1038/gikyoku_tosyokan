@@ -311,7 +311,7 @@ export const getStaticProps: GetStaticProps = async () => {
         posts: JSON.parse(JSON.stringify(filtered)),
         totalCount: filtered.length,
       },
-      revalidate: 86400,
+      revalidate: 604800,
     };
   } catch (error) {
     console.error("Error fetching two-person plays:", error);

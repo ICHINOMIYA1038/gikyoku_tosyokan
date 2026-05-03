@@ -508,6 +508,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       topAuthors,
       yearGroups,
     },
-    revalidate: 86400,
+    revalidate: 604800,
   };
 };

@@ -242,6 +242,6 @@ export const getStaticProps: GetStaticProps = async () => {
 
   return {
     props: { awards, totalRecords },
-    revalidate: 86400,
+    revalidate: 604800,
   };
 };
