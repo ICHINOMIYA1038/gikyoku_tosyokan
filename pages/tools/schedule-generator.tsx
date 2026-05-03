@@ -1,7 +1,8 @@
-import React, { useState, useMemo, useCallback } from "react";
+import React, { useState, useMemo, useCallback, useEffect } from "react";
 import Link from "next/link";
 import Layout from "@/components/Layout";
 import Seo from "@/components/seo";
+import { useSession } from "next-auth/react";
 import {
   FaCalendarAlt,
   FaCopy,
@@ -11,6 +12,8 @@ import {
   FaTheaterMasks,
   FaChevronDown,
   FaChevronUp,
+  FaSave,
+  FaTrash,
 } from "react-icons/fa";
 
 // ---------- Types ----------
@@ -18,7 +21,7 @@ import {
 interface Milestone {
   id: string;
   name: string;
-  weekIndex: number; // 0-based from start
+  weekIndex: number;
 }
 
 interface WeekSchedule {
@@ -29,6 +32,20 @@ interface WeekSchedule {
   tasks: string[];
   tips: string;
   milestones: string[];
+}
+
+interface SavedSchedule {
+  id: number;
+  name: string;
+  data: string;
+  updatedAt: string;
+}
+
+interface ScheduleConfig {
+  performanceDate: string;
+  totalWeeks: number;
+  daysPerWeek: number;
+  milestones: Milestone[];
 }
 
 // ---------- Constants ----------
@@ -96,10 +113,10 @@ function getPhases(totalWeeks: number) {
       { phase: "本番", weeks: 1 },
     ];
   }
-  // 9-12 weeks
   const extraWeeks = totalWeeks - 8;
   const readWeeks = 2 + Math.floor(extraWeeks / 3);
-  const blockWeeks = 2 + Math.floor((extraWeeks - Math.floor(extraWeeks / 3)) / 2);
+  const blockWeeks =
+    2 + Math.floor((extraWeeks - Math.floor(extraWeeks / 3)) / 2);
   const runWeeks = totalWeeks - readWeeks - blockWeeks - 2;
   return [
     { phase: "読み合わせ（台本読み）", weeks: readWeeks },
@@ -148,11 +165,7 @@ const PHASE_TASKS: Record<string, string[]> = {
     "音響・照明の最終チェック",
     "本番！",
   ],
-  "本番": [
-    "開場準備・最終確認",
-    "本番上演",
-    "片付け・打ち上げ",
-  ],
+  "本番": ["開場準備・最終確認", "本番上演", "片付け・打ち上げ"],
 };
 
 const PHASE_TIPS: Record<string, string> = {
@@ -170,30 +183,19 @@ const PHASE_TIPS: Record<string, string> = {
     "本番と全く同じ条件で行いましょう。ミスがあっても止めずに続けること。",
   "ゲネプロ・本番":
     "本番と同じ条件で通し、ミスがあっても止めない。本番は楽しんで！",
-  "本番":
-    "緊張は当然のこと。仲間を信じて、楽しんで演じましょう！",
+  "本番": "緊張は当然のこと。仲間を信じて、楽しんで演じましょう！",
 };
 
-const PHASE_COLORS: Record<string, string> = {
-  "読み合わせ（台本読み）": "bg-blue-50 border-blue-300",
-  "読み合わせ": "bg-blue-50 border-blue-300",
-  "立ち稽古（ブロッキング）": "bg-yellow-50 border-yellow-300",
-  "立ち稽古": "bg-yellow-50 border-yellow-300",
-  "通し稽古": "bg-green-50 border-green-300",
-  "ゲネプロ・リハーサル": "bg-orange-50 border-orange-300",
-  "ゲネプロ・本番": "bg-orange-50 border-orange-300",
-  "本番": "bg-red-50 border-red-300",
-};
-
-const PHASE_BADGE_COLORS: Record<string, string> = {
-  "読み合わせ（台本読み）": "bg-blue-100 text-blue-800",
-  "読み合わせ": "bg-blue-100 text-blue-800",
-  "立ち稽古（ブロッキング）": "bg-yellow-100 text-yellow-800",
-  "立ち稽古": "bg-yellow-100 text-yellow-800",
-  "通し稽古": "bg-green-100 text-green-800",
-  "ゲネプロ・リハーサル": "bg-orange-100 text-orange-800",
-  "ゲネプロ・本番": "bg-orange-100 text-orange-800",
-  "本番": "bg-red-100 text-red-800",
+// Simplified: left border color per phase, muted tones
+const PHASE_BORDER: Record<string, string> = {
+  "読み合わせ（台本読み）": "border-l-blue-400",
+  "読み合わせ": "border-l-blue-400",
+  "立ち稽古（ブロッキング）": "border-l-amber-400",
+  "立ち稽古": "border-l-amber-400",
+  "通し稽古": "border-l-emerald-400",
+  "ゲネプロ・リハーサル": "border-l-orange-400",
+  "ゲネプロ・本番": "border-l-orange-400",
+  "本番": "border-l-red-400",
 };
 
 // ---------- Helpers ----------
@@ -222,20 +224,45 @@ function toInputDateString(date: Date): string {
 // ---------- Component ----------
 
 export default function ScheduleGenerator() {
-  // Default: 8 weeks from today
+  const { data: session } = useSession();
   const defaultPerformanceDate = addDays(new Date(), 56);
+
   const [performanceDate, setPerformanceDate] = useState(
     toInputDateString(defaultPerformanceDate)
   );
   const [totalWeeks, setTotalWeeks] = useState(8);
   const [daysPerWeek, setDaysPerWeek] = useState(3);
   const [milestones, setMilestones] = useState<Milestone[]>([]);
+  const [copied, setCopied] = useState(false);
+
+  // Collapsed sections
+  const [showAdvanced, setShowAdvanced] = useState(false);
+  const [showDailyMenu, setShowDailyMenu] = useState(false);
+  const [showMilestones, setShowMilestones] = useState(false);
+  const [showTips, setShowTips] = useState(false);
+
+  // Milestone form
   const [newMilestoneName, setNewMilestoneName] = useState("");
   const [newMilestoneWeek, setNewMilestoneWeek] = useState(1);
-  const [copied, setCopied] = useState(false);
-  const [showDailyMenu, setShowDailyMenu] = useState(false);
-  const [showMilestoneForm, setShowMilestoneForm] = useState(false);
 
+  // Save/load state
+  const [savedSchedules, setSavedSchedules] = useState<SavedSchedule[]>([]);
+  const [saveName, setSaveName] = useState("");
+  const [showSaveForm, setShowSaveForm] = useState(false);
+  const [saveStatus, setSaveStatus] = useState<string | null>(null);
+
+  // Load saved schedules on mount (if logged in)
+  useEffect(() => {
+    if (!session?.user) return;
+    fetch("/api/tool-data?toolType=schedule")
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.items) setSavedSchedules(data.items);
+      })
+      .catch(() => {});
+  }, [session]);
+
+  // Generate schedule (always, no button needed)
   const schedule = useMemo((): WeekSchedule[] => {
     const perfDate = new Date(performanceDate + "T00:00:00");
     if (isNaN(perfDate.getTime())) return [];
@@ -281,7 +308,6 @@ export default function ScheduleGenerator() {
   const addPresetMilestone = useCallback(
     (name: string) => {
       const id = `ms-${Date.now()}-${Math.random()}`;
-      // Place at a reasonable default week
       const defaultWeek = Math.max(1, totalWeeks - 2);
       setMilestones((prev) => [
         ...prev,
@@ -293,6 +319,64 @@ export default function ScheduleGenerator() {
 
   const removeMilestone = useCallback((id: string) => {
     setMilestones((prev) => prev.filter((m) => m.id !== id));
+  }, []);
+
+  const handleSave = useCallback(async () => {
+    if (!saveName.trim()) return;
+    const config: ScheduleConfig = {
+      performanceDate,
+      totalWeeks,
+      daysPerWeek,
+      milestones,
+    };
+    try {
+      const res = await fetch("/api/tool-data", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          toolType: "schedule",
+          name: saveName.trim(),
+          data: config,
+        }),
+      });
+      const json = await res.json();
+      if (res.ok) {
+        setSaveStatus(json.action === "updated" ? "更新しました" : "保存しました");
+        setSaveName("");
+        setShowSaveForm(false);
+        // Refresh list
+        const listRes = await fetch("/api/tool-data?toolType=schedule");
+        const listData = await listRes.json();
+        if (listData.items) setSavedSchedules(listData.items);
+      } else {
+        setSaveStatus("保存に失敗しました");
+      }
+    } catch {
+      setSaveStatus("保存に失敗しました");
+    }
+    setTimeout(() => setSaveStatus(null), 2000);
+  }, [saveName, performanceDate, totalWeeks, daysPerWeek, milestones]);
+
+  const handleLoad = useCallback((item: SavedSchedule) => {
+    try {
+      const config: ScheduleConfig =
+        typeof item.data === "string" ? JSON.parse(item.data) : item.data;
+      setPerformanceDate(config.performanceDate);
+      setTotalWeeks(config.totalWeeks);
+      setDaysPerWeek(config.daysPerWeek);
+      setMilestones(config.milestones || []);
+    } catch {
+      // ignore parse errors
+    }
+  }, []);
+
+  const handleDelete = useCallback(async (id: number) => {
+    try {
+      await fetch(`/api/tool-data?id=${id}`, { method: "DELETE" });
+      setSavedSchedules((prev) => prev.filter((s) => s.id !== id));
+    } catch {
+      // ignore
+    }
   }, []);
 
   const handleCopyToClipboard = useCallback(async () => {
@@ -323,14 +407,15 @@ export default function ScheduleGenerator() {
       lines.push(`${item.name}: ${item.minutes}分 … ${item.description}`);
     }
     lines.push("");
-    lines.push("作成: 戯曲図書館 https://gikyokutosyokan.com/tools/schedule-generator");
+    lines.push(
+      "作成: 戯曲図書館 https://gikyokutosyokan.com/tools/schedule-generator"
+    );
 
     try {
       await navigator.clipboard.writeText(lines.join("\n"));
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {
-      // Fallback
       const textarea = document.createElement("textarea");
       textarea.value = lines.join("\n");
       document.body.appendChild(textarea);
@@ -343,6 +428,20 @@ export default function ScheduleGenerator() {
   }, [schedule, performanceDate, totalWeeks, daysPerWeek]);
 
   const totalMinutes = DAILY_MENU.reduce((sum, item) => sum + item.minutes, 0);
+
+  // Group consecutive weeks by phase for cleaner timeline
+  const phaseGroups = useMemo(() => {
+    const groups: { phase: string; weeks: WeekSchedule[] }[] = [];
+    for (const week of schedule) {
+      const last = groups[groups.length - 1];
+      if (last && last.phase === week.phase) {
+        last.weeks.push(week);
+      } else {
+        groups.push({ phase: week.phase, weeks: [week] });
+      }
+    }
+    return groups;
+  }, [schedule]);
 
   return (
     <Layout>
@@ -362,148 +461,327 @@ export default function ScheduleGenerator() {
         ]}
       />
 
-      <div className="container mx-auto px-4 py-8 max-w-4xl">
+      <div className="container mx-auto px-4 py-8 max-w-3xl">
         {/* Header */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center gap-2 text-sm text-gray-500 mb-2">
+          <div className="inline-flex items-center gap-2 text-sm text-gray-400 mb-2">
             <FaTheaterMasks />
             <span>演劇ツール</span>
           </div>
           <h1 className="text-2xl md:text-3xl font-bold mb-2">
-            文化祭演劇スケジュール表ジェネレーター
+            演劇スケジュール作成
           </h1>
-          <p className="text-gray-600 text-sm md:text-base">
-            本番日から逆算して、週ごとの稽古スケジュールを自動作成します
+          <p className="text-gray-500 text-sm">
+            本番日を選ぶだけで稽古スケジュールを自動生成
           </p>
         </div>
 
-        {/* Input Form */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 md:p-6 mb-8">
-          <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
-            <FaCalendarAlt className="text-gray-600" />
-            基本設定
-          </h2>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
-            {/* Performance Date */}
-            <div>
-              <label
-                htmlFor="perfDate"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
-                本番日
-              </label>
-              <input
-                id="perfDate"
-                type="date"
-                value={performanceDate}
-                onChange={(e) => setPerformanceDate(e.target.value)}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-              />
-            </div>
-
-            {/* Total Weeks */}
-            <div>
-              <label
-                htmlFor="totalWeeks"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
-                準備期間（週）
-              </label>
-              <select
-                id="totalWeeks"
-                value={totalWeeks}
-                onChange={(e) => setTotalWeeks(Number(e.target.value))}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-              >
-                {Array.from({ length: 9 }, (_, i) => i + 4).map((w) => (
-                  <option key={w} value={w}>
-                    {w}週間
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* Days Per Week */}
-            <div>
-              <label
-                htmlFor="daysPerWeek"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
-                稽古日数 / 週
-              </label>
-              <select
-                id="daysPerWeek"
-                value={daysPerWeek}
-                onChange={(e) => setDaysPerWeek(Number(e.target.value))}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-              >
-                {[2, 3, 4, 5].map((d) => (
-                  <option key={d} value={d}>
-                    週{d}日
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-
-          {/* Summary info */}
-          <div className="mt-4 p-3 bg-gray-50 rounded-lg text-sm text-gray-600">
-            合計稽古日数の目安:{" "}
-            <span className="font-bold text-gray-800">
-              約{totalWeeks * daysPerWeek}日
-            </span>
-            {"　"}| 1日あたり{" "}
-            <span className="font-bold text-gray-800">{totalMinutes}分</span> の
-            稽古メニュー
-          </div>
-        </div>
-
-        {/* Milestones */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 md:p-6 mb-8">
-          <button
-            onClick={() => setShowMilestoneForm(!showMilestoneForm)}
-            className="flex items-center justify-between w-full text-left"
+        {/* Main input: just the date */}
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5 mb-6">
+          <label
+            htmlFor="perfDate"
+            className="block text-sm font-medium text-gray-700 mb-2"
           >
-            <h2 className="text-lg font-bold flex items-center gap-2">
-              <FaPlus className="text-gray-600 text-sm" />
-              マイルストーンを追加（任意）
-            </h2>
-            {showMilestoneForm ? (
-              <FaChevronUp className="text-gray-400" />
+            <FaCalendarAlt className="inline mr-1.5 text-gray-400" />
+            本番日を選択
+          </label>
+          <input
+            id="perfDate"
+            type="date"
+            value={performanceDate}
+            onChange={(e) => setPerformanceDate(e.target.value)}
+            className="w-full border border-gray-300 rounded-lg px-4 py-3 text-base focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+          />
+          <p className="mt-2 text-xs text-gray-400">
+            {totalWeeks}週間 / 週{daysPerWeek}日 = 約
+            {totalWeeks * daysPerWeek}日の稽古
+          </p>
+
+          {/* Advanced settings (collapsed) */}
+          <button
+            onClick={() => setShowAdvanced(!showAdvanced)}
+            className="mt-3 text-xs text-gray-400 hover:text-gray-600 flex items-center gap-1 transition-colors"
+          >
+            詳細設定
+            {showAdvanced ? (
+              <FaChevronUp className="text-[10px]" />
             ) : (
-              <FaChevronDown className="text-gray-400" />
+              <FaChevronDown className="text-[10px]" />
             )}
           </button>
 
-          {showMilestoneForm && (
-            <div className="mt-4">
-              {/* Preset buttons */}
-              <div className="mb-4">
-                <p className="text-xs text-gray-500 mb-2">
-                  よく使うマイルストーン（クリックで追加）
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  {MILESTONE_PRESETS.map((preset) => (
-                    <button
-                      key={preset}
-                      onClick={() => addPresetMilestone(preset)}
-                      className="text-xs px-3 py-1.5 rounded-full border border-gray-300 hover:bg-gray-100 transition-colors"
-                    >
-                      + {preset}
-                    </button>
+          {showAdvanced && (
+            <div className="mt-3 pt-3 border-t border-gray-100 grid grid-cols-2 gap-4">
+              <div>
+                <label
+                  htmlFor="totalWeeks"
+                  className="block text-xs text-gray-500 mb-1"
+                >
+                  準備期間
+                </label>
+                <select
+                  id="totalWeeks"
+                  value={totalWeeks}
+                  onChange={(e) => setTotalWeeks(Number(e.target.value))}
+                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  {Array.from({ length: 9 }, (_, i) => i + 4).map((w) => (
+                    <option key={w} value={w}>
+                      {w}週間
+                    </option>
                   ))}
-                </div>
+                </select>
+              </div>
+              <div>
+                <label
+                  htmlFor="daysPerWeek"
+                  className="block text-xs text-gray-500 mb-1"
+                >
+                  稽古日数 / 週
+                </label>
+                <select
+                  id="daysPerWeek"
+                  value={daysPerWeek}
+                  onChange={(e) => setDaysPerWeek(Number(e.target.value))}
+                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  {[2, 3, 4, 5].map((d) => (
+                    <option key={d} value={d}>
+                      週{d}日
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Save / Load (logged in) */}
+        {session?.user ? (
+          <div className="mb-6 flex flex-wrap items-center gap-2">
+            {/* Save button */}
+            {!showSaveForm ? (
+              <button
+                onClick={() => setShowSaveForm(true)}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs bg-white border border-gray-200 rounded-lg hover:bg-gray-50 text-gray-600 transition-colors"
+              >
+                <FaSave />
+                保存
+              </button>
+            ) : (
+              <div className="flex items-center gap-2">
+                <input
+                  type="text"
+                  value={saveName}
+                  onChange={(e) => setSaveName(e.target.value)}
+                  placeholder="スケジュール名"
+                  className="border border-gray-200 rounded-lg px-3 py-1.5 text-xs outline-none focus:ring-2 focus:ring-blue-500 w-40"
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") handleSave();
+                  }}
+                />
+                <button
+                  onClick={handleSave}
+                  disabled={!saveName.trim()}
+                  className="px-3 py-1.5 text-xs bg-gray-800 text-white rounded-lg hover:bg-gray-900 disabled:opacity-40 transition-colors"
+                >
+                  保存
+                </button>
+                <button
+                  onClick={() => setShowSaveForm(false)}
+                  className="text-gray-400 hover:text-gray-600 text-xs"
+                >
+                  キャンセル
+                </button>
+              </div>
+            )}
+
+            {/* Saved schedules dropdown */}
+            {savedSchedules.length > 0 && (
+              <div className="relative group">
+                <select
+                  onChange={(e) => {
+                    const idx = Number(e.target.value);
+                    if (idx >= 0) handleLoad(savedSchedules[idx]);
+                    e.target.value = "-1";
+                  }}
+                  defaultValue="-1"
+                  className="text-xs border border-gray-200 rounded-lg px-3 py-1.5 outline-none bg-white text-gray-600 cursor-pointer"
+                >
+                  <option value="-1" disabled>
+                    保存済み ({savedSchedules.length})
+                  </option>
+                  {savedSchedules.map((s, i) => (
+                    <option key={s.id} value={i}>
+                      {s.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
+
+            {/* Delete saved */}
+            {savedSchedules.length > 0 && (
+              <div className="flex gap-1 ml-auto">
+                {savedSchedules.map((s) => (
+                  <button
+                    key={s.id}
+                    onClick={() => handleDelete(s.id)}
+                    className="text-[10px] text-gray-300 hover:text-red-400 transition-colors"
+                    title={`「${s.name}」を削除`}
+                  >
+                    <FaTrash />
+                  </button>
+                ))}
+              </div>
+            )}
+
+            {saveStatus && (
+              <span className="text-xs text-green-600">{saveStatus}</span>
+            )}
+          </div>
+        ) : (
+          <p className="mb-6 text-xs text-gray-400">
+            <Link href="/auth/signin" className="text-blue-500 hover:underline">
+              ログイン
+            </Link>
+            するとスケジュールを保存できます
+          </p>
+        )}
+
+        {/* Timeline */}
+        {schedule.length > 0 && (
+          <div className="mb-8">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-base font-bold text-gray-800">
+                スケジュール
+              </h2>
+              <button
+                onClick={handleCopyToClipboard}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-gray-600"
+              >
+                {copied ? (
+                  <>
+                    <FaCheck className="text-green-500" />
+                    コピー済み
+                  </>
+                ) : (
+                  <>
+                    <FaCopy />
+                    コピー
+                  </>
+                )}
+              </button>
+            </div>
+
+            {/* Clean timeline grouped by phase */}
+            <div className="space-y-1">
+              {phaseGroups.map((group, gi) => {
+                const borderColor =
+                  PHASE_BORDER[group.phase] || "border-l-gray-300";
+                return (
+                  <div key={gi}>
+                    {/* Phase header */}
+                    <div className="flex items-center gap-2 pt-3 pb-1">
+                      <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
+                        {group.phase}
+                      </span>
+                      <div className="flex-1 border-t border-gray-100" />
+                    </div>
+
+                    {/* Weeks in this phase */}
+                    <div className="space-y-2">
+                      {group.weeks.map((week) => (
+                        <div
+                          key={week.weekNumber}
+                          className={`border-l-4 ${borderColor} bg-white rounded-r-lg p-3 shadow-sm`}
+                        >
+                          <div className="flex items-baseline justify-between mb-1">
+                            <span className="text-sm font-medium text-gray-800">
+                              {week.label}
+                            </span>
+                            <span className="text-xs text-gray-400">
+                              {week.dateRange}
+                            </span>
+                          </div>
+                          <ul className="space-y-0.5">
+                            {week.tasks.map((task, ti) => (
+                              <li
+                                key={ti}
+                                className="text-sm text-gray-600 pl-2"
+                              >
+                                - {task}
+                              </li>
+                            ))}
+                          </ul>
+                          {week.milestones.length > 0 && (
+                            <div className="mt-1.5 flex flex-wrap gap-1">
+                              {week.milestones.map((ms, mi) => (
+                                <span
+                                  key={mi}
+                                  className="text-xs text-purple-600 bg-purple-50 rounded px-2 py-0.5"
+                                >
+                                  {ms}
+                                </span>
+                              ))}
+                            </div>
+                          )}
+                          <p className="mt-1.5 text-xs text-gray-400">
+                            {week.tips}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* Milestones (collapsible, at bottom) */}
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 mb-4">
+          <button
+            onClick={() => setShowMilestones(!showMilestones)}
+            className="flex items-center justify-between w-full text-left"
+          >
+            <span className="text-sm font-medium text-gray-700 flex items-center gap-1.5">
+              <FaPlus className="text-gray-400 text-xs" />
+              マイルストーンを追加
+              {milestones.length > 0 && (
+                <span className="text-xs text-gray-400">
+                  ({milestones.length})
+                </span>
+              )}
+            </span>
+            {showMilestones ? (
+              <FaChevronUp className="text-gray-300 text-xs" />
+            ) : (
+              <FaChevronDown className="text-gray-300 text-xs" />
+            )}
+          </button>
+
+          {showMilestones && (
+            <div className="mt-4">
+              <div className="mb-3 flex flex-wrap gap-1.5">
+                {MILESTONE_PRESETS.map((preset) => (
+                  <button
+                    key={preset}
+                    onClick={() => addPresetMilestone(preset)}
+                    className="text-xs px-2.5 py-1 rounded border border-gray-200 hover:bg-gray-50 text-gray-600 transition-colors"
+                  >
+                    + {preset}
+                  </button>
+                ))}
               </div>
 
-              {/* Custom milestone */}
               <div className="flex flex-col sm:flex-row gap-2">
                 <input
                   type="text"
                   value={newMilestoneName}
                   onChange={(e) => setNewMilestoneName(e.target.value)}
                   placeholder="マイルストーン名"
-                  className="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                  className="flex-1 border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500"
                   onKeyDown={(e) => {
                     if (e.key === "Enter") addMilestone();
                   }}
@@ -511,7 +789,7 @@ export default function ScheduleGenerator() {
                 <select
                   value={newMilestoneWeek}
                   onChange={(e) => setNewMilestoneWeek(Number(e.target.value))}
-                  className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                  className="border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   {Array.from({ length: totalWeeks }, (_, i) => i + 1).map(
                     (w) => (
@@ -524,24 +802,23 @@ export default function ScheduleGenerator() {
                 <button
                   onClick={addMilestone}
                   disabled={!newMilestoneName.trim()}
-                  className="px-4 py-2 bg-gray-800 text-white text-sm rounded-lg hover:bg-gray-900 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                  className="px-4 py-2 bg-gray-800 text-white text-sm rounded-lg hover:bg-gray-900 disabled:opacity-40 transition-colors"
                 >
                   追加
                 </button>
               </div>
 
-              {/* Current milestones */}
               {milestones.length > 0 && (
-                <div className="mt-3 flex flex-wrap gap-2">
+                <div className="mt-3 flex flex-wrap gap-1.5">
                   {milestones.map((ms) => (
                     <span
                       key={ms.id}
-                      className="inline-flex items-center gap-1 text-xs bg-purple-50 text-purple-700 border border-purple-200 rounded-full px-3 py-1"
+                      className="inline-flex items-center gap-1 text-xs text-purple-600 bg-purple-50 border border-purple-100 rounded px-2.5 py-1"
                     >
                       第{ms.weekIndex + 1}週: {ms.name}
                       <button
                         onClick={() => removeMilestone(ms.id)}
-                        className="ml-1 text-purple-400 hover:text-purple-700"
+                        className="ml-0.5 text-purple-300 hover:text-purple-600"
                       >
                         <FaTimes />
                       </button>
@@ -553,211 +830,90 @@ export default function ScheduleGenerator() {
           )}
         </div>
 
-        {/* Generated Schedule */}
-        {schedule.length > 0 && (
-          <div className="mb-8">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-bold">スケジュール</h2>
-              <button
-                onClick={handleCopyToClipboard}
-                className="inline-flex items-center gap-2 px-4 py-2 text-sm bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
-              >
-                {copied ? (
-                  <>
-                    <FaCheck className="text-green-500" />
-                    コピーしました
-                  </>
-                ) : (
-                  <>
-                    <FaCopy />
-                    テキストをコピー
-                  </>
-                )}
-              </button>
-            </div>
-
-            {/* Timeline */}
-            <div className="space-y-0">
-              {schedule.map((week, index) => {
-                const isLast = index === schedule.length - 1;
-                const colorClass =
-                  PHASE_COLORS[week.phase] || "bg-gray-50 border-gray-300";
-                const badgeClass =
-                  PHASE_BADGE_COLORS[week.phase] || "bg-gray-100 text-gray-800";
-
-                return (
-                  <div key={week.weekNumber} className="relative flex">
-                    {/* Timeline line */}
-                    <div className="flex flex-col items-center mr-4 shrink-0">
-                      <div className="w-8 h-8 rounded-full bg-gray-800 text-white text-xs font-bold flex items-center justify-center z-10">
-                        {week.weekNumber}
-                      </div>
-                      {!isLast && (
-                        <div className="w-0.5 bg-gray-300 flex-1 min-h-[16px]" />
-                      )}
-                    </div>
-
-                    {/* Card */}
-                    <div
-                      className={`flex-1 mb-4 rounded-lg border-l-4 p-4 ${colorClass}`}
-                    >
-                      <div className="flex flex-wrap items-center gap-2 mb-2">
-                        <span className="font-bold text-sm">
-                          {week.label}
-                        </span>
-                        <span
-                          className={`text-xs px-2 py-0.5 rounded-full font-medium ${badgeClass}`}
-                        >
-                          {week.phase}
-                        </span>
-                      </div>
-                      <p className="text-xs text-gray-500 mb-3">
-                        {week.dateRange} ・ 週{daysPerWeek}日稽古
-                      </p>
-
-                      <ul className="space-y-1 mb-2">
-                        {week.tasks.map((task, ti) => (
-                          <li
-                            key={ti}
-                            className="text-sm text-gray-700 flex items-start gap-1.5"
-                          >
-                            <span className="text-gray-400 mt-0.5 shrink-0">
-                              ・
-                            </span>
-                            {task}
-                          </li>
-                        ))}
-                      </ul>
-
-                      {/* Milestones */}
-                      {week.milestones.length > 0 && (
-                        <div className="mb-2 flex flex-wrap gap-1.5">
-                          {week.milestones.map((ms, mi) => (
-                            <span
-                              key={mi}
-                              className="inline-flex items-center gap-1 text-xs bg-purple-100 text-purple-700 rounded-full px-2.5 py-0.5 font-medium"
-                            >
-                              ★ {ms}
-                            </span>
-                          ))}
-                        </div>
-                      )}
-
-                      <p className="text-xs text-gray-500 italic">
-                        {week.tips}
-                      </p>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        )}
-
-        {/* Daily Rehearsal Menu */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 md:p-6 mb-8">
+        {/* Daily menu (collapsed) */}
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 mb-4">
           <button
             onClick={() => setShowDailyMenu(!showDailyMenu)}
             className="flex items-center justify-between w-full text-left"
           >
-            <h2 className="text-lg font-bold">1日の稽古メニュー（目安）</h2>
+            <span className="text-sm font-medium text-gray-700">
+              1日の稽古メニュー（{totalMinutes}分）
+            </span>
             {showDailyMenu ? (
-              <FaChevronUp className="text-gray-400" />
+              <FaChevronUp className="text-gray-300 text-xs" />
             ) : (
-              <FaChevronDown className="text-gray-400" />
+              <FaChevronDown className="text-gray-300 text-xs" />
             )}
           </button>
 
           {showDailyMenu && (
-            <div className="mt-4">
-              <div className="space-y-3">
-                {DAILY_MENU.map((item, i) => {
-                  // Compute cumulative time for visual bar
-                  const totalSoFar = DAILY_MENU.slice(0, i + 1).reduce(
-                    (s, m) => s + m.minutes,
-                    0
-                  );
-                  const pct = (totalSoFar / totalMinutes) * 100;
-
-                  return (
-                    <div key={i} className="relative">
-                      <div className="flex items-center justify-between mb-1">
-                        <span className="text-sm font-medium text-gray-800">
-                          {item.name}
-                        </span>
-                        <span className="text-sm font-bold text-gray-600">
-                          {item.minutes}分
-                        </span>
-                      </div>
-                      <div className="w-full bg-gray-100 rounded-full h-2 mb-1">
-                        <div
-                          className="h-2 rounded-full bg-gray-400 transition-all"
-                          style={{
-                            width: `${(item.minutes / totalMinutes) * 100}%`,
-                          }}
-                        />
-                      </div>
-                      <p className="text-xs text-gray-500">
-                        {item.description}
-                      </p>
-                    </div>
-                  );
-                })}
-              </div>
-              <div className="mt-4 p-3 bg-gray-50 rounded-lg text-sm text-gray-600 text-center">
-                合計: <span className="font-bold">{totalMinutes}分</span>（約
-                {Math.floor(totalMinutes / 60)}時間
+            <div className="mt-4 space-y-2">
+              {DAILY_MENU.map((item, i) => (
+                <div
+                  key={i}
+                  className="flex items-baseline justify-between py-1 border-b border-gray-50 last:border-0"
+                >
+                  <div>
+                    <span className="text-sm text-gray-700">{item.name}</span>
+                    <span className="text-xs text-gray-400 ml-2">
+                      {item.description}
+                    </span>
+                  </div>
+                  <span className="text-xs font-medium text-gray-500 shrink-0 ml-3">
+                    {item.minutes}分
+                  </span>
+                </div>
+              ))}
+              <div className="pt-2 text-xs text-gray-400 text-center">
+                合計 {totalMinutes}分（約{Math.floor(totalMinutes / 60)}時間
                 {totalMinutes % 60 > 0 ? `${totalMinutes % 60}分` : ""}）
               </div>
             </div>
           )}
         </div>
 
-        {/* Tips Section */}
-        <div className="bg-gray-50 rounded-xl p-4 md:p-6 mb-8">
-          <h2 className="text-lg font-bold mb-3">
-            文化祭演劇を成功させるコツ
-          </h2>
-          <ul className="space-y-2 text-sm text-gray-700">
-            <li className="flex items-start gap-2">
-              <span className="text-gray-400 mt-0.5 shrink-0">1.</span>
-              <span>
-                <strong>早めの台本決定</strong>が最重要。
-                準備期間の1週目には台本が確定していることが理想です。
-              </span>
-            </li>
-            <li className="flex items-start gap-2">
-              <span className="text-gray-400 mt-0.5 shrink-0">2.</span>
-              <span>
-                <strong>毎回の稽古に目標</strong>を設定しましょう。
-                「今日は第2場を完成させる」など具体的に。
-              </span>
-            </li>
-            <li className="flex items-start gap-2">
-              <span className="text-gray-400 mt-0.5 shrink-0">3.</span>
-              <span>
-                <strong>裏方の準備は稽古と並行</strong>で。
-                音響・照明・衣装・小道具は早めに担当を決めましょう。
-              </span>
-            </li>
-            <li className="flex items-start gap-2">
-              <span className="text-gray-400 mt-0.5 shrink-0">4.</span>
-              <span>
-                <strong>通し稽古は録画</strong>するのがおすすめ。
-                客観的に見返すことで改善点が見つかります。
-              </span>
-            </li>
-            <li className="flex items-start gap-2">
-              <span className="text-gray-400 mt-0.5 shrink-0">5.</span>
-              <span>
+        {/* Tips (collapsed) */}
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 mb-8">
+          <button
+            onClick={() => setShowTips(!showTips)}
+            className="flex items-center justify-between w-full text-left"
+          >
+            <span className="text-sm font-medium text-gray-700">
+              成功のコツ
+            </span>
+            {showTips ? (
+              <FaChevronUp className="text-gray-300 text-xs" />
+            ) : (
+              <FaChevronDown className="text-gray-300 text-xs" />
+            )}
+          </button>
+
+          {showTips && (
+            <ul className="mt-4 space-y-2 text-sm text-gray-600">
+              <li>
+                <strong>1.</strong> 早めの台本決定が最重要。1週目には確定を。
+              </li>
+              <li>
+                <strong>2.</strong>{" "}
+                毎回の稽古に具体的な目標を設定しましょう。
+              </li>
+              <li>
+                <strong>3.</strong>{" "}
+                裏方の準備（音響・照明・衣装）は稽古と並行で。
+              </li>
+              <li>
+                <strong>4.</strong>{" "}
+                通し稽古は録画がおすすめ。客観的に改善点を発見できます。
+              </li>
+              <li>
                 台本探しは{" "}
-                <Link href="/" className="text-blue-600 hover:underline">
-                  戯曲図書館のトップページ
+                <Link href="/" className="text-blue-500 hover:underline">
+                  戯曲図書館
                 </Link>{" "}
                 から。人数・上演時間で検索できます。
-              </span>
-            </li>
-          </ul>
+              </li>
+            </ul>
+          )}
         </div>
       </div>
     </Layout>

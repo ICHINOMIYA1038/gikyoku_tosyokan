@@ -15,7 +15,10 @@ import {
   FaSun,
   FaEdit,
   FaCheck,
+  FaCloud,
 } from "react-icons/fa";
+import { useToolData, SavedToolItem } from "@/lib/useToolData";
+import Link from "next/link";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -158,6 +161,11 @@ export default function RehearsalTimer() {
   const [editingCustom, setEditingCustom] = useState(false);
   const [customName, setCustomName] = useState("");
   const [customMin, setCustomMin] = useState(10);
+
+  // Cloud save
+  const toolData = useToolData("timer");
+  const [showCloudSaveInput, setShowCloudSaveInput] = useState(false);
+  const [cloudSaveName, setCloudSaveName] = useState("");
 
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
@@ -331,6 +339,32 @@ export default function RehearsalTimer() {
     } catch {}
   };
 
+  // -- Cloud save/load -------------------------------------------------------
+
+  const saveCurrentMenuCloud = async () => {
+    if (!cloudSaveName.trim()) return;
+    const data = {
+      segments: segments.map(({ name, durationMin }) => ({ name, durationMin })),
+    };
+    const ok = await toolData.saveItem(cloudSaveName.trim(), data);
+    if (ok) {
+      setCloudSaveName("");
+      setShowCloudSaveInput(false);
+    }
+  };
+
+  const loadCloudMenu = (item: SavedToolItem) => {
+    if (item.data?.segments) {
+      const segs = toSegments(item.data.segments);
+      setSegments(segs);
+      setRunning(false);
+      setStarted(false);
+      setCurrentIdx(0);
+      if (segs.length > 0) setRemainSec(segs[0].durationMin * 60);
+      setEditingCustom(false);
+    }
+  };
+
   // -- Derived values -------------------------------------------------------
 
   const currentSegment = segments[currentIdx];
@@ -430,6 +464,102 @@ export default function RehearsalTimer() {
               </div>
             )}
           </section>
+
+          {/* ---- Cloud-saved menus (logged in) ---- */}
+          {!toolData.isLoading && (
+            <section className="mb-6">
+              {toolData.isLoggedIn ? (
+                <div className={`rounded-xl border p-4 ${card}`}>
+                  <button
+                    onClick={() => setShowCloudSaveInput((v) => !v)}
+                    className="flex items-center gap-2 text-sm font-semibold w-full"
+                  >
+                    <FaCloud className={accent} />
+                    <span>マイデータ {toolData.items.length > 0 && `(${toolData.items.length})`}</span>
+                    <svg
+                      className={`w-3.5 h-3.5 ml-auto transition-transform ${showCloudSaveInput ? "rotate-180" : ""}`}
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+
+                  {showCloudSaveInput && (
+                    <div className="mt-3 space-y-3">
+                      {/* Save current menu to cloud */}
+                      <div className="flex gap-2">
+                        <input
+                          type="text"
+                          value={cloudSaveName}
+                          onChange={(e) => setCloudSaveName(e.target.value)}
+                          onKeyDown={(e) => e.key === "Enter" && saveCurrentMenuCloud()}
+                          placeholder="メニュー名を入力"
+                          className={`flex-1 px-3 py-1.5 rounded-md border text-sm ${
+                            dark
+                              ? "bg-gray-800 border-gray-600 text-gray-100 placeholder-gray-500"
+                              : "bg-white border-gray-300 text-gray-900 placeholder-gray-400"
+                          }`}
+                        />
+                        <button
+                          onClick={saveCurrentMenuCloud}
+                          disabled={toolData.saving || !cloudSaveName.trim()}
+                          className={`px-4 py-1.5 rounded-md text-sm font-medium ${btnPrimary} disabled:opacity-40 transition-colors`}
+                        >
+                          {toolData.saving ? "保存中..." : "保存"}
+                        </button>
+                      </div>
+
+                      {toolData.error && (
+                        <p className="text-xs text-red-400">{toolData.error}</p>
+                      )}
+
+                      {/* Cloud-saved items */}
+                      {toolData.fetching ? (
+                        <p className={`text-xs ${muted}`}>読み込み中...</p>
+                      ) : toolData.items.length === 0 ? (
+                        <p className={`text-xs ${muted}`}>保存済みメニューはありません</p>
+                      ) : (
+                        <div className="flex flex-wrap gap-2">
+                          {toolData.items.map((item) => {
+                            const segCount = item.data?.segments?.length ?? 0;
+                            const total = item.data?.segments?.reduce((s: number, seg: any) => s + (seg.durationMin || 0), 0) ?? 0;
+                            return (
+                              <div key={item.id} className="flex items-center gap-1">
+                                <button
+                                  onClick={() => loadCloudMenu(item)}
+                                  className={`px-3 py-1.5 rounded-md text-sm font-medium border transition-colors ${card} hover:border-orange-400`}
+                                  title={`${segCount}セグメント・${total}分`}
+                                >
+                                  <FaCloud className="inline mr-1 text-xs opacity-50" />
+                                  {item.name}
+                                </button>
+                                <button
+                                  onClick={() => toolData.deleteItem(item.id)}
+                                  className="text-red-400 hover:text-red-300 text-xs p-1"
+                                  aria-label="削除"
+                                >
+                                  <FaTrash />
+                                </button>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <p className={`text-xs ${muted}`}>
+                  <Link href="/api/auth/signin" className="text-orange-500 hover:underline">
+                    ログイン
+                  </Link>
+                  するとメニューをクラウドに保存できます
+                </p>
+              )}
+            </section>
+          )}
 
           {/* ---- Timer display ---- */}
           <section className={`rounded-xl border p-6 md:p-10 mb-6 text-center ${card}`}>

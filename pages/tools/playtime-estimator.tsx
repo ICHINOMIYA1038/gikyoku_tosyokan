@@ -5,6 +5,8 @@ import Seo from "@/components/seo";
 import StructuredData from "@/components/StructuredData";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
+import { useToolData, SavedToolItem } from "@/lib/useToolData";
+import MyDataSection from "@/components/MyDataSection";
 
 type Pace = "fast" | "normal" | "slow";
 
@@ -57,6 +59,8 @@ export default function PlaytimeEstimator({ referencePlays }: Props) {
   const [pace, setPace] = useState<Pace>("normal");
   const [showDirections, setShowDirections] = useState(false);
 
+  const toolData = useToolData("playtime");
+
   const analysis = useMemo(() => {
     if (!scriptText.trim()) {
       return null;
@@ -100,6 +104,29 @@ export default function PlaytimeEstimator({ referencePlays }: Props) {
 
   const handleClear = useCallback(() => {
     setScriptText("");
+  }, []);
+
+  const handleToolDataSave = useCallback(
+    async (name: string) => {
+      return toolData.saveItem(name, {
+        scriptText,
+        pace,
+        analysis: analysis
+          ? {
+              totalChars: analysis.totalChars,
+              dialogueChars: analysis.dialogueChars,
+              directionChars: analysis.directionChars,
+              estimatedMinutes: analysis.estimatedMinutes,
+            }
+          : null,
+      });
+    },
+    [toolData, scriptText, pace, analysis]
+  );
+
+  const handleToolDataLoad = useCallback((item: SavedToolItem) => {
+    if (item.data.scriptText != null) setScriptText(item.data.scriptText);
+    if (item.data.pace) setPace(item.data.pace as Pace);
   }, []);
 
   const formatTime = (minutes: number): string => {
@@ -223,6 +250,27 @@ export default function PlaytimeEstimator({ referencePlays }: Props) {
                 {PACE_CONFIG[pace].description}
               </p>
             </div>
+
+            {/* My Data */}
+            <MyDataSection
+              isLoggedIn={toolData.isLoggedIn}
+              isLoading={toolData.isLoading}
+              items={toolData.items}
+              fetching={toolData.fetching}
+              saving={toolData.saving}
+              error={toolData.error}
+              onSave={handleToolDataSave}
+              onLoad={handleToolDataLoad}
+              onDelete={toolData.deleteItem}
+              itemLabel="見積もり"
+              renderItemDetail={(item) => {
+                const d = item.data;
+                if (d?.analysis) {
+                  return `${d.analysis.dialogueChars?.toLocaleString() ?? "?"}字 / 約${d.analysis.estimatedMinutes ?? "?"}分`;
+                }
+                return null;
+              }}
+            />
 
             {/* How it works */}
             <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">

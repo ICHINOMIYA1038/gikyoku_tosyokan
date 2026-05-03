@@ -435,9 +435,24 @@ model User {
   sentMessages      Message[]       @relation("SentMessages")
   receivedMessages  Message[]       @relation("ReceivedMessages")
   userSynopses      UserSynopsis[]
+  toolData          UserToolData[]
 
   @@index([email])
   @@map("User")
+}
+
+model UserToolData {
+  id        Int      @id @default(autoincrement())
+  userId    String
+  toolType  String   // "timer", "schedule", "playtime", "analyzer"
+  name      String   // ユーザーが付けた保存名
+  data      String   // JSON文字列
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, toolType])
+  @@map("UserToolData")
 }
 
 model UserSynopsis {
