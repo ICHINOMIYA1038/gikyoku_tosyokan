@@ -456,9 +456,9 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     .sort(([a], [b]) => awardTypeSortOrder(a) - awardTypeSortOrder(b))
     .map(([type, count]) => ({ type, count }));
 
-  // 複数受賞の作家
+  // 複数受賞の作家（受賞/大賞のみカウント、最終候補は除外）
   const authorCountMap = new Map<string, { name: string; authorId: number | null; count: number }>();
-  winners.forEach((w) => {
+  winners.filter((w) => isWinnerType(w.awardType)).forEach((w) => {
     const key = w.authorId ? String(w.authorId) : w.authorName;
     const existing = authorCountMap.get(key);
     if (existing) {
