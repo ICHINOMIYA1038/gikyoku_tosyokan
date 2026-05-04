@@ -326,6 +326,18 @@ export default function VenueDetail({ venue, nearbyVenues, announcements, perfor
                 <p className="text-xs text-gray-500">搬入口の大きさ、楽屋の数、音響・照明設備、客席の配置変更可否、ピアノ等の備品。</p>
               </div>
             </div>
+            <div className="flex items-start gap-2.5">
+              <FaFileAlt className="text-amber-400 mt-0.5 flex-shrink-0 text-xs" />
+              <div>
+                <p className="text-sm font-medium text-gray-700">チラシ・パンフレットの準備</p>
+                <p className="text-xs text-gray-500">
+                  チラシ・パンフレットの印刷は
+                  <a href="https://raksul.com/flyer/" target="_blank" rel="noopener noreferrer"
+                    className="text-theater-primary-600 hover:underline">ラクスル</a>
+                  などのネット印刷サービスが便利です。小ロットから対応しており、コストを抑えられます。
+                </p>
+              </div>
+            </div>
           </div>
           {venue.website && (
             <a href={venue.website} target="_blank" rel="noopener noreferrer"

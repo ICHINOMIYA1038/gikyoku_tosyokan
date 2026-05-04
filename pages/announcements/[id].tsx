@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Layout from '@/components/Layout';
 import Link from 'next/link';
-import { FaCalendarAlt, FaMapMarkerAlt, FaYenSign, FaPhone, FaUser, FaEye, FaClock, FaTheaterMasks, FaArrowLeft, FaTrash, FaShareAlt, FaBook, FaUsers } from 'react-icons/fa';
+import { FaCalendarAlt, FaMapMarkerAlt, FaYenSign, FaPhone, FaUser, FaEye, FaClock, FaTheaterMasks, FaArrowLeft, FaTrash, FaShareAlt, FaBook, FaUsers, FaInfoCircle, FaExternalLinkAlt } from 'react-icons/fa';
 import {
   TwitterShareButton,
   FacebookShareButton,
@@ -266,6 +266,23 @@ export default function AnnouncementDetailPage() {
                 </p>
               </div>
             )}
+
+            {/* チラシ印刷の案内 */}
+            <div className="bg-gray-50 rounded-lg p-4 mb-6 border border-gray-100">
+              <p className="text-sm text-gray-600">
+                <FaInfoCircle className="inline text-gray-400 mr-1" />
+                公演チラシ・パンフレットの印刷なら、ネット印刷サービスが便利です。
+                <a
+                  href="https://raksul.com/flyer/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-theater-primary-600 hover:underline ml-1"
+                >
+                  ラクスルのチラシ印刷
+                  <FaExternalLinkAlt className="inline text-[10px] ml-0.5" />
+                </a>
+              </p>
+            </div>
 
             {/* アクションボタン */}
             <div className="flex gap-4">

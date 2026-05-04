@@ -496,6 +496,23 @@ export default function NewAnnouncementPage() {
                 />
               </div>
 
+              {/* チラシ印刷の案内 */}
+              <div className="bg-blue-50/50 border border-blue-100 rounded-lg p-4">
+                <p className="text-sm text-gray-600">
+                  <FaInfoCircle className="inline text-blue-400 mr-1" />
+                  公演のチラシ・パンフレットの印刷がまだの方へ ―
+                  <a
+                    href="https://raksul.com/flyer/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-theater-primary-600 hover:underline ml-1"
+                  >
+                    ラクスルのネット印刷
+                  </a>
+                  なら小ロットから注文できて便利です。
+                </p>
+              </div>
+
               {/* 送信ボタン */}
               <div className="flex gap-4">
                 <button
