@@ -134,8 +134,15 @@ export const PostHero: React.FC<PostPageProps> = ({ post }) => {
           )}
           {post.amazon_text_url && (
             <a href={post.amazon_text_url} target="_blank" rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 px-4 py-2 bg-gray-800 hover:bg-gray-900 text-white text-sm font-bold rounded transition-colors">
-              Amazonで読む
+              className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#FF9900] hover:bg-[#e68a00] text-white text-sm font-bold rounded transition-colors">
+              Amazonで購入
+            </a>
+          )}
+          {post.ISBN_13 && (
+            <a href={`https://af.moshimo.com/af/c/click?a_id=3488753&p_id=56&pc_id=56&pl_id=637&url=https%3A%2F%2Fbooks.rakuten.co.jp%2Fsearch%3Fisbn%3D${post.ISBN_13}`}
+              target="_blank" rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#BF0000] hover:bg-[#a00000] text-white text-sm font-bold rounded transition-colors">
+              楽天で購入
             </a>
           )}
           {post.kangeki_url && (
