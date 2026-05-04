@@ -138,8 +138,8 @@ export const PostHero: React.FC<PostPageProps> = ({ post }) => {
               Amazonで購入
             </a>
           )}
-          {post.ISBN_13 && process.env.NEXT_PUBLIC_MOSHIMO_RAKUTEN_ID && (
-            <a href={`https://af.moshimo.com/af/c/click?a_id=${process.env.NEXT_PUBLIC_MOSHIMO_RAKUTEN_ID}&p_id=56&pc_id=56&pl_id=637&url=https%3A%2F%2Fbooks.rakuten.co.jp%2Fsearch%3Fisbn%3D${post.ISBN_13}`}
+          {post.ISBN_13 && (
+            <a href={`https://af.moshimo.com/af/c/click?a_id=4249616&p_id=54&pc_id=54&pl_id=616&url=https%3A%2F%2Fbooks.rakuten.co.jp%2Fsearch%3Fisbn%3D${post.ISBN_13}`}
               target="_blank" rel="noopener noreferrer"
               className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#BF0000] hover:bg-[#a00000] text-white text-sm font-bold rounded transition-colors">
               楽天で購入
