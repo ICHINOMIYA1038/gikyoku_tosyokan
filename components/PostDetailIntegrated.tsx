@@ -145,6 +145,13 @@ export const PostHero: React.FC<PostPageProps> = ({ post }) => {
               楽天で購入
             </a>
           )}
+          {post.ISBN_13 && (
+            <a href={`https://af.moshimo.com/af/c/click?a_id=4294434&p_id=1225&pc_id=1925&pl_id=27061&url=https%3A%2F%2Fstore.shopping.yahoo.co.jp%2Fsearch%3Ffirst%3D1%26p%3D${encodeURIComponent(post.ISBN_13)}`}
+              target="_blank" rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#FF0033] hover:bg-[#cc0029] text-white text-sm font-bold rounded transition-colors">
+              Yahoo!で購入
+            </a>
+          )}
           {post.kangeki_url && (
             <a href={post.kangeki_url} target="_blank" rel="noopener noreferrer"
               className="inline-flex items-center gap-1.5 px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-bold rounded transition-colors">
