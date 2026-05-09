@@ -2,7 +2,7 @@ import React from "react";
 import Link from "next/link";
 import Layout from "@/components/Layout";
 import Seo from "@/components/seo";
-import { FaClock, FaChartBar, FaCalendarAlt, FaStopwatch } from "react-icons/fa";
+import { FaClock, FaChartBar, FaCalendarAlt, FaStopwatch, FaMagic } from "react-icons/fa";
 
 interface ToolCard {
   name: string;
@@ -44,6 +44,14 @@ const TOOLS: ToolCard[] = [
     href: "/tools/rehearsal-timer",
     icon: <FaStopwatch />,
     color: "text-orange-500 bg-orange-50",
+  },
+  {
+    name: "稽古効率最適化",
+    description:
+      "出演者・シーン・各メンバーのNG日から、出席率が最大化される稽古スケジュールを自動で組み立てます。",
+    href: "/tools/rehearsal-optimizer",
+    icon: <FaMagic />,
+    color: "text-purple-500 bg-purple-50",
   },
 ];
 

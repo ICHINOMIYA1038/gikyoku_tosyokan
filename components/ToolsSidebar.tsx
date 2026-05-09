@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
-import { FaClock, FaChartBar, FaCalendarAlt, FaStopwatch } from "react-icons/fa";
+import { FaClock, FaChartBar, FaCalendarAlt, FaStopwatch, FaMagic } from "react-icons/fa";
 
 interface Tool {
   slug: string;
@@ -34,6 +34,12 @@ const TOOLS: Tool[] = [
     name: "稽古タイマー",
     icon: <FaStopwatch />,
     href: "/tools/rehearsal-timer",
+  },
+  {
+    slug: "rehearsal-optimizer",
+    name: "稽古効率最適化",
+    icon: <FaMagic />,
+    href: "/tools/rehearsal-optimizer",
   },
 ];
 
