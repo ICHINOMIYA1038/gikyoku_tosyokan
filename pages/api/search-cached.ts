@@ -79,9 +79,10 @@ export default async function handler(
             },
           },
         },
-        orderBy: {
-          averageRating: 'desc',
-        },
+        orderBy: [
+          { averageRating: { sort: 'desc', nulls: 'last' } },
+          { id: 'desc' },
+        ],
         take: perPage,
         skip: skip,
       }),
