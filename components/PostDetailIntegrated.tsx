@@ -12,6 +12,7 @@ import AdSlot from "./Ad/AdSlot";
 import { AD_SLOTS } from "@/lib/adSlots";
 import AiImageBadge from "./AiImageBadge";
 import Image from "next/image";
+import { trackAffiliateClick } from "@/lib/gtag";
 
 type PostPageProps = {
   post: any;
@@ -134,26 +135,30 @@ export const PostHero: React.FC<PostPageProps> = ({ post }) => {
           )}
           {post.amazon_text_url && (
             <a href={post.amazon_text_url} target="_blank" rel="noopener noreferrer"
+              onClick={() => trackAffiliateClick("Amazon", post.title, post.id)}
               className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#FF9900] hover:bg-[#e68a00] text-white text-sm font-bold rounded transition-colors">
               Amazonで購入
             </a>
           )}
           {post.ISBN_13 && (
-            <a href={`https://af.moshimo.com/af/c/click?a_id=4249616&p_id=54&pc_id=54&pl_id=616&url=https%3A%2F%2Fbooks.rakuten.co.jp%2Fsearch%3Fisbn%3D${post.ISBN_13}`}
+            <a href={`https://af.moshimo.com/af/c/click?a_id=4249616&p_id=54&pc_id=54&pl_id=616&url=https%3A%2F%2Fbooks.rakuten.co.jp%2Fsearch%3Fsitem%3D${post.ISBN_13}`}
               target="_blank" rel="noopener noreferrer"
+              onClick={() => trackAffiliateClick("Rakuten", post.title, post.id)}
               className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#BF0000] hover:bg-[#a00000] text-white text-sm font-bold rounded transition-colors">
               楽天で購入
             </a>
           )}
           {post.ISBN_13 && (
-            <a href={`https://af.moshimo.com/af/c/click?a_id=4294434&p_id=1225&pc_id=1925&pl_id=27061&url=https%3A%2F%2Fstore.shopping.yahoo.co.jp%2Fsearch%3Ffirst%3D1%26p%3D${encodeURIComponent(post.ISBN_13)}`}
+            <a href={`https://af.moshimo.com/af/c/click?a_id=4294434&p_id=1225&pc_id=1925&pl_id=27061&url=https%3A%2F%2Fshopping.yahoo.co.jp%2Fsearch%3Fp%3D${encodeURIComponent(post.ISBN_13)}`}
               target="_blank" rel="noopener noreferrer"
+              onClick={() => trackAffiliateClick("Yahoo", post.title, post.id)}
               className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#FF0033] hover:bg-[#cc0029] text-white text-sm font-bold rounded transition-colors">
               Yahoo!で購入
             </a>
           )}
           {post.kangeki_url && (
             <a href={post.kangeki_url} target="_blank" rel="noopener noreferrer"
+              onClick={() => trackAffiliateClick("KangekiZanmai", post.title, post.id)}
               className="inline-flex items-center gap-1.5 px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-bold rounded transition-colors">
               観劇三昧で観る
             </a>
