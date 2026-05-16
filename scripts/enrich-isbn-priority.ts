@@ -99,7 +99,7 @@ async function main() {
   let targetIds: number[];
   if (pvOnly) targetIds = pvPostIds;
   else if (authorOnly) targetIds = authorPostIds;
-  else targetIds = [...new Set([...pvPostIds, ...authorPostIds])];
+  else targetIds = Array.from(new Set([...pvPostIds, ...authorPostIds]));
 
   // ISBN_13 が未設定のもののみ抽出
   const posts = await prisma.post.findMany({
