@@ -320,7 +320,7 @@ function PostPage({ post }: any) {
                 <button
                   key={tab.key}
                   onClick={() => setActiveTab(tab.key)}
-                  className={`px-4 py-2.5 text-sm font-bold transition-colors relative
+                  className={`px-4 py-3 min-h-[44px] text-sm font-bold transition-colors relative
                     ${activeTab === tab.key
                       ? "text-theater-primary-600"
                       : "text-gray-400 hover:text-gray-600"
