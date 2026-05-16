@@ -342,7 +342,8 @@ function PostPage({ post }: any) {
                 <div className="space-y-6">
                   <MemoizedPostDetails post={post} />
 
-                  {!post.synopsis && post.aiDescription && (
+                  {/* AIによる作品概要: synopsisの有無に関わらず常に表示（補完情報として有用） */}
+                  {post.aiDescription && (
                     <AiDescription description={post.aiDescription} />
                   )}
 
