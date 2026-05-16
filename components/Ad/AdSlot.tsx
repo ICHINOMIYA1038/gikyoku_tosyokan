@@ -20,6 +20,7 @@ type AdSlotProps = {
 const AdSlot = ({ slot, format = "auto", className }: AdSlotProps) => {
   return (
     <div className={`my-6 ${className || ""}`}>
+      <div className="text-[10px] text-gray-400 text-right mb-0.5 leading-none">広告</div>
       <DisplayAd slot={slot} format={format} />
     </div>
   );
