@@ -47,7 +47,7 @@ async function processFile(filePath: string, dryRun: boolean): Promise<{ added: 
 
   for (const section of sections) {
     // ヘッダーから作者・タイトルを抽出
-    const matches = [...section.matchAll(HEADING_RE)];
+    const matches = Array.from(section.matchAll(HEADING_RE));
     if (matches.length === 0) {
       newSections.push(section);
       continue;
