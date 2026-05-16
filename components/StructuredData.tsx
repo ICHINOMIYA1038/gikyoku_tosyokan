@@ -69,8 +69,18 @@ interface CollectionItem {
   image?: string;
 }
 
+interface PersonInfo {
+  name: string;
+  url: string;
+  description?: string;
+  jobTitle?: string;
+  worksCount?: number;
+  sameAs?: string[];
+}
+
 interface StructuredDataProps {
-  type?: "WebSite" | "Article" | "BreadcrumbList" | "Organization" | "Play" | "FAQPage" | "EventList" | "CollectionPage";
+  type?: "WebSite" | "Article" | "BreadcrumbList" | "Organization" | "Play" | "FAQPage" | "EventList" | "CollectionPage" | "Person";
+  personInfo?: PersonInfo;
   title?: string;
   description?: string;
   url?: string;
@@ -112,6 +122,7 @@ const StructuredData = ({
   events,
   collectionItems,
   numberOfItems,
+  personInfo,
 }: StructuredDataProps) => {
   const siteUrl = "https://gikyokutosyokan.com";
   
@@ -389,6 +400,27 @@ const StructuredData = ({
               "text": item.answer
             }
           }))
+        };
+
+      case "Person":
+        if (!personInfo) return null;
+        return {
+          "@context": "https://schema.org",
+          "@type": "Person",
+          "name": personInfo.name,
+          "url": personInfo.url,
+          ...(personInfo.description ? { "description": personInfo.description } : {}),
+          "jobTitle": personInfo.jobTitle || "脚本家・劇作家",
+          ...(personInfo.worksCount ? {
+            "knowsAbout": ["演劇", "戯曲", "脚本", "舞台"],
+            "subjectOf": {
+              "@type": "CollectionPage",
+              "name": `${personInfo.name}の戯曲一覧`,
+              "url": personInfo.url,
+              "numberOfItems": personInfo.worksCount,
+            }
+          } : {}),
+          ...(personInfo.sameAs && personInfo.sameAs.length > 0 ? { "sameAs": personInfo.sameAs } : {}),
         };
 
       case "CollectionPage":
