@@ -43,16 +43,20 @@ export default async function handler(
             },
           },
         },
-        orderBy: { averageRating: 'desc' },
+        orderBy: [
+          { averageRating: { sort: 'desc', nulls: 'last' } },
+          { id: 'desc' },
+        ],
       }),
-      
-      // カテゴリ: 名前とIDのみ
+
+      // カテゴリ: 名前とID。作品数の多い順
       prisma.category.findMany({
         select: {
           id: true,
           name: true,
         },
         take: 20,
+        orderBy: { posts: { _count: 'desc' } },
       }),
       
       // 作者: カウントのみ
