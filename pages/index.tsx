@@ -107,7 +107,7 @@ export default function Home({ news, authors, posts, categories, blogPosts, tren
           id="registration-form"
           ref={searchFormRef}
         >
-          <div className="m-1 md:m-5 lg:w-1/2 lg:sticky lg:top-24">
+          <div className="mx-3 my-3 md:m-5 lg:w-1/2 lg:sticky lg:top-24">
             <ResponsiveSearchForm
               setData={setData}
               page={page}
@@ -117,7 +117,7 @@ export default function Home({ news, authors, posts, categories, blogPosts, tren
               onSearch={handleScrollToRegistrationForm}
             />
           </div>
-          <div className="lg:w-2/3 flex flex-col gap-3 m-1 md:m-5">
+          <div className="lg:w-2/3 flex flex-col gap-3 mx-3 my-3 md:m-5">
             <SearchResults
               data={data}
               sort_by={sort_by}
