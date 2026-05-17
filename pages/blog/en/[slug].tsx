@@ -19,6 +19,7 @@ import { FaHome, FaChevronRight, FaClock, FaPen, FaTag } from 'react-icons/fa';
 import BlogTableOfContents from '@/components/BlogTableOfContents';
 import BlogShareButtons from '@/components/BlogShareButtons';
 import BlogRelatedPosts from '@/components/BlogRelatedPosts';
+import ReadingProgressBar from '@/components/ReadingProgressBar';
 import AdSlot from '@/components/Ad/AdSlot';
 import { AD_SLOTS } from '@/lib/adSlots';
 import {
@@ -88,6 +89,7 @@ export default function BlogEnPost({
 
   return (
     <Layout>
+      <ReadingProgressBar />
       <Seo
         pageTitle={post.title}
         pageDescription={post.description}

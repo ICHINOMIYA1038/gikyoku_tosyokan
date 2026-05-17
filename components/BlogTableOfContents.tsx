@@ -67,27 +67,36 @@ const BlogTableOfContents: React.FC<BlogTableOfContentsProps> = ({ content }) =>
   };
 
   return (
-    <nav className="border border-gray-200 rounded-lg p-5 my-8">
-      <p className="text-sm font-bold text-gray-700 mb-3">目次</p>
-      <ul className="space-y-0.5 text-sm">
-        {headings.map((heading, i) => (
-          <li key={i} className={heading.level === 3 ? 'ml-4' : ''}>
-            <a
-              href={`#${heading.id}`}
-              onClick={(e) => handleClick(e, heading.id)}
-              className={`block py-1.5 transition-colors ${
-                activeId === heading.id
-                  ? 'text-gray-900 font-semibold'
-                  : 'text-gray-500 hover:text-gray-800'
-              }`}
-            >
-              {heading.level === 3 && (
-                <span className="inline-block w-1 h-1 rounded-full bg-gray-300 mr-2 align-middle" />
+    <nav className="border border-gray-200 rounded-lg p-5 my-8 bg-white">
+      <p className="text-sm font-bold text-gray-700 mb-3 flex items-center gap-2">
+        <span className="inline-block w-1 h-4 bg-theater-primary-500 rounded-sm" />
+        目次
+      </p>
+      <ul className="space-y-0.5 text-sm border-l border-gray-200 pl-3">
+        {headings.map((heading, i) => {
+          const isActive = activeId === heading.id;
+          return (
+            <li key={i} className={`relative ${heading.level === 3 ? 'ml-4' : ''}`}>
+              {isActive && (
+                <span className="absolute -left-[13px] top-1/2 -translate-y-1/2 w-1 h-5 bg-theater-primary-500 rounded-r" />
               )}
-              {heading.text}
-            </a>
-          </li>
-        ))}
+              <a
+                href={`#${heading.id}`}
+                onClick={(e) => handleClick(e, heading.id)}
+                className={`block py-1.5 transition-colors ${
+                  isActive
+                    ? 'text-theater-primary-700 font-semibold'
+                    : 'text-gray-500 hover:text-gray-800'
+                }`}
+              >
+                {heading.level === 3 && (
+                  <span className="inline-block w-1 h-1 rounded-full bg-gray-300 mr-2 align-middle" />
+                )}
+                {heading.text}
+              </a>
+            </li>
+          );
+        })}
       </ul>
     </nav>
   );

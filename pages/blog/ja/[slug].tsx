@@ -14,10 +14,32 @@ import {
   BlogPost,
   BlogPostMeta,
 } from '@/lib/blog';
-import { FaHome, FaChevronRight, FaClock, FaPen, FaTag } from 'react-icons/fa';
+import { FaHome, FaChevronRight, FaClock, FaPen, FaTag, FaBookmark } from 'react-icons/fa';
+
+const CALLOUT_TYPES: CalloutType[] = ['info', 'tip', 'warn', 'quote'];
+
+function splitContentByCallouts(content: string): Array<{ kind: 'md'; body: string } | { kind: 'callout'; type: CalloutType; title?: string; body: string }> {
+  const segments: Array<{ kind: 'md'; body: string } | { kind: 'callout'; type: CalloutType; title?: string; body: string }> = [];
+  const regex = /^:::(info|tip|warn|quote)(?:\s+(.+?))?\s*\n([\s\S]*?)^:::\s*$/gm;
+  let lastIndex = 0;
+  let m: RegExpExecArray | null;
+  while ((m = regex.exec(content)) !== null) {
+    if (m.index > lastIndex) {
+      segments.push({ kind: 'md', body: content.slice(lastIndex, m.index) });
+    }
+    segments.push({ kind: 'callout', type: m[1] as CalloutType, title: m[2], body: m[3].trimEnd() });
+    lastIndex = regex.lastIndex;
+  }
+  if (lastIndex < content.length) {
+    segments.push({ kind: 'md', body: content.slice(lastIndex) });
+  }
+  return segments;
+}
 import BlogTableOfContents from '@/components/BlogTableOfContents';
 import BlogShareButtons from '@/components/BlogShareButtons';
 import BlogRelatedPosts from '@/components/BlogRelatedPosts';
+import BlogCallout, { CalloutType } from '@/components/BlogCallout';
+import ReadingProgressBar from '@/components/ReadingProgressBar';
 import AdSlot from '@/components/Ad/AdSlot';
 import { AD_SLOTS } from '@/lib/adSlots';
 import {
@@ -57,6 +79,7 @@ export default function BlogJaPost({
   ];
   return (
     <Layout>
+      <ReadingProgressBar />
       <Seo
         pageTitle={post.title}
         pageDescription={post.description}
@@ -152,8 +175,30 @@ export default function BlogJaPost({
                 <AdSlot slot={AD_SLOTS.BLOG_AFTER_TOC} format="horizontal" className="!my-0" />
               </div>
 
+              {/* TL;DR */}
+              {post.description && (
+                <aside
+                  aria-label="この記事のポイント"
+                  className="not-prose mb-10 rounded-xl border border-theater-primary-100 bg-gradient-to-br from-theater-primary-50 to-white p-5 md:p-6"
+                >
+                  <div className="flex items-center gap-2 mb-2.5 text-xs font-bold tracking-wider text-theater-primary-700">
+                    <FaBookmark className="text-theater-primary-500" />
+                    <span>この記事のポイント</span>
+                  </div>
+                  <p className="text-gray-700 leading-relaxed text-[15px]">
+                    {post.description}
+                  </p>
+                </aside>
+              )}
+
               <div className="prose prose-lg max-w-none prose-headings:font-bold prose-p:leading-[1.85] prose-p:text-gray-700">
+                {splitContentByCallouts(displayContent).map((seg, idx) => seg.kind === 'callout' ? (
+                  <BlogCallout key={idx} type={seg.type} title={seg.title}>
+                    <ReactMarkdown remarkPlugins={[remarkGfm]}>{seg.body}</ReactMarkdown>
+                  </BlogCallout>
+                ) : (
                 <ReactMarkdown
+                  key={idx}
                   remarkPlugins={[remarkGfm]}
                   components={{
                     h2: ({ children }) => {
@@ -161,7 +206,7 @@ export default function BlogJaPost({
                       return (
                         <h2
                           id={id}
-                          className="text-xl font-bold mt-12 mb-5 scroll-mt-20 text-gray-700"
+                          className="text-xl font-bold mt-12 mb-5 scroll-mt-20 text-gray-800 relative pl-4 border-l-4 border-theater-primary-500"
                         >
                           {children}
                         </h2>
@@ -172,7 +217,7 @@ export default function BlogJaPost({
                       return (
                         <h3
                           id={id}
-                          className="text-lg font-bold mt-8 mb-4 scroll-mt-20 text-gray-700"
+                          className="text-lg font-bold mt-8 mb-4 scroll-mt-20 text-gray-800 flex items-center gap-2 before:content-[''] before:inline-block before:w-2 before:h-2 before:rounded-full before:bg-theater-primary-400"
                         >
                           {children}
                         </h3>
@@ -233,8 +278,9 @@ export default function BlogJaPost({
                     td: ({ children }) => <td className="px-4 py-3 border-t border-gray-100 text-gray-600">{children}</td>,
                   }}
                 >
-                  {displayContent}
+                  {seg.body}
                 </ReactMarkdown>
+                ))}
               </div>
 
               {/* Author / meta section */}
