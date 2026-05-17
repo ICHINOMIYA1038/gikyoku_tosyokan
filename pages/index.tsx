@@ -102,6 +102,40 @@ export default function Home({ news, authors, posts, categories, blogPosts, tren
           <AdSlot slot={AD_SLOTS.HOME_AFTER_TRENDING} format="horizontal" />
         </div>
 
+        {/* 人気の検索 - クイックフィルタチップ */}
+        <section className="max-w-6xl mx-auto px-4 py-4">
+          <h2 className="text-sm font-bold text-gray-600 mb-3">🔥 人気の検索条件</h2>
+          <div className="flex flex-wrap gap-2 text-sm">
+            <Link href="/?maxPlaytime=30" className="inline-flex items-center gap-1 px-3 py-1.5 bg-white border border-gray-200 rounded-full text-theater-primary-700 hover:bg-theater-primary-50 hover:border-theater-primary-300 transition-colors">
+              30分以内の短編
+            </Link>
+            <Link href="/?minTotalCount=2&maxTotalCount=5" className="inline-flex items-center gap-1 px-3 py-1.5 bg-white border border-gray-200 rounded-full text-theater-primary-700 hover:bg-theater-primary-50 hover:border-theater-primary-300 transition-colors">
+              2〜5人の少人数
+            </Link>
+            <Link href="/?minTotalCount=2&maxTotalCount=2" className="inline-flex items-center gap-1 px-3 py-1.5 bg-white border border-gray-200 rounded-full text-theater-primary-700 hover:bg-theater-primary-50 hover:border-theater-primary-300 transition-colors">
+              二人芝居
+            </Link>
+            <Link href="/?minTotalCount=1&maxTotalCount=1" className="inline-flex items-center gap-1 px-3 py-1.5 bg-white border border-gray-200 rounded-full text-theater-primary-700 hover:bg-theater-primary-50 hover:border-theater-primary-300 transition-colors">
+              一人芝居
+            </Link>
+            <Link href="/?maxMaleCount=0" className="inline-flex items-center gap-1 px-3 py-1.5 bg-white border border-gray-200 rounded-full text-theater-primary-700 hover:bg-theater-primary-50 hover:border-theater-primary-300 transition-colors">
+              女性のみ
+            </Link>
+            <Link href="/categories/4" className="inline-flex items-center gap-1 px-3 py-1.5 bg-white border border-gray-200 rounded-full text-theater-primary-700 hover:bg-theater-primary-50 hover:border-theater-primary-300 transition-colors">
+              無料で読める
+            </Link>
+            <Link href="/categories/14" className="inline-flex items-center gap-1 px-3 py-1.5 bg-white border border-gray-200 rounded-full text-theater-primary-700 hover:bg-theater-primary-50 hover:border-theater-primary-300 transition-colors">
+              コメディ
+            </Link>
+            <Link href="/categories/11" className="inline-flex items-center gap-1 px-3 py-1.5 bg-white border border-gray-200 rounded-full text-theater-primary-700 hover:bg-theater-primary-50 hover:border-theater-primary-300 transition-colors">
+              ヒューマンドラマ
+            </Link>
+            <Link href="/categories/1" className="inline-flex items-center gap-1 px-3 py-1.5 bg-white border border-gray-200 rounded-full text-theater-primary-700 hover:bg-theater-primary-50 hover:border-theater-primary-300 transition-colors">
+              岸田國士戯曲賞
+            </Link>
+          </div>
+        </section>
+
         <div
           className="lg:flex relative box-border"
           id="registration-form"
