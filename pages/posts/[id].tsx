@@ -62,10 +62,20 @@ function PostPage({ post, blogMentions }: any) {
   const [activeTab, setActiveTab] = useState<"overview" | "community" | "related">("overview");
 
   useEffect(() => {
+    // 同一セッション内・同一日付では1回のみ記録（Function Invocations削減）
+    try {
+      const today = new Date().toISOString().split("T")[0];
+      const key = `access:${post.id}:${today}`;
+      if (sessionStorage.getItem(key)) return;
+      sessionStorage.setItem(key, "1");
+    } catch {
+      // sessionStorage不可なら通常通り送信
+    }
     fetch("/api/record-access", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ postId: post.id }),
+      keepalive: true,
     }).catch(() => {});
   }, [post.id]);
 

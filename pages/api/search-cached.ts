@@ -6,10 +6,10 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  // キャッシュヘッダーを設定（2分）
+  // キャッシュヘッダーを設定（1時間 + SWR 2時間 — Edge Function呼び出し回数削減）
   res.setHeader(
     'Cache-Control',
-    'public, s-maxage=600, stale-while-revalidate=300'
+    'public, s-maxage=3600, stale-while-revalidate=7200'
   );
 
   const {
