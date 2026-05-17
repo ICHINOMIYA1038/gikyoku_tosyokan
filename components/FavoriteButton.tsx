@@ -35,7 +35,8 @@ const FavoriteButton: React.FC<FavoriteButtonProps> = ({ postId, size = "md", va
   }
 
   const iconClass = size === "sm" ? "text-base" : "text-xl";
-  const btnClass = size === "sm" ? "w-8 h-8" : "w-10 h-10";
+  // モバイルでのタップしやすさのため、sm でも実質40pxを確保
+  const btnClass = size === "sm" ? "w-10 h-10" : "w-11 h-11";
 
   return (
     <button

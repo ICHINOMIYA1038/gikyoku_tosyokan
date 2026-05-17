@@ -3,27 +3,39 @@ import Link from "next/link";
 
 const footerLinks = [
   {
-    title: "このサイトについて",
+    title: "コンテンツ",
     links: [
-      { href: "/support/aboutus", label: "運営者概要" },
-      { href: "/support/press-release", label: "プレスリリース" },
+      { href: "/", label: "戯曲を検索" },
       { href: "/authors", label: "作者一覧" },
       { href: "/categories", label: "カテゴリー一覧" },
+      { href: "/blog/ja", label: "ブログ" },
       { href: "/announcements", label: "上演告知" },
     ],
   },
   {
-    title: "ヘルプ",
+    title: "データベース",
     links: [
+      { href: "/theater-groups", label: "劇団データベース" },
+      { href: "/venues", label: "劇場データベース" },
+      { href: "/university-theater", label: "大学演劇" },
+      { href: "/shogekijo", label: "小劇場" },
+      { href: "/tools", label: "ツール" },
+    ],
+  },
+  {
+    title: "このサイトについて",
+    links: [
+      { href: "/support/aboutus", label: "運営者概要" },
+      { href: "/support/press-release", label: "プレスリリース" },
       { href: "/support/contact", label: "お問い合わせ" },
-      { href: "/support/privacy-policy", label: "プライバシーポリシー" },
       { href: "/support/posting-request", label: "掲載リクエスト" },
     ],
   },
   {
-    title: "利用規約等",
+    title: "規約・サイトマップ",
     links: [
       { href: "/support/tos", label: "利用規約" },
+      { href: "/support/privacy-policy", label: "プライバシーポリシー" },
       { href: "/support/copyright", label: "著作権について" },
       { href: "/support/content-removal", label: "権利侵害の申告" },
       { href: "/sitemap.xml", label: "サイトマップ" },
@@ -38,18 +50,18 @@ const Footer: React.FC = () => {
         <Link href="/" className="block mb-6" aria-label="戯曲図書館ホームへ">
           <img src="/logo-white.png" alt="戯曲図書館" className="h-10 w-auto opacity-90" />
         </Link>
-        <nav className="grid grid-cols-1 md:grid-cols-3 gap-8" aria-label="フッターナビゲーション">
+        <nav className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8" aria-label="フッターナビゲーション">
           {footerLinks.map((section) => (
             <div key={section.title}>
               <h2 className="text-sm font-semibold text-white uppercase tracking-wider mb-3">
                 {section.title}
               </h2>
-              <ul className="space-y-2">
+              <ul className="space-y-1">
                 {section.links.map((link) => (
                   <li key={link.href}>
                     <Link
                       href={link.href}
-                      className="text-sm text-gray-400 hover:text-white transition-colors"
+                      className="block py-1.5 text-sm text-gray-400 hover:text-white transition-colors"
                     >
                       {link.label}
                     </Link>
