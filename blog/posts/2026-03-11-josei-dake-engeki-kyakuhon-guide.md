@@ -169,7 +169,9 @@ tags: ["女性だけ", "演劇脚本", "文化祭", "演劇部", "脚本選び"]
 
 戯曲図書館では、人数・上演時間・カテゴリで条件を絞りながら、作品情報を比較できます。候補を複数並べて検討したいときに便利です。
 
-[戯曲図書館で脚本を探す](https://gikyokutosyokan.com)
+📖 [戯曲図書館で「男性0人」の作品を絞り込む →](/?maxMaleCount=0)
+📖 [女性2〜5人で30分以内の短編を探す →](/?maxMaleCount=0&minFemaleCount=2&maxFemaleCount=5&maxPlaytime=30)
+📖 [女性3人前後の会話劇を探す →](/?maxMaleCount=0&minFemaleCount=3&maxFemaleCount=5)
 
 ---
 

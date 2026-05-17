@@ -67,7 +67,9 @@ tags: ["少人数", "脚本選び", "二人芝居", "演劇部", "ガイド"]
 3. 必要に応じて男女比や上演時間も指定
 4. 検索結果から気になる作品をチェック
 
-[戯曲図書館で少人数の脚本を検索する](https://gikyokutosyokan.com/)
+📖 [2〜5人の少人数脚本を探す →](/?minTotalCount=2&maxTotalCount=5)
+📖 [2人芝居（二人芝居）を探す →](/?minTotalCount=2&maxTotalCount=2)
+📖 [3〜4人の会話劇を探す →](/?minTotalCount=3&maxTotalCount=4)
 
 ### 書店・図書館で探す
 
