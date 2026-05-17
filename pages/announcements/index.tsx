@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { FaCalendarAlt, FaMapMarkerAlt, FaEye, FaPlus, FaClock, FaTheaterMasks, FaBook, FaUsers } from 'react-icons/fa';
 import Seo from '@/components/seo';
+import StructuredData from '@/components/StructuredData';
 
 type Announcement = {
   id: number;
@@ -98,6 +99,13 @@ export default function AnnouncementsPage() {
         pageDescription="演劇・舞台の公演告知を自由に投稿・閲覧できる掲示板です。公演情報を広く発信しましょう。"
         pagePath="/announcements"
         pageType="website"
+      />
+      <StructuredData
+        type="BreadcrumbList"
+        breadcrumbs={[
+          { name: "ホーム", url: "https://gikyokutosyokan.com" },
+          { name: "上演告知", url: "https://gikyokutosyokan.com/announcements" },
+        ]}
       />
       <Layout>
         <div className="min-h-screen bg-gradient-to-b from-theater-neutral-50 to-white">

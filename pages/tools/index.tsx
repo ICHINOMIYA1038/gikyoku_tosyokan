@@ -2,6 +2,7 @@ import React from "react";
 import Link from "next/link";
 import Layout from "@/components/Layout";
 import Seo from "@/components/seo";
+import StructuredData from "@/components/StructuredData";
 import { FaClock, FaChartBar, FaCalendarAlt, FaStopwatch } from "react-icons/fa";
 
 interface ToolCard {
@@ -62,6 +63,13 @@ export default function ToolsIndex() {
           "稽古タイマー",
           "戯曲",
           "脚本",
+        ]}
+      />
+      <StructuredData
+        type="BreadcrumbList"
+        breadcrumbs={[
+          { name: "ホーム", url: "https://gikyokutosyokan.com" },
+          { name: "演劇ツール", url: "https://gikyokutosyokan.com/tools" },
         ]}
       />
 
