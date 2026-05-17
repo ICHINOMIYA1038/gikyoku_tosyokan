@@ -71,12 +71,17 @@ const PostCard: React.FC<PostPageProps> = ({ post }: any) => {
                 </span>
               </div>
 
-              {/* あらすじ */}
-              {post.synopsis && (
+              {/* あらすじ（synopsis優先、なければAI概要） */}
+              {post.synopsis ? (
                 <p className="text-sm text-gray-600 line-clamp-2 leading-relaxed mb-4 font-sans">
                   {post.synopsis}
                 </p>
-              )}
+              ) : post.aiDescription ? (
+                <p className="text-sm text-gray-600 line-clamp-2 leading-relaxed mb-4 font-sans">
+                  <span className="inline-block text-[10px] font-bold text-purple-600 bg-purple-50 border border-purple-100 px-1.5 py-0.5 rounded mr-1.5 align-middle">AI</span>
+                  {post.aiDescription}
+                </p>
+              ) : null}
             </div>
             
             {/* メタ情報（下部） */}

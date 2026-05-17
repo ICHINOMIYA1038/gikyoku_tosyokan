@@ -162,6 +162,7 @@ export default async function handler(
           id: true,
           title: true,
           synopsis: true,
+          aiDescription: true,
           image_url: true,
           man: true,
           woman: true,

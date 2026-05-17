@@ -72,6 +72,8 @@ export default async function handler(
           totalNumber: true,
           playtime: true,
           averageRating: true,
+          synopsis: true,
+          aiDescription: true,
           author: {
             select: {
               id: true,

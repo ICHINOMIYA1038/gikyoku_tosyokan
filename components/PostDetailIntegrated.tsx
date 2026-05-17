@@ -138,7 +138,31 @@ export const PostHero: React.FC<PostPageProps> = ({ post }) => {
 // --- 購入CTA（販売確認済みの作品のみ表示） ---
 const PurchaseCTAs: React.FC<{ post: any }> = ({ post }) => {
   const hasAnyPurchaseLink = !!(post.amazon_text_url || post.ISBN_13 || post.kangeki_url || post.link_to_plot);
-  if (!hasAnyPurchaseLink) return null;
+  if (!hasAnyPurchaseLink) {
+    return (
+      <div className="mt-4 p-3 rounded-lg bg-gray-50 border border-gray-200 text-xs text-gray-600 leading-relaxed">
+        <p className="font-semibold text-gray-700 mb-1">📕 台本の入手情報</p>
+        <p>
+          現在この作品の台本販売情報は確認できていません。
+          上演希望の場合は、作者または劇団へ直接お問い合わせください。
+          {post.author?.twitter_url && (
+            <>
+              {" "}
+              <a
+                href={post.author.twitter_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-theater-primary-600 hover:underline font-medium"
+              >
+                作者のTwitter
+              </a>
+              から連絡を取れる場合があります。
+            </>
+          )}
+        </p>
+      </div>
+    );
+  }
 
   // モバイルで44px以上のタップターゲットを確保（Apple HIG / WCAG基準）
   const btnBase = "inline-flex items-center justify-center gap-1.5 px-4 py-2.5 min-h-[44px] text-sm font-bold rounded transition-colors";
