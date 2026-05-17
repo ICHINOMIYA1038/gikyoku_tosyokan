@@ -7,6 +7,8 @@ import Seo from "@/components/seo";
 import CustomMarkdown from "@/components/CustomMarkdown";
 import Link from "next/link";
 import { FaTheaterMasks, FaBook, FaTag, FaClock, FaUsers, FaFilter, FaSearch, FaChevronRight } from "react-icons/fa";
+import AdSlot from "@/components/Ad/AdSlot";
+import { AD_SLOTS } from "@/lib/adSlots";
 const prisma = new PrismaClient();
 
 // カテゴリごとのSEO最適化コンテンツ
@@ -448,6 +450,9 @@ function CategoryPage({ category }: any) {
                 </div>
               )}
             </div>
+
+            {/* 広告: 作品一覧の後ろ */}
+            <AdSlot slot={AD_SLOTS.CATEGORY_AFTER_LIST} format="horizontal" />
 
             {/* 関連検索キーワード */}
             {categoryInfo.relatedSearches.length > 0 && (

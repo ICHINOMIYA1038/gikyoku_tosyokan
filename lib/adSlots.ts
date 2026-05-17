@@ -19,4 +19,10 @@ export const AD_SLOTS = {
 
   // 著者ページ
   AUTHOR_AFTER_PROFILE: "3817874970",  // gikyoku-author-after-profile (横長)
+
+  // カテゴリページ
+  // TODO: AdSense管理画面で新規広告ユニット「gikyoku-category-after-list」(横長) を作成し、
+  //       生成されたslot IDをここに差し替えてください。
+  //       それまでは AUTHOR_AFTER_PROFILE のslotを暫定流用しています。
+  CATEGORY_AFTER_LIST: "3817874970",   // ← 新規作成後に置き換え
 } as const;
