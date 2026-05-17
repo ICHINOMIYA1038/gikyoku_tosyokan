@@ -27,6 +27,8 @@ import { prisma } from "@/lib/prisma";
 import AdSlot from "@/components/Ad/AdSlot";
 import { AD_SLOTS } from "@/lib/adSlots";
 import AiDescription from "@/components/AiDescription";
+import PostBlogMentions from "@/components/PostBlogMentions";
+import { getBlogPostsMentioningPost } from "@/lib/blog";
 // import UserSynopsis from "@/components/UserSynopsis";
 
 // メモ化されたコンポーネント
@@ -49,7 +51,7 @@ function formatDatetime(datetime: any) {
   return `${year}/${month}/${day} ${hours}:${minutes}`;
 }
 
-function PostPage({ post }: any) {
+function PostPage({ post, blogMentions }: any) {
   const URL = `https://gikyokutosyokan.com/posts/${post.id}`;
   const QUOTE = `${post.author.name}作「${post.title}」をみんなにおすすめしよう`;
   const [star, setStar] = useState(0);
@@ -352,6 +354,8 @@ function PostPage({ post }: any) {
                   */}
 
                   <AdSlot slot={AD_SLOTS.POST_AFTER_CONTENT} format="horizontal" />
+
+                  <PostBlogMentions posts={blogMentions || []} />
 
                   {/* 概要タブでも同著者の他作品を見せる（回遊性UP） */}
                   <MemoizedOtherPosts authorId={post.author_id} postId={post.id} authorName={post.author.name} />
@@ -771,9 +775,12 @@ export async function getStaticProps(context: any) {
       })),
     };
 
+    const blogMentions = await getBlogPostsMentioningPost(post.id, 'ja', 5);
+
     return {
       props: {
         post: formattedPost,
+        blogMentions,
       },
       revalidate: 604800,
     };

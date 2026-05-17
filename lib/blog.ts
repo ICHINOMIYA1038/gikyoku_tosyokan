@@ -225,6 +225,78 @@ export async function getRelatedPosts(
   }));
 }
 
+/**
+ * 本文中で /posts/{id} を参照しているブログ記事を返す
+ */
+export async function getBlogPostsMentioningPost(
+  postId: number,
+  language: string = 'ja',
+  limit: number = 5
+): Promise<BlogPostMeta[]> {
+  const needle = `/posts/${postId}`;
+  const posts = await prisma.blogPost.findMany({
+    where: {
+      published: true,
+      publishedAt: { lte: new Date() },
+      language,
+      content: { contains: needle },
+    },
+    orderBy: { publishedAt: 'desc' },
+    select: {
+      slug: true,
+      title: true,
+      publishedAt: true,
+      description: true,
+      tags: true,
+    },
+    take: limit,
+  });
+
+  return posts.map((post) => ({
+    slug: post.slug,
+    title: post.title,
+    date: formatDate(post.publishedAt),
+    description: post.description || '',
+    tags: post.tags,
+  }));
+}
+
+/**
+ * 本文中で参照されている /posts/{id} のIDを抽出して、対応する戯曲を返す
+ */
+export async function getPostsReferencedInContent(
+  content: string,
+  limit: number = 8
+): Promise<Array<{ id: number; title: string; authorName: string | null; imageUrl: string | null }>> {
+  const ids = Array.from(new Set(
+    Array.from(content.matchAll(/\/posts\/(\d+)/g)).map((m) => parseInt(m[1], 10))
+  )).filter((n) => !Number.isNaN(n)).slice(0, limit);
+
+  if (ids.length === 0) return [];
+
+  const posts = await prisma.post.findMany({
+    where: { id: { in: ids } },
+    select: {
+      id: true,
+      title: true,
+      image_url: true,
+      author: { select: { name: true } },
+    },
+  });
+
+  // 出現順を保持
+  const map = new Map(posts.map((p) => [p.id, p]));
+  return ids
+    .map((id) => map.get(id))
+    .filter((p): p is NonNullable<typeof p> => !!p)
+    .map((p) => ({
+      id: p.id,
+      title: p.title,
+      authorName: p.author?.name || null,
+      imageUrl: p.image_url || null,
+    }));
+}
+
 export async function getAllTags(): Promise<string[]> {
   const posts = await prisma.blogPost.findMany({
     where: { published: true },

@@ -11,9 +11,11 @@ import {
   getPostSlugsByLanguage,
   getAlternateLanguageSlug,
   getRelatedPosts,
+  getPostsReferencedInContent,
   BlogPost,
   BlogPostMeta,
 } from '@/lib/blog';
+import BlogReferencedPosts from '@/components/BlogReferencedPosts';
 import { FaHome, FaChevronRight, FaClock, FaPen, FaTag, FaBookmark } from 'react-icons/fa';
 
 const CALLOUT_TYPES: CalloutType[] = ['info', 'tip', 'warn', 'quote'];
@@ -55,6 +57,7 @@ interface Props {
   post: BlogPost;
   alternateSlug: string | null;
   relatedPosts: BlogPostMeta[];
+  referencedPosts: Array<{ id: number; title: string; authorName: string | null; imageUrl: string | null }>;
   metadata: BlogMetadata;
   readingTime: number;
   displayContent: string;
@@ -65,6 +68,7 @@ export default function BlogJaPost({
   post,
   alternateSlug,
   relatedPosts,
+  referencedPosts,
   metadata,
   readingTime,
   displayContent,
@@ -283,6 +287,8 @@ export default function BlogJaPost({
                 ))}
               </div>
 
+              <BlogReferencedPosts posts={referencedPosts} />
+
               {/* Author / meta section */}
               <div className="mt-14 pt-8 border-t border-gray-200">
                 <div className="flex items-start gap-4 p-5 bg-gray-50 rounded-xl">
@@ -352,8 +358,9 @@ export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
   const metadata = extractBlogMetadata(post.content);
   const displayContent = stripMetadataComment(post.content);
   const readingTime = estimateReadingTime(displayContent);
+  const referencedPosts = await getPostsReferencedInContent(displayContent, 8);
   return {
-    props: { post, alternateSlug, relatedPosts, metadata, readingTime, displayContent },
+    props: { post, alternateSlug, relatedPosts, referencedPosts, metadata, readingTime, displayContent },
     // 記事本文は公開後ほぼ変化なし。7日に延ばしてISR Writesを削減。
     revalidate: 604800,
   };
