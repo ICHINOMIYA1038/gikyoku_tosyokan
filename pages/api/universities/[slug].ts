@@ -42,7 +42,7 @@ export default async function handler(
       return res.status(404).json({ error: 'University not found' });
     }
 
-    res.setHeader('Cache-Control', 's-maxage=600, stale-while-revalidate');
+    res.setHeader('Cache-Control', 'public, s-maxage=3600, stale-while-revalidate=7200');
     res.status(200).json(university);
   } catch (error) {
     console.error('Error fetching university:', error);

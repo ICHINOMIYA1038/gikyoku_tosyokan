@@ -91,7 +91,7 @@ export default async function handler(
       prisma.theaterGroup.count({ where }),
     ]);
 
-    res.setHeader('Cache-Control', 's-maxage=600, stale-while-revalidate');
+    res.setHeader('Cache-Control', 'public, s-maxage=3600, stale-while-revalidate=7200');
 
     res.status(200).json({
       theaterGroups,
