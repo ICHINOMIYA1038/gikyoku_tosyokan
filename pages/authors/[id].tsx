@@ -15,6 +15,21 @@ const prisma = new PrismaClient();
 function AuthorPage({ author }: any) {
   const postCount = author.posts?.length || 0;
 
+  // 代表作（評価順×レビュー数で上位を抽出。最大5件）
+  const topPosts = React.useMemo(() => {
+    if (!author.posts || author.posts.length === 0) return [];
+    const scored = author.posts
+      .filter((p: any) => (p.averageRating || 0) > 0 || (p._count?.comments || 0) > 0)
+      .map((p: any) => ({
+        post: p,
+        score: (p.averageRating || 0) * 2 + (p._count?.comments || 0),
+      }))
+      .sort((a: any, b: any) => b.score - a.score)
+      .slice(0, 5)
+      .map((x: any) => x.post);
+    return scored;
+  }, [author.posts]);
+
   return (
     <Layout>
       <Seo
@@ -29,6 +44,16 @@ function AuthorPage({ author }: any) {
           { name: '作者一覧', url: 'https://gikyokutosyokan.com/authors' },
           { name: author.name, url: `https://gikyokutosyokan.com/authors/${author.id}` },
         ]}
+      />
+      <StructuredData
+        type="Person"
+        personInfo={{
+          name: author.name,
+          url: `https://gikyokutosyokan.com/authors/${author.id}`,
+          description: author.profile || `${author.name}${author.group ? `（${author.group}）` : ''}の戯曲・脚本作品を${postCount}件掲載。`,
+          worksCount: postCount,
+          sameAs: author.website ? [author.website] : undefined,
+        }}
       />
       
       <div className="min-h-screen bg-gradient-to-b from-theater-neutral-50 to-white">
@@ -102,8 +127,22 @@ function AuthorPage({ author }: any) {
             </div>
           )}
 
-          {/* 広告: プロフィール後 */}
-          <AdSlot slot={AD_SLOTS.AUTHOR_AFTER_PROFILE} format="horizontal" />
+          {/* 代表作セクション（評価×レビュー数で抽出） */}
+          {topPosts.length > 0 && (
+            <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-2xl font-bold text-theater-neutral-900 flex items-center gap-2">
+                  ⭐ {author.name}の代表作
+                </h2>
+                <span className="text-sm text-theater-neutral-600">評価の高い作品</span>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 justify-items-center">
+                {topPosts.map((post: any) => (
+                  <PostCardSmall post={post} key={post.id} />
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* 作品一覧セクション */}
           <div className="bg-white rounded-lg shadow-md p-6">
@@ -131,6 +170,11 @@ function AuthorPage({ author }: any) {
                 </p>
               </div>
             )}
+          </div>
+
+          {/* 広告: 作品一覧の後ろに配置（読者の回遊を遮らない） */}
+          <div className="mt-6">
+            <AdSlot slot={AD_SLOTS.AUTHOR_AFTER_PROFILE} format="horizontal" />
           </div>
 
           {/* 関連情報セクション */}

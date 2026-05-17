@@ -27,6 +27,7 @@ const PostCard: React.FC<PostPageProps> = ({ post }: any) => {
                 alt={`${post.title}のサムネイル`}
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 loading="lazy"
+                decoding="async"
               />
             ) : (
               <div className="w-full h-full flex flex-col items-center justify-center bg-gray-50 text-gray-300">
@@ -58,7 +59,7 @@ const PostCard: React.FC<PostPageProps> = ({ post }: any) => {
           <div className="flex-1 p-4 md:p-5 flex flex-col justify-between">
             <div>
               <div className="flex justify-between items-start mb-2">
-                 <h3 className="text-lg md:text-xl font-serif font-bold text-gray-800 group-hover:text-theater-primary-700 transition-colors line-clamp-1 leading-snug">
+                 <h3 className="text-lg md:text-xl font-serif font-bold text-gray-800 group-hover:text-theater-primary-700 transition-colors line-clamp-2 md:line-clamp-1 leading-snug">
                   {post.title}
                 </h3>
               </div>

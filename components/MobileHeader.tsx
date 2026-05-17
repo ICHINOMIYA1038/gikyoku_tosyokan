@@ -35,8 +35,8 @@ export default function MobileHeader() {
           <Image src="https://gikyokutosyokan-public.s3.ap-northeast-1.amazonaws.com/assets/logo-tosyokan.png" alt="戯曲図書館" width={280} height={40} className="h-12 w-auto" priority />
         </Link>
         
-        {/* デスクトップメニュー */}
-        <nav className="space-x-4 hidden md:flex font-semibold items-center">
+        {/* デスクトップメニュー（lg以上で表示。8項目あるためタブレットではハンバーガーに） */}
+        <nav className="space-x-4 hidden lg:flex font-semibold items-center">
           {menuItems.map((item) => (
             <Link
               key={item.href}
@@ -50,10 +50,10 @@ export default function MobileHeader() {
           <AuthMenu variant="desktop" />
         </nav>
 
-        {/* モバイルメニューボタン */}
+        {/* モバイルメニューボタン（タブレットでも表示） */}
         <button
           onClick={toggleMenu}
-          className="flex md:hidden items-center justify-center flex-shrink-0 w-10 h-10 rounded-md bg-white/30 text-theater-neutral-800 hover:bg-white/50 active:bg-white/60 focus:outline-none relative z-10"
+          className="flex lg:hidden items-center justify-center flex-shrink-0 w-11 h-11 rounded-md bg-white/30 text-theater-neutral-800 hover:bg-white/50 active:bg-white/60 focus:outline-none relative z-10"
           aria-label="メニューを開く"
         >
           {isMenuOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
@@ -62,7 +62,7 @@ export default function MobileHeader() {
 
       {/* モバイルメニュー（スライドイン） */}
       <div
-        className={`md:hidden fixed inset-0 z-50 transform transition-transform duration-300 ${
+        className={`lg:hidden fixed inset-0 z-50 transform transition-transform duration-300 ${
           isMenuOpen ? "translate-x-0" : "translate-x-full pointer-events-none"
         }`}
       >

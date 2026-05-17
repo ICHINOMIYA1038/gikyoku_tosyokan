@@ -12,6 +12,7 @@ import {
   LineIcon,
 } from 'react-share';
 import Seo from '@/components/seo';
+import StructuredData from '@/components/StructuredData';
 
 type Announcement = {
   id: number;
@@ -140,6 +141,14 @@ export default function AnnouncementDetailPage() {
         pageDescription={announcement.content.substring(0, 160)}
         pagePath={`/announcements/${announcement.id}`}
         pageType="article"
+      />
+      <StructuredData
+        type="BreadcrumbList"
+        breadcrumbs={[
+          { name: "ホーム", url: "https://gikyokutosyokan.com" },
+          { name: "上演告知", url: "https://gikyokutosyokan.com/announcements" },
+          { name: announcement.title, url: `https://gikyokutosyokan.com/announcements/${announcement.id}` },
+        ]}
       />
       <Layout>
         <div className="min-h-screen bg-gradient-to-b from-theater-neutral-50 to-white">

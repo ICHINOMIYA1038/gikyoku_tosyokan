@@ -320,7 +320,7 @@ function PostPage({ post }: any) {
                 <button
                   key={tab.key}
                   onClick={() => setActiveTab(tab.key)}
-                  className={`px-4 py-2.5 text-sm font-bold transition-colors relative
+                  className={`px-4 py-3 min-h-[44px] text-sm font-bold transition-colors relative
                     ${activeTab === tab.key
                       ? "text-theater-primary-600"
                       : "text-gray-400 hover:text-gray-600"
@@ -342,7 +342,8 @@ function PostPage({ post }: any) {
                 <div className="space-y-6">
                   <MemoizedPostDetails post={post} />
 
-                  {!post.synopsis && post.aiDescription && (
+                  {/* AIによる作品概要: synopsisの有無に関わらず常に表示（補完情報として有用） */}
+                  {post.aiDescription && (
                     <AiDescription description={post.aiDescription} />
                   )}
 
@@ -351,6 +352,34 @@ function PostPage({ post }: any) {
                   */}
 
                   <AdSlot slot={AD_SLOTS.POST_AFTER_CONTENT} format="horizontal" />
+
+                  {/* 概要タブでも同著者の他作品を見せる（回遊性UP） */}
+                  <MemoizedOtherPosts authorId={post.author_id} postId={post.id} authorName={post.author.name} />
+
+                  {/* もっと探す: カテゴリ・人数・時間で関連作品を探す動線 */}
+                  <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                    <h3 className="text-sm font-bold text-gray-700 mb-3">似た条件の作品を探す</h3>
+                    <div className="flex flex-wrap gap-2 text-sm">
+                      {post.categories && post.categories.length > 0 && post.categories.map((c: any) => (
+                        <Link key={c.id} href={`/categories/${c.id}`}
+                          className="inline-flex items-center gap-1 px-3 py-1.5 bg-white border border-gray-200 rounded-full text-theater-primary-700 hover:bg-theater-primary-50 hover:border-theater-primary-300 transition-colors">
+                          #{c.name}
+                        </Link>
+                      ))}
+                      {post.playtime > 0 && (
+                        <Link href={`/?minPlaytime=${Math.max(0, post.playtime - 15)}&maxPlaytime=${post.playtime + 15}`}
+                          className="inline-flex items-center gap-1 px-3 py-1.5 bg-white border border-gray-200 rounded-full text-theater-primary-700 hover:bg-theater-primary-50 hover:border-theater-primary-300 transition-colors">
+                          {post.playtime}分前後
+                        </Link>
+                      )}
+                      {post.totalNumber > 0 && (
+                        <Link href={`/?minTotalNumber=${Math.max(0, post.totalNumber - 2)}&maxTotalNumber=${post.totalNumber + 2}`}
+                          className="inline-flex items-center gap-1 px-3 py-1.5 bg-white border border-gray-200 rounded-full text-theater-primary-700 hover:bg-theater-primary-50 hover:border-theater-primary-300 transition-colors">
+                          {post.totalNumber}人前後の出演
+                        </Link>
+                      )}
+                    </div>
+                  </div>
                 </div>
               )}
 

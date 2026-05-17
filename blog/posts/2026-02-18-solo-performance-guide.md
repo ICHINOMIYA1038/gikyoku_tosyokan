@@ -102,7 +102,8 @@ related:
 | 上級者 | 30〜60分 | 本公演、フェスティバル |
 | ベテラン | 60分以上 | 単独公演、ツアー |
 
-[戯曲図書館では上演時間で脚本を検索](https://gikyokutosyokan.com/)できるので、「1人」「短編」で絞り込んでみてください。
+📖 [一人芝居（1人）の脚本を探す →](/?minTotalCount=1&maxTotalCount=1)
+📖 [一人芝居×30分以内の短編を探す →](/?minTotalCount=1&maxTotalCount=1&maxPlaytime=30)
 
 #### 2. 自分の強みに合わせる
 

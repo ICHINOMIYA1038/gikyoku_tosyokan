@@ -12,6 +12,7 @@ import AdSlot from "./Ad/AdSlot";
 import { AD_SLOTS } from "@/lib/adSlots";
 import AiImageBadge from "./AiImageBadge";
 import Image from "next/image";
+import { trackAffiliateClick } from "@/lib/gtag";
 
 type PostPageProps = {
   post: any;
@@ -32,6 +33,9 @@ export const PostHero: React.FC<PostPageProps> = ({ post }) => {
         <div className="relative">
           {post.image_url ? (
             <img src={post.image_url} alt={post.title}
+              width={160} height={220}
+              fetchPriority="high"
+              decoding="async"
               className="w-36 h-[200px] md:w-40 md:h-[220px] object-cover rounded-lg shadow-md" />
           ) : (
             <div className="w-36 h-[200px] md:w-40 md:h-[220px] bg-gradient-to-br from-theater-primary-400 via-pink-400 to-purple-500 rounded-lg shadow-md flex items-center justify-center">
@@ -125,41 +129,58 @@ export const PostHero: React.FC<PostPageProps> = ({ post }) => {
         )}
 
         {/* CTAボタン */}
-        <div className="flex flex-wrap gap-2 mt-4">
-          {post.link_to_plot && (
-            <a href={post.link_to_plot} target="_blank" rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 px-4 py-2 bg-theater-primary-600 hover:bg-theater-primary-700 text-white text-sm font-bold rounded transition-colors">
-              <FaBook className="text-xs" /> 無料で読む
-            </a>
-          )}
-          {post.amazon_text_url && (
-            <a href={post.amazon_text_url} target="_blank" rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#FF9900] hover:bg-[#e68a00] text-white text-sm font-bold rounded transition-colors">
-              Amazonで購入
-            </a>
-          )}
-          {post.ISBN_13 && (
-            <a href={`https://af.moshimo.com/af/c/click?a_id=4249616&p_id=54&pc_id=54&pl_id=616&url=https%3A%2F%2Fbooks.rakuten.co.jp%2Fsearch%3Fisbn%3D${post.ISBN_13}`}
-              target="_blank" rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#BF0000] hover:bg-[#a00000] text-white text-sm font-bold rounded transition-colors">
-              楽天で購入
-            </a>
-          )}
-          {post.ISBN_13 && (
-            <a href={`https://af.moshimo.com/af/c/click?a_id=4294434&p_id=1225&pc_id=1925&pl_id=27061&url=https%3A%2F%2Fstore.shopping.yahoo.co.jp%2Fsearch%3Ffirst%3D1%26p%3D${encodeURIComponent(post.ISBN_13)}`}
-              target="_blank" rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#FF0033] hover:bg-[#cc0029] text-white text-sm font-bold rounded transition-colors">
-              Yahoo!で購入
-            </a>
-          )}
-          {post.kangeki_url && (
-            <a href={post.kangeki_url} target="_blank" rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-bold rounded transition-colors">
-              観劇三昧で観る
-            </a>
-          )}
-        </div>
+        <PurchaseCTAs post={post} />
       </div>
+    </div>
+  );
+};
+
+// --- 購入CTA（販売確認済みの作品のみ表示） ---
+const PurchaseCTAs: React.FC<{ post: any }> = ({ post }) => {
+  const hasAnyPurchaseLink = !!(post.amazon_text_url || post.ISBN_13 || post.kangeki_url || post.link_to_plot);
+  if (!hasAnyPurchaseLink) return null;
+
+  // モバイルで44px以上のタップターゲットを確保（Apple HIG / WCAG基準）
+  const btnBase = "inline-flex items-center justify-center gap-1.5 px-4 py-2.5 min-h-[44px] text-sm font-bold rounded transition-colors";
+
+  return (
+    <div className="flex flex-wrap gap-2 mt-4">
+      {post.link_to_plot && (
+        <a href={post.link_to_plot} target="_blank" rel="noopener noreferrer"
+          className={`${btnBase} bg-theater-primary-600 hover:bg-theater-primary-700 text-white`}>
+          <FaBook className="text-xs" /> 無料で読む
+        </a>
+      )}
+      {post.amazon_text_url && (
+        <a href={post.amazon_text_url} target="_blank" rel="noopener noreferrer sponsored"
+          onClick={() => trackAffiliateClick("Amazon", post.title, post.id)}
+          className={`${btnBase} bg-[#FF9900] hover:bg-[#e68a00] text-white`}>
+          Amazonで購入
+        </a>
+      )}
+      {post.ISBN_13 && (
+        <a href={`https://af.moshimo.com/af/c/click?a_id=4249616&p_id=54&pc_id=54&pl_id=616&url=${encodeURIComponent("https://books.rakuten.co.jp/search?sitem=" + post.ISBN_13)}`}
+          target="_blank" rel="noopener noreferrer sponsored"
+          onClick={() => trackAffiliateClick("Rakuten", post.title, post.id)}
+          className={`${btnBase} bg-[#BF0000] hover:bg-[#a00000] text-white`}>
+          楽天で購入
+        </a>
+      )}
+      {post.ISBN_13 && (
+        <a href={`https://af.moshimo.com/af/c/click?a_id=4294434&p_id=1225&pc_id=1925&pl_id=27061&url=${encodeURIComponent("https://shopping.yahoo.co.jp/search?p=" + post.ISBN_13)}`}
+          target="_blank" rel="noopener noreferrer sponsored"
+          onClick={() => trackAffiliateClick("Yahoo", post.title, post.id)}
+          className={`${btnBase} bg-[#FF0033] hover:bg-[#cc0029] text-white`}>
+          Yahoo!で購入
+        </a>
+      )}
+      {post.kangeki_url && (
+        <a href={post.kangeki_url} target="_blank" rel="noopener noreferrer sponsored"
+          onClick={() => trackAffiliateClick("KangekiZanmai", post.title, post.id)}
+          className={`${btnBase} bg-red-600 hover:bg-red-700 text-white`}>
+          観劇三昧で観る
+        </a>
+      )}
     </div>
   );
 };
@@ -244,6 +265,19 @@ export const PostDetails: React.FC<PostPageProps> = ({ post }) => {
             </p>
           </div>
         </div>
+      )}
+
+      {/* 記事末の購入CTA再訴求 - 販売リンクが1つでもある場合のみ表示 */}
+      {(post.amazon_text_url || post.ISBN_13 || post.kangeki_url) && (
+        <section className="mt-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
+          <p className="text-sm text-gray-700 font-bold mb-2">
+            『{post.title}』を手に取って読んでみませんか？
+          </p>
+          <p className="text-xs text-gray-500 mb-3">
+            下記の通販サイトで購入できます。
+          </p>
+          <PurchaseCTAs post={post} />
+        </section>
       )}
     </div>
   );

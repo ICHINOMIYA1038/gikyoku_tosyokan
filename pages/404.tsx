@@ -12,6 +12,7 @@ export default function Custom404() {
         pageTitle="404 - ページが見つかりません"
         pageDescription="お探しのページは見つかりませんでした。URLをご確認いただくか、トップページからお探しください。"
         pagePath="/404"
+        noindex={true}
       />
       <div className="min-h-screen flex items-center justify-center px-4">
         <div className="max-w-md w-full text-center">
@@ -38,19 +39,36 @@ export default function Custom404() {
             </button>
           </div>
           <div className="mt-8 pt-8 border-t border-gray-200">
-            <p className="text-sm text-gray-500">
-              よくアクセスされるページ
+            <p className="text-sm text-gray-500 mb-4">
+              人気のページ
             </p>
-            <div className="mt-4 space-y-2">
-              <Link href="/posts" className="block text-blue-500 hover:underline">
-                作品一覧
+            <div className="grid grid-cols-2 gap-2 text-sm">
+              <Link href="/" className="block p-2 bg-gray-50 rounded hover:bg-theater-primary-50 text-theater-primary-700">
+                戯曲を検索
               </Link>
-              <Link href="/authors" className="block text-blue-500 hover:underline">
+              <Link href="/authors" className="block p-2 bg-gray-50 rounded hover:bg-theater-primary-50 text-theater-primary-700">
                 作者一覧
               </Link>
-              <Link href="/categories" className="block text-blue-500 hover:underline">
-                カテゴリー一覧
+              <Link href="/categories" className="block p-2 bg-gray-50 rounded hover:bg-theater-primary-50 text-theater-primary-700">
+                カテゴリ一覧
               </Link>
+              <Link href="/blog/ja" className="block p-2 bg-gray-50 rounded hover:bg-theater-primary-50 text-theater-primary-700">
+                ブログ
+              </Link>
+              <Link href="/announcements" className="block p-2 bg-gray-50 rounded hover:bg-theater-primary-50 text-theater-primary-700">
+                上演告知
+              </Link>
+              <Link href="/theater-groups" className="block p-2 bg-gray-50 rounded hover:bg-theater-primary-50 text-theater-primary-700">
+                劇団データベース
+              </Link>
+            </div>
+            <div className="mt-6 text-sm text-gray-500">
+              <p>こんな条件で探せます：</p>
+              <div className="mt-2 flex flex-wrap gap-2 justify-center">
+                <Link href="/?maxPlaytime=30" className="px-3 py-1 bg-white border rounded-full text-theater-primary-600 hover:bg-theater-primary-50">30分以内の短編</Link>
+                <Link href="/?minTotalCount=2&maxTotalCount=5" className="px-3 py-1 bg-white border rounded-full text-theater-primary-600 hover:bg-theater-primary-50">少人数</Link>
+                <Link href="/categories/4" className="px-3 py-1 bg-white border rounded-full text-theater-primary-600 hover:bg-theater-primary-50">無料で読める</Link>
+              </div>
             </div>
           </div>
         </div>
