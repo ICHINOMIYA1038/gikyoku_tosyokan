@@ -100,9 +100,27 @@ const OtherPosts = ({ authorId, postId, authorName }: any) => {
         {displayPosts.map((post: any) => (
           <Link key={post.id} href={`/posts/${post.id}`}>
             <div className="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md hover:border-purple-300 transition-all cursor-pointer">
-              <div className="flex justify-between items-start">
+              <div className="flex justify-between items-start gap-3">
+                {/* サムネイル */}
+                <div className="flex-shrink-0 w-16 h-20 sm:w-20 sm:h-28 rounded-md overflow-hidden bg-gray-100">
+                  {post.image_url ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={post.image_url}
+                      alt=""
+                      className="w-full h-full object-cover"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-gray-300">
+                      <FaTheaterMasks className="text-2xl" />
+                    </div>
+                  )}
+                </div>
+
                 {/* 左側：タイトルと情報 */}
-                <div className="flex-1 mr-4">
+                <div className="flex-1 min-w-0">
                   <h3 className="font-semibold text-gray-800 hover:text-purple-600 mb-2 line-clamp-1">
                     {post.title}
                   </h3>
