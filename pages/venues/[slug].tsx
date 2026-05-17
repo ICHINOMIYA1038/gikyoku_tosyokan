@@ -602,6 +602,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       performances: JSON.parse(JSON.stringify(performances)),
       theaterGroups: JSON.parse(JSON.stringify(theaterGroups)),
     },
-    revalidate: 604800,
+    revalidate: 2592000,
   };
 };

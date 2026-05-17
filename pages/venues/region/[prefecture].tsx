@@ -312,6 +312,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       venues,
       stats,
     },
-    revalidate: 604800,
+    revalidate: 2592000,
   };
 };

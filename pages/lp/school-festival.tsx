@@ -381,7 +381,7 @@ export const getStaticProps: GetStaticProps = async () => {
         mediumPosts: JSON.parse(JSON.stringify(mediumPosts)),
         totalCount,
       },
-      revalidate: 604800,
+      revalidate: 2592000,
     };
   } catch (error) {
     console.error("Error fetching school festival posts:", error);

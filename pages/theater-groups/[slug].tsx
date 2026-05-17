@@ -182,7 +182,7 @@ export default function TheaterGroupDetail({ group, relatedShogekijoGroups, acti
           <section className="bg-white rounded-xl border border-gray-100 shadow-sm p-5 mb-4">
             <h2 className="font-serif font-bold text-lg text-gray-800 mb-3 flex items-center gap-2">
               <FaBuilding className="text-indigo-500" />
-              活動劇場
+              公演実績のある劇場
             </h2>
             <ul className="space-y-2">
               {activeVenues.map((v) => (
@@ -343,6 +343,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       activeVenues,
     },
     // 劇団情報は参考資料的で更新頻度低い。7日に延長してISR Writes削減。
-    revalidate: 604800,
+    revalidate: 2592000,
   };
 };

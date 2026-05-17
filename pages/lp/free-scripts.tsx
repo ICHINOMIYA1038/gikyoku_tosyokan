@@ -261,7 +261,7 @@ export const getStaticProps: GetStaticProps = async () => {
         posts: JSON.parse(JSON.stringify(filtered)),
         totalCount: filtered.length,
       },
-      revalidate: 604800,
+      revalidate: 2592000,
     };
   } catch (error) {
     console.error("Error fetching free scripts:", error);

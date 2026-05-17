@@ -255,7 +255,7 @@ export const getStaticProps: GetStaticProps = async () => {
         totalCount: posts.length
       },
       // 集計ページ。7日でOK。
-      revalidate: 604800,
+      revalidate: 2592000,
     };
   } catch (error) {
     console.error("Error fetching short posts:", error);

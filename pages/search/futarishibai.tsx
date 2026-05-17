@@ -160,7 +160,7 @@ export const getStaticProps: GetStaticProps = async () => {
         posts: JSON.parse(JSON.stringify(posts)),
         totalCount: posts.length
       },
-      revalidate: 604800,
+      revalidate: 2592000,
     };
   } catch (error) {
     console.error("Error fetching futarishibai posts:", error);

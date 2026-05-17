@@ -792,7 +792,7 @@ export async function getStaticProps(context: any) {
         post: formattedPost,
         blogMentions,
       },
-      revalidate: 604800,
+      revalidate: 2592000,
     };
   } catch (error) {
     console.error("Error fetching post:", error);

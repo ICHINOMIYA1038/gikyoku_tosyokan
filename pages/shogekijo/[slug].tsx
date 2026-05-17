@@ -280,6 +280,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       relatedStudentGroups,
     },
     // 小劇場情報は参考資料的で更新頻度低い。7日に延長してISR Writes削減。
-    revalidate: 604800,
+    revalidate: 2592000,
   };
 };

@@ -362,6 +362,6 @@ export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
   return {
     props: { post, alternateSlug, relatedPosts, referencedPosts, metadata, readingTime, displayContent },
     // 記事本文は公開後ほぼ変化なし。7日に延ばしてISR Writesを削減。
-    revalidate: 604800,
+    revalidate: 2592000,
   };
 };
