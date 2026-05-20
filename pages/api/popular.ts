@@ -11,7 +11,7 @@ export default async function handler(
       // キャッシュヘッダーを設定（1時間キャッシュ）
       res.setHeader(
         "Cache-Control",
-        "public, s-maxage=3600, stale-while-revalidate=7200"
+        "public, max-age=600, s-maxage=21600, stale-while-revalidate=86400"
       );
 
       const posts = await prisma.post.findMany({

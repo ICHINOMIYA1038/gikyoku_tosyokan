@@ -501,6 +501,6 @@ export const getStaticProps: GetStaticProps = async () => {
       prefectureCounts,
       popularVenueIds: popularVenueIds.slice(0, 6),
     },
-    revalidate: 604800,
+    revalidate: 2592000,
   };
 };

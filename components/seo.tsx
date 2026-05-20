@@ -7,6 +7,8 @@ const Seo = ({
   pageImg,
   pageImgWidth,
   pageImgHeight,
+  pageImgAlt,
+  pageImgType = "image/png",
   pageType = "website",
   twitterCardType = "summary_large_image",
   pageKeywords,
@@ -23,12 +25,15 @@ const Seo = ({
   const defaultImg = "https://gikyokutosyokan.com/logo.png";
   const siteUrl = "https://gikyokutosyokan.com";
 
-  const title = pageTitle ? `${pageTitle} | ${defaultTitle}` : defaultTitle;
+  const title = pageTitle
+    ? (pageTitle.includes(defaultTitle) ? pageTitle : `${pageTitle} | ${defaultTitle}`)
+    : defaultTitle;
   const description = pageDescription ? pageDescription : defaultDescription;
   const url = pagePath ? `${siteUrl}${pagePath}` : siteUrl;
   const imgUrl = pageImg ? pageImg : defaultImg;
   const imgWidth = pageImgWidth ? pageImgWidth : 1280;
   const imgHeight = pageImgHeight ? pageImgHeight : 640;
+  const imgAlt = pageImgAlt ? pageImgAlt : (pageTitle ? `${pageTitle} | ${defaultTitle}` : defaultTitle);
 
   // キーワードの生成（EN/JAで既定キーワードを分離）
   const defaultKeywordsJa = ["戯曲", "脚本", "演劇", "上演時間", "人数検索", "戯曲図書館", "演劇台本", "舞台脚本"];
@@ -39,7 +44,6 @@ const Seo = ({
   return (
     <Head>
       <title>{title}</title>
-      <meta name="viewport" content="width=device-width,initial-scale=1.0" />
       <meta name="description" content={description} />
       <meta name="keywords" content={keywords} />
       <meta name="author" content="戯曲図書館" />
@@ -53,14 +57,17 @@ const Seo = ({
       <meta property="og:image" content={imgUrl} />
       <meta property="og:image:width" content={String(imgWidth)} />
       <meta property="og:image:height" content={String(imgHeight)} />
+      <meta property="og:image:alt" content={imgAlt} />
+      <meta property="og:image:type" content={pageImgType} />
       <meta property="og:locale" content={locale} />
-      
+
       <meta name="twitter:card" content={twitterCardType} />
       <meta name="twitter:site" content="@gikyokutosyokan" />
       <meta name="twitter:creator" content="@gikyokutosyokan" />
       <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={description} />
       <meta name="twitter:image" content={imgUrl} />
+      <meta name="twitter:image:alt" content={imgAlt} />
       <meta name="twitter:domain" content="gikyokutosyokan.com" />
 
       {descriptionEn && <meta name="description" lang="en" content={descriptionEn} />}
@@ -70,11 +77,11 @@ const Seo = ({
         <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
       )}
 
-      {hreflang && hreflang.map((h: { lang: string; path: string }) => (
-        <link key={h.lang} rel="alternate" hrefLang={h.lang} href={`${siteUrl}${h.path}`} />
-      ))}
-      {/* Default hreflang if none provided */}
-      {!hreflang && (
+      {hreflang ? (
+        hreflang.map((h: { lang: string; path: string }) => (
+          <link key={h.lang} rel="alternate" hrefLang={h.lang} href={`${siteUrl}${h.path}`} />
+        ))
+      ) : (
         <>
           <link rel="alternate" hrefLang="ja" href={url} />
           <link rel="alternate" hrefLang="x-default" href={url} />

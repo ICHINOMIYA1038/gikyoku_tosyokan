@@ -12,6 +12,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Noto_Sans_JP } from "next/font/google";
 import MobileOptimizations from "@/components/MobileOptimizations";
 import CookieConsent from "@/components/CookieConsent";
+import dynamic from "next/dynamic";
+const InstallPrompt = dynamic(() => import("@/components/InstallPrompt"), { ssr: false });
 import { getConsent } from "@/lib/cookie-consent";
 import { FavoritesProvider } from "@/contexts/FavoritesContext";
 
@@ -85,12 +87,11 @@ export default function App({ Component, pageProps }: AppProps) {
           `,
         }}
       />
-      {/* AdSense: 手動広告ユニット用スクリプト（自動広告OFF） */}
+      {/* AdSense: 手動広告ユニット用スクリプト（自動広告OFF）— LCP/CLSへの影響を抑えるため遅延ロード */}
       <Script
-        async
         src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8691137965825158"
         crossOrigin="anonymous"
-        strategy="afterInteractive"
+        strategy="lazyOnload"
       />
       <Script
         strategy="afterInteractive"
@@ -117,6 +118,7 @@ export default function App({ Component, pageProps }: AppProps) {
       </SessionProvider>
       <Analytics />
       <CookieConsent />
+      <InstallPrompt />
     </>
   );
 }

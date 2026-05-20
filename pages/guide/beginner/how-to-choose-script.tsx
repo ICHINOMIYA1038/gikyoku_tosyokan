@@ -131,7 +131,8 @@ export default function HowToChooseScript() {
           </h2>
           
           <h3 className="text-xl font-semibold mb-3">人数構成のチェック</h3>
-          <table className="w-full border mb-6">
+          <div className="overflow-x-auto mb-6">
+          <table className="w-full border">
             <thead className="bg-gray-50">
               <tr>
                 <th className="border p-2 text-left">人数</th>
@@ -169,6 +170,7 @@ export default function HowToChooseScript() {
               </tr>
             </tbody>
           </table>
+          </div>
 
           <div className="bg-yellow-50 p-6 rounded-lg">
             <h3 className="text-xl font-semibold mb-3">

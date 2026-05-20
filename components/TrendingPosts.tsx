@@ -45,10 +45,15 @@ const TrendingPosts: React.FC<Props> = ({ posts }) => {
           <p className="text-gray-500 text-sm mt-2">
             直近7日間で最も閲覧された作品
           </p>
+          <p className="text-gray-400 text-xs mt-1 md:hidden" aria-hidden="true">← 横にスワイプ →</p>
         </div>
 
         {/* 横スクロール対応のカードリスト */}
-        <div className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide md:grid md:grid-cols-5 md:overflow-x-visible">
+        <div
+          className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide md:grid md:grid-cols-5 md:overflow-x-visible"
+          role="region"
+          aria-label="今週の人気作品（横スクロール）"
+        >
           {posts.map((post, index) => (
             <Link
               key={post.id}

@@ -8,6 +8,7 @@ import CustomMarkdown from "@/components/CustomMarkdown";
 import Link from "next/link";
 import { FaTheaterMasks, FaBook, FaTag, FaClock, FaUsers, FaFilter, FaSearch, FaChevronRight } from "react-icons/fa";
 import AdSlot from "@/components/Ad/AdSlot";
+import OptimizedImage from "@/components/OptimizedImage";
 import { AD_SLOTS } from "@/lib/adSlots";
 const prisma = new PrismaClient();
 
@@ -191,15 +192,22 @@ function CategoryPage({ category }: any) {
     "description": categoryInfo.intro,
     "url": `https://gikyokutosyokan.com/categories/${category.id}`,
     "numberOfItems": postCount,
-    "hasPart": category.posts?.map((post: any) => ({
-      "@type": "CreativeWork",
-      "name": post.title,
-      "author": {
-        "@type": "Person",
-        "name": post.author.name
-      },
-      "timeRequired": `PT${post.playtime}M`
-    }))
+    "mainEntity": {
+      "@type": "ItemList",
+      "numberOfItems": postCount,
+      "itemListElement": (category.posts || []).slice(0, 30).map((post: any, i: number) => ({
+        "@type": "ListItem",
+        "position": i + 1,
+        "url": `https://gikyokutosyokan.com/posts/${post.id}`,
+        "item": {
+          "@type": "CreativeWork",
+          "name": post.title,
+          "url": `https://gikyokutosyokan.com/posts/${post.id}`,
+          "author": { "@type": "Person", "name": post.author.name },
+          ...(post.playtime > 0 ? { "timeRequired": `PT${post.playtime}M` } : {}),
+        }
+      }))
+    }
   };
 
   // パンくずリスト構造化データ
@@ -326,11 +334,14 @@ function CategoryPage({ category }: any) {
               <div className="bg-white rounded-lg shadow-md p-6 mb-8">
                 {category.image_url && (
                   <div className="mb-6">
-                    <img 
-                      src={category.image_url} 
-                      alt={`${category.name}演劇のイメージ`} 
-                      className="w-full h-64 object-cover rounded-lg"
+                    <OptimizedImage
+                      src={category.image_url}
+                      alt={`${category.name}演劇のイメージ`}
+                      width={1200}
+                      height={400}
+                      sizes="(max-width: 768px) 100vw, 800px"
                       loading="lazy"
+                      className="w-full h-64 object-cover rounded-lg"
                     />
                   </div>
                 )}

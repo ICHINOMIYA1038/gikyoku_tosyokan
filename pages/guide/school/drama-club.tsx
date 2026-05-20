@@ -720,7 +720,7 @@ export default function DramaClubGuide() {
         {/* 年間予算計画例 */}
         <section className="mb-12">
           <h2 className="text-2xl font-bold mb-6">年間予算計画の例</h2>
-          <div className="bg-white border rounded-lg overflow-hidden">
+          <div className="bg-white border rounded-lg overflow-x-auto">
             <table className="w-full">
               <thead className="bg-gray-50">
                 <tr>

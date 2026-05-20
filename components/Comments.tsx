@@ -423,7 +423,7 @@ const Comments = ({ comments: initialComments, postid, postTitle, inline = false
               <p className="text-xs text-gray-400 mb-1.5">種類（任意）</p>
               <div className="flex gap-0.5 p-1 bg-gray-100 rounded-lg overflow-x-auto">
                 <button
-                  className={`flex-1 flex items-center justify-center py-2 px-2 rounded-md text-[11px] font-medium transition-colors whitespace-nowrap ${
+                  className={`flex-1 flex items-center justify-center py-2 px-2 rounded-md text-xs font-medium transition-colors whitespace-nowrap ${
                     selectedType === null
                       ? "bg-white text-gray-800 shadow-sm"
                       : "text-gray-400 hover:text-gray-600"
@@ -435,7 +435,7 @@ const Comments = ({ comments: initialComments, postid, postTitle, inline = false
                 {COMMENT_TYPES.map((type) => (
                   <button
                     key={type.value}
-                    className={`flex-1 flex items-center justify-center py-2 px-2 rounded-md text-[11px] font-medium transition-colors whitespace-nowrap ${
+                    className={`flex-1 flex items-center justify-center py-2 px-2 rounded-md text-xs font-medium transition-colors whitespace-nowrap ${
                       selectedType === type.value
                         ? "bg-white text-gray-800 shadow-sm"
                         : "text-gray-400 hover:text-gray-600"

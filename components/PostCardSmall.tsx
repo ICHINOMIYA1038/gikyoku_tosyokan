@@ -1,9 +1,9 @@
 import * as React from "react";
-import Image from "next/image";
 import { Post as PostType } from "@prisma/client";
 import Link from "next/link";
 import { FaClock, FaUsers, FaTag, FaPen, FaMale, FaFemale, FaTheaterMasks, FaStar, FaCommentDots } from "react-icons/fa";
 import AiImageBadge from "./AiImageBadge";
+import OptimizedImage from "./OptimizedImage";
 
 type PostPageProps = {
   post: PostType & { author: { id: number; name: string } };
@@ -19,17 +19,19 @@ const PostCardSmall: React.FC<PostPageProps> = ({ post }: any) => {
   };
   
   return (
-    <Link href={`/posts/${post.id}`} className="block h-full">
+    <Link href={`/posts/${post.id}`} className="block h-full" aria-label={`${post.title} - ${post.author?.name ?? ""}`}>
       <div className="group h-full bg-white rounded-lg border border-gray-100 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 overflow-hidden flex flex-col">
         {/* 画像部分 */}
         <div className="relative aspect-[16/9] w-full bg-gray-50 overflow-hidden">
           {post.image_url ? (
-            <img
+            <OptimizedImage
               src={post.image_url}
               alt={`${post.title}のサムネイル`}
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
               loading="lazy"
-              decoding="async"
+              width={400}
+              height={225}
+              sizes="(max-width: 768px) 50vw, 250px"
             />
           ) : (
              <div className="w-full h-full flex items-center justify-center bg-gray-50 text-gray-300">

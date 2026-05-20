@@ -193,5 +193,5 @@ export default function BlogJaIndex({ posts: initialPosts, total }: Props) {
 
 export const getStaticProps: GetStaticProps<Props> = async () => {
   const { posts, total } = await getPostsByLanguagePaginated('ja', 1, PER_PAGE);
-  return { props: { posts, total }, revalidate: 604800 };
+  return { props: { posts, total }, revalidate: 2592000 };
 };

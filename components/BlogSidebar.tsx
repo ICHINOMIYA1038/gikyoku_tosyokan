@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
+import OptimizedImage from './OptimizedImage';
 import { FaBook, FaGraduationCap, FaTheaterMasks, FaUsers, FaQuestionCircle, FaEnvelope, FaShieldAlt, FaHandshake, FaChevronRight, FaSearch, FaHotjar, FaGlobeAmericas, FaAward, FaMapMarkerAlt } from 'react-icons/fa';
 
 interface BlogSidebarProps {
@@ -162,7 +162,7 @@ function JapaneseSidebar({ category, currentPath }: { category?: string; current
         rel="noopener noreferrer"
         className="block cursor-pointer hover:opacity-90 transition-opacity"
       >
-        <Image
+        <OptimizedImage
           src="https://gikyokutosyokan-public.s3.ap-northeast-1.amazonaws.com/assets/banners/palette-rect.png"
           alt="戯曲パレット - 戯曲の投稿・公開・上演許可プラットフォーム"
           width={300}
@@ -286,7 +286,7 @@ function EnglishSidebar({ currentPath }: { currentPath?: string }) {
         rel="noopener noreferrer"
         className="block cursor-pointer hover:opacity-90 transition-opacity"
       >
-        <Image
+        <OptimizedImage
           src="https://gikyokutosyokan-public.s3.ap-northeast-1.amazonaws.com/assets/banners/palette-rect.png"
           alt="Gikyoku Palette - Publish and license theatrical scripts"
           width={300}

@@ -29,7 +29,7 @@ export default async function handler(
   // 検索APIキャッシュ（1時間 + SWR 2時間）
   res.setHeader(
     "Cache-Control",
-    "public, s-maxage=3600, stale-while-revalidate=7200"
+    "public, max-age=600, s-maxage=21600, stale-while-revalidate=86400"
   );
 
   try {

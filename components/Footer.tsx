@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 
 const footerLinks = [
   {
@@ -48,7 +49,7 @@ const Footer: React.FC = () => {
     <footer className="bg-theater-neutral-900 text-gray-300" role="contentinfo" aria-label="サイトフッター">
       <div className="container mx-auto px-4 py-10">
         <Link href="/" className="block mb-6" aria-label="戯曲図書館ホームへ">
-          <img src="/logo-white.png" alt="戯曲図書館" width={140} height={40} loading="lazy" decoding="async" className="h-10 w-auto opacity-90" />
+          <Image src="/logo-white.png" alt="戯曲図書館" width={140} height={40} loading="lazy" className="h-10 w-auto opacity-90" />
         </Link>
         <nav className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8" aria-label="フッターナビゲーション">
           {footerLinks.map((section) => (

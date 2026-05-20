@@ -441,7 +441,7 @@ export async function getServerSideProps({ res }) {
   // We generate the XML sitemap with the data
   const sitemap = generateSiteMap(posts, authors, categories, blogPosts, studentGroups, shogekijoGroups, venues, awardSlugs, venuePrefectureSlugs);
   res.statusCode = 200;
-  res.setHeader("Cache-Control", "s-maxage=86400, stale-while-revalidate"); // 24時間のキャッシュ
+  res.setHeader("Cache-Control", "public, max-age=3600, s-maxage=172800, stale-while-revalidate=604800"); // CDN 2日 + SWR 7日
   res.setHeader("Content-Type", "text/xml");
   // we send the XML to the browser
   res.end(sitemap);

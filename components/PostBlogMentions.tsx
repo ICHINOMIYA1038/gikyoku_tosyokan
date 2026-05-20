@@ -36,7 +36,7 @@ const PostBlogMentions: React.FC<Props> = ({ posts }) => {
                 {bp.description && (
                   <p className="text-xs text-gray-500 mt-1 line-clamp-2">{bp.description}</p>
                 )}
-                <p className="text-[11px] text-gray-400 mt-1">{bp.date}</p>
+                <p className="text-xs text-gray-400 mt-1">{bp.date}</p>
               </div>
               <FaChevronRight className="text-gray-300 group-hover:text-amber-500 flex-shrink-0 mt-1" size={12} />
             </Link>

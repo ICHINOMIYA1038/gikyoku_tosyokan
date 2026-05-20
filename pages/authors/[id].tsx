@@ -6,6 +6,7 @@ import PostCardSmall from "@/components/PostCardSmall";
 import Seo from "@/components/seo";
 import StructuredData from "@/components/StructuredData";
 import LinkCard from "@/components/LinkCard";
+import Breadcrumb from "@/components/Breadcrumb";
 import CustomMarkdown from "@/components/CustomMarkdown";
 import { FaUser, FaUsers, FaGlobe, FaBook, FaTheaterMasks, FaExternalLinkAlt } from "react-icons/fa";
 import AdSlot from "@/components/Ad/AdSlot";
@@ -33,7 +34,7 @@ function AuthorPage({ author }: any) {
   return (
     <Layout>
       <Seo
-        pageTitle={`${author.name}の戯曲一覧 - 戯曲図書館`}
+        pageTitle={`${author.name}の戯曲・脚本一覧（${postCount}作品）`}
         pageDescription={`${author.name}${author.group ? `（${author.group}）` : ''}の演劇脚本・戯曲を${postCount}作品掲載。${author.profile ? author.profile.substring(0, 100) : '文化祭・学園祭・部活動に最適な脚本をお探しの方へ。'}`}
         pagePath={`/authors/${author.id}`}
       />
@@ -55,8 +56,45 @@ function AuthorPage({ author }: any) {
           sameAs: author.website ? [author.website] : undefined,
         }}
       />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "CollectionPage",
+            "name": `${author.name}の戯曲一覧`,
+            "url": `https://gikyokutosyokan.com/authors/${author.id}`,
+            "numberOfItems": postCount,
+            "mainEntity": {
+              "@type": "ItemList",
+              "numberOfItems": postCount,
+              "itemListElement": (author.posts || []).slice(0, 30).map((post: any, i: number) => ({
+                "@type": "ListItem",
+                "position": i + 1,
+                "url": `https://gikyokutosyokan.com/posts/${post.id}`,
+                "item": {
+                  "@type": "CreativeWork",
+                  "name": post.title,
+                  "url": `https://gikyokutosyokan.com/posts/${post.id}`,
+                  "author": { "@type": "Person", "name": author.name },
+                  ...(post.playtime > 0 ? { "timeRequired": `PT${post.playtime}M` } : {}),
+                }
+              }))
+            }
+          })
+        }}
+      />
       
       <div className="min-h-screen bg-gradient-to-b from-theater-neutral-50 to-white">
+        <div className="max-w-6xl mx-auto px-4 pt-3">
+          <Breadcrumb
+            items={[
+              { name: "ホーム", href: "/" },
+              { name: "作者一覧", href: "/authors" },
+              { name: author.name },
+            ]}
+          />
+        </div>
         {/* ヒーローセクション */}
         <div className="bg-gradient-to-r from-theater-primary-100 to-theater-primary-50 py-12 px-4">
           <div className="max-w-6xl mx-auto">

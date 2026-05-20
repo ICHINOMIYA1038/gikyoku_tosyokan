@@ -1,6 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { FaBookOpen, FaChevronRight } from 'react-icons/fa';
+import OptimizedImage from './OptimizedImage';
 
 interface ReferencedPost {
   id: number;
@@ -32,7 +33,7 @@ const BlogReferencedPosts: React.FC<Props> = ({ posts }) => {
               <div className="flex-shrink-0 w-12 h-16 bg-gray-100 rounded overflow-hidden">
                 {p.imageUrl ? (
                   // eslint-disable-next-line @next/next/no-img-element
-                  <img src={p.imageUrl} alt="" className="w-full h-full object-cover" loading="lazy" />
+                  <OptimizedImage src={p.imageUrl} alt="" width={120} height={120} loading="lazy" className="w-full h-full object-cover" />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center text-gray-300 text-xs">作品</div>
                 )}

@@ -103,7 +103,7 @@ export async function getStaticProps() {
       props: {
         categories: formatted,
       },
-      revalidate: 604800,
+      revalidate: 2592000,
     };
   } catch {
     return {

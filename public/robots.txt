@@ -56,6 +56,21 @@ Allow: /
 Disallow: /admin/
 Disallow: /api/
 
+User-agent: Claude-Web
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+
+User-agent: Claude-SearchBot
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+
+User-agent: OAI-SearchBot
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+
 User-agent: cohere-ai
 Allow: /
 Disallow: /admin/

@@ -307,7 +307,7 @@ export default function MobileSearchForm({
                       <label className="text-sm font-medium text-gray-700">男性人数</label>
                       <div className="flex items-center gap-2 mt-1">
                         <input
-                          type="number"
+                          type="number" inputMode="numeric" pattern="[0-9]*"
                           className="flex-1 p-2 border rounded"
                           placeholder="最小"
                           value={minMaleCount}
@@ -315,7 +315,7 @@ export default function MobileSearchForm({
                         />
                         <span>〜</span>
                         <input
-                          type="number"
+                          type="number" inputMode="numeric" pattern="[0-9]*"
                           className="flex-1 p-2 border rounded"
                           placeholder="最大"
                           value={maxMaleCount}
@@ -328,7 +328,7 @@ export default function MobileSearchForm({
                       <label className="text-sm font-medium text-gray-700">女性人数</label>
                       <div className="flex items-center gap-2 mt-1">
                         <input
-                          type="number"
+                          type="number" inputMode="numeric" pattern="[0-9]*"
                           className="flex-1 p-2 border rounded"
                           placeholder="最小"
                           value={minFemaleCount}
@@ -336,7 +336,7 @@ export default function MobileSearchForm({
                         />
                         <span>〜</span>
                         <input
-                          type="number"
+                          type="number" inputMode="numeric" pattern="[0-9]*"
                           className="flex-1 p-2 border rounded"
                           placeholder="最大"
                           value={maxFemaleCount}
@@ -349,7 +349,7 @@ export default function MobileSearchForm({
                       <label className="text-sm font-medium text-gray-700">総人数</label>
                       <div className="flex items-center gap-2 mt-1">
                         <input
-                          type="number"
+                          type="number" inputMode="numeric" pattern="[0-9]*"
                           className="flex-1 p-2 border rounded"
                           placeholder="最小"
                           value={minTotalCount}
@@ -357,7 +357,7 @@ export default function MobileSearchForm({
                         />
                         <span>〜</span>
                         <input
-                          type="number"
+                          type="number" inputMode="numeric" pattern="[0-9]*"
                           className="flex-1 p-2 border rounded"
                           placeholder="最大"
                           value={maxTotalCount}
@@ -387,7 +387,7 @@ export default function MobileSearchForm({
                 <div className="mt-3 p-3 bg-white rounded-lg border border-theater-neutral-200">
                   <div className="flex items-center gap-2">
                     <input
-                      type="number"
+                      type="number" inputMode="numeric" pattern="[0-9]*"
                       min="0"
                       max="999"
                       placeholder="0分"
@@ -397,7 +397,7 @@ export default function MobileSearchForm({
                     />
                     <span>〜</span>
                     <input
-                      type="number"
+                      type="number" inputMode="numeric" pattern="[0-9]*"
                       min="0"
                       max="999"
                       placeholder="上限なし"

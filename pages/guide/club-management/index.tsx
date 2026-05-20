@@ -535,7 +535,7 @@ export default function ClubManagement() {
             {/* 週間スケジュール例 */}
             <div className="mb-8">
               <h3 className="font-bold text-lg mb-4">週間スケジュール例</h3>
-              <div className="bg-white border rounded-lg overflow-hidden">
+              <div className="bg-white border rounded-lg overflow-x-auto">
                 <table className="w-full">
                   <thead className="bg-gray-100">
                     <tr>

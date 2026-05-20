@@ -10,7 +10,7 @@ function Layout({ children, ishead, noPadding, noFooter }: any) {
       </div>
       <div className="header-gap"></div>
       {/*<ImportantMessage />*/}
-      <div className={noPadding ? "" : "md:px-12 md:py-6"}>{children}</div>
+      <div className={noPadding ? "" : "px-3 py-3 md:px-12 md:py-6"}>{children}</div>
       {!noFooter && <Footer />}
     </div>
   );

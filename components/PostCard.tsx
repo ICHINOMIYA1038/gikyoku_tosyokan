@@ -1,9 +1,9 @@
 import * as React from "react";
-import Image from "next/image";
 import { Post as PostType } from "@prisma/client";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import AiImageBadge from "./AiImageBadge";
+import OptimizedImage from "./OptimizedImage";
 import { FaClock, FaUsers, FaMale, FaFemale, FaTag, FaPen, FaTheaterMasks, FaCommentDots, FaStar } from "react-icons/fa";
 import FavoriteButton from "@/components/FavoriteButton";
 
@@ -16,18 +16,20 @@ const PostCard: React.FC<PostPageProps> = ({ post }: any) => {
   const additionalCategories = post.categories && post.categories.length > 1 ? post.categories.length - 1 : 0;
 
   return (
-    <Link href={`/posts/${post.id}`} className="block mb-3">
+    <Link href={`/posts/${post.id}`} className="block mb-3" aria-label={`${post.title} - ${post.author?.name ?? ""}`}>
       <div className="group relative bg-white rounded-lg border border-gray-100 shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden hover:-translate-y-0.5">
         <div className="flex flex-col md:flex-row h-full">
           {/* 画像部分 */}
           <div className="relative w-full md:w-48 h-48 md:h-auto flex-shrink-0 bg-gray-50">
              {post.image_url ? (
-              <img
+              <OptimizedImage
                 src={post.image_url}
                 alt={`${post.title}のサムネイル`}
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 loading="lazy"
-                decoding="async"
+                width={400}
+                height={400}
+                sizes="(max-width: 768px) 100vw, 192px"
               />
             ) : (
               <div className="w-full h-full flex flex-col items-center justify-center bg-gray-50 text-gray-300">

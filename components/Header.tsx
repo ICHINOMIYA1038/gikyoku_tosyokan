@@ -2,13 +2,13 @@ import * as React from "react";
 import { useEffect } from "react";
 import router from "next/router";
 import Link from "next/link";
-import Image from "next/image";
+import OptimizedImage from "./OptimizedImage";
 
 export default function Header() {
   return (
     <header className="flex items-center justify-between p-4 bg-theater-primary-300">
       <Link className="flex items-center cursor-pointer" href={"/"}>
-        <Image src="https://gikyokutosyokan-public.s3.ap-northeast-1.amazonaws.com/assets/logo-tosyokan.png" alt="戯曲図書館" width={320} height={48} className="h-14 w-auto" priority />
+        <OptimizedImage src="https://gikyokutosyokan-public.s3.ap-northeast-1.amazonaws.com/assets/logo-tosyokan.png" alt="戯曲図書館" width={320} height={48} className="h-14 w-auto" priority />
       </Link>
       <nav className="space-x-4 hidden md:block font-semibold">
         <Link href="/" className="text-theater-neutral-800 hover:text-theater-neutral-600">

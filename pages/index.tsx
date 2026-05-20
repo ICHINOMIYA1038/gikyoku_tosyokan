@@ -1,6 +1,7 @@
 import Layout from "@/components/Layout";
 import ResponsiveSearchForm from "@/components/ResponsiveSearchForm";
 import { useRef, useState } from "react";
+import { useRouter } from "next/router";
 import { prisma } from "@/lib/prisma";
 import NewsList from "@/components/NewsList";
 import TopImage from "@/components/TopImage"
@@ -15,7 +16,7 @@ import RecentComments from "@/components/RecentComments";
 import TrendingPosts from "@/components/TrendingPosts";
 import AdSlot from "@/components/Ad/AdSlot";
 import { AD_SLOTS } from "@/lib/adSlots";
-import Image from "next/image";
+import OptimizedImage from "@/components/OptimizedImage";
 
 export default function Home({ news, authors, posts, categories, blogPosts, trendingPosts, announcements }: any) {
   const [data, setData] = useState<any>(null); // 取得したデータを格納
@@ -23,6 +24,7 @@ export default function Home({ news, authors, posts, categories, blogPosts, tren
   const [sort_by, setSortIndex] = useState<number>(2);
   const [sortDirection, setSortDirection] = useState<number>(1);
   const searchFormRef = useRef<HTMLDivElement | null>(null);
+  const router = useRouter();
 
   const handleScrollToRegistrationForm = () => {
     if (searchFormRef.current) {
@@ -72,8 +74,75 @@ export default function Home({ news, authors, posts, categories, blogPosts, tren
         />
         <StructuredData type="Organization" />
         <StructuredData type="FAQPage" faqItems={faqItems} />
+        {trendingPosts && trendingPosts.length > 0 && (
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": "ItemList",
+                "name": "注目の戯曲",
+                "itemListElement": trendingPosts.slice(0, 20).map((p: any, i: number) => ({
+                  "@type": "ListItem",
+                  "position": i + 1,
+                  "url": `https://gikyokutosyokan.com/posts/${p.id}`,
+                  "name": p.title,
+                })),
+              }),
+            }}
+          />
+        )}
         <TopImage buttonClick={handleScrollToRegistrationForm} />
+
+        {/* モバイル常時表示キーワード検索バー */}
+        <div className="sm:hidden max-w-6xl mx-auto px-3 pt-3">
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              const fd = new FormData(e.currentTarget);
+              const q = String(fd.get("q") || "").trim();
+              if (q) router.push(`/?keyword=${encodeURIComponent(q)}`);
+              handleScrollToRegistrationForm();
+            }}
+            className="flex gap-2"
+            role="search"
+          >
+            <input
+              type="search"
+              name="q"
+              placeholder="タイトル・作者・キーワードで検索"
+              className="flex-1 min-h-[44px] px-3 rounded-lg border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-theater-primary-300"
+              aria-label="戯曲を検索"
+            />
+            <button
+              type="submit"
+              className="min-h-[44px] px-4 bg-theater-primary-500 text-white text-sm font-bold rounded-lg active:bg-theater-primary-600"
+            >
+              検索
+            </button>
+          </form>
+        </div>
+
         <NewsList news={news} />
+
+        {/* モバイル向けクイック導線（PCではsm:hidden） */}
+        <div className="sm:hidden max-w-6xl mx-auto px-3 pt-3">
+          <p className="text-xs font-bold text-gray-500 mb-2">目的から探す</p>
+          <div className="grid grid-cols-2 gap-2">
+            <Link href="/lp/school-festival" className="flex items-center justify-center min-h-[52px] px-3 py-3 bg-theater-primary-500 text-white text-sm font-bold rounded-lg shadow-sm active:bg-theater-primary-600">
+              文化祭の脚本
+            </Link>
+            <Link href="/lp/two-person-plays" className="flex items-center justify-center min-h-[52px] px-3 py-3 bg-white border border-theater-primary-300 text-theater-primary-700 text-sm font-bold rounded-lg shadow-sm active:bg-theater-primary-50">
+              2人で上演
+            </Link>
+            <Link href="/search/short-plays" className="flex items-center justify-center min-h-[52px] px-3 py-3 bg-white border border-theater-primary-300 text-theater-primary-700 text-sm font-bold rounded-lg shadow-sm active:bg-theater-primary-50">
+              短編（30分以内）
+            </Link>
+            <Link href="/lp/free-scripts" className="flex items-center justify-center min-h-[52px] px-3 py-3 bg-white border border-theater-primary-300 text-theater-primary-700 text-sm font-bold rounded-lg shadow-sm active:bg-theater-primary-50">
+              無料で読める
+            </Link>
+          </div>
+        </div>
 
         {/* 戯曲パレット プロモーションバナー */}
         <div className="max-w-6xl mx-auto px-4 py-6">
@@ -83,13 +152,12 @@ export default function Home({ news, authors, posts, categories, blogPosts, tren
             rel="noopener noreferrer"
             className="block cursor-pointer hover:opacity-90 transition-opacity"
           >
-            <Image
+            <OptimizedImage
               src="https://gikyokutosyokan-public.s3.ap-northeast-1.amazonaws.com/assets/banners/palette-wide.png"
               alt="戯曲パレット - 戯曲の投稿・公開・上演許可プラットフォーム"
               width={970}
               height={250}
               className="w-full h-auto rounded-lg shadow-md"
-              priority={false}
             />
           </a>
         </div>

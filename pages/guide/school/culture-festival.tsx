@@ -89,7 +89,7 @@ export default function CultureFestivalGuide() {
             8週間完全スケジュール
           </h2>
           
-          <div className="bg-white border rounded-lg overflow-hidden">
+          <div className="bg-white border rounded-lg overflow-x-auto">
             <table className="w-full">
               <thead className="bg-gray-50">
                 <tr>

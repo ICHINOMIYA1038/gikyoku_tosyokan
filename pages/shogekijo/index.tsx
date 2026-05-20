@@ -420,6 +420,6 @@ export const getStaticProps: GetStaticProps = async () => {
       prefectures: allPrefectures,
     },
     // 小劇場一覧は seed 追加時だけ更新。7日でOK。
-    revalidate: 604800,
+    revalidate: 2592000,
   };
 };

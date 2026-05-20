@@ -2,6 +2,7 @@ import * as React from "react";
 import Link from "next/link";
 import Star from "./Widget/Star";
 import CustomMarkdown from './CustomMarkdown';
+import OptimizedImage from './OptimizedImage';
 import {
   FaClock, FaUsers, FaMale, FaFemale, FaTheaterMasks,
   FaTag, FaPen, FaBook, FaInfoCircle, FaQuoteLeft,
@@ -11,7 +12,6 @@ import {
 import AdSlot from "./Ad/AdSlot";
 import { AD_SLOTS } from "@/lib/adSlots";
 import AiImageBadge from "./AiImageBadge";
-import Image from "next/image";
 import { trackAffiliateClick } from "@/lib/gtag";
 
 type PostPageProps = {
@@ -32,10 +32,10 @@ export const PostHero: React.FC<PostPageProps> = ({ post }) => {
       <div className="flex-shrink-0 self-center sm:self-start">
         <div className="relative">
           {post.image_url ? (
-            <img src={post.image_url} alt={post.title}
+            <OptimizedImage src={post.image_url} alt={post.title}
               width={160} height={220}
-              fetchPriority="high"
-              decoding="async"
+              priority
+              sizes="(max-width: 768px) 144px, 160px"
               className="w-36 h-[200px] md:w-40 md:h-[220px] object-cover rounded-lg shadow-md" />
           ) : (
             <div className="w-36 h-[200px] md:w-40 md:h-[220px] bg-gradient-to-br from-theater-primary-400 via-pink-400 to-purple-500 rounded-lg shadow-md flex items-center justify-center">
@@ -291,18 +291,6 @@ export const PostDetails: React.FC<PostPageProps> = ({ post }) => {
         </div>
       )}
 
-      {/* 記事末の購入CTA再訴求 - 販売リンクが1つでもある場合のみ表示 */}
-      {(post.amazon_text_url || post.ISBN_13 || post.kangeki_url) && (
-        <section className="mt-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
-          <p className="text-sm text-gray-700 font-bold mb-2">
-            『{post.title}』を手に取って読んでみませんか？
-          </p>
-          <p className="text-xs text-gray-500 mb-3">
-            下記の通販サイトで購入できます。
-          </p>
-          <PurchaseCTAs post={post} />
-        </section>
-      )}
     </div>
   );
 };
@@ -361,7 +349,7 @@ export const PostSidebar: React.FC<PostPageProps> = ({ post }) => {
           rel="noopener noreferrer"
           className="block cursor-pointer hover:opacity-90 transition-opacity"
         >
-          <Image
+          <OptimizedImage
             src="https://gikyokutosyokan-public.s3.ap-northeast-1.amazonaws.com/assets/banners/palette-rect.png"
             alt="戯曲パレット - 戯曲の投稿・公開・上演許可プラットフォーム"
             width={300}

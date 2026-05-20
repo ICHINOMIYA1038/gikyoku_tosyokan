@@ -118,6 +118,7 @@ async function uploadToS3(buffer: Buffer, postId: number): Promise<string> {
       Key: key,
       Body: buffer,
       ContentType: "image/webp",
+      CacheControl: "public, max-age=31536000, immutable",
     })
   );
 

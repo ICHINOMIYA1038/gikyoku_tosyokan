@@ -130,7 +130,7 @@ export default async function handler(
     res.setHeader("Content-Type", "application/xml; charset=utf-8");
     res.setHeader(
       "Cache-Control",
-      "public, s-maxage=3600, stale-while-revalidate=7200"
+      "public, max-age=3600, s-maxage=21600, stale-while-revalidate=86400"
     );
 
     res.status(200).send(rssFeed);

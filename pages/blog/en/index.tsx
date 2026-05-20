@@ -141,5 +141,5 @@ export default function BlogEnIndex({ posts: initialPosts, total }: Props) {
 export const getStaticProps: GetStaticProps<Props> = async () => {
   const { posts, total } = await getPostsByLanguagePaginated('en', 1, PER_PAGE);
   // 新記事追加は手動オペレーション時に on-demand revalidate する想定。7日に延長。
-  return { props: { posts, total }, revalidate: 604800 };
+  return { props: { posts, total }, revalidate: 2592000 };
 };

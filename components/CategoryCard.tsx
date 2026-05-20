@@ -1,4 +1,5 @@
 import Link from "next/link";
+import OptimizedImage from "./OptimizedImage";
 
 interface CategoryCardProps {
     id: number;
@@ -13,9 +14,13 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ id, name, imageUrl, postCou
             <div className="group relative bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer overflow-hidden transform hover:-translate-y-1">
                 <div className="aspect-w-16 aspect-h-9 relative h-48 bg-gray-200">
                     {imageUrl ? (
-                        <img 
-                            src={imageUrl} 
-                            alt={name} 
+                        <OptimizedImage
+                            src={imageUrl}
+                            alt={name}
+                            width={400}
+                            height={225}
+                            loading="lazy"
+                            sizes="(max-width: 768px) 100vw, 33vw"
                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                         />
                     ) : (

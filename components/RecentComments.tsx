@@ -96,7 +96,7 @@ const RecentComments: React.FC = () => {
                       <p className="text-xs font-bold text-gray-800 truncate group-hover:text-theater-primary-700 transition-colors">
                         {comment.postTitle}
                       </p>
-                      <p className="text-[10px] text-gray-400 flex items-center gap-1">
+                      <p className="text-[11px] text-gray-400 flex items-center gap-1">
                         <FaPen className="text-[8px]" />
                         {comment.postAuthor}
                       </p>

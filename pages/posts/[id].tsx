@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Post as PostType } from "@prisma/client";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import Layout from "@/components/Layout";
 import { PostHero, PostDetails, PostSidebar } from "@/components/PostDetailIntegrated";
 import {
@@ -13,13 +14,12 @@ import {
   LineIcon,
   TwitterIcon,
 } from "react-share";
-import Comments from "@/components/Comments";
+const Comments = dynamic(() => import("@/components/Comments"), { ssr: false, loading: () => <div className="text-xs text-gray-400">読み込み中…</div> });
 import Seo from "@/components/seo";
 import StructuredData from "@/components/StructuredData";
 import OtherPosts from "@/components/Widget/OtherPosts";
 import { useState, useCallback, useEffect } from "react";
 import { FaStar, FaCommentDots, FaShareAlt, FaBook, FaExternalLinkAlt, FaTheaterMasks, FaHeart, FaBalanceScale, FaTrophy, FaMapMarkerAlt } from "react-icons/fa";
-import QuickReactions from "@/components/QuickReactions";
 import ReactionBadge from "@/components/ReactionBadge";
 import FavoriteButton from "@/components/FavoriteButton";
 import CompareButton from "@/components/CompareButton";
@@ -28,6 +28,7 @@ import AdSlot from "@/components/Ad/AdSlot";
 import { AD_SLOTS } from "@/lib/adSlots";
 import AiDescription from "@/components/AiDescription";
 import PostBlogMentions from "@/components/PostBlogMentions";
+import Breadcrumb from "@/components/Breadcrumb";
 import { getBlogPostsMentioningPost } from "@/lib/blog";
 // import UserSynopsis from "@/components/UserSynopsis";
 
@@ -175,17 +176,23 @@ function PostPage({ post, blogMentions }: any) {
 
         <Seo
           pageTitle={(() => {
-            const parts: string[] = [`『${post.title}』あらすじ`];
-            if (post.playtime > 0) parts.push(`上演時間${post.playtime}分`);
-            if (post.totalNumber > 0) parts.push(`${post.totalNumber}人`);
-            const optimized = parts.join('・') + ' | 戯曲図書館';
-            return optimized;
+            // モバイルSERPは約30文字で切れる。重要語を前に詰める
+            const specs: string[] = [];
+            if (post.totalNumber > 0) specs.push(`${post.totalNumber}人`);
+            if (post.playtime > 0) specs.push(`${post.playtime}分`);
+            const spec = specs.length > 0 ? `（${specs.join('・')}）` : '';
+            return `『${post.title}』${spec} ${post.author.name}`;
           })()}
-          pageDescription={
-            post.synopsis
+          pageDescription={(() => {
+            const head: string[] = [];
+            if (post.totalNumber > 0) head.push(`${post.totalNumber}人`);
+            if (post.playtime > 0) head.push(`上演時間${post.playtime}分`);
+            const prefix = head.length > 0 ? `${head.join('・')}の戯曲。` : '';
+            const body = post.synopsis
               ? post.synopsis
-              : `${post.author.name}作『${post.title}』の詳細情報。${post.playtime > 0 ? `上演時間${post.playtime}分、` : ''}${post.totalNumber > 0 ? `${post.totalNumber}人で上演可能。` : ''}感想やレビューを募集中。`
-          }
+              : `${post.author.name}作『${post.title}』のあらすじ・キャスト・上演情報。感想やレビューも掲載。`;
+            return prefix + body;
+          })()}
           hreflang={[
             { lang: "ja", path: `/posts/${post.id}` },
             { lang: "x-default", path: `/posts/${post.id}` },
@@ -194,8 +201,11 @@ function PostPage({ post, blogMentions }: any) {
           pageImg={
             post.image_url
               ? post.image_url
-              : "https://gikyokutosyokan.com/logo.png"
+              : `https://gikyokutosyokan.com/api/og/${post.id}?title=${encodeURIComponent(post.title)}&author=${encodeURIComponent(post.author.name)}${post.playtime > 0 ? `&playtime=${post.playtime}` : ''}${post.totalNumber > 0 ? `&people=${post.totalNumber}` : ''}`
           }
+          pageImgWidth={post.image_url ? undefined : 1200}
+          pageImgHeight={post.image_url ? undefined : 630}
+          pageImgType={post.image_url ? undefined : "image/png"}
           pagePath={`/posts/${post.id}`}
           pageType="article"
           pageKeywords={[
@@ -292,6 +302,17 @@ function PostPage({ post, blogMentions }: any) {
         <div className="w-full">
           <div className="container mx-auto px-4 py-6 max-w-3xl">
 
+            <Breadcrumb
+              items={[
+                { name: "ホーム", href: "/" },
+                ...(post.categories && post.categories.length > 0
+                  ? [{ name: post.categories[0].name, href: `/categories/${post.categories[0].id}` }]
+                  : []),
+                { name: post.author?.name, href: `/authors/${post.author_id}` },
+                { name: post.title },
+              ].filter((c) => c.name) as any}
+            />
+
             {/* ヒーロー（常時表示） */}
             <MemoizedPostHero post={post} />
 
@@ -313,11 +334,11 @@ function PostPage({ post, blogMentions }: any) {
                 <FaShareAlt />
               </button>
               {showShareButtons && (
-                <div className="flex gap-1">
-                  <TwitterShareButton url={URL} title={QUOTE}><TwitterIcon size={24} round /></TwitterShareButton>
-                  <LineShareButton url={URL} title={QUOTE}><LineIcon size={24} round /></LineShareButton>
-                  <FacebookShareButton url={URL} quote={QUOTE}><FacebookIcon size={24} round /></FacebookShareButton>
-                  <HatenaShareButton url={URL} title={QUOTE} windowWidth={660} windowHeight={460}><HatenaIcon size={24} round /></HatenaShareButton>
+                <div className="flex gap-1" role="group" aria-label="SNS共有">
+                  <TwitterShareButton url={URL} title={QUOTE} aria-label="Twitterで共有"><TwitterIcon size={24} round /></TwitterShareButton>
+                  <LineShareButton url={URL} title={QUOTE} aria-label="LINEで共有"><LineIcon size={24} round /></LineShareButton>
+                  <FacebookShareButton url={URL} quote={QUOTE} aria-label="Facebookで共有"><FacebookIcon size={24} round /></FacebookShareButton>
+                  <HatenaShareButton url={URL} title={QUOTE} windowWidth={660} windowHeight={460} aria-label="はてなブックマークに追加"><HatenaIcon size={24} round /></HatenaShareButton>
                 </div>
               )}
             </div>
@@ -325,9 +346,9 @@ function PostPage({ post, blogMentions }: any) {
             {/* タブナビゲーション */}
             <nav className="flex gap-0 mt-6 border-b border-gray-200">
               {([
-                { key: "overview" as const, label: "概要" },
-                { key: "community" as const, label: `みんなの声${commentCount > 0 ? `(${commentCount})` : ""}` },
-                { key: "related" as const, label: "関連情報" },
+                { key: "overview" as const, label: "概要", emphasize: false },
+                { key: "community" as const, label: `みんなの声${commentCount > 0 ? `(${commentCount})` : ""}`, emphasize: true },
+                { key: "related" as const, label: "関連情報", emphasize: false },
               ]).map((tab) => (
                 <button
                   key={tab.key}
@@ -335,10 +356,15 @@ function PostPage({ post, blogMentions }: any) {
                   className={`px-4 py-3 min-h-[44px] text-sm font-bold transition-colors relative
                     ${activeTab === tab.key
                       ? "text-theater-primary-600"
-                      : "text-gray-400 hover:text-gray-600"
+                      : tab.emphasize
+                        ? "text-theater-primary-500 hover:text-theater-primary-700"
+                        : "text-gray-400 hover:text-gray-600"
                     }`}
                 >
-                  {tab.label}
+                  <span className="inline-flex items-center gap-1">
+                    {tab.emphasize && <FaCommentDots className="text-[11px]" />}
+                    {tab.label}
+                  </span>
                   {activeTab === tab.key && (
                     <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-theater-primary-500" />
                   )}
@@ -364,8 +390,6 @@ function PostPage({ post, blogMentions }: any) {
                   */}
 
                   <AdSlot slot={AD_SLOTS.POST_AFTER_CONTENT} format="horizontal" />
-
-                  <PostBlogMentions posts={blogMentions || []} />
 
                   {/* 概要タブでも同著者の他作品を見せる（回遊性UP） */}
                   <MemoizedOtherPosts authorId={post.author_id} postId={post.id} authorName={post.author.name} />
@@ -400,8 +424,6 @@ function PostPage({ post, blogMentions }: any) {
               {/* ━━━ みんなの声タブ ━━━ */}
               {activeTab === "community" && (
                 <div className="space-y-6" id="comments-section">
-                  <QuickReactions postId={post.id} />
-
                   <div className="flex items-center gap-3">
                     <span className="text-sm text-gray-500">評価する</span>
                     <div className="flex items-center">
@@ -423,6 +445,13 @@ function PostPage({ post, blogMentions }: any) {
               {/* ━━━ 関連情報タブ ━━━ */}
               {activeTab === "related" && (
                 <div className="space-y-8">
+                  {blogMentions && blogMentions.length > 0 && (
+                    <div>
+                      <h2 className="text-base font-bold text-gray-900 mb-3">この作品が登場するブログ記事</h2>
+                      <PostBlogMentions posts={blogMentions} />
+                    </div>
+                  )}
+
                   {post.theaterGroups && post.theaterGroups.length > 0 && (
                     <div>
                       <h2 className="text-base font-bold text-gray-900 mb-3">この脚本を上演した劇団（{post.theaterGroups.length}）</h2>

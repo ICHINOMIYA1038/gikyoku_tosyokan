@@ -226,7 +226,7 @@ export default function SearchForm({
                   <div className="flex items-center gap-2">
                     <input
                       className="w-full p-2 bg-white border border-gray-200 rounded text-center focus:border-theater-primary-300 outline-none"
-                      type="number"
+                      type="number" inputMode="numeric" pattern="[0-9]*"
                       placeholder="下限"
                       value={minTotalCount}
                       onChange={(e) => setMinTotalCount(e.target.value)}
@@ -234,7 +234,7 @@ export default function SearchForm({
                     <span className="text-gray-400">〜</span>
                     <input
                       className="w-full p-2 bg-white border border-gray-200 rounded text-center focus:border-theater-primary-300 outline-none"
-                      type="number"
+                      type="number" inputMode="numeric" pattern="[0-9]*"
                       placeholder="上限"
                       value={maxTotalCount}
                       onChange={(e) => setMaxTotalCount(e.target.value)}
@@ -247,7 +247,7 @@ export default function SearchForm({
                   <div className="flex items-center gap-2">
                     <input
                       className="w-full p-2 bg-white border border-gray-200 rounded text-center focus:border-theater-primary-300 outline-none"
-                      type="number"
+                      type="number" inputMode="numeric" pattern="[0-9]*"
                       placeholder="0"
                       value={minMaleCount}
                       onChange={(e) => setMinMaleCount(e.target.value)}
@@ -255,7 +255,7 @@ export default function SearchForm({
                     <span className="text-gray-400">〜</span>
                     <input
                       className="w-full p-2 bg-white border border-gray-200 rounded text-center focus:border-theater-primary-300 outline-none"
-                      type="number"
+                      type="number" inputMode="numeric" pattern="[0-9]*"
                       placeholder="上限なし"
                       value={maxMaleCount}
                       onChange={(e) => setMaxMaleCount(e.target.value)}
@@ -268,7 +268,7 @@ export default function SearchForm({
                   <div className="flex items-center gap-2">
                     <input
                       className="w-full p-2 bg-white border border-gray-200 rounded text-center focus:border-theater-primary-300 outline-none"
-                      type="number"
+                      type="number" inputMode="numeric" pattern="[0-9]*"
                       placeholder="0"
                       value={minFemaleCount}
                       onChange={(e) => setMinFemaleCount(e.target.value)}
@@ -276,7 +276,7 @@ export default function SearchForm({
                     <span className="text-gray-400">〜</span>
                     <input
                       className="w-full p-2 bg-white border border-gray-200 rounded text-center focus:border-theater-primary-300 outline-none"
-                      type="number"
+                      type="number" inputMode="numeric" pattern="[0-9]*"
                       placeholder="上限なし"
                       value={maxFemaleCount}
                       onChange={(e) => setMaxFemaleCount(e.target.value)}
@@ -295,7 +295,7 @@ export default function SearchForm({
                 <div className="flex items-center gap-2">
                   <input
                     className="w-full p-2 bg-white border border-gray-200 rounded text-center focus:border-theater-primary-300 outline-none"
-                    type="number"
+                    type="number" inputMode="numeric" pattern="[0-9]*"
                     min="0"
                     max="999"
                     placeholder="0"
@@ -305,7 +305,7 @@ export default function SearchForm({
                   <span className="text-gray-400">〜</span>
                   <input
                     className="w-full p-2 bg-white border border-gray-200 rounded text-center focus:border-theater-primary-300 outline-none"
-                    type="number"
+                    type="number" inputMode="numeric" pattern="[0-9]*"
                     min="0"
                     max="999"
                     placeholder="上限なし"

@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
+import OptimizedImage from "./OptimizedImage";
 import { FaBars, FaTimes } from "react-icons/fa";
 import AuthMenu from "@/components/AuthMenu";
 import { FEATURES } from "@/lib/feature-flags";
@@ -32,7 +32,7 @@ export default function MobileHeader() {
     <>
       <header className="flex items-center justify-between p-3 bg-theater-primary-300">
         <Link className="flex items-center cursor-pointer min-w-0" href={"/"} onClick={closeMenu}>
-          <Image src="https://gikyokutosyokan-public.s3.ap-northeast-1.amazonaws.com/assets/logo-tosyokan.png" alt="戯曲図書館" width={280} height={40} className="h-12 w-auto" priority />
+          <OptimizedImage src="https://gikyokutosyokan-public.s3.ap-northeast-1.amazonaws.com/assets/logo-tosyokan.png" alt="戯曲図書館" width={280} height={40} className="h-12 w-auto" priority />
         </Link>
         
         {/* デスクトップメニュー（lg以上で表示。8項目あるためタブレットではハンバーガーに） */}
@@ -80,7 +80,7 @@ export default function MobileHeader() {
             <span className="text-xl font-bold">メニュー</span>
             <button
               onClick={closeMenu}
-              className="p-2 text-theater-neutral-800 hover:text-theater-neutral-600 focus:outline-none"
+              className="flex items-center justify-center w-11 h-11 -mr-2 text-theater-neutral-800 hover:text-theater-neutral-600 focus:outline-none"
               aria-label="メニューを閉じる"
             >
               <FaTimes size={24} />
