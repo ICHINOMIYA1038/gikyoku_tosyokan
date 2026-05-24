@@ -162,6 +162,40 @@ export default function Home({ news, authors, posts, categories, blogPosts, tren
           </a>
         </div>
 
+        {/* TOMOSHIBI小屋 プロモーションバナー (横長) */}
+        <div className="max-w-6xl mx-auto px-4 pb-6">
+          <a
+            href="https://tomoshibi.gikyokutosyokan.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block cursor-pointer hover:opacity-90 transition-opacity"
+            aria-label="TOMOSHIBI小屋 - ブラウザで動く舞台照明シミュレーター"
+          >
+            <div className="relative w-full overflow-hidden rounded-lg shadow-md border border-amber-900/30 bg-gradient-to-br from-[#1a1208] via-[#2a1a10] to-[#3a2a18] aspect-[970/250]">
+              {/* 背景のスポット光 */}
+              <div className="absolute inset-0 opacity-70 pointer-events-none">
+                <div className="absolute top-0 left-[15%] w-48 h-full -rotate-12 bg-gradient-to-b from-amber-200/40 via-amber-300/20 to-transparent blur-md" />
+                <div className="absolute top-0 left-[40%] w-32 h-full bg-gradient-to-b from-yellow-100/40 via-amber-200/20 to-transparent blur-sm" />
+                <div className="absolute top-0 right-[20%] w-40 h-full rotate-12 bg-gradient-to-b from-orange-200/30 via-orange-300/15 to-transparent blur-md" />
+              </div>
+              <div className="relative h-full flex items-center justify-center text-center px-6">
+                <div>
+                  <div className="text-amber-300 text-3xl mb-1" aria-hidden>✦</div>
+                  <div className="text-amber-50 font-serif text-3xl md:text-4xl tracking-wide">
+                    TOMOSHIBI<span className="text-amber-200 text-xl md:text-2xl ml-2">小屋</span>
+                  </div>
+                  <div className="mt-2 text-amber-200/80 text-sm md:text-base tracking-wider">
+                    舞台に灯をともす、ちいさな小屋
+                  </div>
+                  <div className="mt-3 inline-block px-4 py-1.5 rounded-full bg-amber-900/40 border border-amber-700/40 text-amber-100 text-xs md:text-sm">
+                    ブラウザで舞台照明をデザイン・プレビュー・共有
+                  </div>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+
         {/* 今週の人気作品 */}
         <TrendingPosts posts={trendingPosts} />
 
