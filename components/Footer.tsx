@@ -79,7 +79,7 @@ const Footer: React.FC = () => {
             <p className="text-xs text-gray-500">
               © 2026 戯曲図書館 All Rights Reserved.
             </p>
-            <div className="flex items-center gap-2 text-xs text-gray-500">
+            <div className="flex items-center gap-2 text-xs text-gray-500 flex-wrap">
               <span>姉妹サイト:</span>
               <a
                 href="https://palette.gikyokutosyokan.com"
@@ -89,7 +89,16 @@ const Footer: React.FC = () => {
               >
                 戯曲パレット
               </a>
-              <span className="text-gray-600">（共通アカウントで利用可能）</span>
+              <span className="text-gray-600">/</span>
+              <a
+                href="https://tomoshibi.gikyokutosyokan.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-400 hover:text-white transition-colors"
+              >
+                TOMOSHIBI小屋
+              </a>
+              <span className="text-gray-600">（舞台照明シミュレーター）</span>
             </div>
           </div>
         </div>

@@ -170,6 +170,36 @@ function JapaneseSidebar({ category, currentPath }: { category?: string; current
           className="w-full h-auto rounded-lg shadow-md"
         />
       </a>
+
+      {/* TOMOSHIBI小屋 バナー */}
+      <a
+        href="https://tomoshibi.gikyokutosyokan.com"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="block cursor-pointer hover:opacity-90 transition-opacity"
+        aria-label="TOMOSHIBI小屋 - ブラウザで動く舞台照明シミュレーター"
+      >
+        <div className="relative w-full overflow-hidden rounded-lg shadow-md border border-amber-900/30 bg-gradient-to-br from-[#1a1208] via-[#2a1a10] to-[#3a2a18]">
+          {/* 背景のスポット光 */}
+          <div className="absolute inset-0 opacity-60 pointer-events-none">
+            <div className="absolute top-0 left-1/4 w-32 h-48 -rotate-12 bg-gradient-to-b from-amber-200/40 via-amber-300/20 to-transparent blur-md" />
+            <div className="absolute top-0 right-1/4 w-32 h-48 rotate-12 bg-gradient-to-b from-orange-200/30 via-orange-300/15 to-transparent blur-md" />
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-56 bg-gradient-to-b from-yellow-100/40 via-amber-200/20 to-transparent blur-sm" />
+          </div>
+          <div className="relative p-5 text-center">
+            <div className="text-amber-300 text-2xl mb-1" aria-hidden>✦</div>
+            <div className="text-amber-50 font-serif text-xl tracking-wide">
+              TOMOSHIBI<span className="text-amber-200 text-base ml-1">小屋</span>
+            </div>
+            <div className="mt-1 text-amber-200/80 text-xs tracking-wider">
+              舞台に灯をともす、ちいさな小屋
+            </div>
+            <div className="mt-4 inline-block px-3 py-1 rounded-full bg-amber-900/40 border border-amber-700/40 text-amber-100 text-xs">
+              ブラウザで舞台照明をデザイン
+            </div>
+          </div>
+        </div>
+      </a>
     </div>
   );
 }
