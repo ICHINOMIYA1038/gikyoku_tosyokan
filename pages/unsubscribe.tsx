@@ -36,7 +36,7 @@ export default function Unsubscribe({ status, email }: Props) {
               プロフィール編集から手動で配信設定を変更できます。
             </p>
             <p className="mt-4">
-              <Link href="/mypage/edit" className="text-pink-600 underline">プロフィール編集を開く</a>
+              <Link href="/mypage/edit" className="text-pink-600 underline">プロフィール編集を開く</Link>
             </p>
           </>
         )}
