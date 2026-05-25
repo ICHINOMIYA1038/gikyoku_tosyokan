@@ -67,7 +67,7 @@ export type MailInput = {
   from?: string;
   to: string | string[];
   subject: string;
-  html: string;
+  html?: string;
   text?: string;
   replyTo?: string;
 };
