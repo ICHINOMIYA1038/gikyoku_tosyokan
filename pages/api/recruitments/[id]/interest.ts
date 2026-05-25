@@ -59,10 +59,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       select: { email: true, displayName: true, name: true },
     });
     if (poster?.email) {
-      const { Resend } = await import('resend');
-      const resend = new Resend(process.env.RESEND_API_KEY);
-      await resend.emails.send({
-        from: `戯曲図書館 <noreply@${process.env.RESEND_DOMAIN || 'gikyokutosyokan.com'}>`,
+      const { sendMail } = await import('@/lib/mailer');
+      await sendMail({
+        from: `戯曲図書館 <${process.env.GMAIL_USER || 'noreply@gikyokutosyokan.com'}>`,
         to: poster.email,
         subject: `${senderName}さんが「${recruitment.title}」に興味を示しています`,
         text: `${poster.displayName || poster.name}さん\n\n${senderName}さんが「${recruitment.title}」に興味を示しています。\nプロフィールを確認して、メッセージを送ってみましょう。\n\n確認する: https://gikyokutosyokan.com/messages/${conversation.id}\n\n---\n戯曲図書館`,

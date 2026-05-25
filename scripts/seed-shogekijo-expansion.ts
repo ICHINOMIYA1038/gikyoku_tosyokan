@@ -232,10 +232,11 @@ const expansionGroups: ShogekijoData[] = [
     name: '劇団しゃれこうべ',
     slug: 'gekidan-sharekobe',
     groupType: 'AMATEUR',
-    description: 'プロのスタッフと共に舞台を創り上げる劇団。埼玉県を中心に活動。',
-    prefecture: '埼玉県',
+    description: '東京都を拠点に活動する社会人劇団。劇団神戸（故・夏目俊二主宰）の姉妹劇団として設立され、代表が関東へ移住したことを機に旗揚げ。「大人が愉しむ劇空間をつくる」をキャッチフレーズに、サラリーマンとして働きながら演劇と真剣に向き合う劇団員が集まる。座付き衣装家（伊藤熹朔賞新人賞・兵庫県芸術奨励賞受賞）が在籍するのが強みで、チェーホフやシェイクスピア、井上ひさし作品など幅広いジャンルを上演。初心者向け演劇学校「遊びの部屋」も運営している。',
+    prefecture: '東京都',
     region: 'KANTO',
     website: 'https://sharekobe.com/',
+    twitter: 'g_sharekobe',
   },
   {
     name: '劇団WAO!',

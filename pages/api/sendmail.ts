@@ -1,7 +1,5 @@
-import { Resend } from "resend";
 import { NextApiRequest, NextApiResponse } from "next";
-
-const resend = new Resend(process.env.RESEND_API_KEY);
+import { sendMail } from "@/lib/mailer";
 
 export default async function handler(
   req: NextApiRequest,
@@ -18,17 +16,19 @@ export default async function handler(
           .json({ error: "必須項目が入力されていません。" });
       }
 
-      // API キーの存在チェック
-      if (!process.env.RESEND_API_KEY) {
-        console.error("RESEND_API_KEY is not set");
+      // SMTP 認証情報チェック
+      if (!process.env.GMAIL_USER || !process.env.GMAIL_APP_PASSWORD) {
+        console.error("GMAIL_USER / GMAIL_APP_PASSWORD が未設定です");
         return res
           .status(500)
           .json({ error: "メール設定エラーが発生しました。" });
       }
 
+      const FROM = `戯曲図書館 <${process.env.GMAIL_USER}>`;
+
       // お客様への自動返信メール
-      const customerEmail = await resend.emails.send({
-        from: `戯曲図書館 <noreply@${process.env.RESEND_DOMAIN}>`, // ドメインを環境変数で指定
+      const customerEmail = await sendMail({
+        from: FROM,
         to: [email],
         subject: `お問い合わせを受け付けました - ${subject}`,
         html: `
@@ -62,8 +62,8 @@ export default async function handler(
       });
 
       // 管理者への通知メール
-      const adminEmail = await resend.emails.send({
-        from: `戯曲図書館 <noreply@${process.env.RESEND_DOMAIN}>`,
+      const adminEmail = await sendMail({
+        from: FROM,
         to: [`gekidankatakago@gmail.com`], // または process.env.ADMIN_EMAIL
         subject: `新規お問い合わせ：${subject}`,
         html: `
@@ -92,8 +92,8 @@ export default async function handler(
       res.status(200).json({
         message:
           "メールが送信されました。ご登録いただいたメールアドレスに確認メールをお送りしました。",
-        customerEmailId: customerEmail.data?.id,
-        adminEmailId: adminEmail.data?.id,
+        customerEmailId: customerEmail.id,
+        adminEmailId: adminEmail.id,
       });
     } catch (error: any) {
       console.error("Email sending error:", error);

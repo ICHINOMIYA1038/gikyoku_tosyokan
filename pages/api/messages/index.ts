@@ -108,10 +108,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     try {
       if (receiver.email) {
         const senderName = session.user.name || 'ユーザー';
-        const { Resend } = await import('resend');
-        const resend = new Resend(process.env.RESEND_API_KEY);
-        await resend.emails.send({
-          from: `戯曲図書館 <noreply@${process.env.RESEND_DOMAIN || 'gikyokutosyokan.com'}>`,
+        const { sendMail } = await import('@/lib/mailer');
+        await sendMail({
+          from: `戯曲図書館 <${process.env.GMAIL_USER || 'noreply@gikyokutosyokan.com'}>`,
           to: receiver.email,
           subject: `${senderName}さんからメッセージが届きました`,
           text: `${receiver.displayName || receiver.name}さん\n\n${senderName}さんからメッセージが届きました。\n\n「${content.substring(0, 100)}${content.length > 100 ? '...' : ''}」\n\n確認する: https://gikyokutosyokan.com/messages/${conversation.id}\n\n---\n戯曲図書館`,

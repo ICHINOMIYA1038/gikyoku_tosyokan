@@ -89,11 +89,10 @@ export default async function handler(
       // 返信先ユーザーにメール通知（自分自身への返信は除く）
       if (parentComment?.user?.email && parentComment.userId !== userId) {
         try {
-          const { Resend } = await import('resend');
-          const resend = new Resend(process.env.RESEND_API_KEY);
+          const { sendMail } = await import('@/lib/mailer');
           const recipientName = parentComment.user.displayName || parentComment.user.name || 'ユーザー';
-          await resend.emails.send({
-            from: `戯曲図書館 <noreply@${process.env.RESEND_DOMAIN || 'gikyokutosyokan.com'}>`,
+          await sendMail({
+            from: `戯曲図書館 <${process.env.GMAIL_USER || 'noreply@gikyokutosyokan.com'}>`,
             to: parentComment.user.email,
             subject: `${displayAuthor}さんがあなたのコメントに返信しました`,
             text: `${recipientName}さん\n\n${displayAuthor}さんがあなたのコメントに返信しました。\n\n「${content.substring(0, 100)}${content.length > 100 ? '...' : ''}」\n\n確認する: https://gikyokutosyokan.com/posts/${revalidatePostId}#comments-section\n\n---\n戯曲図書館`,

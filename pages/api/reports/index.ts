@@ -58,10 +58,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   // メール通知（運営者へ）
   try {
-    const { Resend } = await import('resend');
-    const resend = new Resend(process.env.RESEND_API_KEY);
-    await resend.emails.send({
-      from: `戯曲図書館 <noreply@${process.env.RESEND_DOMAIN || 'gikyokutosyokan.com'}>`,
+    const { sendMail } = await import('@/lib/mailer');
+    await sendMail({
+      from: `戯曲図書館 <${process.env.GMAIL_USER || 'noreply@gikyokutosyokan.com'}>`,
       to: 'gekidankatakago@gmail.com',
       subject: `【通報】${reason} - ${targetType}`,
       text: `通報がありました。\n\n理由: ${reason}\n詳細: ${details || 'なし'}\n対象: ${targetType} (ID: ${targetId})\nURL: ${targetUrl || 'なし'}\n通報者: ${session.user.email}\n\n管理画面で確認してください。`,
