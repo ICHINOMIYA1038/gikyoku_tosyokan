@@ -1,4 +1,5 @@
 import { GetServerSideProps } from "next";
+import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import Layout from "@/components/Layout";
 import Seo from "@/components/seo";
@@ -23,7 +24,7 @@ export default function Unsubscribe({ status, email }: Props) {
             </p>
             <p className="mt-4 text-xs text-gray-500">
               再度受け取りたい場合は、
-              <a href="/mypage/edit" className="text-pink-600 underline">プロフィール編集</a>
+              <Link href="/mypage/edit" className="text-pink-600 underline">プロフィール編集</Link>
               から「案内メールを受け取る」を有効にできます。
             </p>
           </>
@@ -35,7 +36,7 @@ export default function Unsubscribe({ status, email }: Props) {
               プロフィール編集から手動で配信設定を変更できます。
             </p>
             <p className="mt-4">
-              <a href="/mypage/edit" className="text-pink-600 underline">プロフィール編集を開く</a>
+              <Link href="/mypage/edit" className="text-pink-600 underline">プロフィール編集を開く</a>
             </p>
           </>
         )}
