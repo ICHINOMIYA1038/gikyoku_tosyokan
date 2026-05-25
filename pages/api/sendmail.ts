@@ -114,6 +114,7 @@ export default async function handler(
       res.status(500).json({
         error:
           "メールの送信中にエラーが発生しました。しばらく時間をおいて再度お試しください。",
+        detail: error?.message || String(error),
       });
     }
   } else {
