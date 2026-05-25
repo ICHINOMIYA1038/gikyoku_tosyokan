@@ -16,9 +16,14 @@ export default async function handler(
           .json({ error: "必須項目が入力されていません。" });
       }
 
-      // SMTP 認証情報チェック
-      if (!process.env.GMAIL_USER || !process.env.GMAIL_APP_PASSWORD) {
-        console.error("GMAIL_USER / GMAIL_APP_PASSWORD が未設定です");
+      // SMTP 認証情報チェック (OAuth2 もしくは App Password のいずれか)
+      const hasOAuth =
+        !!process.env.GMAIL_CLIENT_ID &&
+        !!process.env.GMAIL_CLIENT_SECRET &&
+        !!process.env.GMAIL_REFRESH_TOKEN;
+      const hasAppPassword = !!process.env.GMAIL_APP_PASSWORD;
+      if (!process.env.GMAIL_USER || (!hasOAuth && !hasAppPassword)) {
+        console.error("GMAIL の認証情報が未設定です");
         return res
           .status(500)
           .json({ error: "メール設定エラーが発生しました。" });
