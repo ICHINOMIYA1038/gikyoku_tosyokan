@@ -418,6 +418,12 @@ model User {
   bio           String?
   avatarUrl     String?
   groupName     String?
+  /// 案内メール配信可否。デフォルトは false (明示的にオプトイン)。
+  emailOptIn       Boolean   @default(false)
+  emailOptInAt     DateTime?
+  /// 配信停止リンクで本人確認に使う（推測不可なトークン）
+  unsubscribeToken String?   @unique
+  welcomeEmailSentAt DateTime?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
@@ -436,9 +442,31 @@ model User {
   receivedMessages  Message[]       @relation("ReceivedMessages")
   userSynopses      UserSynopsis[]
   toolData          UserToolData[]
+  broadcasts        Broadcast[]
 
   @@index([email])
+  @@index([emailOptIn])
   @@map("User")
+}
+
+/// 案内メール一斉送信の記録。
+model Broadcast {
+  id          String   @id @default(cuid())
+  authorId    String
+  subject     String
+  bodyHtml    String   @db.Text
+  bodyText    String?  @db.Text
+  recipientCount Int
+  succeededCount Int   @default(0)
+  failedCount Int      @default(0)
+  status      String   @default("pending") // pending | sending | completed | failed
+  startedAt   DateTime?
+  finishedAt  DateTime?
+  createdAt   DateTime @default(now())
+  author      User     @relation(fields: [authorId], references: [id])
+
+  @@index([createdAt(sort: Desc)])
+  @@map("Broadcast")
 }
 
 model UserToolData {

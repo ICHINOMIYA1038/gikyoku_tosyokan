@@ -10,7 +10,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const session = await requireAuth(req, res);
   if (!session) return;
 
-  const { displayName, bio, groupName, avatarUrl } = req.body;
+  const { displayName, bio, groupName, avatarUrl, emailOptIn } = req.body;
 
   // バリデーション
   if (displayName !== undefined && typeof displayName !== 'string') {
@@ -32,11 +32,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(400).json({ error: '劇団名は100文字以内で入力してください' });
   }
 
-  const data: Record<string, string | null> = {};
+  const data: Record<string, string | boolean | Date | null> = {};
   if (displayName !== undefined) data.displayName = displayName || null;
   if (bio !== undefined) data.bio = bio || null;
   if (groupName !== undefined) data.groupName = groupName || null;
   if (avatarUrl !== undefined) data.avatarUrl = avatarUrl || null;
+  if (typeof emailOptIn === "boolean") {
+    data.emailOptIn = emailOptIn;
+    data.emailOptInAt = emailOptIn ? new Date() : null;
+  }
 
   const updated = await prisma.user.update({
     where: { id: session.user.id },

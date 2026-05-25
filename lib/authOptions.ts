@@ -124,8 +124,36 @@ export const authOptions: NextAuthOptions = {
 
   events: {
     async createUser({ user }) {
-      // 初回ログインユーザーのログ（今後Slack通知等に拡張可能）
       console.log(`[auth] New user created: ${user.email}`);
+      if (!user.email || !user.id) return;
+      try {
+        // 配信停止用のトークンを発行して保存
+        const { randomBytes } = await import("node:crypto");
+        const token = randomBytes(24).toString("base64url");
+        await prisma.user.update({
+          where: { id: user.id },
+          data: { unsubscribeToken: token, welcomeEmailSentAt: new Date() },
+        });
+
+        const [{ sendMail }, { welcomeMail }] = await Promise.all([
+          import("@/lib/mailer"),
+          import("@/lib/mail-templates"),
+        ]);
+        const fromAddr = process.env.GMAIL_USER || "noreply@gikyokutosyokan.com";
+        const t = welcomeMail({
+          displayName: (user as { displayName?: string | null }).displayName ?? user.name ?? null,
+          email: user.email,
+        });
+        await sendMail({
+          from: `戯曲図書館 <${fromAddr}>`,
+          to: user.email,
+          subject: t.subject,
+          html: t.html,
+          text: t.text,
+        });
+      } catch (e) {
+        console.error("[auth] welcome mail failed:", e);
+      }
     },
   },
 

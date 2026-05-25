@@ -17,6 +17,7 @@ interface Props {
     avatarUrl: string | null;
     bio: string | null;
     groupName: string | null;
+    emailOptIn: boolean;
   };
 }
 
@@ -24,6 +25,7 @@ export default function EditProfile({ user }: Props) {
   const [displayName, setDisplayName] = useState(user.displayName ?? user.name ?? '');
   const [bio, setBio] = useState(user.bio ?? '');
   const [groupName, setGroupName] = useState(user.groupName ?? '');
+  const [emailOptIn, setEmailOptIn] = useState(user.emailOptIn);
   const [avatarPreview, setAvatarPreview] = useState(user.avatarUrl ?? user.image ?? '');
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -97,7 +99,7 @@ export default function EditProfile({ user }: Props) {
       const res = await fetch('/api/account/profile', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ displayName, bio, groupName }),
+        body: JSON.stringify({ displayName, bio, groupName, emailOptIn }),
       });
       if (res.ok) {
         setMessage('プロフィールを保存しました');
@@ -205,6 +207,24 @@ export default function EditProfile({ user }: Props) {
             <p className="text-xs text-gray-400 mt-1 text-right">{bio.length}/500</p>
           </div>
 
+          {/* 案内メール受信 */}
+          <div className="border border-gray-200 rounded-lg bg-gray-50/40 p-3">
+            <label className="flex items-start gap-2 cursor-pointer text-sm">
+              <input
+                type="checkbox"
+                checked={emailOptIn}
+                onChange={(e) => setEmailOptIn(e.target.checked)}
+                className="mt-0.5 h-4 w-4 rounded border-gray-300"
+              />
+              <span>
+                <span className="font-medium text-gray-900">案内メールを受け取る</span>
+                <span className="mt-0.5 block text-xs text-gray-500">
+                  新機能のお知らせ、おすすめの戯曲特集などをメールでお届けします。いつでも配信停止できます。
+                </span>
+              </span>
+            </label>
+          </div>
+
           {/* メッセージ */}
           {message && (
             <p className={`text-sm font-medium ${message.includes('失敗') || message.includes('エラー') ? 'text-red-600' : 'text-green-600'}`}>
@@ -251,6 +271,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
       avatarUrl: true,
       bio: true,
       groupName: true,
+      emailOptIn: true,
     },
   });
 
