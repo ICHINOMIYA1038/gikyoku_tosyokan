@@ -153,15 +153,22 @@ export const authOptions: NextAuthOptions = {
      * 初回ログインユーザー (onboardedAt が null) は /auth/welcome へ強制誘導。
      */
     async redirect({ url, baseUrl }) {
-      // 内部URLのみ許可（外部URLは baseUrl にフォールバック）
+      // 同一サイトの相対URL / baseUrl と同じオリジン / *.gikyokutosyokan.com サブドメインを許可。
+      // それ以外は baseUrl にフォールバック (オープンリダイレクト防止)。
+      const isSafeAbsolute = (u: string): boolean => {
+        try {
+          const p = new URL(u);
+          if (p.origin === baseUrl) return true;
+          // 親ドメイン共有: tomoshibi.gikyokutosyokan.com など
+          return p.protocol === 'https:' && /(^|\.)gikyokutosyokan\.com$/.test(p.hostname);
+        } catch { return false; }
+      };
       const target = url.startsWith('/')
         ? `${baseUrl}${url}`
-        : url.startsWith(baseUrl)
+        : isSafeAbsolute(url)
           ? url
           : baseUrl;
-      // welcome 自体への遷移はそのまま通す（ループ防止）
       if (target.includes('/auth/welcome')) return target;
-      // それ以外は次の getServerSideProps / middleware で onboarded 判定する
       return target;
     },
   },

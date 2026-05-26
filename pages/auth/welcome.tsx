@@ -6,6 +6,17 @@ import Seo from '@/components/seo';
 import { prisma } from '@/lib/prisma';
 import { useState, useRef } from 'react';
 import { useRouter } from 'next/router';
+
+// 関連サブドメイン (*.gikyokutosyokan.com) を含む安全な next URL を返す
+function safeNextUrl(raw: unknown): string {
+  if (typeof raw !== 'string' || !raw) return '/';
+  if (raw.startsWith('/')) return raw;
+  try {
+    const u = new URL(raw);
+    if (u.protocol === 'https:' && /(^|\.)gikyokutosyokan\.com$/.test(u.hostname)) return u.toString();
+  } catch { /* fallthrough */ }
+  return '/';
+}
 import { FaUser, FaCamera, FaTheaterMasks, FaArrowRight } from 'react-icons/fa';
 
 interface Props {
@@ -56,9 +67,7 @@ export default function Welcome({ user }: Props) {
     setUploading(false);
   };
 
-  const nextUrl = typeof router.query.next === 'string' && router.query.next.startsWith('/')
-    ? router.query.next
-    : '/';
+  const nextUrl = safeNextUrl(router.query.next);
 
   const handleSave = async () => {
     setSaving(true);
@@ -213,11 +222,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
   });
 
   if (user?.onboardedAt) {
-    const next =
-      typeof context.query.next === 'string' && context.query.next.startsWith('/')
-        ? context.query.next
-        : '/';
-    return { redirect: { destination: next, permanent: false } };
+    return { redirect: { destination: safeNextUrl(context.query.next), permanent: false } };
   }
 
   return { props: { user: { name: user?.name ?? null, image: user?.image ?? null } } };
