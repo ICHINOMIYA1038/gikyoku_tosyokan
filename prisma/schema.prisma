@@ -427,6 +427,9 @@ model User {
   /// 配信停止リンクで本人確認に使う（推測不可なトークン）
   unsubscribeToken String?   @unique
   welcomeEmailSentAt DateTime?
+  /// 初回オンボーディング (/auth/welcome) を完了した時刻。
+  /// 未完了なら未ログイン時のCTA以外のページから welcome へ誘導する。
+  onboardedAt        DateTime?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 

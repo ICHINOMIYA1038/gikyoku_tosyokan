@@ -56,18 +56,28 @@ export default function Welcome({ user }: Props) {
     setUploading(false);
   };
 
+  const nextUrl = typeof router.query.next === 'string' && router.query.next.startsWith('/')
+    ? router.query.next
+    : '/';
+
   const handleSave = async () => {
     setSaving(true);
     await fetch('/api/account/profile', {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ displayName, bio, groupName, emailOptIn }),
+      body: JSON.stringify({ displayName, bio, groupName, emailOptIn, completeOnboarding: true }),
     });
-    router.push('/');
+    router.push(nextUrl);
   };
 
-  const handleSkip = () => {
-    router.push('/');
+  const handleSkip = async () => {
+    // スキップ時もオンボーディングは完了扱い (再表示しない)
+    await fetch('/api/account/profile', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ completeOnboarding: true }),
+    });
+    router.push(nextUrl);
   };
 
   return (
@@ -196,14 +206,18 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
     return { redirect: { destination: '/auth/signup', permanent: false } };
   }
 
-  // 既にプロフィール設定済みならホームにリダイレクト
+  // オンボーディング完了済みならホームへ
   const user = await prisma.user.findUnique({
     where: { id: session.user.id },
-    select: { name: true, image: true, displayName: true },
+    select: { name: true, image: true, onboardedAt: true },
   });
 
-  if (user?.displayName) {
-    return { redirect: { destination: '/', permanent: false } };
+  if (user?.onboardedAt) {
+    const next =
+      typeof context.query.next === 'string' && context.query.next.startsWith('/')
+        ? context.query.next
+        : '/';
+    return { redirect: { destination: next, permanent: false } };
   }
 
   return { props: { user: { name: user?.name ?? null, image: user?.image ?? null } } };
