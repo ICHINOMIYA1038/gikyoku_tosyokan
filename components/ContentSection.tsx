@@ -57,12 +57,12 @@ const ContentSection: React.FC<ContentSectionProps> = ({ posts, authors, categor
                     {/* 人気記事TOP3 */}
                     <div className="lg:col-span-2">
                         <div className="bg-white rounded-xl shadow-lg p-5">
-                            <div className="flex items-center justify-between mb-4">
-                                <h3 className="text-2xl font-bold text-theater-neutral-900 flex items-center gap-2">
-                                    <FaTrophy className="text-theater-accent-yellow" />
-                                    人気戯曲 TOP3
+                            <div className="flex items-center justify-between gap-2 mb-4">
+                                <h3 className="text-lg sm:text-2xl font-bold text-theater-neutral-900 flex items-center gap-2 min-w-0">
+                                    <FaTrophy className="text-theater-accent-yellow shrink-0" />
+                                    <span className="truncate">人気戯曲 TOP3</span>
                                 </h3>
-                                <Link href="/popular" className="text-theater-primary-600 hover:text-theater-primary-700 text-sm font-medium flex items-center gap-1">
+                                <Link href="/popular" className="text-theater-primary-600 hover:text-theater-primary-700 text-xs sm:text-sm font-medium flex items-center gap-1 shrink-0">
                                     もっと見る <FaChevronRight className="text-xs" />
                                 </Link>
                             </div>
@@ -72,32 +72,32 @@ const ContentSection: React.FC<ContentSectionProps> = ({ posts, authors, categor
                             ) : (
                                 <div className="space-y-4">
                                     {popularPosts?.slice(0, 3).map((post: any, index: number) => (
-                                        <Link 
-                                            key={post.id} 
+                                        <Link
+                                            key={post.id}
                                             href={`/posts/${post.id}`}
-                                            className="flex items-center gap-4 p-4 rounded-lg hover:bg-theater-primary-50 transition-all group"
+                                            className="flex items-center gap-3 sm:gap-4 p-2.5 sm:p-4 rounded-lg hover:bg-theater-primary-50 transition-all group"
                                         >
                                             {/* ランキング番号 */}
                                             <div className="flex-shrink-0">
                                                 {index === 0 && (
-                                                    <div className="w-12 h-12 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center shadow-lg">
-                                                        <FaCrown className="text-white text-xl" />
+                                                    <div className="w-9 h-9 sm:w-12 sm:h-12 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center shadow-lg">
+                                                        <FaCrown className="text-white text-base sm:text-xl" />
                                                     </div>
                                                 )}
                                                 {index === 1 && (
-                                                    <div className="w-12 h-12 bg-gradient-to-br from-gray-300 to-gray-500 rounded-full flex items-center justify-center shadow-lg">
-                                                        <span className="text-white font-bold text-lg">2</span>
+                                                    <div className="w-9 h-9 sm:w-12 sm:h-12 bg-gradient-to-br from-gray-300 to-gray-500 rounded-full flex items-center justify-center shadow-lg">
+                                                        <span className="text-white font-bold text-sm sm:text-lg">2</span>
                                                     </div>
                                                 )}
                                                 {index === 2 && (
-                                                    <div className="w-12 h-12 bg-gradient-to-br from-orange-400 to-orange-600 rounded-full flex items-center justify-center shadow-lg">
-                                                        <span className="text-white font-bold text-lg">3</span>
+                                                    <div className="w-9 h-9 sm:w-12 sm:h-12 bg-gradient-to-br from-orange-400 to-orange-600 rounded-full flex items-center justify-center shadow-lg">
+                                                        <span className="text-white font-bold text-sm sm:text-lg">3</span>
                                                     </div>
                                                 )}
                                             </div>
-                                            
+
                                             {/* サムネイル */}
-                                            <div className="relative w-20 h-20 flex-shrink-0 rounded-lg overflow-hidden bg-theater-neutral-100">
+                                            <div className="relative w-14 h-14 sm:w-20 sm:h-20 flex-shrink-0 rounded-lg overflow-hidden bg-theater-neutral-100">
                                                 {post.image_url ? (
                                                     <img
                                                         src={post.image_url}
@@ -120,21 +120,21 @@ const ContentSection: React.FC<ContentSectionProps> = ({ posts, authors, categor
                                                 <p className="text-sm text-theater-neutral-600 mt-1">
                                                     {post.author?.name}
                                                 </p>
-                                                <div className="flex items-center gap-3 mt-2 text-xs text-theater-neutral-500">
+                                                <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1.5 text-xs text-theater-neutral-500">
                                                     {post.playtime > 0 && (
-                                                        <span className="flex items-center gap-1">
+                                                        <span className="flex items-center gap-1 whitespace-nowrap">
                                                             <FaClock className="text-theater-primary-400" />
                                                             {post.playtime}分
                                                         </span>
                                                     )}
                                                     {post.totalNumber > 0 && (
-                                                        <span className="flex items-center gap-1">
+                                                        <span className="flex items-center gap-1 whitespace-nowrap">
                                                             <FaUsers className="text-theater-accent-blue" />
                                                             {post.totalNumber}人
                                                         </span>
                                                     )}
                                                     {post.categories?.[0] && (
-                                                        <span className="px-2 py-0.5 bg-theater-primary-100 text-theater-primary-600 rounded-full">
+                                                        <span className="px-2 py-0.5 bg-theater-primary-100 text-theater-primary-600 rounded-full whitespace-nowrap">
                                                             {post.categories[0].name}
                                                         </span>
                                                     )}
