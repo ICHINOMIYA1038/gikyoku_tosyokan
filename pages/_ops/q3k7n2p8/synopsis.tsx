@@ -22,7 +22,7 @@ export default function AdminSynopsis() {
   const fetchEntries = async (status: string) => {
     setLoading(true);
     try {
-      const res = await fetch(`/api/admin/synopsis?status=${status}`);
+      const res = await fetch(`/api/_ops/q3k7n2p8/synopsis?status=${status}`);
       if (res.ok) {
         setEntries(await res.json());
       }
@@ -36,7 +36,7 @@ export default function AdminSynopsis() {
 
   const handleAction = async (id: number, status: "approved" | "rejected") => {
     try {
-      const res = await fetch("/api/admin/synopsis", {
+      const res = await fetch("/api/_ops/q3k7n2p8/synopsis", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id, status }),
