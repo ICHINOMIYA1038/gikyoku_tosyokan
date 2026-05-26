@@ -352,12 +352,15 @@ model Announcement {
   theaterGroupName String?
   scriptTitle      String?
   images           String[]
+  /// 論理削除（管理画面から非表示にしたもの）
+  deletedAt        DateTime?
 
   @@index([createdAt(sort: Desc)])
   @@index([performanceDate])
   @@index([startDate])
   @@index([views(sort: Desc)])
   @@index([postId])
+  @@index([deletedAt])
   @@index([userId])
   @@map("Announcement")
 }
@@ -645,12 +648,15 @@ model Recruitment {
   expiresAt           DateTime?
   createdAt           DateTime          @default(now())
   updatedAt           DateTime          @updatedAt
+  /// 論理削除（管理画面から非表示にしたもの）
+  deletedAt           DateTime?
   applications        Application[]
   interests           Interest[]
 
   @@index([status, publishedAt])
   @@index([postedBy])
   @@index([theaterGroupId])
+  @@index([deletedAt])
   @@map("Recruitment")
 }
 

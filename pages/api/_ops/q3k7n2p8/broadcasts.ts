@@ -36,10 +36,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  const { subject, bodyHtml, bodyText } = req.body as {
+  const { subject, bodyHtml, bodyText, mode, userIds } = req.body as {
     subject?: string;
     bodyHtml?: string;
     bodyText?: string;
+    /** "all" = 全オプトインユーザー（既定） / "selected" = userIds で指定したユーザーのみ */
+    mode?: "all" | "selected";
+    userIds?: string[];
   };
   if (!subject?.trim() || !bodyHtml?.trim()) {
     return res.status(400).json({ error: "件名・本文は必須です" });
@@ -47,12 +50,29 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (subject.length > 200) {
     return res.status(400).json({ error: "件名は200文字以内です" });
   }
+  if (mode === "selected" && (!Array.isArray(userIds) || userIds.length === 0)) {
+    return res.status(400).json({ error: "送信先ユーザーを1人以上選んでください" });
+  }
 
-  // 配信対象（emailOptIn=true かつメールアドレスあり）
+  // 配信対象。常に emailOptIn=true かつメール有のユーザーに絞る
+  // （個別選択時も「配信を許可していない人には送らない」セーフティを維持）
+  const whereBase = {
+    emailOptIn: true,
+    email: { not: null },
+  } as const;
+  const where =
+    mode === "selected"
+      ? { ...whereBase, id: { in: userIds as string[] } }
+      : whereBase;
   const recipients = await prisma.user.findMany({
-    where: { emailOptIn: true, email: { not: null } },
+    where,
     select: { id: true, email: true, displayName: true, name: true, unsubscribeToken: true },
   });
+  if (recipients.length === 0) {
+    return res.status(400).json({
+      error: "送信対象が0人です（配信OFFのユーザーを選択していませんか？）",
+    });
+  }
 
   // unsubscribeToken が無い既存ユーザーには発行
   for (const r of recipients) {
