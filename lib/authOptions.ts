@@ -53,6 +53,33 @@ export const authOptions: NextAuthOptions = {
   // 本番では必ずHTTPSのみにする
   useSecureCookies: process.env.NODE_ENV === 'production',
 
+  // 関連サービス (tomoshibi.gikyokutosyokan.com 等) とログイン状態を共有するため
+  // セッションCookieは親ドメイン .gikyokutosyokan.com に発行する。
+  // __Host- 接頭辞は domain 指定不可なので csrfToken は付け替えず既定のまま。
+  cookies: process.env.NODE_ENV === 'production'
+    ? {
+        sessionToken: {
+          name: '__Secure-next-auth.session-token',
+          options: {
+            httpOnly: true,
+            sameSite: 'lax',
+            path: '/',
+            secure: true,
+            domain: '.gikyokutosyokan.com',
+          },
+        },
+        callbackUrl: {
+          name: '__Secure-next-auth.callback-url',
+          options: {
+            sameSite: 'lax',
+            path: '/',
+            secure: true,
+            domain: '.gikyokutosyokan.com',
+          },
+        },
+      }
+    : undefined,
+
   pages: {
     signIn: '/auth/signin',
     error: '/auth/signin',

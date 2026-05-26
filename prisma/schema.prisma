@@ -10,22 +10,22 @@ datasource db {
 }
 
 model Author {
-  id          Int     @id @default(autoincrement())
-  name        String @unique
-  website     String?
-  group       String?
-  profile     String?
-  masterpiece String?
-  posts       Post[]
+  id            Int     @id @default(autoincrement())
+  name          String  @unique
+  website       String?
+  group         String?
+  profile       String?
+  masterpiece   String?
+  posts         Post[]
   authorTwitter String?
-  groupTwitter String?
+  groupTwitter  String?
 
   @@index([name])
   @@map("Author")
 }
 
 model Post {
-  id                  Int             @id @default(autoincrement())
+  id                  Int                @id @default(autoincrement())
   title               String
   content             String?
   author_id           Int
@@ -45,14 +45,14 @@ model Post {
   website3            String?
   ISBN_13             String?
   buy_link            String?
-  comments      ParentComment[]
+  comments            ParentComment[]
   access              Access[]
-  averageRating Float?
-  ratings   Rating[]
-  author              Author          @relation(fields: [author_id], references: [id])
+  averageRating       Float?
+  ratings             Rating[]
+  author              Author             @relation(fields: [author_id], references: [id])
   kangeki_url         String?
-  aiDescription       String?         @map("ai_description")
-  categories          Category[]      @relation("PostCategory")
+  aiDescription       String?            @map("ai_description")
+  categories          Category[]         @relation("PostCategory")
   theaterGroups       PostTheaterGroup[]
   awards              PostAward[]
   announcements       Announcement[]
@@ -74,10 +74,10 @@ model Post {
 }
 
 model Category {
-  id    Int    @id @default(autoincrement())
-  name  String @unique
-  posts Post[] @relation("PostCategory")
-  image_url String?
+  id              Int     @id @default(autoincrement())
+  name            String  @unique
+  posts           Post[]  @relation("PostCategory")
+  image_url       String?
   contentMarkdown String?
 
   @@map("Category")
@@ -170,9 +170,9 @@ model BlogPost {
 // === 大学演劇 ===
 
 enum UniversityType {
-  NATIONAL    // 国立
-  PUBLIC      // 公立
-  PRIVATE     // 私立
+  NATIONAL // 国立
+  PUBLIC // 公立
+  PRIVATE // 私立
 }
 
 enum Region {
@@ -186,25 +186,25 @@ enum Region {
 }
 
 enum TheaterGroupType {
-  STUDENT       // 学生劇団
-  INTERCOLLEGE  // インカレ
-  ACADEMIC      // 大学学科
-  AMATEUR       // アマチュア・社会人
-  PROFESSIONAL  // プロ
-  YOUTH         // ユース
+  STUDENT // 学生劇団
+  INTERCOLLEGE // インカレ
+  ACADEMIC // 大学学科
+  AMATEUR // アマチュア・社会人
+  PROFESSIONAL // プロ
+  YOUTH // ユース
 }
 
 model University {
-  id              Int              @id @default(autoincrement())
-  name            String           @unique
-  slug            String           @unique
-  universityType  UniversityType
-  prefecture      String
-  region          Region
-  website         String?
-  theaterGroups   TheaterGroupUniversity[]
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @updatedAt
+  id             Int                      @id @default(autoincrement())
+  name           String                   @unique
+  slug           String                   @unique
+  universityType UniversityType
+  prefecture     String
+  region         Region
+  website        String?
+  theaterGroups  TheaterGroupUniversity[]
+  createdAt      DateTime                 @default(now())
+  updatedAt      DateTime                 @updatedAt
 
   @@index([region])
   @@index([prefecture])
@@ -213,28 +213,28 @@ model University {
 }
 
 model TheaterGroup {
-  id            Int                      @id @default(autoincrement())
-  name          String
-  slug          String                   @unique
-  groupType     TheaterGroupType         @default(STUDENT)
-  description   String?
-  memberCount   Int?
-  foundedYear   Int?
-  prefecture    String?
-  region        Region?
-  website       String?
-  twitter       String?
-  instagram     String?
-  corich        String?
-  otherLinks    String[]
-  isActive      Boolean                  @default(true)
-  blogPostSlug  String?
-  universities  TheaterGroupUniversity[]
-  posts              PostTheaterGroup[]
-  recruitments       Recruitment[]
-  venuePerformances  VenuePerformance[]
-  createdAt          DateTime                 @default(now())
-  updatedAt          DateTime                 @updatedAt
+  id                Int                      @id @default(autoincrement())
+  name              String
+  slug              String                   @unique
+  groupType         TheaterGroupType         @default(STUDENT)
+  description       String?
+  memberCount       Int?
+  foundedYear       Int?
+  prefecture        String?
+  region            Region?
+  website           String?
+  twitter           String?
+  instagram         String?
+  corich            String?
+  otherLinks        String[]
+  isActive          Boolean                  @default(true)
+  blogPostSlug      String?
+  universities      TheaterGroupUniversity[]
+  posts             PostTheaterGroup[]
+  recruitments      Recruitment[]
+  venuePerformances VenuePerformance[]
+  createdAt         DateTime                 @default(now())
+  updatedAt         DateTime                 @updatedAt
 
   @@index([groupType])
   @@index([isActive])
@@ -244,23 +244,23 @@ model TheaterGroup {
 }
 
 model Venue {
-  id          Int       @id @default(autoincrement())
-  name        String
-  slug        String    @unique
-  venueType   String    @default("small") // small, medium, large, outdoor, other
-  capacity    Int?
-  prefecture  String
-  address     String?
-  website     String?
-  twitter     String?
-  description String?
-  latitude    Float?
-  longitude   Float?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  announcements       Announcement[]
-  performances        PostTheaterGroup[]
-  venuePerformances   VenuePerformance[]
+  id                Int                @id @default(autoincrement())
+  name              String
+  slug              String             @unique
+  venueType         String             @default("small") // small, medium, large, outdoor, other
+  capacity          Int?
+  prefecture        String
+  address           String?
+  website           String?
+  twitter           String?
+  description       String?
+  latitude          Float?
+  longitude         Float?
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  announcements     Announcement[]
+  performances      PostTheaterGroup[]
+  venuePerformances VenuePerformance[]
 
   @@index([prefecture])
   @@index([venueType])
@@ -269,21 +269,21 @@ model Venue {
 }
 
 model VenuePerformance {
-  id              Int          @id @default(autoincrement())
+  id              Int           @id @default(autoincrement())
   venueId         Int
-  title           String       // 作品名・公演名
-  artistName      String?      // 作家名・演出家名・団体名
-  performanceType String       @default("play") // play, reading, festival, workshop, other
-  year            Int?         // 上演年
-  month           Int?         // 上演月
-  description     String?      // 補足情報（演劇祭名、企画名など）
-  sourceUrl       String?      // エビデンスURL
-  postId          Int?         // サイト内作品への紐付け（任意）
-  theaterGroupId  Int?         // 劇団への紐付け（任意）
-  post            Post?        @relation(fields: [postId], references: [id])
+  title           String // 作品名・公演名
+  artistName      String? // 作家名・演出家名・団体名
+  performanceType String        @default("play") // play, reading, festival, workshop, other
+  year            Int? // 上演年
+  month           Int? // 上演月
+  description     String? // 補足情報（演劇祭名、企画名など）
+  sourceUrl       String? // エビデンスURL
+  postId          Int? // サイト内作品への紐付け（任意）
+  theaterGroupId  Int? // 劇団への紐付け（任意）
+  post            Post?         @relation(fields: [postId], references: [id])
   theaterGroup    TheaterGroup? @relation(fields: [theaterGroupId], references: [id])
-  venue           Venue        @relation(fields: [venueId], references: [id])
-  createdAt       DateTime     @default(now())
+  venue           Venue         @relation(fields: [venueId], references: [id])
+  createdAt       DateTime      @default(now())
 
   @@index([venueId])
   @@index([postId])
@@ -293,12 +293,12 @@ model VenuePerformance {
 }
 
 model TheaterGroupUniversity {
-  id              Int          @id @default(autoincrement())
-  theaterGroupId  Int
-  universityId    Int
-  campus          String?
-  theaterGroup    TheaterGroup @relation(fields: [theaterGroupId], references: [id])
-  university      University   @relation(fields: [universityId], references: [id])
+  id             Int          @id @default(autoincrement())
+  theaterGroupId Int
+  universityId   Int
+  campus         String?
+  theaterGroup   TheaterGroup @relation(fields: [theaterGroupId], references: [id])
+  university     University   @relation(fields: [universityId], references: [id])
 
   @@unique([theaterGroupId, universityId])
   @@index([theaterGroupId])
@@ -310,16 +310,16 @@ model TheaterGroupUniversity {
 
 model TheaterNewsItem {
   id          Int      @id @default(autoincrement())
-  source      String   // RSSソース名 (natalie, broadwayworld, etc.)
+  source      String // RSSソース名 (natalie, broadwayworld, etc.)
   sourceUrl   String   @unique // 元記事URL（重複防止）
   title       String
-  summary     String?  // 記事の要約・description
+  summary     String? // 記事の要約・description
   language    String   @default("ja") // ja or en
-  category    String?  // カテゴリタグ
+  category    String? // カテゴリタグ
   publishedAt DateTime // 元記事の公開日時
   fetchedAt   DateTime @default(now()) // 取得日時
   used        Boolean  @default(false) // 記事に使用済みか
-  usedInSlug  String?  // 使用した記事のslug
+  usedInSlug  String? // 使用した記事のslug
 
   @@index([publishedAt(sort: Desc)])
   @@index([used])
@@ -329,7 +329,7 @@ model TheaterNewsItem {
 }
 
 model Announcement {
-  id               Int      @id @default(autoincrement())
+  id               Int       @id @default(autoincrement())
   title            String
   content          String
   performanceDate  DateTime?
@@ -337,18 +337,18 @@ model Announcement {
   endDate          DateTime?
   venue            String?
   venueId          Int?
-  venueRef         Venue?   @relation(fields: [venueId], references: [id])
+  venueRef         Venue?    @relation(fields: [venueId], references: [id])
   ticketPrice      String?
   contactInfo      String?
-  authorName       String   @default("名無しさん")
+  authorName       String    @default("名無しさん")
   ipAddress        String?
   userId           String?
-  user             User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
-  views            Int      @default(0)
+  user             User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  views            Int       @default(0)
   postId           Int?
-  post             Post?    @relation(fields: [postId], references: [id])
+  post             Post?     @relation(fields: [postId], references: [id])
   theaterGroupName String?
   scriptTitle      String?
   images           String[]
@@ -369,10 +369,10 @@ model PostTheaterGroup {
   id              Int          @id @default(autoincrement())
   postId          Int
   theaterGroupId  Int
-  sourceUrl       String?      // 上演の根拠となるURL（公式サイト・SNS等）
-  sourceType      String?      // 根拠の種類: official, twitter, instagram, corich, other
-  performanceYear Int?         // 上演年
-  venueId         Int?         // 上演劇場
+  sourceUrl       String? // 上演の根拠となるURL（公式サイト・SNS等）
+  sourceType      String? // 根拠の種類: official, twitter, instagram, corich, other
+  performanceYear Int? // 上演年
+  venueId         Int? // 上演劇場
   post            Post         @relation(fields: [postId], references: [id])
   theaterGroup    TheaterGroup @relation(fields: [theaterGroupId], references: [id])
   venue           Venue?       @relation(fields: [venueId], references: [id])
@@ -384,14 +384,14 @@ model PostTheaterGroup {
 }
 
 model PostAward {
-  id           Int     @id @default(autoincrement())
-  postId       Int?
-  awardName    String
-  awardYear    Int
-  awardType    String  @default("受賞")
-  title        String?
-  authorName   String?
-  post         Post?   @relation(fields: [postId], references: [id])
+  id         Int     @id @default(autoincrement())
+  postId     Int?
+  awardName  String
+  awardYear  Int
+  awardType  String  @default("受賞")
+  title      String?
+  authorName String?
+  post       Post?   @relation(fields: [postId], references: [id])
 
   @@unique([awardName, awardYear, title])
   @@index([postId])
@@ -411,44 +411,45 @@ enum UserRole {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
-  emailVerified DateTime?
-  image         String?
-  role          UserRole  @default(USER)
-  displayName   String?
-  bio           String?
-  avatarUrl     String?
-  groupName     String?
+  id                 String    @id @default(cuid())
+  name               String?
+  email              String?   @unique
+  emailVerified      DateTime?
+  image              String?
+  role               UserRole  @default(USER)
+  displayName        String?
+  bio                String?
+  avatarUrl          String?
+  groupName          String?
   /// 案内メール配信可否。デフォルトは false (明示的にオプトイン)。
-  emailOptIn       Boolean   @default(false)
-  emailOptInAt     DateTime?
+  emailOptIn         Boolean   @default(false)
+  emailOptInAt       DateTime?
   /// 配信停止リンクで本人確認に使う（推測不可なトークン）
-  unsubscribeToken String?   @unique
+  unsubscribeToken   String?   @unique
   welcomeEmailSentAt DateTime?
   /// 初回オンボーディング (/auth/welcome) を完了した時刻。
   /// 未完了なら未ログイン時のCTA以外のページから welcome へ誘導する。
   onboardedAt        DateTime?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
 
-  accounts          Account[]
-  sessions          Session[]
-  parentComments    ParentComment[]
-  childComments     ChildComment[]
-  favorites         Favorite[]
-  reports           Report[]
-  searchHistories   SearchHistory[]
-  announcements     Announcement[]
-  recruitments      Recruitment[]
-  applications      Application[]
-  interests         Interest[]
-  sentMessages      Message[]       @relation("SentMessages")
-  receivedMessages  Message[]       @relation("ReceivedMessages")
-  userSynopses      UserSynopsis[]
-  toolData          UserToolData[]
-  broadcasts        Broadcast[]
+  accounts         Account[]
+  sessions         Session[]
+  parentComments   ParentComment[]
+  childComments    ChildComment[]
+  favorites        Favorite[]
+  reports          Report[]
+  searchHistories  SearchHistory[]
+  announcements    Announcement[]
+  recruitments     Recruitment[]
+  applications     Application[]
+  interests        Interest[]
+  sentMessages     Message[]        @relation("SentMessages")
+  receivedMessages Message[]        @relation("ReceivedMessages")
+  userSynopses     UserSynopsis[]
+  toolData         UserToolData[]
+  broadcasts       Broadcast[]
+  tomoshibiScenes  TomoshibiScene[]
 
   @@index([email])
   @@index([emailOptIn])
@@ -457,19 +458,19 @@ model User {
 
 /// 案内メール一斉送信の記録。
 model Broadcast {
-  id          String   @id @default(cuid())
-  authorId    String
-  subject     String
-  bodyHtml    String   @db.Text
-  bodyText    String?  @db.Text
+  id             String    @id @default(cuid())
+  authorId       String
+  subject        String
+  bodyHtml       String    @db.Text
+  bodyText       String?   @db.Text
   recipientCount Int
-  succeededCount Int   @default(0)
-  failedCount Int      @default(0)
-  status      String   @default("pending") // pending | sending | completed | failed
-  startedAt   DateTime?
-  finishedAt  DateTime?
-  createdAt   DateTime @default(now())
-  author      User     @relation(fields: [authorId], references: [id])
+  succeededCount Int       @default(0)
+  failedCount    Int       @default(0)
+  status         String    @default("pending") // pending | sending | completed | failed
+  startedAt      DateTime?
+  finishedAt     DateTime?
+  createdAt      DateTime  @default(now())
+  author         User      @relation(fields: [authorId], references: [id])
 
   @@index([createdAt(sort: Desc)])
   @@map("Broadcast")
@@ -478,9 +479,9 @@ model Broadcast {
 model UserToolData {
   id        Int      @id @default(autoincrement())
   userId    String
-  toolType  String   // "timer", "schedule", "playtime", "analyzer"
-  name      String   // ユーザーが付けた保存名
-  data      String   // JSON文字列
+  toolType  String // "timer", "schedule", "playtime", "analyzer"
+  name      String // ユーザーが付けた保存名
+  data      String // JSON文字列
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -573,17 +574,17 @@ enum ReportStatus {
 }
 
 model Report {
-  id          Int          @id @default(autoincrement())
-  reporterId  String
-  reason      String
-  details     String?
-  targetType  String       // "comment" | "announcement" | "user"
-  targetId    String       // 対象のID（コメントID, ユーザーID等）
-  targetUrl   String?      // 通報対象のページURL
-  status      ReportStatus @default(PENDING)
-  createdAt   DateTime     @default(now())
-  resolvedAt  DateTime?
-  reporter    User         @relation(fields: [reporterId], references: [id], onDelete: Cascade)
+  id         Int          @id @default(autoincrement())
+  reporterId String
+  reason     String
+  details    String?
+  targetType String // "comment" | "announcement" | "user"
+  targetId   String // 対象のID（コメントID, ユーザーID等）
+  targetUrl  String? // 通報対象のページURL
+  status     ReportStatus @default(PENDING)
+  createdAt  DateTime     @default(now())
+  resolvedAt DateTime?
+  reporter   User         @relation(fields: [reporterId], references: [id], onDelete: Cascade)
 
   @@index([reporterId])
   @@index([status])
@@ -591,12 +592,12 @@ model Report {
 }
 
 model SearchHistory {
-  id         Int      @id @default(autoincrement())
-  userId     String
-  query      Json
+  id          Int      @id @default(autoincrement())
+  userId      String
+  query       Json
   resultCount Int?
-  createdAt  DateTime @default(now())
-  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId, createdAt])
   @@map("SearchHistory")
@@ -619,42 +620,42 @@ enum ExperienceLevel {
 }
 
 model Recruitment {
-  id                  String            @id @default(cuid())
-  title               String
-  description         String
-  postedBy            String
-  poster              User              @relation(fields: [postedBy], references: [id], onDelete: Cascade)
-  theaterGroupId      Int?
-  theaterGroup        TheaterGroup?     @relation(fields: [theaterGroupId], references: [id])
-  theaterGroupName    String?
-  recruitmentType     String?           // "member" | "cast" | "staff"
-  rolesWanted         String[]
-  genre               String?           // 演劇, ミュージカル, 朗読劇 等
-  vibe                String[]          // カジュアル, 本格派, 初心者歓迎 等
-  groupType           String?           // 学生劇団, 社会人劇団, プロ 等
-  experienceLevel     ExperienceLevel   @default(ANY)
-  genderRequirement   String?
-  ageRangeMin         Int?
-  ageRangeMax         Int?
-  feeStructure        String?
-  prefecture          String?
-  rehearsalFrequency  String?
-  rehearsalLocation   String?
-  venue               String?
-  startDate           DateTime?
-  endDate             DateTime?
-  images              String[]
-  contactMethod       String?
-  status              RecruitmentStatus @default(ACTIVE)
-  views               Int               @default(0)
-  publishedAt         DateTime          @default(now())
-  expiresAt           DateTime?
-  createdAt           DateTime          @default(now())
-  updatedAt           DateTime          @updatedAt
+  id                 String            @id @default(cuid())
+  title              String
+  description        String
+  postedBy           String
+  poster             User              @relation(fields: [postedBy], references: [id], onDelete: Cascade)
+  theaterGroupId     Int?
+  theaterGroup       TheaterGroup?     @relation(fields: [theaterGroupId], references: [id])
+  theaterGroupName   String?
+  recruitmentType    String? // "member" | "cast" | "staff"
+  rolesWanted        String[]
+  genre              String? // 演劇, ミュージカル, 朗読劇 等
+  vibe               String[] // カジュアル, 本格派, 初心者歓迎 等
+  groupType          String? // 学生劇団, 社会人劇団, プロ 等
+  experienceLevel    ExperienceLevel   @default(ANY)
+  genderRequirement  String?
+  ageRangeMin        Int?
+  ageRangeMax        Int?
+  feeStructure       String?
+  prefecture         String?
+  rehearsalFrequency String?
+  rehearsalLocation  String?
+  venue              String?
+  startDate          DateTime?
+  endDate            DateTime?
+  images             String[]
+  contactMethod      String?
+  status             RecruitmentStatus @default(ACTIVE)
+  views              Int               @default(0)
+  publishedAt        DateTime          @default(now())
+  expiresAt          DateTime?
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
   /// 論理削除（管理画面から非表示にしたもの）
-  deletedAt           DateTime?
-  applications        Application[]
-  interests           Interest[]
+  deletedAt          DateTime?
+  applications       Application[]
+  interests          Interest[]
 
   @@index([status, publishedAt])
   @@index([postedBy])
@@ -664,12 +665,12 @@ model Recruitment {
 }
 
 model Interest {
-  id             String      @id @default(cuid())
-  recruitmentId  String
-  recruitment    Recruitment @relation(fields: [recruitmentId], references: [id], onDelete: Cascade)
-  userId         String
-  user           User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-  createdAt      DateTime    @default(now())
+  id            String      @id @default(cuid())
+  recruitmentId String
+  recruitment   Recruitment @relation(fields: [recruitmentId], references: [id], onDelete: Cascade)
+  userId        String
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt     DateTime    @default(now())
 
   @@unique([recruitmentId, userId])
   @@index([recruitmentId])
@@ -686,15 +687,15 @@ enum ApplicationStatus {
 }
 
 model Application {
-  id             String            @id @default(cuid())
-  recruitmentId  String
-  recruitment    Recruitment       @relation(fields: [recruitmentId], references: [id], onDelete: Cascade)
-  applicantId    String
-  applicant      User              @relation(fields: [applicantId], references: [id], onDelete: Cascade)
-  message        String
-  status         ApplicationStatus @default(PENDING)
-  createdAt      DateTime          @default(now())
-  updatedAt      DateTime          @updatedAt
+  id            String            @id @default(cuid())
+  recruitmentId String
+  recruitment   Recruitment       @relation(fields: [recruitmentId], references: [id], onDelete: Cascade)
+  applicantId   String
+  applicant     User              @relation(fields: [applicantId], references: [id], onDelete: Cascade)
+  message       String
+  status        ApplicationStatus @default(PENDING)
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
 
   @@unique([recruitmentId, applicantId])
   @@index([applicantId])
@@ -736,4 +737,22 @@ model Message {
   @@index([conversationId, createdAt])
   @@index([receiverId, readAt])
   @@map("Message")
+}
+
+// ============================================
+// ともしび小屋 (tomoshibi.gikyokutosyokan.com)
+// 舞台照明シミュレーターのシーン保存
+// ============================================
+model TomoshibiScene {
+  id        String   @id @default(cuid())
+  userId    String
+  name      String
+  /// シーン本体: { fixtures, performers, setPieces, settings }
+  data      Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, updatedAt(sort: Desc)])
+  @@map("TomoshibiScene")
 }
