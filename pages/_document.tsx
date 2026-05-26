@@ -4,6 +4,7 @@ export default function Document() {
   return (
     <Html lang="ja">
       <Head>
+        {/* viewport は components/MobileOptimizations.tsx で設定 */}
         {/* DNS Prefetch for external resources */}
 
         <link rel="dns-prefetch" href="https://fonts.googleapis.com" />

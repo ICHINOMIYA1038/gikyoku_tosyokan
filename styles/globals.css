@@ -16,13 +16,18 @@
   --background-rgb: 253, 253, 252;
 }
 
-body {
+html, body {
   background: rgb(var(--background-rgb));
   color: rgb(var(--foreground-rgb));
   font-family: 'Noto Sans JP', sans-serif;
   line-height: 1.7;
-  overflow-y: scroll;
   scroll-behavior: smooth;
+  /* 横スクロール抑止（個別に overflow-x:auto したい要素はその内側で実現する） */
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+body {
+  overflow-y: scroll;
 }
 
 /* 明朝体の適用 */
