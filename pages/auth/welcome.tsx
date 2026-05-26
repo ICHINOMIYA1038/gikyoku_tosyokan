@@ -20,6 +20,7 @@ export default function Welcome({ user }: Props) {
   const [displayName, setDisplayName] = useState(user.name ?? '');
   const [groupName, setGroupName] = useState('');
   const [bio, setBio] = useState('');
+  const [emailOptIn, setEmailOptIn] = useState(true);
   const [avatarPreview, setAvatarPreview] = useState(user.image ?? '');
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -60,7 +61,7 @@ export default function Welcome({ user }: Props) {
     await fetch('/api/account/profile', {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ displayName, bio, groupName }),
+      body: JSON.stringify({ displayName, bio, groupName, emailOptIn }),
     });
     router.push('/');
   };
@@ -144,6 +145,24 @@ export default function Welcome({ user }: Props) {
                 rows={3}
                 className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-theater-primary-300 resize-y"
               />
+            </div>
+
+            {/* 案内メール受信 */}
+            <div className="rounded-lg border border-gray-200 bg-gray-50/60 p-3">
+              <label className="flex cursor-pointer items-start gap-2 text-sm">
+                <input
+                  type="checkbox"
+                  checked={emailOptIn}
+                  onChange={(e) => setEmailOptIn(e.target.checked)}
+                  className="mt-0.5 h-4 w-4 rounded border-gray-300"
+                />
+                <span>
+                  <span className="font-medium text-gray-900">案内メールを受け取る</span>
+                  <span className="mt-0.5 block text-xs text-gray-500">
+                    新機能のお知らせ、おすすめの戯曲特集などをメールでお届けします。いつでも配信停止できます。
+                  </span>
+                </span>
+              </label>
             </div>
 
             {/* ボタン */}
