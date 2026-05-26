@@ -10,7 +10,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const session = await requireAuth(req, res);
   if (!session) return;
 
-  const { displayName, bio, groupName, avatarUrl, emailOptIn } = req.body;
+  const { displayName, bio, groupName, avatarUrl, emailOptIn, completeOnboarding } = req.body;
 
   // バリデーション
   if (displayName !== undefined && typeof displayName !== 'string') {
@@ -40,6 +40,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (typeof emailOptIn === "boolean") {
     data.emailOptIn = emailOptIn;
     data.emailOptInAt = emailOptIn ? new Date() : null;
+  }
+  if (completeOnboarding === true) {
+    data.onboardedAt = new Date();
   }
 
   const updated = await prisma.user.update({

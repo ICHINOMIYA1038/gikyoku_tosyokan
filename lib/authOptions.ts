@@ -120,6 +120,23 @@ export const authOptions: NextAuthOptions = {
       }
       return true;
     },
+
+    /**
+     * サインイン後のリダイレクト先制御。
+     * 初回ログインユーザー (onboardedAt が null) は /auth/welcome へ強制誘導。
+     */
+    async redirect({ url, baseUrl }) {
+      // 内部URLのみ許可（外部URLは baseUrl にフォールバック）
+      const target = url.startsWith('/')
+        ? `${baseUrl}${url}`
+        : url.startsWith(baseUrl)
+          ? url
+          : baseUrl;
+      // welcome 自体への遷移はそのまま通す（ループ防止）
+      if (target.includes('/auth/welcome')) return target;
+      // それ以外は次の getServerSideProps / middleware で onboarded 判定する
+      return target;
+    },
   },
 
   events: {

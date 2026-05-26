@@ -54,7 +54,11 @@ export default function SignIn({ providers, callbackUrl }: Props) {
               Object.values(providers).map((provider) => (
                 <button
                   key={provider.id}
-                  onClick={() => signIn(provider.id, { callbackUrl })}
+                  onClick={() =>
+                    signIn(provider.id, {
+                      callbackUrl: `/auth/welcome?next=${encodeURIComponent(callbackUrl)}`,
+                    })
+                  }
                   className="w-full flex items-center justify-center gap-3 px-4 py-3.5 border border-gray-300 rounded-lg hover:bg-gray-50 active:bg-gray-100 transition-colors font-medium text-gray-700"
                 >
                   <FaGoogle className="text-lg" />
