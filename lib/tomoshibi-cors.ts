@@ -6,7 +6,7 @@ const ALLOWED_ORIGINS = new Set([
   'http://localhost:5174',
 ]);
 
-export const MAX_SCENES_PER_USER = 20;
+export const MAX_SCENES_PER_USER = 5;
 export const MAX_FIXTURES = 100;
 export const MAX_PERFORMERS = 30;
 export const MAX_SETPIECES = 30;
