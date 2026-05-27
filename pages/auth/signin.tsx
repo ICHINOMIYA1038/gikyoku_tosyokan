@@ -13,18 +13,26 @@ interface Props {
   callbackUrl: string;
 }
 
-function detectFromService(callbackUrl: string): string | null {
+type ServiceKey = 'gikyoku' | 'tomoshibi';
+const SERVICES: Record<ServiceKey, { name: string; tagline: string }> = {
+  gikyoku: { name: '戯曲図書館', tagline: '戯曲を探す・読む・記録する' },
+  tomoshibi: { name: 'ともしび小屋', tagline: '舞台照明を3Dでデザインする' },
+};
+
+function detectFromService(callbackUrl: string): ServiceKey {
   try {
     const u = new URL(callbackUrl, 'https://gikyokutosyokan.com');
-    if (u.hostname.endsWith('tomoshibi.gikyokutosyokan.com')) return 'ともしび小屋';
-    return null;
-  } catch { return null; }
+    if (u.hostname.endsWith('tomoshibi.gikyokutosyokan.com')) return 'tomoshibi';
+  } catch { /* noop */ }
+  return 'gikyoku';
 }
 
 export default function SignIn({ providers, callbackUrl }: Props) {
   const router = useRouter();
   const error = router.query.error as string | undefined;
-  const fromService = detectFromService(callbackUrl);
+  const fromKey = detectFromService(callbackUrl);
+  const main = SERVICES[fromKey];
+  const other = SERVICES[fromKey === 'tomoshibi' ? 'gikyoku' : 'tomoshibi'];
 
   const errorMessages: Record<string, string> = {
     OAuthSignin: 'サインインの開始中にエラーが発生しました。',
@@ -38,37 +46,26 @@ export default function SignIn({ providers, callbackUrl }: Props) {
   return (
     <Layout>
       <Seo
-        pageTitle="ログイン"
-        pageDescription="戯曲図書館にログインして、コメントやレビューを投稿しましょう"
+        pageTitle={`${main.name} にログイン`}
+        pageDescription={`${main.name} にログイン`}
         pagePath="/auth/signin"
       />
       <div className="container mx-auto px-4 py-12 max-w-md">
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
-          <div className="text-center mb-8">
-            <img src="/logo.png" alt="戯曲図書館" className="h-12 w-auto mx-auto mb-4" />
-            <h1 className="text-2xl font-bold text-gray-900">おかえりなさい</h1>
-            <p className="text-sm text-gray-500 mt-2">
-              {fromService
-                ? `${fromService} は戯曲図書館アカウントで利用できます`
-                : '戯曲図書館アカウントにログイン'}
-            </p>
-          </div>
-
-          <div className="mb-6 p-3 bg-gray-50 border border-gray-200 rounded-lg text-xs text-gray-600">
-            <p className="font-semibold text-gray-700 mb-1">共通アカウントで使えるサービス</p>
-            <ul className="space-y-0.5">
-              <li>• <span className="font-medium">戯曲図書館</span> — 戯曲検索・コメント・上演告知</li>
-              <li>• <span className="font-medium">ともしび小屋</span> — 舞台照明シミュレーター (3D)</li>
-            </ul>
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-7">
+          <div className="text-center mb-6">
+            <h1 className="text-xl font-bold text-gray-900">
+              {main.name} にログイン
+            </h1>
+            <p className="text-xs text-gray-500 mt-1.5">{main.tagline}</p>
           </div>
 
           {error && (
-            <div className="mb-6 p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
+            <div className="mb-5 p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
               {errorMessages[error] || errorMessages.Default}
             </div>
           )}
 
-          <div className="space-y-3">
+          <div className="space-y-2">
             {providers &&
               Object.values(providers).map((provider) => (
                 <button
@@ -78,15 +75,21 @@ export default function SignIn({ providers, callbackUrl }: Props) {
                       callbackUrl: `/auth/welcome?next=${encodeURIComponent(callbackUrl)}`,
                     })
                   }
-                  className="w-full flex items-center justify-center gap-3 px-4 py-3.5 border border-gray-300 rounded-lg hover:bg-gray-50 active:bg-gray-100 transition-colors font-medium text-gray-700"
+                  className="w-full flex items-center justify-center gap-3 px-4 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 active:bg-gray-100 transition-colors font-medium text-gray-700 text-sm"
                 >
-                  <FaGoogle className="text-lg" />
-                  <span>{provider.name} でログイン{fromService ? ` (${fromService} に戻ります)` : ''}</span>
+                  <FaGoogle />
+                  <span>{provider.name} でログイン</span>
                 </button>
               ))}
           </div>
 
-          <div className="mt-8 pt-6 border-t border-gray-200 text-center">
+          <div className="mt-5 pt-5 border-t border-gray-200">
+            <p className="text-xs text-gray-500 leading-relaxed">
+              <b className="text-gray-700">{other.name}</b>（{other.tagline}）も同じアカウントで使えます。
+            </p>
+          </div>
+
+          <div className="mt-5 pt-4 border-t border-gray-100 text-center">
             <p className="text-sm text-gray-600">
               アカウントをお持ちでない方は
               <Link

@@ -6,109 +6,89 @@ import Layout from '@/components/Layout';
 import Seo from '@/components/seo';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { FaGoogle, FaCommentDots, FaHeart, FaTheaterMasks, FaCheckCircle } from 'react-icons/fa';
+import { FaGoogle } from 'react-icons/fa';
 
 interface Props {
   providers: Record<string, ClientSafeProvider> | null;
   callbackUrl: string;
 }
 
-const BENEFITS = [
-  {
-    icon: FaCommentDots,
-    title: 'コメント・レビュー投稿',
-    description: '作品への感想や上演報告を投稿できます',
-  },
-  {
-    icon: FaHeart,
-    title: 'お気に入り・履歴',
-    description: '気になる作品をブックマークして後から見返せます',
-  },
-  {
-    icon: FaTheaterMasks,
-    title: '上演告知',
-    description: '公演情報を投稿して観客を募ることができます',
-  },
-];
+type ServiceKey = 'gikyoku' | 'tomoshibi';
 
-const RELATED_SERVICES = [
-  { name: '戯曲図書館', desc: '戯曲検索・コメント・上演告知', host: 'gikyokutosyokan.com', tag: '本サイト' },
-  { name: 'ともしび小屋', desc: '舞台照明シミュレーター (3D)', host: 'tomoshibi.gikyokutosyokan.com', tag: '関連サービス' },
-];
+interface ServiceInfo {
+  key: ServiceKey;
+  name: string;
+  tagline: string;
+  benefits: string[];
+}
 
-function detectFromService(callbackUrl: string): string | null {
+const SERVICES: Record<ServiceKey, ServiceInfo> = {
+  gikyoku: {
+    key: 'gikyoku',
+    name: '戯曲図書館',
+    tagline: '戯曲を探す・読む・記録する',
+    benefits: [
+      'コメント・レビューを投稿できる',
+      'お気に入り戯曲をブックマーク',
+      '上演告知を投稿して観客を集められる',
+    ],
+  },
+  tomoshibi: {
+    key: 'tomoshibi',
+    name: 'ともしび小屋',
+    tagline: '舞台照明を3Dでデザインする',
+    benefits: [
+      '組んだ明かりをクラウドに保存できる',
+      '別端末から続きを開ける',
+      '最大5シーンまで自由に保存',
+    ],
+  },
+};
+
+function detectFromService(callbackUrl: string): ServiceKey {
   try {
     const u = new URL(callbackUrl, 'https://gikyokutosyokan.com');
-    const match = RELATED_SERVICES.find(s => u.hostname.endsWith(s.host) && s.host !== 'gikyokutosyokan.com');
-    return match?.name ?? null;
-  } catch { return null; }
+    if (u.hostname.endsWith('tomoshibi.gikyokutosyokan.com')) return 'tomoshibi';
+  } catch { /* noop */ }
+  return 'gikyoku';
 }
 
 export default function SignUp({ providers, callbackUrl }: Props) {
   const router = useRouter();
   const error = router.query.error as string | undefined;
-  const fromService = detectFromService(callbackUrl);
+  const fromKey = detectFromService(callbackUrl);
+  const main = SERVICES[fromKey];
+  const other = SERVICES[fromKey === 'tomoshibi' ? 'gikyoku' : 'tomoshibi'];
 
   return (
     <Layout>
       <Seo
-        pageTitle="新規登録"
-        pageDescription="戯曲図書館に無料登録して、コメントやレビュー投稿、お気に入り機能を利用しましょう"
+        pageTitle={`${main.name} に新規登録`}
+        pageDescription={`${main.name} を含む関連サービスで共通利用できる無料アカウントです`}
         pagePath="/auth/signup"
       />
-      <div className="container mx-auto px-4 py-12 max-w-lg">
+      <div className="container mx-auto px-4 py-12 max-w-md">
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
           {/* ヘッダー */}
-          <div className="bg-gradient-to-br from-theater-primary-300 to-pink-200 px-8 py-8 text-center">
-            <img src="/logo.png" alt="戯曲図書館" className="h-14 w-auto mx-auto mb-4" />
-            <h1 className="text-2xl font-bold text-gray-900">戯曲図書館アカウントを作成</h1>
-            <p className="text-sm text-gray-700 mt-2">
-              {fromService
-                ? `${fromService} を含む関連サービスで共通利用できる無料アカウントです`
-                : '無料で登録して、演劇の世界をもっと楽しもう'}
+          <div className="bg-gradient-to-br from-theater-primary-300 to-pink-200 px-6 py-7 text-center">
+            <h1 className="text-xl font-bold text-gray-900">
+              {main.name} に登録
+            </h1>
+            <p className="text-xs text-gray-700 mt-1.5">
+              {main.tagline}
             </p>
           </div>
 
-          <div className="p-8">
-            {/* 共通アカウントで使えるサービス */}
-            <div className="mb-6 p-4 bg-gray-50 border border-gray-200 rounded-lg">
-              <p className="text-xs font-semibold text-gray-700 mb-2">
-                このアカウント1つで使えるサービス
-              </p>
-              <ul className="space-y-1.5">
-                {RELATED_SERVICES.map(s => (
-                  <li key={s.host} className="flex items-baseline gap-2 text-xs">
-                    <span className={
-                      'px-1.5 py-0.5 rounded font-medium ' +
-                      (s.tag === '本サイト'
-                        ? 'bg-theater-primary-100 text-theater-primary-700'
-                        : 'bg-amber-100 text-amber-800')
-                    }>{s.tag}</span>
-                    <span className="font-medium text-gray-900">{s.name}</span>
-                    <span className="text-gray-500">— {s.desc}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            {/* できること */}
-            <div className="mb-8">
-              <h2 className="text-sm font-bold text-gray-500 uppercase tracking-wide mb-4">
-                登録するとできること
-              </h2>
-              <ul className="space-y-4">
-                {BENEFITS.map((benefit) => (
-                  <li key={benefit.title} className="flex items-start gap-3">
-                    <div className="w-9 h-9 bg-theater-primary-50 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <benefit.icon className="text-theater-primary-600" />
-                    </div>
-                    <div>
-                      <p className="font-medium text-gray-900 text-sm">{benefit.title}</p>
-                      <p className="text-xs text-gray-500 mt-0.5">{benefit.description}</p>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            </div>
+          <div className="p-6">
+            {/* メインサービスでできること */}
+            <ul className="space-y-2 mb-5">
+              {main.benefits.map((b, i) => (
+                <li key={i} className="flex items-start gap-2 text-sm text-gray-700">
+                  <span className="text-theater-primary-500 mt-1">✓</span>
+                  <span>{b}</span>
+                </li>
+              ))}
+            </ul>
 
             {error && (
               <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
@@ -117,7 +97,7 @@ export default function SignUp({ providers, callbackUrl }: Props) {
             )}
 
             {/* 登録ボタン */}
-            <div className="space-y-3">
+            <div className="space-y-2">
               {providers &&
                 Object.values(providers).map((provider) => (
                   <button
@@ -127,47 +107,38 @@ export default function SignUp({ providers, callbackUrl }: Props) {
                         callbackUrl: `/auth/welcome?next=${encodeURIComponent(callbackUrl)}`,
                       })
                     }
-                    className="w-full flex items-center justify-center gap-3 px-4 py-3.5 bg-gray-900 hover:bg-gray-800 active:bg-gray-700 text-white rounded-lg transition-colors font-medium"
+                    className="w-full flex items-center justify-center gap-3 px-4 py-3 bg-gray-900 hover:bg-gray-800 active:bg-gray-700 text-white rounded-lg transition-colors font-medium text-sm"
                   >
-                    <FaGoogle className="text-lg" />
-                    <span>{provider.name} で無料登録{fromService ? ` (登録後 ${fromService} に戻ります)` : ''}</span>
+                    <FaGoogle />
+                    <span>{provider.name} で登録</span>
                   </button>
                 ))}
             </div>
 
-            {/* 取得情報の説明 */}
-            <div className="mt-6 space-y-2">
-              <div className="flex items-center gap-2 text-xs text-gray-500">
-                <FaCheckCircle className="text-green-500 flex-shrink-0" />
-                <span>取得する情報: 表示名・メールアドレス・プロフィール画像のみ</span>
-              </div>
-              <div className="flex items-center gap-2 text-xs text-gray-500">
-                <FaCheckCircle className="text-green-500 flex-shrink-0" />
-                <span>パスワードの設定は不要です</span>
-              </div>
-              <div className="flex items-center gap-2 text-xs text-gray-500">
-                <FaCheckCircle className="text-green-500 flex-shrink-0" />
-                <span>いつでもアカウントを削除できます</span>
-              </div>
+            <p className="mt-3 text-xs text-gray-500 text-center">
+              パスワード設定不要・いつでも削除可
+            </p>
+
+            {/* 共通アカウントの注記 */}
+            <div className="mt-5 pt-5 border-t border-gray-200">
+              <p className="text-xs text-gray-500 leading-relaxed">
+                作成するアカウントは <b className="text-gray-700">{other.name}</b>（{other.tagline}）でも共通でご利用いただけます。
+              </p>
             </div>
 
             {/* 利用規約 */}
-            <p className="mt-6 text-xs text-gray-400 text-center">
+            <p className="mt-4 text-[11px] text-gray-400 text-center leading-relaxed">
               登録することで、
-              <Link href="/support/tos" className="text-theater-primary-600 hover:underline">
-                利用規約
-              </Link>
+              <Link href="/support/tos" className="text-theater-primary-600 hover:underline">利用規約</Link>
               および
-              <Link href="/support/privacy-policy" className="text-theater-primary-600 hover:underline">
-                プライバシーポリシー
-              </Link>
+              <Link href="/support/privacy-policy" className="text-theater-primary-600 hover:underline">プライバシーポリシー</Link>
               に同意したものとみなされます。
             </p>
 
             {/* ログインリンク */}
-            <div className="mt-6 pt-6 border-t border-gray-200 text-center">
+            <div className="mt-5 pt-4 border-t border-gray-100 text-center">
               <p className="text-sm text-gray-600">
-                すでにアカウントをお持ちの方は
+                すでにアカウントをお持ちは
                 <Link
                   href={`/auth/signin${callbackUrl !== '/' ? `?callbackUrl=${encodeURIComponent(callbackUrl)}` : ''}`}
                   className="text-theater-primary-600 hover:underline font-medium ml-1"
