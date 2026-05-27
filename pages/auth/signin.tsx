@@ -13,9 +13,18 @@ interface Props {
   callbackUrl: string;
 }
 
+function detectFromService(callbackUrl: string): string | null {
+  try {
+    const u = new URL(callbackUrl, 'https://gikyokutosyokan.com');
+    if (u.hostname.endsWith('tomoshibi.gikyokutosyokan.com')) return 'ともしび小屋';
+    return null;
+  } catch { return null; }
+}
+
 export default function SignIn({ providers, callbackUrl }: Props) {
   const router = useRouter();
   const error = router.query.error as string | undefined;
+  const fromService = detectFromService(callbackUrl);
 
   const errorMessages: Record<string, string> = {
     OAuthSignin: 'サインインの開始中にエラーが発生しました。',
@@ -39,8 +48,18 @@ export default function SignIn({ providers, callbackUrl }: Props) {
             <img src="/logo.png" alt="戯曲図書館" className="h-12 w-auto mx-auto mb-4" />
             <h1 className="text-2xl font-bold text-gray-900">おかえりなさい</h1>
             <p className="text-sm text-gray-500 mt-2">
-              戯曲図書館アカウントにログイン
+              {fromService
+                ? `${fromService} は戯曲図書館アカウントで利用できます`
+                : '戯曲図書館アカウントにログイン'}
             </p>
+          </div>
+
+          <div className="mb-6 p-3 bg-gray-50 border border-gray-200 rounded-lg text-xs text-gray-600">
+            <p className="font-semibold text-gray-700 mb-1">共通アカウントで使えるサービス</p>
+            <ul className="space-y-0.5">
+              <li>• <span className="font-medium">戯曲図書館</span> — 戯曲検索・コメント・上演告知</li>
+              <li>• <span className="font-medium">ともしび小屋</span> — 舞台照明シミュレーター (3D)</li>
+            </ul>
           </div>
 
           {error && (
@@ -62,7 +81,7 @@ export default function SignIn({ providers, callbackUrl }: Props) {
                   className="w-full flex items-center justify-center gap-3 px-4 py-3.5 border border-gray-300 rounded-lg hover:bg-gray-50 active:bg-gray-100 transition-colors font-medium text-gray-700"
                 >
                   <FaGoogle className="text-lg" />
-                  <span>{provider.name} でログイン</span>
+                  <span>{provider.name} でログイン{fromService ? ` (${fromService} に戻ります)` : ''}</span>
                 </button>
               ))}
           </div>

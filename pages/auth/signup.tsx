@@ -31,9 +31,23 @@ const BENEFITS = [
   },
 ];
 
+const RELATED_SERVICES = [
+  { name: '戯曲図書館', desc: '戯曲検索・コメント・上演告知', host: 'gikyokutosyokan.com', tag: '本サイト' },
+  { name: 'ともしび小屋', desc: '舞台照明シミュレーター (3D)', host: 'tomoshibi.gikyokutosyokan.com', tag: '関連サービス' },
+];
+
+function detectFromService(callbackUrl: string): string | null {
+  try {
+    const u = new URL(callbackUrl, 'https://gikyokutosyokan.com');
+    const match = RELATED_SERVICES.find(s => u.hostname.endsWith(s.host) && s.host !== 'gikyokutosyokan.com');
+    return match?.name ?? null;
+  } catch { return null; }
+}
+
 export default function SignUp({ providers, callbackUrl }: Props) {
   const router = useRouter();
   const error = router.query.error as string | undefined;
+  const fromService = detectFromService(callbackUrl);
 
   return (
     <Layout>
@@ -47,13 +61,35 @@ export default function SignUp({ providers, callbackUrl }: Props) {
           {/* ヘッダー */}
           <div className="bg-gradient-to-br from-theater-primary-300 to-pink-200 px-8 py-8 text-center">
             <img src="/logo.png" alt="戯曲図書館" className="h-14 w-auto mx-auto mb-4" />
-            <h1 className="text-2xl font-bold text-gray-900">戯曲図書館に登録</h1>
+            <h1 className="text-2xl font-bold text-gray-900">戯曲図書館アカウントを作成</h1>
             <p className="text-sm text-gray-700 mt-2">
-              無料で登録して、演劇の世界をもっと楽しもう
+              {fromService
+                ? `${fromService} を含む関連サービスで共通利用できる無料アカウントです`
+                : '無料で登録して、演劇の世界をもっと楽しもう'}
             </p>
           </div>
 
           <div className="p-8">
+            {/* 共通アカウントで使えるサービス */}
+            <div className="mb-6 p-4 bg-gray-50 border border-gray-200 rounded-lg">
+              <p className="text-xs font-semibold text-gray-700 mb-2">
+                このアカウント1つで使えるサービス
+              </p>
+              <ul className="space-y-1.5">
+                {RELATED_SERVICES.map(s => (
+                  <li key={s.host} className="flex items-baseline gap-2 text-xs">
+                    <span className={
+                      'px-1.5 py-0.5 rounded font-medium ' +
+                      (s.tag === '本サイト'
+                        ? 'bg-theater-primary-100 text-theater-primary-700'
+                        : 'bg-amber-100 text-amber-800')
+                    }>{s.tag}</span>
+                    <span className="font-medium text-gray-900">{s.name}</span>
+                    <span className="text-gray-500">— {s.desc}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
             {/* できること */}
             <div className="mb-8">
               <h2 className="text-sm font-bold text-gray-500 uppercase tracking-wide mb-4">
@@ -94,7 +130,7 @@ export default function SignUp({ providers, callbackUrl }: Props) {
                     className="w-full flex items-center justify-center gap-3 px-4 py-3.5 bg-gray-900 hover:bg-gray-800 active:bg-gray-700 text-white rounded-lg transition-colors font-medium"
                   >
                     <FaGoogle className="text-lg" />
-                    <span>{provider.name} で無料登録</span>
+                    <span>{provider.name} で無料登録{fromService ? ` (登録後 ${fromService} に戻ります)` : ''}</span>
                   </button>
                 ))}
             </div>
