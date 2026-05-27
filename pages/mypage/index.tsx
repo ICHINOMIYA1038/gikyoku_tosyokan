@@ -1,6 +1,5 @@
 import { GetServerSideProps } from 'next';
 import { getServerSession } from 'next-auth/next';
-import { signOut } from 'next-auth/react';
 import { authOptions } from '@/lib/authOptions';
 import Layout from '@/components/Layout';
 import Seo from '@/components/seo';
@@ -118,7 +117,7 @@ export default function MyPage({ user, stats, recentComments, favoriteCount, fav
     try {
       const res = await fetch('/api/account/delete', { method: 'POST' });
       if (res.ok) {
-        signOut({ callbackUrl: '/' });
+        window.location.href = '/api/tomoshibi/logout?callbackUrl=/';
       } else {
         const data = await res.json();
         setDeleteError(data.error || 'アカウント削除に失敗しました');

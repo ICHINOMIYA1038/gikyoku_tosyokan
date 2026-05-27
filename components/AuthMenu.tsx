@@ -1,4 +1,9 @@
-import { useSession, signOut } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
+// 親ドメインCookieに加えてcookie domain切替前の host-only Cookie も確実に消すため、
+// NextAuth 標準 signOut ではなく専用エンドポイントへ遷移する。
+function handleLogout() {
+  window.location.href = '/api/tomoshibi/logout?callbackUrl=/';
+}
 import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -110,7 +115,7 @@ const AuthMenu: React.FC<AuthMenuProps> = ({ variant = 'desktop' }) => {
           <span>メッセージ</span>
         </Link>
         <button
-          onClick={() => signOut({ callbackUrl: '/' })}
+          onClick={() => handleLogout()}
           className="w-full flex items-center gap-3 py-3 px-4 text-left text-gray-800 hover:bg-gray-100 rounded-lg transition-colors"
         >
           <FaSignOutAlt />
@@ -170,7 +175,7 @@ const AuthMenu: React.FC<AuthMenuProps> = ({ variant = 'desktop' }) => {
           <button
             onClick={() => {
               setOpen(false);
-              signOut({ callbackUrl: '/' });
+              handleLogout();
             }}
             className="w-full flex items-center gap-3 px-4 py-3 text-sm text-gray-700 hover:bg-gray-100 border-t border-gray-100"
           >
