@@ -6,6 +6,7 @@ import Layout from '@/components/Layout';
 import Seo from '@/components/seo';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { useEffect, useRef } from 'react';
 import { FaGoogle } from 'react-icons/fa';
 
 interface Props {
@@ -30,9 +31,29 @@ function detectFromService(callbackUrl: string): ServiceKey {
 export default function SignIn({ providers, callbackUrl }: Props) {
   const router = useRouter();
   const error = router.query.error as string | undefined;
+  const auto = router.query.auto === '1' && !error;
   const fromKey = detectFromService(callbackUrl);
   const main = SERVICES[fromKey];
   const other = SERVICES[fromKey === 'tomoshibi' ? 'gikyoku' : 'tomoshibi'];
+  const autoFired = useRef(false);
+
+  // ?auto=1 が指定されていれば Google OAuth を自動起動 (中継ページの説明は出さない)
+  useEffect(() => {
+    if (!auto || autoFired.current || !providers?.google) return;
+    autoFired.current = true;
+    signIn('google', { callbackUrl: `/auth/welcome?next=${encodeURIComponent(callbackUrl)}` });
+  }, [auto, providers, callbackUrl]);
+
+  if (auto) {
+    return (
+      <Layout>
+        <Seo pageTitle="ログイン中..." pageDescription="" pagePath="/auth/signin" />
+        <div className="container mx-auto px-4 py-20 text-center text-gray-600">
+          <p className="text-sm">Googleに移動しています…</p>
+        </div>
+      </Layout>
+    );
+  }
 
   const errorMessages: Record<string, string> = {
     OAuthSignin: 'サインインの開始中にエラーが発生しました。',
