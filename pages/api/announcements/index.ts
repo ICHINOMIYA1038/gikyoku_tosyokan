@@ -13,8 +13,10 @@ export default async function handler(
       const limitNum = parseInt(limit as string);
       const skip = (pageNum - 1) * limitNum;
 
+      const where = { status: 'approved', deletedAt: null } as const;
       const [announcements, total] = await Promise.all([
         prisma.announcement.findMany({
+          where,
           select: {
             id: true,
             title: true,
@@ -40,7 +42,7 @@ export default async function handler(
           skip,
           take: limitNum,
         }),
-        prisma.announcement.count(),
+        prisma.announcement.count({ where }),
       ]);
 
       // キャッシュヘッダーを設定（1分間キャッシュ）

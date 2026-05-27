@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { prisma } from '@/lib/prisma';
+import { getAuth } from '@/lib/auth';
 
 export default async function handler(
   req: NextApiRequest,
@@ -21,15 +22,24 @@ export default async function handler(
         },
       });
 
-      if (!announcement) {
+      if (!announcement || announcement.deletedAt) {
         return res.status(404).json({ error: 'Announcement not found' });
       }
 
-      // ビュー数を増やす
-      await prisma.announcement.update({
-        where: { id: announcementId },
-        data: { views: { increment: 1 } },
-      });
+      // 未承認は本人のみ閲覧可
+      if (announcement.status !== 'approved') {
+        const session = await getAuth(req, res);
+        if (!session || session.user.id !== announcement.userId) {
+          return res.status(404).json({ error: 'Announcement not found' });
+        }
+      }
+
+      if (announcement.status === 'approved') {
+        await prisma.announcement.update({
+          where: { id: announcementId },
+          data: { views: { increment: 1 } },
+        });
+      }
 
       res.status(200).json(announcement);
     } catch (error) {
@@ -38,26 +48,26 @@ export default async function handler(
     }
   } else if (req.method === 'DELETE') {
     try {
-      // IPアドレスチェック（投稿者のみ削除可能）
-      const ipAddress =
-        req.headers['x-real-ip'] as string ||
-        req.headers['x-forwarded-for'] as string ||
-        req.socket.remoteAddress;
+      const session = await getAuth(req, res);
+      if (!session) {
+        return res.status(401).json({ error: 'ログインが必要です' });
+      }
 
       const announcement = await prisma.announcement.findUnique({
         where: { id: announcementId },
       });
 
-      if (!announcement) {
+      if (!announcement || announcement.deletedAt) {
         return res.status(404).json({ error: 'Announcement not found' });
       }
 
-      if (announcement.ipAddress !== ipAddress) {
-        return res.status(403).json({ error: 'Unauthorized to delete this announcement' });
+      if (announcement.userId !== session.user.id) {
+        return res.status(403).json({ error: 'この投稿を削除する権限がありません' });
       }
 
-      await prisma.announcement.delete({
+      await prisma.announcement.update({
         where: { id: announcementId },
+        data: { deletedAt: new Date() },
       });
 
       res.status(200).json({ message: 'Announcement deleted successfully' });

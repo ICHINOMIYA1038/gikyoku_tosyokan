@@ -352,7 +352,11 @@ model Announcement {
   theaterGroupName String?
   scriptTitle      String?
   images           String[]
-  /// 論理削除（管理画面から非表示にしたもの）
+  /// pending | approved | rejected (電気通信事業届出に伴う事前審査)
+  status           String    @default("pending")
+  rejectionReason  String?
+  reviewedAt       DateTime?
+  /// 論理削除（管理画面から非表示にしたもの、または本人削除）
   deletedAt        DateTime?
 
   @@index([createdAt(sort: Desc)])
@@ -362,6 +366,7 @@ model Announcement {
   @@index([postId])
   @@index([deletedAt])
   @@index([userId])
+  @@index([status])
   @@map("Announcement")
 }
 
