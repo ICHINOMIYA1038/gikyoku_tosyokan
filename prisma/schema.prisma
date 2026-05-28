@@ -358,6 +358,8 @@ model Announcement {
   reviewedAt       DateTime?
   /// 論理削除（管理画面から非表示にしたもの、または本人削除）
   deletedAt        DateTime?
+  /// "self" | "admin" — 本人/管理者どちらが削除したか
+  deletedBy        String?
 
   @@index([createdAt(sort: Desc)])
   @@index([performanceDate])

@@ -22,6 +22,8 @@ type AnnouncementRow = {
   venue: string | null;
   views: number;
   createdAt: string;
+  deletedAt: string | null;
+  deletedBy: string | null;
 };
 
 type RecruitmentRow = {
@@ -66,11 +68,12 @@ interface SavedToolDataItem {
 
 type TabKey = 'overview' | 'announcements' | 'recruitments' | 'favorites' | 'comments' | 'tools' | 'settings';
 
-const annStatusLabel = (s: string) => {
-  if (s === 'pending') return { text: '審査待ち', cls: 'bg-amber-100 text-amber-700' };
-  if (s === 'rejected') return { text: '却下', cls: 'bg-rose-100 text-rose-700' };
-  if (s === 'approved') return { text: '公開中', cls: 'bg-emerald-100 text-emerald-700' };
-  return { text: s, cls: 'bg-gray-100 text-gray-600' };
+const annStatusLabel = (a: AnnouncementRow) => {
+  if (a.deletedAt && a.deletedBy === 'admin') return { text: '管理者により削除', cls: 'bg-gray-300 text-gray-800' };
+  if (a.status === 'pending') return { text: '審査待ち', cls: 'bg-amber-100 text-amber-700' };
+  if (a.status === 'rejected') return { text: '却下', cls: 'bg-rose-100 text-rose-700' };
+  if (a.status === 'approved') return { text: '公開中', cls: 'bg-emerald-100 text-emerald-700' };
+  return { text: a.status, cls: 'bg-gray-100 text-gray-600' };
 };
 
 const recStatusLabel = (s: string) => {
@@ -138,11 +141,11 @@ export default function MyPage({
     }
   }, []);
 
-  const handleDeleteAnnouncement = async (id: number) => {
-    if (!confirm('この上演告知を削除しますか？（取り消せません）')) return;
+  const handleDeleteAnnouncement = async (id: number, silent = false) => {
+    if (!silent && !confirm('この上演告知を削除しますか？（取り消せません）')) return;
     const res = await fetch(`/api/announcements/${id}`, { method: 'DELETE' });
     if (res.ok) setAnnouncements(prev => prev.filter(a => a.id !== id));
-    else alert('削除に失敗しました');
+    else if (!silent) alert('削除に失敗しました');
   };
 
   const handleDeleteRecruitment = async (id: string) => {
@@ -285,30 +288,43 @@ export default function MyPage({
             ) : (
               <ul className="space-y-2">
                 {announcements.map((a) => {
-                  const badge = annStatusLabel(a.status);
+                  const badge = annStatusLabel(a);
+                  const isInactive = !!a.deletedAt || a.status === 'rejected';
                   return (
-                    <li key={a.id} className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+                    <li key={a.id} className={`bg-white rounded-lg shadow-sm border border-gray-200 p-4 ${isInactive ? 'opacity-75' : ''}`}>
                       <div className="flex items-start justify-between gap-3">
                         <div className="min-w-0 flex-1">
                           <div className="flex items-center gap-2 mb-1">
                             <span className={`text-[10px] font-medium rounded px-1.5 py-0.5 ${badge.cls}`}>{badge.text}</span>
-                            <p className="text-sm font-medium text-gray-900 truncate">{a.title}</p>
+                            <p className={`text-sm font-medium truncate ${isInactive ? 'text-gray-500 line-through' : 'text-gray-900'}`}>{a.title}</p>
                           </div>
                           <p className="text-[11px] text-gray-500">
                             {a.performanceDate && `公演日: ${new Date(a.performanceDate).toLocaleDateString('ja-JP')} / `}
                             {a.venue && `${a.venue} / `}
                             閲覧 {a.views} / {new Date(a.createdAt).toLocaleDateString('ja-JP')}
                           </p>
-                          {a.status === 'rejected' && a.rejectionReason && (
-                            <p className="mt-1 text-[11px] text-rose-600">却下理由: {a.rejectionReason}</p>
+                          {a.status === 'rejected' && (
+                            <p className="mt-1.5 text-[11px] text-rose-700 bg-rose-50 border border-rose-200 rounded px-2 py-1">
+                              管理者により却下されました{a.rejectionReason ? `（理由: ${a.rejectionReason}）` : ''}
+                            </p>
+                          )}
+                          {a.deletedAt && a.deletedBy === 'admin' && (
+                            <p className="mt-1.5 text-[11px] text-gray-700 bg-gray-100 border border-gray-300 rounded px-2 py-1">
+                              管理者により削除されました（{new Date(a.deletedAt).toLocaleDateString('ja-JP')}）
+                            </p>
                           )}
                         </div>
                         <div className="flex flex-shrink-0 gap-2">
-                          {a.status === 'approved' && (
+                          {a.status === 'approved' && !a.deletedAt && (
                             <Link href={`/announcements/${a.id}`} className="text-xs text-blue-600 hover:underline self-center">表示</Link>
                           )}
-                          <button onClick={() => handleDeleteAnnouncement(a.id)}
-                            className="text-xs text-rose-600 hover:bg-rose-50 px-2 py-1 rounded">削除</button>
+                          {isInactive ? (
+                            <button onClick={() => handleDeleteAnnouncement(a.id, true)}
+                              className="text-xs text-gray-500 hover:bg-gray-100 px-2 py-1 rounded">確認して非表示</button>
+                          ) : (
+                            <button onClick={() => handleDeleteAnnouncement(a.id)}
+                              className="text-xs text-rose-600 hover:bg-rose-50 px-2 py-1 rounded">削除</button>
+                          )}
                         </div>
                       </div>
                     </li>
@@ -523,8 +539,13 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
       include: { post: { select: { id: true, title: true, author: { select: { name: true } } } } },
     }),
     prisma.announcement.findMany({
-      where: { userId, deletedAt: null }, orderBy: { createdAt: 'desc' }, take: 50,
-      select: { id: true, title: true, status: true, rejectionReason: true, performanceDate: true, venue: true, views: true, createdAt: true },
+      where: {
+        userId,
+        // 本人が削除したものだけ非表示。管理者削除・却下は表示して通知する。
+        NOT: { AND: [{ deletedAt: { not: null } }, { deletedBy: 'self' }] },
+      },
+      orderBy: { createdAt: 'desc' }, take: 50,
+      select: { id: true, title: true, status: true, rejectionReason: true, performanceDate: true, venue: true, views: true, createdAt: true, deletedAt: true, deletedBy: true },
     }),
     prisma.recruitment.findMany({
       where: { postedBy: userId, deletedAt: null }, orderBy: { publishedAt: 'desc' }, take: 50,
@@ -553,6 +574,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
         id: a.id, title: a.title, status: a.status, rejectionReason: a.rejectionReason,
         performanceDate: a.performanceDate?.toISOString() ?? null, venue: a.venue,
         views: a.views, createdAt: a.createdAt.toISOString(),
+        deletedAt: a.deletedAt?.toISOString() ?? null, deletedBy: a.deletedBy,
       })),
       recruitments: recruitments.map((r) => ({
         id: r.id, title: r.title, status: r.status,

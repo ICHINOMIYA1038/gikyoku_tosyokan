@@ -67,7 +67,7 @@ export default async function handler(
 
       await prisma.announcement.update({
         where: { id: announcementId },
-        data: { deletedAt: new Date() },
+        data: { deletedAt: new Date(), deletedBy: 'self' },
       });
 
       res.status(200).json({ message: 'Announcement deleted successfully' });
