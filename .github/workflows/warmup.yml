@@ -1,0 +1,31 @@
+name: Warmup serverless functions
+
+# Vercel Functions のコールドスタート対策。10 分毎に主要 API を叩いて関数を温めておく。
+# GitHub Actions の無料枠で動作。CDN にもキャッシュが乗ったまま保たれる。
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Ping endpoints
+        run: |
+          set -e
+          ENDPOINTS=(
+            "https://gikyokutosyokan.com/"
+            "https://gikyokutosyokan.com/api/home-cached"
+            "https://gikyokutosyokan.com/api/popular"
+            "https://gikyokutosyokan.com/api/announcements"
+            "https://gikyokutosyokan.com/api/categories-cached"
+            "https://gikyokutosyokan.com/api/authors-cached"
+            "https://gikyokutosyokan.com/api/search-cached"
+          )
+          for url in "${ENDPOINTS[@]}"; do
+            t=$(curl -s -o /dev/null -w "%{http_code} %{time_total}s" "$url")
+            echo "$url -> $t"
+          done
