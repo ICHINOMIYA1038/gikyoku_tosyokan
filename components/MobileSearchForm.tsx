@@ -46,6 +46,42 @@ const getCategories = async (): Promise<any> => {
   return res.json();
 };
 
+type RangeRowProps = {
+  label?: string;
+  minVal: string;
+  maxVal: string;
+  setMin: (v: string) => void;
+  setMax: (v: string) => void;
+  minPlaceholder?: string;
+  maxPlaceholder?: string;
+};
+
+function RangeRow({ label, minVal, maxVal, setMin, setMax, minPlaceholder = "最小", maxPlaceholder = "最大" }: RangeRowProps) {
+  const inputCls = "min-w-0 w-full p-2 border border-theater-neutral-300 rounded text-base focus:border-theater-primary-400 focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none";
+  return (
+    <div>
+      {label && <label className="text-sm font-medium text-gray-700 block mb-1">{label}</label>}
+      <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2">
+        <input
+          type="number" inputMode="numeric" pattern="[0-9]*"
+          className={inputCls}
+          placeholder={minPlaceholder}
+          value={minVal}
+          onChange={(e) => setMin(e.target.value)}
+        />
+        <span className="text-gray-500 text-sm">〜</span>
+        <input
+          type="number" inputMode="numeric" pattern="[0-9]*"
+          className={inputCls}
+          placeholder={maxPlaceholder}
+          value={maxVal}
+          onChange={(e) => setMax(e.target.value)}
+        />
+      </div>
+    </div>
+  );
+}
+
 export default function MobileSearchForm({
   setData,
   page,
@@ -303,68 +339,9 @@ export default function MobileSearchForm({
               {expandedSections.includes("people") && (
                 <div className="mt-3 p-3 bg-white rounded-lg border border-theater-neutral-200">
                   <div className="space-y-4">
-                    <div>
-                      <label className="text-sm font-medium text-gray-700">男性人数</label>
-                      <div className="flex items-center gap-2 mt-1">
-                        <input
-                          type="number" inputMode="numeric" pattern="[0-9]*"
-                          className="flex-1 p-2 border rounded"
-                          placeholder="最小"
-                          value={minMaleCount}
-                          onChange={(e) => setMinMaleCount(e.target.value)}
-                        />
-                        <span>〜</span>
-                        <input
-                          type="number" inputMode="numeric" pattern="[0-9]*"
-                          className="flex-1 p-2 border rounded"
-                          placeholder="最大"
-                          value={maxMaleCount}
-                          onChange={(e) => setMaxMaleCount(e.target.value)}
-                        />
-                      </div>
-                    </div>
-                    
-                    <div>
-                      <label className="text-sm font-medium text-gray-700">女性人数</label>
-                      <div className="flex items-center gap-2 mt-1">
-                        <input
-                          type="number" inputMode="numeric" pattern="[0-9]*"
-                          className="flex-1 p-2 border rounded"
-                          placeholder="最小"
-                          value={minFemaleCount}
-                          onChange={(e) => setMinFemaleCount(e.target.value)}
-                        />
-                        <span>〜</span>
-                        <input
-                          type="number" inputMode="numeric" pattern="[0-9]*"
-                          className="flex-1 p-2 border rounded"
-                          placeholder="最大"
-                          value={maxFemaleCount}
-                          onChange={(e) => setMaxFemaleCount(e.target.value)}
-                        />
-                      </div>
-                    </div>
-                    
-                    <div>
-                      <label className="text-sm font-medium text-gray-700">総人数</label>
-                      <div className="flex items-center gap-2 mt-1">
-                        <input
-                          type="number" inputMode="numeric" pattern="[0-9]*"
-                          className="flex-1 p-2 border rounded"
-                          placeholder="最小"
-                          value={minTotalCount}
-                          onChange={(e) => setMinTotalCount(e.target.value)}
-                        />
-                        <span>〜</span>
-                        <input
-                          type="number" inputMode="numeric" pattern="[0-9]*"
-                          className="flex-1 p-2 border rounded"
-                          placeholder="最大"
-                          value={maxTotalCount}
-                          onChange={(e) => setMaxTotalCount(e.target.value)}
-                        />
-                      </div>
-                    </div>
+                    <RangeRow label="男性人数" minVal={minMaleCount} maxVal={maxMaleCount} setMin={setMinMaleCount} setMax={setMaxMaleCount} />
+                    <RangeRow label="女性人数" minVal={minFemaleCount} maxVal={maxFemaleCount} setMin={setMinFemaleCount} setMax={setMaxFemaleCount} />
+                    <RangeRow label="総人数" minVal={minTotalCount} maxVal={maxTotalCount} setMin={setMinTotalCount} setMax={setMaxTotalCount} />
                   </div>
                 </div>
               )}
@@ -385,27 +362,11 @@ export default function MobileSearchForm({
               
               {expandedSections.includes("time") && (
                 <div className="mt-3 p-3 bg-white rounded-lg border border-theater-neutral-200">
-                  <div className="flex items-center gap-2">
-                    <input
-                      type="number" inputMode="numeric" pattern="[0-9]*"
-                      min="0"
-                      max="999"
-                      placeholder="0分"
-                      value={minPlaytime}
-                      onChange={(e) => setMinPlaytime(e.target.value)}
-                      className="flex-1 p-2 border rounded"
-                    />
-                    <span>〜</span>
-                    <input
-                      type="number" inputMode="numeric" pattern="[0-9]*"
-                      min="0"
-                      max="999"
-                      placeholder="上限なし"
-                      value={maxPlaytime}
-                      onChange={(e) => setMaxPlaytime(e.target.value)}
-                      className="flex-1 p-2 border rounded"
-                    />
-                  </div>
+                  <RangeRow
+                    minVal={minPlaytime} maxVal={maxPlaytime}
+                    setMin={setMinPlaytime} setMax={setMaxPlaytime}
+                    minPlaceholder="0分" maxPlaceholder="上限なし"
+                  />
                 </div>
               )}
             </div>
