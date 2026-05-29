@@ -242,10 +242,10 @@ export default function MobileSearchForm({
       </div>
 
       {/* モバイル検索パネル */}
-      <div className={`md:hidden fixed inset-0 z-50 transform transition-transform duration-300 ${
+      <div className={`md:hidden fixed inset-0 z-50 transform transition-transform duration-300 overflow-hidden ${
         isOpen ? "translate-y-0" : "translate-y-full"
       }`}>
-        <div className="bg-white h-full overflow-y-auto">
+        <div className="bg-white h-full w-full overflow-y-auto overflow-x-hidden">
           {/* ヘッダー */}
           <div className="sticky top-0 bg-theater-primary-300 text-white p-4 flex items-center justify-between shadow-md">
             <h2 className="text-lg font-bold">脚本を検索</h2>
@@ -271,15 +271,15 @@ export default function MobileSearchForm({
           {/* クイック選択プリセット */}
           <div className="p-4 border-b">
             <h3 className="text-sm font-bold text-gray-700 mb-3">クイック選択</h3>
-            <div className="grid grid-cols-4 gap-2">
+            <div className="grid grid-cols-2 gap-2">
               {quickPresets.map((preset, index) => (
                 <button
                   key={index}
                   onClick={() => applyPreset(preset)}
-                  className="p-3 bg-white border border-theater-neutral-300 rounded-lg hover:bg-theater-primary-50 hover:border-theater-primary-400 transition-colors text-center"
+                  className="min-w-0 p-3 bg-white border border-theater-neutral-300 rounded-lg hover:bg-theater-primary-50 hover:border-theater-primary-400 transition-colors text-center"
                 >
                   <div className="text-2xl mb-1">{preset.icon}</div>
-                  <div className="text-xs whitespace-pre-line">{preset.label}</div>
+                  <div className="text-xs whitespace-pre-line break-keep">{preset.label}</div>
                 </button>
               ))}
             </div>
