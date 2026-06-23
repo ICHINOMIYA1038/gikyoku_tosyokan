@@ -6,6 +6,8 @@ import { prisma } from "@/lib/prisma";
 import PostCardList from "@/components/PostCardList";
 import { FaLaugh, FaTheaterMasks, FaGraduationCap, FaUsers } from "react-icons/fa";
 import { GetStaticProps } from "next";
+import AdSlot from "@/components/Ad/AdSlot";
+import { AD_SLOTS } from "@/lib/adSlots";
 
 interface ComedyPageProps {
   posts: any[];
@@ -115,6 +117,8 @@ export default function ComedyPage({ posts, totalCount }: ComedyPageProps) {
             </p>
           )}
         </section>
+
+        <AdSlot slot={AD_SLOTS.CATEGORY_AFTER_LIST} format="horizontal" />
 
         {/* 詳細検索へのリンク */}
         <section className="mt-12 text-center">

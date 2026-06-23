@@ -4,6 +4,8 @@ import StructuredData from "@/components/StructuredData";
 import Link from "next/link";
 import { FaClock, FaTheaterMasks, FaExclamationTriangle, FaCheckCircle, FaLightbulb, FaChartBar } from "react-icons/fa";
 import { useState } from "react";
+import AdSlot from "@/components/Ad/AdSlot";
+import { AD_SLOTS } from "@/lib/adSlots";
 
 interface TimeGuide {
   id: string;
@@ -589,6 +591,8 @@ export default function TimeGuide() {
             </details>
           </div>
         </section>
+
+        <AdSlot slot={AD_SLOTS.BLOG_AFTER_TOC} format="horizontal" />
 
         {/* まとめとCTA */}
         <section className="mt-12 bg-gradient-to-r from-blue-100 to-purple-100 p-8 rounded-lg text-center">

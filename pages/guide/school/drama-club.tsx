@@ -4,6 +4,8 @@ import StructuredData from "@/components/StructuredData";
 import Link from "next/link";
 import { FaTheaterMasks, FaCalendarAlt, FaUsers, FaMoneyBillWave, FaClipboardList, FaGraduationCap, FaHeart, FaTrophy, FaLightbulb, FaExclamationTriangle } from "react-icons/fa";
 import { useState } from "react";
+import AdSlot from "@/components/Ad/AdSlot";
+import { AD_SLOTS } from "@/lib/adSlots";
 
 interface Activity {
   id: string;
@@ -849,6 +851,8 @@ export default function DramaClubGuide() {
             </div>
           </div>
         </section>
+
+        <AdSlot slot={AD_SLOTS.BLOG_AFTER_TOC} format="horizontal" />
 
         {/* まとめ */}
         <section className="mb-12 bg-gradient-to-r from-blue-50 to-purple-50 p-8 rounded-lg">

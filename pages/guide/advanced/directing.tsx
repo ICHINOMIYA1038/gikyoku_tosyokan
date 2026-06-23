@@ -4,6 +4,8 @@ import StructuredData from "@/components/StructuredData";
 import Link from "next/link";
 import { FaTheaterMasks, FaEye, FaPalette, FaMusic, FaLightbulb, FaUsers, FaFilm, FaChartLine } from "react-icons/fa";
 import { useState } from "react";
+import AdSlot from "@/components/Ad/AdSlot";
+import { AD_SLOTS } from "@/lib/adSlots";
 
 export default function DirectingGuide() {
   const [activeTab, setActiveTab] = useState<string>("concept");
@@ -653,6 +655,8 @@ export default function DirectingGuide() {
             </div>
           </div>
         </section>
+
+        <AdSlot slot={AD_SLOTS.BLOG_AFTER_TOC} format="horizontal" />
 
         {/* まとめ */}
         <section className="mb-12 bg-gradient-to-r from-purple-100 to-pink-100 p-8 rounded-lg">

@@ -3,6 +3,8 @@ import Layout from "@/components/Layout";
 import Seo from "@/components/seo";
 import Link from "next/link";
 import { FaTheaterMasks, FaRedo, FaSearch, FaArrowRight, FaArrowLeft } from "react-icons/fa";
+import AdSlot from "@/components/Ad/AdSlot";
+import { AD_SLOTS } from "@/lib/adSlots";
 
 type Question = {
   id: string;
@@ -462,6 +464,8 @@ export default function ShindanPage() {
                     結果をシェア
                   </button>
                 </div>
+
+                <AdSlot slot={AD_SLOTS.CATEGORY_AFTER_LIST} format="horizontal" />
               </div>
             )}
           </div>

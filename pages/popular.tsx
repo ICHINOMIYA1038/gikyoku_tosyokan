@@ -4,6 +4,8 @@ import PostCardList from "@/components/PostCardList";
 import Seo from "@/components/seo";
 import { Post } from "@prisma/client";
 import LoadingSpinner from "@/components/LoadingSpinner";
+import AdSlot from "@/components/Ad/AdSlot";
+import { AD_SLOTS } from "@/lib/adSlots";
 
 interface PopularPost extends Post {
   author: any;
@@ -64,6 +66,10 @@ export default function Popular() {
           <div className="grid gap-6">
             <PostCardList posts={posts} />
           </div>
+        )}
+
+        {!loading && !error && posts.length > 0 && (
+          <AdSlot slot={AD_SLOTS.CATEGORY_AFTER_LIST} format="horizontal" />
         )}
         
         {!loading && !error && posts.length === 0 && (

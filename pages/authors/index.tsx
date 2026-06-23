@@ -5,6 +5,8 @@ import { PrismaClient } from "@prisma/client";
 import Link from "next/link";
 import { useState, useMemo } from "react";
 import { FaSearch, FaUser, FaPen } from "react-icons/fa";
+import AdSlot from "@/components/Ad/AdSlot";
+import { AD_SLOTS } from "@/lib/adSlots";
 
 const prisma = new PrismaClient();
 
@@ -113,6 +115,8 @@ function AuthorListPage({ authors }: AuthorListPageProps) {
                 該当する作者が見つかりませんでした。
               </p>
             )}
+
+            <AdSlot slot={AD_SLOTS.CATEGORY_AFTER_LIST} format="horizontal" />
           </div>
         </div>
       </Layout>

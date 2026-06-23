@@ -3,6 +3,8 @@ import Seo from "@/components/seo";
 import StructuredData from "@/components/StructuredData";
 import Link from "next/link";
 import { FaTrophy, FaCalendarAlt, FaYenSign, FaExternalLinkAlt, FaLightbulb, FaBook } from "react-icons/fa";
+import AdSlot from "@/components/Ad/AdSlot";
+import { AD_SLOTS } from "@/lib/adSlots";
 
 type Contest = {
   name: string;
@@ -265,6 +267,8 @@ export default function ContestsPage() {
                 <li>このページの情報は2026年3月時点のものです。</li>
               </ul>
             </section>
+
+            <AdSlot slot={AD_SLOTS.BLOG_AFTER_TOC} format="horizontal" />
 
             {/* CTA */}
             <section className="text-center bg-amber-50 rounded-2xl p-8 border border-amber-200">

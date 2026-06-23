@@ -87,11 +87,13 @@ export default function App({ Component, pageProps }: AppProps) {
           `,
         }}
       />
-      {/* AdSense: 手動広告ユニット用スクリプト（自動広告OFF）— LCP/CLSへの影響を抑えるため遅延ロード */}
+      {/* AdSense: 手動広告ユニット用スクリプト（自動広告OFF）
+          afterInteractive: 直帰ユーザーにも広告がロードされるよう、
+          interactive直後に投入する。lazyOnloadだとPV/imp比が大きく毀損する。 */}
       <Script
         src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8691137965825158"
         crossOrigin="anonymous"
-        strategy="lazyOnload"
+        strategy="afterInteractive"
       />
       <Script
         strategy="afterInteractive"

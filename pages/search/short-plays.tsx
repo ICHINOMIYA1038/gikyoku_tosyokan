@@ -6,6 +6,8 @@ import { prisma } from "@/lib/prisma";
 import PostCardSmall from "@/components/PostCardSmall";
 import { FaClock, FaTheaterMasks } from "react-icons/fa";
 import { GetStaticProps } from "next";
+import AdSlot from "@/components/Ad/AdSlot";
+import { AD_SLOTS } from "@/lib/adSlots";
 
 interface ShortPlaysPageProps {
   posts: any[];
@@ -87,6 +89,8 @@ export default function ShortPlaysPage({ posts, totalCount }: ShortPlaysPageProp
             </p>
           )}
         </section>
+
+        <AdSlot slot={AD_SLOTS.CATEGORY_AFTER_LIST} format="horizontal" />
 
         {/* 詳細検索へのリンク */}
         <section className="mt-12 text-center">

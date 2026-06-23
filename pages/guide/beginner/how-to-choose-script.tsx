@@ -3,6 +3,8 @@ import Seo from "@/components/seo";
 import StructuredData from "@/components/StructuredData";
 import Link from "next/link";
 import { FaUsers, FaClock, FaTheaterMasks, FaLightbulb } from "react-icons/fa";
+import AdSlot from "@/components/Ad/AdSlot";
+import { AD_SLOTS } from "@/lib/adSlots";
 
 export default function HowToChooseScript() {
   const breadcrumbs = [
@@ -265,6 +267,8 @@ export default function HowToChooseScript() {
             </ol>
           </div>
         </section>
+
+        <AdSlot slot={AD_SLOTS.BLOG_AFTER_TOC} format="horizontal" />
 
         <section className="bg-gray-100 p-8 rounded-lg mb-12">
           <h2 className="text-2xl font-bold mb-4">まとめ</h2>

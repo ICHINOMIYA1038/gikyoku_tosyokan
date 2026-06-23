@@ -389,8 +389,6 @@ function PostPage({ post, blogMentions }: any) {
                   <UserSynopsis postId={post.id} />
                   */}
 
-                  <AdSlot slot={AD_SLOTS.POST_AFTER_CONTENT} format="horizontal" />
-
                   {/* 概要タブでも同著者の他作品を見せる（回遊性UP） */}
                   <MemoizedOtherPosts authorId={post.author_id} postId={post.id} authorName={post.author.name} />
 
@@ -537,6 +535,11 @@ function PostPage({ post, blogMentions }: any) {
                 </div>
               )}
             </div>
+
+            {/* 広告（タブ外: 全ユーザーに表示） */}
+            {activeTab !== "community" && (
+              <AdSlot slot={AD_SLOTS.POST_AFTER_CONTENT} format="horizontal" />
+            )}
 
             {/* レビュー促進CTA */}
             {activeTab !== "community" && (

@@ -8,6 +8,8 @@ import Link from "next/link";
 import Head from "next/head";
 import { prisma } from "@/lib/prisma";
 import { FaExternalLinkAlt, FaSearch, FaBookOpen } from "react-icons/fa";
+import AdSlot from "@/components/Ad/AdSlot";
+import { AD_SLOTS } from "@/lib/adSlots";
 
 interface FreeScriptsPageProps {
   posts: any[];
@@ -150,6 +152,8 @@ export default function FreeScriptsPage({ posts, totalCount }: FreeScriptsPagePr
             </p>
           )}
         </section>
+
+        <AdSlot slot={AD_SLOTS.CATEGORY_AFTER_LIST} format="horizontal" />
 
         {/* 詳細検索リンク */}
         <div className="mt-10 text-center">

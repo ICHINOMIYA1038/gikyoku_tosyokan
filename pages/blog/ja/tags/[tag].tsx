@@ -5,6 +5,8 @@ import Seo from '@/components/seo';
 import { getPostsByTag, BlogPostMeta } from '@/lib/blog';
 import Link from 'next/link';
 import { FaHome, FaChevronRight, FaTag } from 'react-icons/fa';
+import AdSlot from '@/components/Ad/AdSlot';
+import { AD_SLOTS } from '@/lib/adSlots';
 
 interface Props {
   tag: string;
@@ -72,6 +74,8 @@ export default function TagPage({ tag, posts }: Props) {
                 ))}
               </div>
             )}
+
+            <AdSlot slot={AD_SLOTS.CATEGORY_AFTER_LIST} format="horizontal" />
           </main>
           <aside className="lg:w-80">
             <BlogSidebar language="ja" />

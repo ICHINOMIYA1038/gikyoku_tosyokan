@@ -4,6 +4,8 @@ import StructuredData from "@/components/StructuredData";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { FaTheaterMasks } from "react-icons/fa";
+import AdSlot from "@/components/Ad/AdSlot";
+import { AD_SLOTS } from "@/lib/adSlots";
 
 const REACTIONS = [
   { key: "all", emoji: "🏆", label: "総合" },
@@ -170,6 +172,8 @@ export default function ReactionsRankingPage() {
             ))}
           </div>
         )}
+
+        <AdSlot slot={AD_SLOTS.CATEGORY_AFTER_LIST} format="horizontal" />
 
         {/* Related links */}
         <section className="mt-12 bg-gray-50 rounded-xl p-6">

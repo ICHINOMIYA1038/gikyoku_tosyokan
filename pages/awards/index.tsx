@@ -5,6 +5,8 @@ import Seo from '@/components/seo';
 import StructuredData from '@/components/StructuredData';
 import { prisma } from '@/lib/prisma';
 import { FaChevronRight, FaTrophy } from 'react-icons/fa';
+import AdSlot from '@/components/Ad/AdSlot';
+import { AD_SLOTS } from '@/lib/adSlots';
 
 type LatestWinner = {
   awardYear: number;
@@ -172,6 +174,8 @@ export default function AwardsIndex({ awards, totalRecords }: Props) {
             </Link>
           ))}
         </div>
+
+        <AdSlot slot={AD_SLOTS.CATEGORY_AFTER_LIST} format="horizontal" />
 
         {/* フッター説明 */}
         <div className="mt-10 pt-6 border-t border-gray-100">

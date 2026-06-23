@@ -13,6 +13,8 @@ import {
   TwitterShareButton,
 } from "react-share";
 import QuizHeader from "@/components/quiz/puiz-header";
+import AdSlot from "@/components/Ad/AdSlot";
+import { AD_SLOTS } from "@/lib/adSlots";
 
 export const QUIZ_TITLE = 0;
 export const QUIZ_QUESTION = 1;
@@ -215,6 +217,7 @@ function QuizApp({ quizData }: any) {
           <button className="hover:underline" onClick={quizRestart}>
             TOPへ戻る
           </button>
+          <AdSlot slot={AD_SLOTS.CATEGORY_AFTER_LIST} format="horizontal" />
         </QuizHeader>
       );
     case QUIZ_TIME_OVER:

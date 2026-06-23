@@ -3,6 +3,8 @@ import Seo from "@/components/seo";
 import StructuredData from "@/components/StructuredData";
 import Link from "next/link";
 import { FaSchool, FaTheaterMasks, FaUserGraduate, FaBook, FaClock, FaUsers } from "react-icons/fa";
+import AdSlot from "@/components/Ad/AdSlot";
+import { AD_SLOTS } from "@/lib/adSlots";
 
 export default function GuideIndex() {
   const guides = {
@@ -176,6 +178,8 @@ export default function GuideIndex() {
             </section>
           ))}
         </div>
+
+        <AdSlot slot={AD_SLOTS.BLOG_AFTER_TOC} format="horizontal" />
 
         {/* CTA */}
         <section className="bg-gray-100 p-8 rounded-lg mt-12 text-center">

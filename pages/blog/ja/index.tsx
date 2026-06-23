@@ -5,6 +5,8 @@ import Layout from '@/components/Layout';
 import BlogSidebar from '@/components/BlogSidebar';
 import Seo from '@/components/seo';
 import { getPostsByLanguagePaginated, BlogPostMeta } from '@/lib/blog';
+import AdSlot from '@/components/Ad/AdSlot';
+import { AD_SLOTS } from '@/lib/adSlots';
 
 const PER_PAGE = 20;
 
@@ -155,6 +157,8 @@ export default function BlogJaIndex({ posts: initialPosts, total }: Props) {
                     ))}
                   </div>
                 )}
+
+                <AdSlot slot={AD_SLOTS.CATEGORY_AFTER_LIST} format="horizontal" />
 
                 {/* Load More */}
                 {hasMore && (

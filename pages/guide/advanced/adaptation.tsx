@@ -4,6 +4,8 @@ import StructuredData from "@/components/StructuredData";
 import Link from "next/link";
 import { FaPencilAlt, FaGlobeAsia, FaClock, FaTheaterMasks, FaLightbulb, FaBook, FaExclamationTriangle, FaCheckCircle } from "react-icons/fa";
 import { useState } from "react";
+import AdSlot from "@/components/Ad/AdSlot";
+import { AD_SLOTS } from "@/lib/adSlots";
 
 export default function AdaptationGuide() {
   const [activeSection, setActiveSection] = useState<string>("basics");
@@ -798,6 +800,8 @@ export default function AdaptationGuide() {
             </form>
           </div>
         </section>
+
+        <AdSlot slot={AD_SLOTS.BLOG_AFTER_TOC} format="horizontal" />
 
         {/* まとめ */}
         <section className="mb-12 bg-gradient-to-r from-purple-100 to-indigo-100 p-8 rounded-lg">

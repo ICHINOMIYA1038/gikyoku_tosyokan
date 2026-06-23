@@ -6,6 +6,8 @@ import { prisma } from "@/lib/prisma";
 import PostCardList from "@/components/PostCardList";
 import { FaClock, FaTheaterMasks } from "react-icons/fa";
 import { GetStaticProps, GetStaticPaths } from "next";
+import AdSlot from "@/components/Ad/AdSlot";
+import { AD_SLOTS } from "@/lib/adSlots";
 
 const TIME_CONFIGS: Record<string, { title: string; description: string; label: string; min: number; max: number }> = {
   "15": {
@@ -136,6 +138,8 @@ export default function TimeDurationPage({ posts, totalCount, duration, config }
             <p>該当する作品が見つかりませんでした</p>
           </div>
         )}
+
+        <AdSlot slot={AD_SLOTS.CATEGORY_AFTER_LIST} format="horizontal" />
 
         {/* 関連ページ */}
         <section className="mt-12 bg-gray-50 rounded-xl p-6">

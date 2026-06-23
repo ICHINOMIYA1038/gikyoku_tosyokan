@@ -3,6 +3,8 @@ import Seo from "@/components/seo";
 import StructuredData from "@/components/StructuredData";
 import Link from "next/link";
 import { FaCalendarAlt, FaYenSign, FaUserFriends, FaClock, FaCheckCircle, FaExclamationTriangle } from "react-icons/fa";
+import AdSlot from "@/components/Ad/AdSlot";
+import { AD_SLOTS } from "@/lib/adSlots";
 
 export default function CultureFestivalGuide() {
   const schedule = [
@@ -363,6 +365,8 @@ export default function CultureFestivalGuide() {
             </div>
           </div>
         </section>
+
+        <AdSlot slot={AD_SLOTS.BLOG_AFTER_TOC} format="horizontal" />
 
         {/* まとめ */}
         <section className="bg-gray-100 p-8 rounded-lg mb-12">

@@ -6,6 +6,8 @@ import { prisma } from "@/lib/prisma";
 import PostCardSmall from "@/components/PostCardSmall";
 import { FaSchool, FaTheaterMasks, FaClock, FaUsers } from "react-icons/fa";
 import { GetStaticProps } from "next";
+import AdSlot from "@/components/Ad/AdSlot";
+import { AD_SLOTS } from "@/lib/adSlots";
 
 interface BunkasaiPageProps {
   posts: any[];
@@ -131,6 +133,8 @@ export default function BunkasaiPage({ posts, totalCount }: BunkasaiPageProps) {
             </p>
           )}
         </section>
+
+        <AdSlot slot={AD_SLOTS.CATEGORY_AFTER_LIST} format="horizontal" />
 
         {/* 詳細検索へのリンク */}
         <section className="mt-12 text-center">

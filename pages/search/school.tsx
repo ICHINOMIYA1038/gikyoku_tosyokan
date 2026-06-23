@@ -6,6 +6,8 @@ import { prisma } from "@/lib/prisma";
 import PostCardList from "@/components/PostCardList";
 import { FaGraduationCap, FaClock, FaUsers, FaTheaterMasks, FaSchool, FaTrophy } from "react-icons/fa";
 import { GetStaticProps } from "next";
+import AdSlot from "@/components/Ad/AdSlot";
+import { AD_SLOTS } from "@/lib/adSlots";
 
 interface SchoolPageProps {
   posts: any[];
@@ -185,6 +187,8 @@ export default function SchoolPage({ posts, totalCount }: SchoolPageProps) {
             </p>
           )}
         </section>
+
+        <AdSlot slot={AD_SLOTS.CATEGORY_AFTER_LIST} format="horizontal" />
 
         {/* もっと見る */}
         <section className="mt-12 text-center">

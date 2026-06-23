@@ -4,6 +4,8 @@ import StructuredData from "@/components/StructuredData";
 import Link from "next/link";
 import { FaMicrophone, FaHeart, FaRunning, FaEye, FaHandPaper, FaBrain } from "react-icons/fa";
 import { useState } from "react";
+import AdSlot from "@/components/Ad/AdSlot";
+import { AD_SLOTS } from "@/lib/adSlots";
 
 export default function ActingBasics() {
   const [openSection, setOpenSection] = useState<number | null>(null);
@@ -463,6 +465,8 @@ export default function ActingBasics() {
             </div>
           </div>
         </section>
+
+        <AdSlot slot={AD_SLOTS.BLOG_AFTER_TOC} format="horizontal" />
 
         {/* まとめ */}
         <section className="bg-gradient-to-r from-purple-50 to-pink-50 p-8 rounded-lg mb-12">

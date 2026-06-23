@@ -5,6 +5,8 @@ import { prisma } from "@/lib/prisma";
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { useRouter } from "next/router";
 import { FaTheaterMasks, FaFilter, FaSortAmountDown, FaSearch } from "react-icons/fa";
+import AdSlot from "@/components/Ad/AdSlot";
+import { AD_SLOTS } from "@/lib/adSlots";
 
 const POSTS_PER_PAGE = 24;
 
@@ -254,6 +256,8 @@ function PostListPage({ posts }: any) {
               </p>
             </div>
           )}
+
+          <AdSlot slot={AD_SLOTS.CATEGORY_AFTER_LIST} format="horizontal" />
 
           {/* ページネーション */}
           {totalPages > 1 && (

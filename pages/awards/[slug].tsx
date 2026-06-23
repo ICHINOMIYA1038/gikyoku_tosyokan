@@ -6,6 +6,8 @@ import Seo from '@/components/seo';
 import StructuredData from '@/components/StructuredData';
 import { prisma } from '@/lib/prisma';
 import { FaChevronRight, FaTrophy, FaUser, FaBook, FaCalendarAlt } from 'react-icons/fa';
+import AdSlot from '@/components/Ad/AdSlot';
+import { AD_SLOTS } from '@/lib/adSlots';
 
 const INITIAL_YEARS = 15;
 
@@ -389,6 +391,8 @@ export default function AwardDetailPage({ award, stats, topAuthors, yearGroups }
             )}
           </div>
         </div>
+
+        <AdSlot slot={AD_SLOTS.BLOG_AFTER_TOC} format="horizontal" />
 
         {/* 免責事項 */}
         <div className="mt-6 pt-4 border-t border-gray-100">

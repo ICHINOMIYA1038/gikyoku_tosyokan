@@ -4,6 +4,8 @@ import StructuredData from "@/components/StructuredData";
 import Link from "next/link";
 import { FaUsers, FaTheaterMasks, FaLightbulb, FaChartLine, FaExclamationTriangle, FaStar } from "react-icons/fa";
 import { useState } from "react";
+import AdSlot from "@/components/Ad/AdSlot";
+import { AD_SLOTS } from "@/lib/adSlots";
 
 interface CastSizeGuide {
   size: string;
@@ -617,6 +619,8 @@ export default function CastSizeGuide() {
             </details>
           </div>
         </section>
+
+        <AdSlot slot={AD_SLOTS.BLOG_AFTER_TOC} format="horizontal" />
 
         {/* まとめとCTA */}
         <section className="mt-12 bg-gradient-to-r from-purple-100 to-blue-100 p-8 rounded-lg text-center">

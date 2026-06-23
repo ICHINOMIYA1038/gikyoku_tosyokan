@@ -17,9 +17,9 @@ declare global {
 }
 
 const formatStyles: Record<AdFormat, React.CSSProperties> = {
-  horizontal: { display: "block", width: "100%", height: "90px" },
-  vertical: { display: "block", width: "300px", height: "600px" },
-  rectangle: { display: "block", width: "100%", height: "250px" },
+  horizontal: { display: "block" },
+  vertical: { display: "block" },
+  rectangle: { display: "block" },
   auto: { display: "block" },
 };
 
@@ -45,8 +45,8 @@ const DisplayAd = ({ slot, format = "auto", className }: DisplayAdProps) => {
         style={formatStyles[format]}
         data-ad-client={AD_CLIENT}
         data-ad-slot={slot}
-        data-ad-format={format === "auto" ? "auto" : undefined}
-        data-full-width-responsive={format === "auto" ? "true" : undefined}
+        data-ad-format={format === "auto" ? "auto" : format}
+        data-full-width-responsive="true"
       />
     </div>
   );

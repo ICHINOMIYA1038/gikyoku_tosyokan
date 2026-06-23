@@ -8,6 +8,8 @@ import Link from "next/link";
 import Head from "next/head";
 import { prisma } from "@/lib/prisma";
 import { FaSearch, FaClock, FaUsers, FaStar } from "react-icons/fa";
+import AdSlot from "@/components/Ad/AdSlot";
+import { AD_SLOTS } from "@/lib/adSlots";
 
 interface SchoolFestivalPageProps {
   shortPosts: any[];
@@ -220,6 +222,8 @@ export default function SchoolFestivalPage({
           )}
         </section>
 
+        <AdSlot slot={AD_SLOTS.CATEGORY_AFTER_LIST} format="horizontal" />
+
         {/* 中編作品（30〜60分） */}
         <section className="mb-12">
           <h2 className="text-xl font-bold text-gray-900 mb-2">
@@ -240,6 +244,8 @@ export default function SchoolFestivalPage({
             </p>
           )}
         </section>
+
+        <AdSlot slot={AD_SLOTS.BLOG_AFTER_TOC} format="horizontal" />
 
         {/* 詳細検索リンク */}
         <div className="text-center">
