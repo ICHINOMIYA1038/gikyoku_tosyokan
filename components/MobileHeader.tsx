@@ -43,7 +43,13 @@ export default function MobileHeader() {
       label: "掲示板",
       children: boardChildren,
     },
-    { href: "/tools", label: "ツール" },
+    {
+      label: "ツール",
+      children: [
+        { href: "/theater-menu", label: "演劇メニュー辞典" },
+        { href: "/tools", label: "上演時間・稽古タイマー他" },
+      ],
+    },
     { href: "/blog/ja", label: "ブログ" },
     { href: "/support/about", label: "概要" },
   ];

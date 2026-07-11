@@ -43,5 +43,28 @@
     }
   ],
   "related_applications": [],
-  "prefer_related_applications": false
+  "prefer_related_applications": false,
+  "shortcuts": [
+    {
+      "name": "演劇メニュー辞典",
+      "short_name": "メニュー",
+      "description": "発声・エチュード・ゲーム・台本のメニュー集",
+      "url": "/theater-menu",
+      "icons": [{ "src": "/logo.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "ランダムに1つ引く",
+      "short_name": "ランダム",
+      "description": "今日のメニューをランダム抽出",
+      "url": "/theater-menu/random",
+      "icons": [{ "src": "/logo.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "レッスンプラン",
+      "short_name": "プラン",
+      "description": "自分の稽古プランを作成・共有",
+      "url": "/theater-menu/plans",
+      "icons": [{ "src": "/logo.png", "sizes": "192x192" }]
+    }
+  ]
 }

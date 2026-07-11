@@ -14,6 +14,7 @@ import {
   Megaphone,
   UserPlus,
   Mail,
+  BookOpen,
   ExternalLink,
 } from "lucide-react";
 
@@ -28,6 +29,7 @@ const NAV = [
   { href: `${BASE}/announcements`, label: "上演告知", icon: Megaphone },
   { href: `${BASE}/recruitments`, label: "募集", icon: UserPlus },
   { href: `${BASE}/broadcasts`, label: "案内メール", icon: Mail },
+  { href: `${BASE}/theater-menu`, label: "演劇メニュー", icon: BookOpen },
 ];
 
 export function AdminLayout({

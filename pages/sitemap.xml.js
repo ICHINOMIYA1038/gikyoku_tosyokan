@@ -2,7 +2,7 @@ import { PrismaClient } from "@prisma/client";
 
 const EXTERNAL_DATA_URL = "https://gikyokutosyokan.com";
 const prisma = new PrismaClient();
-function generateSiteMap(posts, authors, categories, blogPosts, studentGroups, shogekijoGroups, venues, awardSlugs, venuePrefectureSlugs) {
+function generateSiteMap(posts, authors, categories, blogPosts, studentGroups, shogekijoGroups, venues, awardSlugs, venuePrefectureSlugs, theaterMenuCategories, theaterMenus) {
   const currentDate = new Date().toISOString();
   
   return `<?xml version="1.0" encoding="UTF-8"?>
@@ -313,6 +313,38 @@ function generateSiteMap(posts, authors, categories, blogPosts, studentGroups, s
        <priority>0.8</priority>
      </url>
 
+     <!-- 演劇メニュー辞典 -->
+     <url>
+       <loc>${EXTERNAL_DATA_URL}/theater-menu</loc>
+       <lastmod>${currentDate}</lastmod>
+       <changefreq>weekly</changefreq>
+       <priority>0.85</priority>
+     </url>
+     <url>
+       <loc>${EXTERNAL_DATA_URL}/theater-menu/random</loc>
+       <lastmod>${currentDate}</lastmod>
+       <changefreq>weekly</changefreq>
+       <priority>0.7</priority>
+     </url>
+     ${theaterMenuCategories
+       .map(({ slug }) => `
+       <url>
+           <loc>${EXTERNAL_DATA_URL}/theater-menu/${slug}</loc>
+           <lastmod>${currentDate}</lastmod>
+           <changefreq>weekly</changefreq>
+           <priority>0.75</priority>
+       </url>
+     `).join("")}
+     ${theaterMenus
+       .map(({ categorySlug, slug, updatedAt }) => `
+       <url>
+           <loc>${EXTERNAL_DATA_URL}/theater-menu/${categorySlug}/${slug}</loc>
+           <lastmod>${updatedAt ? new Date(updatedAt).toISOString() : currentDate}</lastmod>
+           <changefreq>monthly</changefreq>
+           <priority>0.7</priority>
+       </url>
+     `).join("")}
+
      <!-- サポートページ -->
      <url>
        <loc>${`${EXTERNAL_DATA_URL}/support/about`}</loc>
@@ -438,8 +470,22 @@ export async function getServerSideProps({ res }) {
     .map((p) => PREFECTURE_SLUG_MAP[p.prefecture])
     .filter(Boolean);
 
+  // 演劇メニュー辞典
+  const theaterMenuCategories = await prisma.theaterMenuCategory.findMany({
+    select: { slug: true },
+  });
+  const theaterMenusRaw = await prisma.theaterMenu.findMany({
+    where: { published: true },
+    select: { slug: true, updatedAt: true, category: { select: { slug: true } } },
+  });
+  const theaterMenus = theaterMenusRaw.map((m) => ({
+    slug: m.slug,
+    categorySlug: m.category.slug,
+    updatedAt: m.updatedAt,
+  }));
+
   // We generate the XML sitemap with the data
-  const sitemap = generateSiteMap(posts, authors, categories, blogPosts, studentGroups, shogekijoGroups, venues, awardSlugs, venuePrefectureSlugs);
+  const sitemap = generateSiteMap(posts, authors, categories, blogPosts, studentGroups, shogekijoGroups, venues, awardSlugs, venuePrefectureSlugs, theaterMenuCategories, theaterMenus);
   res.statusCode = 200;
   res.setHeader("Cache-Control", "public, max-age=3600, s-maxage=172800, stale-while-revalidate=604800"); // CDN 2日 + SWR 7日
   res.setHeader("Content-Type", "text/xml");

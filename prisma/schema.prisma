@@ -457,6 +457,8 @@ model User {
   toolData         UserToolData[]
   broadcasts       Broadcast[]
   tomoshibiScenes  TomoshibiScene[]
+  theaterMenuFavorites TheaterMenuFavorite[]
+  lessonPlans          LessonPlan[]
 
   @@index([email])
   @@index([emailOptIn])
@@ -750,6 +752,114 @@ model Message {
 // ともしび小屋 (tomoshibi.gikyokutosyokan.com)
 // 舞台照明シミュレーターのシーン保存
 // ============================================
+// ============================================
+// 演劇メニュー (/theater-menu)
+// 発声練習・エチュード・シアターゲーム・ワークショップ台本などの
+// レッスン素材を辞典形式で提供する。将来的にモバイルアプリ化予定で
+// ランダム抽出・タグ絞り込みAPIも提供する。
+// ============================================
+model TheaterMenuCategory {
+  id          Int           @id @default(autoincrement())
+  slug        String        @unique
+  name        String
+  description String?
+  icon        String?
+  order       Int           @default(0)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  menus       TheaterMenu[]
+
+  @@map("TheaterMenuCategory")
+}
+
+model TheaterMenu {
+  id          Int      @id @default(autoincrement())
+  slug        String   @unique
+  categoryId  Int
+  title       String
+  summary     String
+  content     String
+  imageUrl    String?
+  images      String[] @default([])
+  tags        String[] @default([])
+  duration    Int?
+  minPeople   Int?
+  maxPeople   Int?
+  difficulty  Int?
+  published   Boolean  @default(true)
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // 拡張メタデータ (2026-07 追加)
+  aliases              String[] @default([])
+  learningObjectives   String[] @default([])
+  ageGroup             String?
+  materials            String[] @default([])
+  spaceRequirement     String?
+  hasPhysicalContact   Boolean?
+  sideCoaching         String?
+  reflectionQuestions  String[] @default([])
+  videoUrl             String?
+  credit               String?
+  sourceUrl            String?
+  relatedSlugs         String[] @default([])
+
+  category  TheaterMenuCategory     @relation(fields: [categoryId], references: [id])
+  favorites TheaterMenuFavorite[]
+  planItems LessonPlanItem[]
+
+  @@index([categoryId])
+  @@index([published])
+  @@index([slug])
+  @@map("TheaterMenu")
+}
+
+model LessonPlan {
+  id          String   @id @default(cuid())
+  userId      String
+  title       String
+  description String?
+  isPublic    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user  User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items LessonPlanItem[]
+
+  @@index([userId, updatedAt(sort: Desc)])
+  @@map("LessonPlan")
+}
+
+model TheaterMenuFavorite {
+  id        Int      @id @default(autoincrement())
+  userId    String
+  menuId    Int
+  createdAt DateTime @default(now())
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  menu      TheaterMenu @relation(fields: [menuId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, menuId])
+  @@index([userId])
+  @@index([menuId])
+  @@map("TheaterMenuFavorite")
+}
+
+model LessonPlanItem {
+  id             String  @id @default(cuid())
+  planId         String
+  menuId         Int
+  order          Int     @default(0)
+  customDuration Int?
+  notes          String?
+
+  plan LessonPlan  @relation(fields: [planId], references: [id], onDelete: Cascade)
+  menu TheaterMenu @relation(fields: [menuId], references: [id], onDelete: Cascade)
+
+  @@index([planId, order])
+  @@map("LessonPlanItem")
+}
+
 model TomoshibiScene {
   id        String   @id @default(cuid())
   userId    String

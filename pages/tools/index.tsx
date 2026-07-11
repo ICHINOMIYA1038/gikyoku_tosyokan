@@ -3,7 +3,7 @@ import Link from "next/link";
 import Layout from "@/components/Layout";
 import Seo from "@/components/seo";
 import StructuredData from "@/components/StructuredData";
-import { FaClock, FaChartBar, FaCalendarAlt, FaStopwatch } from "react-icons/fa";
+import { FaClock, FaChartBar, FaCalendarAlt, FaStopwatch, FaBookOpen } from "react-icons/fa";
 
 interface ToolCard {
   name: string;
@@ -37,6 +37,14 @@ const TOOLS: ToolCard[] = [
     href: "/tools/schedule-generator",
     icon: <FaCalendarAlt />,
     color: "text-emerald-500 bg-emerald-50",
+  },
+  {
+    name: "演劇メニュー辞典",
+    description:
+      "発声練習・エチュード・シアターゲーム・ワークショップ台本などレッスンで使えるメニューを辞典形式で。ランダム抽出ツール付き。",
+    href: "/theater-menu",
+    icon: <FaBookOpen />,
+    color: "text-rose-500 bg-rose-50",
   },
   {
     name: "稽古タイマー",
