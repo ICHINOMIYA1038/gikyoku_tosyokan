@@ -418,45 +418,53 @@ enum UserRole {
 }
 
 model User {
-  id                 String    @id @default(cuid())
-  name               String?
-  email              String?   @unique
-  emailVerified      DateTime?
-  image              String?
-  role               UserRole  @default(USER)
-  displayName        String?
-  bio                String?
-  avatarUrl          String?
-  groupName          String?
+  id                     String    @id @default(cuid())
+  name                   String?
+  email                  String?   @unique
+  emailVerified          DateTime?
+  image                  String?
+  role                   UserRole  @default(USER)
+  displayName            String?
+  bio                    String?
+  avatarUrl              String?
+  groupName              String?
   /// 案内メール配信可否。デフォルトは false (明示的にオプトイン)。
-  emailOptIn         Boolean   @default(false)
-  emailOptInAt       DateTime?
+  emailOptIn             Boolean   @default(false)
+  emailOptInAt           DateTime?
   /// 配信停止リンクで本人確認に使う（推測不可なトークン）
-  unsubscribeToken   String?   @unique
-  welcomeEmailSentAt DateTime?
+  unsubscribeToken       String?   @unique
+  welcomeEmailSentAt     DateTime?
   /// 初回オンボーディング (/auth/welcome) を完了した時刻。
   /// 未完了なら未ログイン時のCTA以外のページから welcome へ誘導する。
-  onboardedAt        DateTime?
-  createdAt          DateTime  @default(now())
-  updatedAt          DateTime  @updatedAt
+  onboardedAt            DateTime?
+  /// tomoshibi Pro プランのステータス。'free' or 'pro'。デフォルトは 'free'。
+  tomoshibiPlan          String    @default("free")
+  /// tomoshibi Pro の有効期限 (次回課金日 or サブスク終了日)。null なら free。
+  tomoshibiPlanExpiresAt DateTime?
+  /// Stripe Customer ID (tomoshibi Pro 用)。null なら未購入。
+  stripeCustomerId       String?   @unique
+  /// Stripe Subscription ID (tomoshibi Pro 用)。null なら未購読。
+  stripeSubscriptionId   String?   @unique
+  createdAt              DateTime  @default(now())
+  updatedAt              DateTime  @updatedAt
 
-  accounts         Account[]
-  sessions         Session[]
-  parentComments   ParentComment[]
-  childComments    ChildComment[]
-  favorites        Favorite[]
-  reports          Report[]
-  searchHistories  SearchHistory[]
-  announcements    Announcement[]
-  recruitments     Recruitment[]
-  applications     Application[]
-  interests        Interest[]
-  sentMessages     Message[]        @relation("SentMessages")
-  receivedMessages Message[]        @relation("ReceivedMessages")
-  userSynopses     UserSynopsis[]
-  toolData         UserToolData[]
-  broadcasts       Broadcast[]
-  tomoshibiScenes  TomoshibiScene[]
+  accounts             Account[]
+  sessions             Session[]
+  parentComments       ParentComment[]
+  childComments        ChildComment[]
+  favorites            Favorite[]
+  reports              Report[]
+  searchHistories      SearchHistory[]
+  announcements        Announcement[]
+  recruitments         Recruitment[]
+  applications         Application[]
+  interests            Interest[]
+  sentMessages         Message[]             @relation("SentMessages")
+  receivedMessages     Message[]             @relation("ReceivedMessages")
+  userSynopses         UserSynopsis[]
+  toolData             UserToolData[]
+  broadcasts           Broadcast[]
+  tomoshibiScenes      TomoshibiScene[]
   theaterMenuFavorites TheaterMenuFavorite[]
   lessonPlans          LessonPlan[]
 
@@ -773,39 +781,39 @@ model TheaterMenuCategory {
 }
 
 model TheaterMenu {
-  id          Int      @id @default(autoincrement())
-  slug        String   @unique
-  categoryId  Int
-  title       String
-  summary     String
-  content     String
-  imageUrl    String?
-  images      String[] @default([])
-  tags        String[] @default([])
-  duration    Int?
-  minPeople   Int?
-  maxPeople   Int?
-  difficulty  Int?
-  published   Boolean  @default(true)
-  order       Int      @default(0)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id         Int      @id @default(autoincrement())
+  slug       String   @unique
+  categoryId Int
+  title      String
+  summary    String
+  content    String
+  imageUrl   String?
+  images     String[] @default([])
+  tags       String[] @default([])
+  duration   Int?
+  minPeople  Int?
+  maxPeople  Int?
+  difficulty Int?
+  published  Boolean  @default(true)
+  order      Int      @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
   // 拡張メタデータ (2026-07 追加)
-  aliases              String[] @default([])
-  learningObjectives   String[] @default([])
-  ageGroup             String?
-  materials            String[] @default([])
-  spaceRequirement     String?
-  hasPhysicalContact   Boolean?
-  sideCoaching         String?
-  reflectionQuestions  String[] @default([])
-  videoUrl             String?
-  credit               String?
-  sourceUrl            String?
-  relatedSlugs         String[] @default([])
+  aliases             String[] @default([])
+  learningObjectives  String[] @default([])
+  ageGroup            String?
+  materials           String[] @default([])
+  spaceRequirement    String?
+  hasPhysicalContact  Boolean?
+  sideCoaching        String?
+  reflectionQuestions String[] @default([])
+  videoUrl            String?
+  credit              String?
+  sourceUrl           String?
+  relatedSlugs        String[] @default([])
 
-  category  TheaterMenuCategory     @relation(fields: [categoryId], references: [id])
+  category  TheaterMenuCategory   @relation(fields: [categoryId], references: [id])
   favorites TheaterMenuFavorite[]
   planItems LessonPlanItem[]
 
@@ -832,10 +840,10 @@ model LessonPlan {
 }
 
 model TheaterMenuFavorite {
-  id        Int      @id @default(autoincrement())
+  id        Int         @id @default(autoincrement())
   userId    String
   menuId    Int
-  createdAt DateTime @default(now())
+  createdAt DateTime    @default(now())
   user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
   menu      TheaterMenu @relation(fields: [menuId], references: [id], onDelete: Cascade)
 

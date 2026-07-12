@@ -5,7 +5,8 @@ import { prisma } from '@/lib/prisma';
 import {
   applyTomoshibiCors,
   validateSceneData,
-  MAX_SCENES_PER_USER,
+  maxScenesForPlan,
+  isProActive,
   MAX_NAME_LEN,
 } from '@/lib/tomoshibi-cors';
 
@@ -34,9 +35,22 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const v = validateSceneData(data);
     if (!v.ok) return res.status(413).json({ error: v.error });
 
-    const count = await prisma.tomoshibiScene.count({ where: { userId } });
-    if (count >= MAX_SCENES_PER_USER) {
-      return res.status(403).json({ error: `保存できるシーンは${MAX_SCENES_PER_USER}件までです` });
+    const [count, u] = await Promise.all([
+      prisma.tomoshibiScene.count({ where: { userId } }),
+      prisma.user.findUnique({ where: { id: userId }, select: { tomoshibiPlan: true, tomoshibiPlanExpiresAt: true } }),
+    ]);
+    const plan = isProActive(u?.tomoshibiPlan, u?.tomoshibiPlanExpiresAt ?? null) ? 'pro' : 'free';
+    const limit = maxScenesForPlan(plan);
+    if (count >= limit) {
+      return res.status(403).json({
+        error: plan === 'free'
+          ? `Free プランで保存できるシーンは${limit}件までです。Pro プラン(月額300円)にアップグレードすると無制限に保存できます。`
+          : `保存できるシーンは${limit}件までです`,
+        code: 'PLAN_LIMIT',
+        plan,
+        limit,
+        count,
+      });
     }
 
     const created = await prisma.tomoshibiScene.create({

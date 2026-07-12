@@ -6,7 +6,27 @@ const ALLOWED_ORIGINS = new Set([
   'http://localhost:5174',
 ]);
 
-export const MAX_SCENES_PER_USER = 5;
+/** 後方互換用の旧定数。新規コードは maxScenesForPlan() を使うこと。 */
+export const MAX_SCENES_PER_USER = 3;
+export const MAX_SCENES_FREE = 3;
+export const MAX_SCENES_PRO = 500;
+
+export type TomoshibiPlan = 'free' | 'pro';
+
+export function maxScenesForPlan(plan: TomoshibiPlan | string | null | undefined): number {
+  return plan === 'pro' ? MAX_SCENES_PRO : MAX_SCENES_FREE;
+}
+
+/**
+ * ユーザーの Pro プラン有効判定。
+ * planExpiresAt が未来の場合のみ Pro とみなす(サブスク切れの自動 downgrade を許容)。
+ */
+export function isProActive(plan: string | null | undefined, expiresAt: Date | null | undefined): boolean {
+  if (plan !== 'pro') return false;
+  if (!expiresAt) return false;
+  return expiresAt.getTime() > Date.now();
+}
+
 export const MAX_FIXTURES = 100;
 export const MAX_PERFORMERS = 30;
 export const MAX_SETPIECES = 30;
