@@ -3,7 +3,22 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/authOptions';
 import { prisma } from '@/lib/prisma';
 import { applyTomoshibiCors, isProActive } from '@/lib/tomoshibi-cors';
-import { stripe, stripePriceId, tomoshibiAppUrl } from '@/lib/stripe';
+import { stripe, stripePriceId, tomoshibiAppUrl, isStripeLiveMode } from '@/lib/stripe';
+
+/**
+ * サンドボックス鍵で本番トラフィックを受けると、テストカードを打った第三者が
+ * 実質無料で Pro を取得できてしまう。ライブ鍵にするまで /pro 申込は受け付けない。
+ * (バイパス用途で SANDBOX_CHECKOUT_ALLOWED_EMAILS があれば、そのユーザーだけ通す)
+ */
+function isCheckoutAllowed(email: string | null | undefined): boolean {
+  if (isStripeLiveMode()) return true;
+  const allow = (process.env.SANDBOX_CHECKOUT_ALLOWED_EMAILS ?? '')
+    .split(',')
+    .map(s => s.trim().toLowerCase())
+    .filter(Boolean);
+  if (!email) return false;
+  return allow.includes(email.toLowerCase());
+}
 
 /**
  * tomoshibi Pro プラン用 Stripe Checkout セッション作成エンドポイント。
@@ -26,6 +41,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     },
   });
   if (!user) return res.status(404).json({ error: 'ユーザーが見つかりません' });
+  if (!isCheckoutAllowed(user.email)) {
+    return res.status(503).json({
+      error: 'Pro プランは現在準備中です。決済機能公開までしばらくお待ちください。',
+      code: 'PRO_NOT_AVAILABLE',
+    });
+  }
   if (isProActive(user.tomoshibiPlan, user.tomoshibiPlanExpiresAt)) {
     return res.status(400).json({ error: '既に Pro プランに加入済みです', code: 'ALREADY_PRO' });
   }

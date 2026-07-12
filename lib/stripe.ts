@@ -39,3 +39,13 @@ export function stripeWebhookSecret(): string {
 export function tomoshibiAppUrl(): string {
   return process.env.TOMOSHIBI_APP_URL || 'https://tomoshibi.gikyokutosyokan.com';
 }
+
+/**
+ * Stripe が本番モードで動作しているか。
+ * サンドボックス鍵 (sk_test_) では実カード決済が通らないため、
+ * フロントで Pro 申込 UI を「準備中」に切り替えるトリガとして使う。
+ */
+export function isStripeLiveMode(): boolean {
+  const key = process.env.STRIPE_SECRET_KEY ?? '';
+  return key.startsWith('sk_live_');
+}

@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/authOptions';
 import { prisma } from '@/lib/prisma';
 import { applyTomoshibiCors, isProActive, maxScenesForPlan } from '@/lib/tomoshibi-cors';
+import { isStripeLiveMode } from '@/lib/stripe';
 
 /**
  * tomoshibi 用の軽量セッション確認エンドポイント。
@@ -15,7 +16,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   const session = await getServerSession(req, res, authOptions);
   res.setHeader('Cache-Control', 'no-store');
-  if (!session?.user?.id) return res.json({ user: null });
+  const proAvailable = isStripeLiveMode();
+  if (!session?.user?.id) return res.json({ user: null, proAvailable });
 
   const user = await prisma.user.findUnique({
     where: { id: session.user.id },
@@ -32,5 +34,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       planExpiresAt: user?.tomoshibiPlanExpiresAt?.toISOString() ?? null,
       maxScenes: maxScenesForPlan(effectivePlan),
     },
+    proAvailable,
   });
 }
