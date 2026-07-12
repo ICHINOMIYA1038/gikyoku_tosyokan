@@ -19,11 +19,12 @@ export function maxScenesForPlan(plan: TomoshibiPlan | string | null | undefined
 
 /**
  * ユーザーの Pro プラン有効判定。
- * planExpiresAt が未来の場合のみ Pro とみなす(サブスク切れの自動 downgrade を許容)。
+ * planExpiresAt が未来の場合、または未設定(=Stripe から取れなかった)の場合も Pro とみなす。
+ * サブスク切れの自動 downgrade は expiresAt が過去の場合のみ発動する。
  */
 export function isProActive(plan: string | null | undefined, expiresAt: Date | null | undefined): boolean {
   if (plan !== 'pro') return false;
-  if (!expiresAt) return false;
+  if (!expiresAt) return true; // Stripe 応答から期限を抽出できなかったケースをフェイルセーフでカバー
   return expiresAt.getTime() > Date.now();
 }
 

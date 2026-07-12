@@ -94,11 +94,15 @@ async function syncSubscription(sub: Stripe.Subscription) {
     return;
   }
 
-  // Stripe 22 では current_period_end が number(unix秒) で入る。
   // アクティブとみなすステータス: active / trialing。past_due は暫定 Pro のままにする(グレースピリオド)。
   const activeStatuses: Stripe.Subscription.Status[] = ['active', 'trialing', 'past_due'];
   const isActive = activeStatuses.includes(sub.status);
-  const periodEndSec = (sub as unknown as { current_period_end?: number }).current_period_end;
+  // 2026-06-24.dahlia 以降、current_period_end は subscription.items.data[0] に移動している。
+  // 旧位置 (sub.current_period_end) も後方互換で残っている可能性があるため両方見る。
+  const item = sub.items?.data?.[0] as unknown as { current_period_end?: number } | undefined;
+  const periodEndSec =
+    item?.current_period_end ??
+    (sub as unknown as { current_period_end?: number }).current_period_end;
   const expiresAt = periodEndSec ? new Date(periodEndSec * 1000) : null;
 
   await prisma.user.update({
