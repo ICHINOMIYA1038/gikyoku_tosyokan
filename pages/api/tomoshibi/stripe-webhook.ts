@@ -29,6 +29,25 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(400).send(`Webhook Error: ${msg}`);
   }
 
+  // === Idempotency: 同じ event.id を二度処理しない ===
+  // event.id を PK にした INSERT が unique 制約違反なら「処理済み」として早期 return。
+  try {
+    await prisma.stripeEvent.create({
+      data: {
+        id: event.id,
+        type: event.type,
+        eventCreated: new Date(event.created * 1000),
+      },
+    });
+  } catch (err) {
+    // P2002 = unique constraint violation → 重複イベント。200 で ACK して Stripe の再送を止める。
+    if (typeof err === 'object' && err !== null && (err as { code?: string }).code === 'P2002') {
+      console.info('[stripe-webhook] duplicate event ignored:', event.id, event.type);
+      return res.json({ received: true, duplicate: true });
+    }
+    throw err;
+  }
+
   try {
     switch (event.type) {
       case 'checkout.session.completed': {
@@ -78,23 +97,53 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 }
 
+/**
+ * subscription から userId を決定する。
+ * 攻撃防御: metadata.tomoshibiUserId を無条件に信用せず、必ず stripeCustomerId で DB を引き、
+ * 一致するユーザーが居ることを確認する (metadata と DB の customerId の cross-check)。
+ * どちらかが欠けている・不整合の場合は処理を中断してアラート。
+ */
+async function resolveUserIdSafely(sub: Stripe.Subscription): Promise<string | null> {
+  const customerId = typeof sub.customer === 'string' ? sub.customer : sub.customer.id;
+  const metadataUserId = sub.metadata?.tomoshibiUserId ?? null;
+
+  const byCustomer = await prisma.user.findUnique({
+    where: { stripeCustomerId: customerId },
+    select: { id: true },
+  });
+
+  // どちらも無い → 未知の customer。ログのみ。
+  if (!byCustomer && !metadataUserId) {
+    console.warn('[stripe-webhook] no user for subscription', sub.id, 'customer', customerId);
+    return null;
+  }
+
+  // metadata がある & customer 引きもある → 一致必須。
+  if (byCustomer && metadataUserId && byCustomer.id !== metadataUserId) {
+    console.error('[stripe-webhook] MISMATCH between metadata userId and customer-lookup', {
+      subId: sub.id,
+      customerId,
+      metadataUserId,
+      dbUserId: byCustomer.id,
+    });
+    return null; // 詐称の可能性あり → 更新しない
+  }
+
+  // 通常経路
+  return byCustomer?.id ?? null;
+}
+
 async function syncSubscription(sub: Stripe.Subscription) {
-  const userId = sub.metadata?.tomoshibiUserId;
+  const uid = await resolveUserIdSafely(sub);
+  if (!uid) return;
   const customerId = typeof sub.customer === 'string' ? sub.customer : sub.customer.id;
 
-  // userId は subscription.metadata から取得できる (checkout 時に付与)。
-  // 万一メタデータに無ければ customerId から逆引き。
-  let uid: string | undefined = userId;
-  if (!uid) {
-    const u = await prisma.user.findUnique({ where: { stripeCustomerId: customerId }, select: { id: true } });
-    uid = u?.id ?? undefined;
-  }
-  if (!uid) {
-    console.warn('[stripe-webhook] no user for subscription', sub.id, 'customer', customerId);
+  // canceled は明示的に downgrade へ回す (順序逆転で古い updated が active を復活させないため)。
+  if (sub.status === 'canceled') {
+    await downgradeUser(uid);
     return;
   }
 
-  // アクティブとみなすステータス: active / trialing。past_due は暫定 Pro のままにする(グレースピリオド)。
   const activeStatuses: Stripe.Subscription.Status[] = ['active', 'trialing', 'past_due'];
   const isActive = activeStatuses.includes(sub.status);
   // 2026-06-24.dahlia 以降、current_period_end は subscription.items.data[0] に移動している。
@@ -117,15 +166,16 @@ async function syncSubscription(sub: Stripe.Subscription) {
 }
 
 async function downgradeToFree(sub: Stripe.Subscription) {
-  const userId = sub.metadata?.tomoshibiUserId;
-  const customerId = typeof sub.customer === 'string' ? sub.customer : sub.customer.id;
-  const uid = userId ?? (await prisma.user.findUnique({
-    where: { stripeCustomerId: customerId },
-    select: { id: true },
-  }))?.id;
+  const uid = await resolveUserIdSafely(sub);
   if (!uid) return;
+  await downgradeUser(uid);
+}
+
+async function downgradeUser(uid: string) {
   await prisma.user.update({
     where: { id: uid },
+    // stripeCustomerId は保持 (再開時に同じ Customer を使うため)。
+    // stripeSubscriptionId のみクリア。
     data: { tomoshibiPlan: 'free', tomoshibiPlanExpiresAt: null, stripeSubscriptionId: null },
   });
 }

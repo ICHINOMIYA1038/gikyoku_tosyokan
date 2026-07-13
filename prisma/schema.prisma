@@ -881,3 +881,19 @@ model TomoshibiScene {
   @@index([userId, updatedAt(sort: Desc)])
   @@map("TomoshibiScene")
 }
+
+/// Stripe Webhook イベント配信ログ (idempotency 用)。
+/// event.id を主キーにして、同一イベントの重複配信・順序逆転を検出する。
+model StripeEvent {
+  id           String   @id
+  /// event.type (e.g. customer.subscription.updated)
+  type         String
+  /// Stripe が付与するイベント発生時刻 (秒→ミリ秒に変換して保存)
+  eventCreated DateTime
+  /// 受信時刻
+  receivedAt   DateTime @default(now())
+
+  @@index([type])
+  @@index([receivedAt(sort: Desc)])
+  @@map("StripeEvent")
+}

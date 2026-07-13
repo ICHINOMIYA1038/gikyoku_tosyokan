@@ -19,12 +19,14 @@ export function maxScenesForPlan(plan: TomoshibiPlan | string | null | undefined
 
 /**
  * ユーザーの Pro プラン有効判定。
- * planExpiresAt が未来の場合、または未設定(=Stripe から取れなかった)の場合も Pro とみなす。
- * サブスク切れの自動 downgrade は expiresAt が過去の場合のみ発動する。
+ * Pro として扱うには plan='pro' かつ planExpiresAt が未来 であることを要求する。
+ * expiresAt が null の場合は Pro としない (無期限 Pro 化を防止)。
+ * Stripe API 側で current_period_end が取れない事態が発生した場合は、
+ * 監視ログで検知して個別対応する方針 (代わりに無料化する方が安全)。
  */
 export function isProActive(plan: string | null | undefined, expiresAt: Date | null | undefined): boolean {
   if (plan !== 'pro') return false;
-  if (!expiresAt) return true; // Stripe 応答から期限を抽出できなかったケースをフェイルセーフでカバー
+  if (!expiresAt) return false;
   return expiresAt.getTime() > Date.now();
 }
 
@@ -37,11 +39,17 @@ export const MAX_DATA_BYTES = 256 * 1024; // 256KB
 /**
  * tomoshibi (別オリジン SPA) からの fetch を受けるための CORS。
  * Cookie送信を許可するため Allow-Origin はワイルドカード不可。
- * @returns true ならプリフライト応答済みなのでハンドラ側は return すべし
+ *
+ * 状態変更メソッド (POST/PUT/PATCH/DELETE) では **Origin ヘッダを必須化**し、
+ * ALLOWED_ORIGINS に含まれないリクエストは 403 で拒否する (CSRF 対策)。
+ * これによりブラウザの simple request でも allowlist 外からの状態変更を確実に防ぐ。
+ *
+ * @returns true ならレスポンス送信済みなのでハンドラ側は return すべし
  */
 export function applyTomoshibiCors(req: NextApiRequest, res: NextApiResponse): boolean {
   const origin = req.headers.origin;
-  if (origin && ALLOWED_ORIGINS.has(origin)) {
+  const originAllowed = origin ? ALLOWED_ORIGINS.has(origin) : false;
+  if (originAllowed && origin) {
     res.setHeader('Access-Control-Allow-Origin', origin);
     res.setHeader('Access-Control-Allow-Credentials', 'true');
     res.setHeader('Vary', 'Origin');
@@ -53,6 +61,15 @@ export function applyTomoshibiCors(req: NextApiRequest, res: NextApiResponse): b
     res.status(204).end();
     return true;
   }
+
+  // 状態変更メソッドは Origin allowlist を強制。
+  // GET/HEAD は認証チェックが別途あるので許容 (だが Cookie も Origin 制限を通じてしか送られない)。
+  const isMutating = req.method && !['GET', 'HEAD'].includes(req.method);
+  if (isMutating && !originAllowed) {
+    res.status(403).json({ error: 'forbidden origin', code: 'CSRF_BLOCKED' });
+    return true;
+  }
+
   return false;
 }
 
