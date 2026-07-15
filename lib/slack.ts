@@ -4,7 +4,7 @@
  * 通知失敗は本業ロジックを止めないよう、常に例外を握り潰す (ログ出力のみ)。
  */
 
-const WEBHOOK_ENV = 'SLACK_WEBHOOK__NOTIFICATIONS';
+const WEBHOOK_ENV = 'SLACK_WEBHOOK_URL_NOTIFICATIONS';
 
 type SlackBlock = Record<string, unknown>;
 
