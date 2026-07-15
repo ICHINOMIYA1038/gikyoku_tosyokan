@@ -20,6 +20,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     length: envValue?.length ?? 0,
     prefix: envValue?.slice(0, 30) ?? null,
   };
+  // 診断: SLACK_ で始まる env key を全部リスト
+  const slackKeys = Object.keys(process.env).filter(k => k.toUpperCase().includes('SLACK') || k.toUpperCase().includes('WEBHOOK'));
+  const stripeExists = !!process.env.STRIPE_SECRET_KEY;
+  const priceExists = !!process.env.STRIPE_PRICE_ID_TOMOSHIBI_PRO;
 
   await notifySlack({
     text: '🧪 Slack 疎通テスト',
@@ -27,5 +31,5 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     blocks: [slackSection(`*🧪 Slack 疎通テスト*\n時刻: ${new Date().toISOString()}\n環境変数長: ${envInfo.length}`)],
   });
 
-  return res.json({ ok: true, envInfo, note: 'Slack にメッセージが投稿されたか確認してください' });
+  return res.json({ ok: true, envInfo, slackKeys, stripeExists, priceExists, note: 'Slack にメッセージが投稿されたか確認してください' });
 }
