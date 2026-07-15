@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import type { Readable } from 'node:stream';
 import { prisma } from '@/lib/prisma';
 import { stripe, stripeWebhookSecret } from '@/lib/stripe';
+import { notifySlack, slackSection } from '@/lib/slack';
 import type Stripe from 'stripe';
 
 // Stripe Webhook は生のリクエストボディが必要なので Next.js のパーサを無効化する。
@@ -63,15 +64,27 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         }
         break;
       }
-      case 'customer.subscription.created':
-      case 'customer.subscription.updated': {
+      case 'customer.subscription.created': {
         const sub = event.data.object as Stripe.Subscription;
         await syncSubscription(sub);
+        // 新規 Pro 加入通知 (fire-and-forget)
+        void notifyProSubscribed(sub);
+        break;
+      }
+      case 'customer.subscription.updated': {
+        const sub = event.data.object as Stripe.Subscription;
+        // 解約予約 (cancel_at_period_end 遷移) を検知
+        const prev = (event.data as { previous_attributes?: { cancel_at_period_end?: boolean } }).previous_attributes;
+        const becameCanceled = sub.cancel_at_period_end === true && prev?.cancel_at_period_end === false;
+        await syncSubscription(sub);
+        if (becameCanceled) void notifyProCanceled(sub);
         break;
       }
       case 'customer.subscription.deleted': {
         const sub = event.data.object as Stripe.Subscription;
         await downgradeToFree(sub);
+        // 期間終了による最終削除の通知
+        void notifyProEnded(sub);
         break;
       }
       case 'invoice.payment_failed': {
@@ -177,5 +190,74 @@ async function downgradeUser(uid: string) {
     // stripeCustomerId は保持 (再開時に同じ Customer を使うため)。
     // stripeSubscriptionId のみクリア。
     data: { tomoshibiPlan: 'free', tomoshibiPlanExpiresAt: null, stripeSubscriptionId: null },
+  });
+}
+
+/**
+ * Slack 通知ヘルパ (fire-and-forget 前提)。
+ * user 情報 (メール・氏名) を追加取得し、リッチな通知メッセージを送る。
+ */
+async function userSummary(sub: Stripe.Subscription): Promise<{ name: string; email: string | null }> {
+  const uid = await resolveUserIdSafely(sub);
+  if (!uid) return { name: '(未知のユーザー)', email: null };
+  const u = await prisma.user.findUnique({
+    where: { id: uid },
+    select: { name: true, email: true, displayName: true },
+  }).catch(() => null);
+  const name = u?.displayName ?? u?.name ?? '(名前未設定)';
+  return { name, email: u?.email ?? null };
+}
+
+async function proStats(): Promise<{ proCount: number; mrrJpy: number }> {
+  const proCount = await prisma.user.count({
+    where: { tomoshibiPlan: 'pro', tomoshibiPlanExpiresAt: { gt: new Date() } },
+  }).catch(() => 0);
+  return { proCount, mrrJpy: proCount * 300 };
+}
+
+async function notifyProSubscribed(sub: Stripe.Subscription): Promise<void> {
+  const { name, email } = await userSummary(sub);
+  const { proCount, mrrJpy } = await proStats();
+  const emailLine = email ? `\nメール: ${email}` : '';
+  await notifySlack({
+    text: `💰 Pro プラン加入: ${name}`,
+    iconEmoji: ':moneybag:',
+    blocks: [
+      slackSection(
+        `*💰 Pro プラン加入*\n氏名: ${name}${emailLine}\nサブスク ID: \`${sub.id}\`\n月額: ¥300\n現在の Pro 会員: *${proCount}* 人 / MRR: *¥${mrrJpy.toLocaleString('ja-JP')}*`
+      ),
+    ],
+  });
+}
+
+async function notifyProCanceled(sub: Stripe.Subscription): Promise<void> {
+  const { name, email } = await userSummary(sub);
+  const item = sub.items?.data?.[0] as unknown as { current_period_end?: number } | undefined;
+  const periodEndSec = item?.current_period_end ?? (sub as unknown as { current_period_end?: number }).current_period_end;
+  const endDate = periodEndSec ? new Date(periodEndSec * 1000).toLocaleDateString('ja-JP', { year: 'numeric', month: 'long', day: 'numeric' }) : '不明';
+  const emailLine = email ? `\nメール: ${email}` : '';
+  await notifySlack({
+    text: `😢 Pro プラン解約予約: ${name}`,
+    iconEmoji: ':disappointed:',
+    blocks: [
+      slackSection(
+        `*😢 Pro プラン解約 (期間終了時)*\n氏名: ${name}${emailLine}\n利用終了予定: *${endDate}*\nサブスク ID: \`${sub.id}\``
+      ),
+    ],
+  });
+}
+
+async function notifyProEnded(sub: Stripe.Subscription): Promise<void> {
+  const { name, email } = await userSummary(sub);
+  const { proCount, mrrJpy } = await proStats();
+  const emailLine = email ? `\nメール: ${email}` : '';
+  await notifySlack({
+    text: `👋 Pro プラン利用終了: ${name}`,
+    iconEmoji: ':wave:',
+    blocks: [
+      slackSection(
+        `*👋 Pro プラン利用終了 (Free へ戻る)*\n氏名: ${name}${emailLine}\nサブスク ID: \`${sub.id}\`\n現在の Pro 会員: *${proCount}* 人 / MRR: *¥${mrrJpy.toLocaleString('ja-JP')}*`
+      ),
+    ],
   });
 }
