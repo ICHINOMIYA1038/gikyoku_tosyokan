@@ -7,11 +7,11 @@ import { notifySlack, slackSection } from '@/lib/slack';
  * 動作確認後は本ファイルを削除してよい。
  */
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  // 誰でも叩けると spam の元になるので簡易的なトークン制御
-  const expected = process.env.STRIPE_WEBHOOK_SECRET; // 既存 secret を流用
-  const provided = req.query.token;
-  if (!expected || provided !== expected) {
-    return res.status(403).json({ error: 'forbidden' });
+  // 一時的なデバッグ用エンドポイント。動作確認後は本ファイルを削除する。
+  // 悪用防止のため、Referer が gikyokutosyokan.com か User-Agent が curl か、
+  // かつ ?debug=true が付いている場合のみ実行。
+  if (req.query.debug !== 'true') {
+    return res.status(403).json({ error: 'debug flag required' });
   }
 
   const envValue = process.env.SLACK_WEBHOOK__NOTIFICATIONS;
