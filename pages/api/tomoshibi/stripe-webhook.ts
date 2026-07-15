@@ -67,8 +67,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       case 'customer.subscription.created': {
         const sub = event.data.object as Stripe.Subscription;
         await syncSubscription(sub);
-        // 新規 Pro 加入通知 (fire-and-forget)
-        void notifyProSubscribed(sub);
+        // Vercel Serverless は response 返却後に fire-and-forget が freeze されるため await 必須
+        await notifyProSubscribed(sub);
         break;
       }
       case 'customer.subscription.updated': {
@@ -77,14 +77,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const prev = (event.data as { previous_attributes?: { cancel_at_period_end?: boolean } }).previous_attributes;
         const becameCanceled = sub.cancel_at_period_end === true && prev?.cancel_at_period_end === false;
         await syncSubscription(sub);
-        if (becameCanceled) void notifyProCanceled(sub);
+        if (becameCanceled) await notifyProCanceled(sub);
         break;
       }
       case 'customer.subscription.deleted': {
         const sub = event.data.object as Stripe.Subscription;
         await downgradeToFree(sub);
         // 期間終了による最終削除の通知
-        void notifyProEnded(sub);
+        await notifyProEnded(sub);
         break;
       }
       case 'invoice.payment_failed': {

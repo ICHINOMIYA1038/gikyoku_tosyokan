@@ -178,8 +178,8 @@ export const authOptions: NextAuthOptions = {
       console.log(`[auth] New user created: ${user.email}`);
       if (!user.email || !user.id) return;
 
-      // Slack 通知 (fire-and-forget, 失敗しても welcome mail 送信を止めない)
-      void (async () => {
+      // Slack 通知 (Serverless では fire-and-forget が freeze されるため await)
+      try {
         const [{ notifySlack, slackSection }] = await Promise.all([import('@/lib/slack')]);
         const totalUsers = await prisma.user.count().catch(() => null);
         const displayName = (user as { displayName?: string | null }).displayName ?? user.name ?? '(名前未設定)';
@@ -191,7 +191,9 @@ export const authOptions: NextAuthOptions = {
             slackSection(`*🎉 新規会員登録*\n氏名: ${displayName}\nメール: ${user.email}${totalLine}`),
           ],
         });
-      })();
+      } catch (e) {
+        console.error('[auth] slack notify failed:', e);
+      }
 
       try {
         // 配信停止用のトークンを発行して保存
