@@ -13,7 +13,7 @@ const shortStoriesData = [
     pdfSrc: "/pdf/hone.pdf",
     description: "「靴があっただけましやろ。」\n「靴やん」\n「和也の靴やで」\n「和也の靴やけど、和也は靴ちゃう…」",
     duration: "15分",
-    characters: { male: 2, female: 1, total: 3 },
+    characters: { male: 1, female: 1, total: 2 },
     genre: "シリアス",
     difficulty: "中級",
     keywords: ["家族", "死", "記憶", "喪失感"]
@@ -25,7 +25,7 @@ const shortStoriesData = [
     pdfSrc: "/pdf/senakani.pdf",
     description: "「子供は親の背中を見て育つんだから」\n「見せられないですよ、僕の背中なんて」",
     duration: "20分",
-    characters: { male: 1, female: 2, total: 3 },
+    characters: { male: 2, female: 0, total: 2 },
     genre: "ヒューマンドラマ",
     difficulty: "初級",
     keywords: ["親子", "成長", "責任", "家族愛"]
@@ -37,7 +37,7 @@ const shortStoriesData = [
     pdfSrc: "/pdf/gomi.pdf",
     description: '「ビール飲めたら大人かなって」\n「なんやそれ。誰が言うたんやそれ\nあんた、"もう"はたちやねんから、大人やん」\n「さっきは"まだ"はたちって言ってた」',
     duration: "25分",
-    characters: { male: 2, female: 2, total: 4 },
+    characters: { male: 1, female: 1, total: 2 },
     genre: "コメディ",
     difficulty: "初級",
     keywords: ["成人", "青春", "成長", "友情"]
@@ -49,7 +49,7 @@ const shortStoriesData = [
     pdfSrc: "/pdf/hatsukoi.pdf",
     description: "「自殺しようとしてるんです、このビルの屋上で」\n「誰なの」\n「誰って、わかんないですけど」",
     duration: "30分",
-    characters: { male: 1, female: 1, total: 2 },
+    characters: { male: 2, female: 1, total: 3 },
     genre: "ロマンス・サスペンス",
     difficulty: "中級",
     keywords: ["恋愛", "救い", "運命", "出会い"]
@@ -61,7 +61,7 @@ const shortStoriesData = [
     pdfSrc: "/pdf/8.pdf",
     description: "「あなた、今日何の日か知ってる？」\n「燃えるゴミの日ですよね」\n「燃えるゴミじゃなくて燃やすゴミなの。それが問題なの。」",
     duration: "20分",
-    characters: { male: 2, female: 2, total: 4 },
+    characters: { male: 1, female: 1, total: 2 },
     genre: "社会派",
     difficulty: "上級",
     keywords: ["戦争", "平和", "記憶", "8月"]
@@ -73,10 +73,46 @@ const shortStoriesData = [
     pdfSrc: "/pdf/sumika.pdf",
     description: "「あんなの家族じゃないよ」\n「家族じゃん、ちゃんと血の繋がってる」\n「その家族に逃げられたくせに」",
     duration: "25分",
-    characters: { male: 2, female: 1, total: 3 },
+    characters: { male: 1, female: 1, total: 2 },
     genre: "ヒューマンドラマ",
     difficulty: "中級",
     keywords: ["家族", "居場所", "絆", "孤独"]
+  },
+  {
+    id: "syokutaku",
+    title: "食卓",
+    imgSrc: "/img/card_syokutaku.jpg",
+    pdfSrc: "/pdf/syokutaku.pdf",
+    description: "「誰かと間違っているんじゃないかい？」\n「いえ、合ってますよ。ロープのある家を探しに来たんです」\n「なんに使うって言うんだい」\n「首を吊るんです」",
+    duration: "20分",
+    characters: { male: 2, female: 1, total: 3 },
+    genre: "シリアス",
+    difficulty: "中級",
+    keywords: ["家族", "死", "日常", "食卓"]
+  },
+  {
+    id: "himitsu",
+    title: "秘密",
+    imgSrc: "/img/card_himitsu.jpg",
+    pdfSrc: "/pdf/himitsu.pdf",
+    description: "「親がサンタっていつ気づいた？」\n「そろそろかな、たっちゃんも」\n「子供ってなんでも一人で気づいちゃうんだから。親が教えなくても」",
+    duration: "15分",
+    characters: { male: 1, female: 1, total: 2 },
+    genre: "ヒューマンドラマ",
+    difficulty: "初級",
+    keywords: ["夫婦", "秘密", "サンタ", "子供"]
+  },
+  {
+    id: "blue",
+    title: "ブルーシート",
+    imgSrc: "/img/card_blue.jpg",
+    pdfSrc: "/pdf/blue.pdf",
+    description: "「僕だって人間なんですから」\n「なにそれ、俺が人間じゃないみたいな」\n「人間だからですよ、人間だから生きてほしいんです。」",
+    duration: "20分",
+    characters: { male: 2, female: 0, total: 2 },
+    genre: "社会派",
+    difficulty: "中級",
+    keywords: ["ホームレス", "社会", "命", "対話"]
   }
 ];
 
@@ -88,7 +124,7 @@ const mediumStoriesData = [
     pdfSrc: "/pdf/tsukino.pdf",
     description: "「月がきれいですね」\n「うん」\n「月がきれいですね」\n「私、死にたい」",
     duration: "45分",
-    characters: { male: 3, female: 3, total: 6 },
+    characters: { male: 2, female: 3, total: 5 },
     genre: "青春・ファンタジー",
     difficulty: "中級",
     keywords: ["卒業", "青春", "別れ", "夢"]
@@ -100,7 +136,7 @@ const mediumStoriesData = [
     pdfSrc: "/pdf/oudanhodou.pdf",
     description: "「1次元は横に伸びる直線」\n「2次元はそれがさらに広がった平面」\n「3次元は高さが加わった空間」\n「3次元ってなんか生きてる感じがする」",
     duration: "50分",
-    characters: { male: 2, female: 2, total: 4 },
+    characters: { male: 5, female: 3, total: 8 },
     genre: "SF・哲学",
     difficulty: "上級",
     keywords: ["次元", "存在", "哲学", "現実"]
@@ -115,7 +151,7 @@ const longStoriesData = [
     pdfSrc: "/pdf/ningyou.pdf",
     description: "「これだけそっくりだと無理ないね。ひとりでに踊りだしたりして」\n「そこまでいったらもう本物の人間じゃないですか」\n「なに？人間なら踊るの？」\n「人間だから踊るわけじゃないけど、踊るのは人間です。」",
     duration: "90分",
-    characters: { male: 4, female: 4, total: 8 },
+    characters: { male: 2, female: 6, total: 8 },
     genre: "ミステリー・ファンタジー",
     difficulty: "上級",
     keywords: ["人形", "舞踊", "人間性", "芸術"]
@@ -281,7 +317,9 @@ export default function PlotPageOptimized() {
                   </div>
                   
                   <div className="p-4">
-                    <h3 className="text-xl font-bold mb-2">{story.title}</h3>
+                    <h3 className="text-xl font-bold mb-2 text-theater-primary-600 underline decoration-theater-primary-300 underline-offset-4 hover:text-theater-primary-700 hover:decoration-theater-primary-500">
+                      {story.title}
+                    </h3>
                     
                     {/* メタ情報 */}
                     <div className="flex flex-wrap gap-2 mb-3 text-sm">
