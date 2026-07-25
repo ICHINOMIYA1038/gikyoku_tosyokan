@@ -1,6 +1,6 @@
 # 認証セットアップ手順
 
-NextAuth.js + Google OAuth のセットアップガイド。
+NextAuth.js + Google OAuth / Sign In with Apple のセットアップガイド。
 
 ## 必要な環境変数
 
@@ -14,6 +14,12 @@ NEXTAUTH_SECRET="<openssl rand -base64 32 で生成>"
 # Google OAuth
 GOOGLE_CLIENT_ID="<Google Cloud Consoleで取得>"
 GOOGLE_CLIENT_SECRET="<Google Cloud Consoleで取得>"
+
+# Sign In with Apple (tomoshibiモバイルアプリのApp Store審査 4.8 対応)
+APPLE_CLIENT_ID="com.gikyokutosyokan.tomoshibi.web"   # Services ID
+APPLE_TEAM_ID="<developer.apple.com/account 右上に表示されるTeam ID>"
+APPLE_KEY_ID="<Apple Developer Portal で発行したキーのKey ID>"
+APPLE_PRIVATE_KEY="<ダウンロードした AuthKey_xxxxx.p8 の中身をそのまま>"
 ```
 
 ## Google Cloud Console セットアップ手順
@@ -54,6 +60,46 @@ GOOGLE_CLIENT_SECRET="<Google Cloud Consoleで取得>"
    ```
 7. 「作成」クリック
 8. 表示された **クライアント ID** と **クライアント シークレット** を `.env.local` にコピー
+
+## Sign In with Apple セットアップ手順
+
+tomoshibiモバイルアプリでGoogle Sign-Inを使うため、App Store審査ガイドライン4.8により
+同等のプライバシー配慮ログインとしてApple Sign Inの併設が必須。
+
+### 1. Apple Developer Portal での設定 (developer.apple.com/account)
+
+1. **Identifiers → App IDs**: `com.gikyokutosyokan.tomoshibi` (Bundle ID) に
+   Sign In with Apple capability を有効化 (primary App ID として)
+2. **Identifiers → Services IDs**: `com.gikyokutosyokan.tomoshibi.web` を作成し
+   Sign In with Apple を有効化。Web Authentication Configuration で:
+   - Domains: `gikyokutosyokan.com`
+   - Return URLs: `https://gikyokutosyokan.com/api/auth/callback/apple`
+3. **Keys**: Sign In with Apple を有効化したキーを新規作成し、
+   `.p8` ファイルをダウンロード(**一度しかダウンロードできないので必ず安全な場所に保存**)。
+   Team ID (developer.apple.com/account 右上に表示) と Key ID を控える
+
+### 2. client_secret (JWT) は自動生成・ローテーション不要
+
+NextAuthのAppleProviderは `clientSecret` に生のJWT文字列を要求するが、
+このJWTはApple仕様上最長6ヶ月しか有効にできない。手動での定期再生成を避けるため、
+`lib/appleClientSecret.ts` が **秘密鍵 (失効しない) から起動のたびにその場でJWTを署名する**
+方式を採用している。人間が覚えておくべき定期作業は無い。
+
+環境変数に設定するのは失効しない秘密鍵そのもの (`APPLE_TEAM_ID` / `APPLE_KEY_ID` /
+`APPLE_PRIVATE_KEY`) であり、`APPLE_CLIENT_SECRET` という変数自体は存在しない。
+
+### 3. Vercel環境変数
+
+```
+Vercel Dashboard → Project → Settings → Environment Variables
+- APPLE_CLIENT_ID: com.gikyokutosyokan.tomoshibi.web
+- APPLE_TEAM_ID: (developer.apple.com/account 右上に表示されるTeam ID)
+- APPLE_KEY_ID: (Apple Developer Portal で発行したキーのKey ID)
+- APPLE_PRIVATE_KEY: (ダウンロードした .p8 の中身をそのまま貼り付け。改行はそのまま貼ってOK)
+```
+
+秘密鍵自体を万が一ローテーションしたくなった場合(漏洩時など)は、Apple Developer Portal で
+新しいキーを発行し、上記3変数を差し替えるだけでよい(コード変更不要)。
 
 ## NEXTAUTH_SECRET の生成
 

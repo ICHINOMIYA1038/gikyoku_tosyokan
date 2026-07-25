@@ -1,18 +1,23 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { prisma } from '@/lib/prisma';
 import { requireAuth } from '@/lib/auth';
+import { stripe } from '@/lib/stripe';
 
 /**
  * アカウント完全削除API
  *
  * 削除される情報:
  * - User レコード
- * - Account レコード（Google連携情報）
+ * - Account レコード（Google/Apple連携情報）
  * - Session レコード
  *
  * 残る情報（匿名化）:
  * - ParentComment: userId を null に、author を「退会済みユーザー」に
  * - ChildComment: 同上
+ *
+ * 副作用:
+ * - tomoshibi Pro プランの Stripe サブスクリプションが有効な場合は即時解約する
+ *   (これをしないとUser削除後もStripe側の課金が残り続けてしまう)
  *
  * セキュリティ:
  * - ログイン必須（requireAuth）
@@ -33,6 +38,20 @@ export default async function handler(
   const userId = session.user.id;
 
   try {
+    // Stripeの解約はDBトランザクションの外(外部API呼び出しを長時間保持しない)。
+    // 失敗してもアカウント削除自体は継続し、ログに残して運用側で個別対応する。
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { stripeSubscriptionId: true },
+    });
+    if (user?.stripeSubscriptionId) {
+      try {
+        await stripe().subscriptions.cancel(user.stripeSubscriptionId);
+      } catch (stripeError) {
+        console.error(`[account] Failed to cancel Stripe subscription for user ${userId}:`, stripeError);
+      }
+    }
+
     await prisma.$transaction(async (tx) => {
       // 1. コメントを匿名化（削除ではなく、userId を外してauthorを変更）
       await tx.parentComment.updateMany({

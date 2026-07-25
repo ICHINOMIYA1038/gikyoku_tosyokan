@@ -897,3 +897,18 @@ model StripeEvent {
   @@index([receivedAt(sort: Desc)])
   @@map("StripeEvent")
 }
+
+/// RevenueCat Webhook イベント配信ログ (idempotency 用)。StripeEvent と同じ役割。
+model RevenueCatEvent {
+  id           String   @id
+  /// event.type (e.g. INITIAL_PURCHASE, RENEWAL, EXPIRATION)
+  type         String
+  /// RevenueCat が付与するイベント発生時刻
+  eventCreated DateTime
+  /// 受信時刻
+  receivedAt   DateTime @default(now())
+
+  @@index([type])
+  @@index([receivedAt(sort: Desc)])
+  @@map("RevenueCatEvent")
+}

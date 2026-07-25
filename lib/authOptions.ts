@@ -1,6 +1,8 @@
 import type { NextAuthOptions } from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
+import AppleProvider from 'next-auth/providers/apple';
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
+import { getAppleClientSecret } from '@/lib/appleClientSecret';
 import { prisma } from '@/lib/prisma';
 import type { UserRole } from '@prisma/client';
 
@@ -39,6 +41,26 @@ export const authOptions: NextAuthOptions = {
           name: profile.name,
           email: profile.email,
           image: profile.picture,
+          role: 'USER' as UserRole,
+        };
+      },
+    }),
+    // tomoshibiモバイルアプリ (App Store) が Sign In with Apple を必須とする
+    // (Google等サードパーティログインを使うアプリはApple審査ガイドライン4.8により
+    // 同等のプライバシー配慮ログインの併設が必要)ため追加。
+    // clientSecretはAPPLE_PRIVATE_KEYからその場で署名する (詳細は lib/appleClientSecret.ts)。
+    AppleProvider({
+      clientId: process.env.APPLE_CLIENT_ID ?? '',
+      clientSecret: getAppleClientSecret(),
+      // Appleはユーザー名をid_tokenに含めず、初回認可時のPOSTボディでのみ送ってくる。
+      // このため name は取得できないことが多い。session callback が
+      // displayName を別途DBから補完する既存の仕組みに委ねる。
+      profile(profile) {
+        return {
+          id: profile.sub,
+          name: null,
+          email: profile.email,
+          image: null,
           role: 'USER' as UserRole,
         };
       },
@@ -140,8 +162,8 @@ export const authOptions: NextAuthOptions = {
      * 現在は全Googleユーザーを許可
      */
     async signIn({ user, account }) {
-      if (account?.provider === 'google') {
-        // emailが確認済みでなければ拒否（Google側で通常確認されているが念のため）
+      if (account?.provider === 'google' || account?.provider === 'apple') {
+        // emailが確認済みでなければ拒否（各プロバイダ側で通常確認されているが念のため）
         const email = user.email;
         if (!email) return false;
       }
