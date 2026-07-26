@@ -6,12 +6,17 @@ import Layout from '@/components/Layout';
 import Seo from '@/components/seo';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { FaGoogle } from 'react-icons/fa';
+import { FaGoogle, FaApple } from 'react-icons/fa';
 
 interface Props {
   providers: Record<string, ClientSafeProvider> | null;
   callbackUrl: string;
 }
+
+const PROVIDER_ICONS: Record<string, JSX.Element> = {
+  google: <FaGoogle />,
+  apple: <FaApple />,
+};
 
 type ServiceKey = 'gikyoku' | 'tomoshibi';
 const SERVICES: Record<ServiceKey, { name: string; tagline: string }> = {
@@ -77,7 +82,7 @@ export default function SignIn({ providers, callbackUrl }: Props) {
                   }
                   className="w-full flex items-center justify-center gap-3 px-4 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 active:bg-gray-100 transition-colors font-medium text-gray-700 text-sm"
                 >
-                  <FaGoogle />
+                  {PROVIDER_ICONS[provider.id] ?? null}
                   <span>{provider.name} でログイン</span>
                 </button>
               ))}
