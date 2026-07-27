@@ -20,14 +20,16 @@ export function getAppleClientSecret(): string {
   const teamId = process.env.APPLE_TEAM_ID;
   const keyId = process.env.APPLE_KEY_ID;
   const clientId = process.env.APPLE_CLIENT_ID;
-  // Vercelのダッシュボードに直接貼り付けた場合は改行がそのまま入るが、
-  // CLI/JSON経由で `\n` エスケープのまま渡された場合に備えて変換する。
-  const privateKey = process.env.APPLE_PRIVATE_KEY?.replace(/\\n/g, '\n');
+  // 秘密鍵はBase64エンコードして環境変数に置く。PEMの複数行テキストを
+  // そのままVercelのダッシュボードに貼ると改行が失われて壊れることがあるため、
+  // 改行を含まない単一行のBase64にして事故を防ぐ。
+  const privateKeyBase64 = process.env.APPLE_PRIVATE_KEY_BASE64;
 
-  if (!teamId || !keyId || !clientId || !privateKey) {
+  if (!teamId || !keyId || !clientId || !privateKeyBase64) {
     // Apple Sign Inを使わない開発環境等では未設定でも起動できるよう、空文字を返すに留める。
     return '';
   }
+  const privateKey = Buffer.from(privateKeyBase64, 'base64').toString('utf8');
 
   const now = Math.floor(Date.now() / 1000);
   const header = { alg: 'ES256', kid: keyId };

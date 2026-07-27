@@ -19,7 +19,7 @@ GOOGLE_CLIENT_SECRET="<Google Cloud Consoleで取得>"
 APPLE_CLIENT_ID="com.gikyokutosyokan.tomoshibi.web"   # Services ID
 APPLE_TEAM_ID="<developer.apple.com/account 右上に表示されるTeam ID>"
 APPLE_KEY_ID="<Apple Developer Portal で発行したキーのKey ID>"
-APPLE_PRIVATE_KEY="<ダウンロードした AuthKey_xxxxx.p8 の中身をそのまま>"
+APPLE_PRIVATE_KEY_BASE64="<ダウンロードした AuthKey_xxxxx.p8 を base64 -i AuthKey_xxxxx.p8 した1行の文字列>"
 ```
 
 ## Google Cloud Console セットアップ手順
@@ -86,7 +86,11 @@ NextAuthのAppleProviderは `clientSecret` に生のJWT文字列を要求する�
 方式を採用している。人間が覚えておくべき定期作業は無い。
 
 環境変数に設定するのは失効しない秘密鍵そのもの (`APPLE_TEAM_ID` / `APPLE_KEY_ID` /
-`APPLE_PRIVATE_KEY`) であり、`APPLE_CLIENT_SECRET` という変数自体は存在しない。
+`APPLE_PRIVATE_KEY_BASE64`) であり、`APPLE_CLIENT_SECRET` という変数自体は存在しない。
+
+秘密鍵はPEMの複数行テキストのままではなく **base64エンコードした1行の文字列**で保存する
+(`base64 -i AuthKey_xxxxx.p8`)。Vercelのダッシュボードに複数行PEMを直接貼ると改行が
+壊れてビルド時に `DECODER routines::unsupported` エラーになることがあるため。
 
 ### 3. Vercel環境変数
 
@@ -95,7 +99,7 @@ Vercel Dashboard → Project → Settings → Environment Variables
 - APPLE_CLIENT_ID: com.gikyokutosyokan.tomoshibi.web
 - APPLE_TEAM_ID: (developer.apple.com/account 右上に表示されるTeam ID)
 - APPLE_KEY_ID: (Apple Developer Portal で発行したキーのKey ID)
-- APPLE_PRIVATE_KEY: (ダウンロードした .p8 の中身をそのまま貼り付け。改行はそのまま貼ってOK)
+- APPLE_PRIVATE_KEY_BASE64: (`base64 -i AuthKey_xxxxx.p8` の出力をそのまま貼り付け)
 ```
 
 秘密鍵自体を万が一ローテーションしたくなった場合(漏洩時など)は、Apple Developer Portal で
