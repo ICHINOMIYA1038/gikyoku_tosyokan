@@ -1,0 +1,209 @@
+/*
+ * 演劇メニュー詳細ページの Markdown 本文スタイル。
+ * Tailwind Typography (prose) をベースに、ライト基調で読みやすく
+ * 上書き。コードブロックは白+細ボーダー。
+ */
+
+.theater-menu-prose {
+  color: rgb(55, 65, 81);
+}
+
+.theater-menu-prose h2 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin: 2.5rem 0 1rem;
+  padding-bottom: 0.5rem;
+  color: rgb(17, 24, 39);
+  border-bottom: 1px solid rgb(252, 231, 243);
+  position: relative;
+  padding-left: 1rem;
+}
+.theater-menu-prose h2::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.35rem;
+  bottom: 0.85rem;
+  width: 4px;
+  border-radius: 2px;
+  background: linear-gradient(180deg, #f43f5e 0%, #ec4899 100%);
+}
+
+.theater-menu-prose h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: rgb(190, 24, 93);
+  margin: 1.75rem 0 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.theater-menu-prose h3::before {
+  content: "";
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #f43f5e;
+  flex-shrink: 0;
+}
+
+.theater-menu-prose p {
+  color: rgb(55, 65, 81);
+  line-height: 1.85;
+  margin: 0.75rem 0;
+}
+
+.theater-menu-prose strong {
+  color: rgb(17, 24, 39);
+  font-weight: 700;
+  background: linear-gradient(transparent 65%, rgba(251, 207, 232, 0.5) 65%);
+  padding: 0 0.15em;
+}
+
+.theater-menu-prose a {
+  color: rgb(219, 39, 119);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.theater-menu-prose ul {
+  padding-left: 1.5rem;
+  margin: 0.5rem 0 1rem;
+}
+.theater-menu-prose ul > li {
+  position: relative;
+  margin: 0.35rem 0;
+  padding-left: 0.5rem;
+  list-style: none;
+}
+.theater-menu-prose ul > li::marker {
+  content: none;
+}
+.theater-menu-prose ul > li::before {
+  content: "";
+  position: absolute;
+  left: -0.9rem;
+  top: 0.65em;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #f9a8d4;
+}
+
+.theater-menu-prose ol {
+  padding-left: 1.5rem;
+  margin: 0.75rem 0 1rem;
+  counter-reset: item;
+  list-style: none;
+}
+.theater-menu-prose ol > li {
+  position: relative;
+  margin: 0.5rem 0;
+  padding-left: 0.5rem;
+  counter-increment: item;
+}
+.theater-menu-prose ol > li::before {
+  content: counter(item);
+  position: absolute;
+  left: -1.75rem;
+  top: 0.1em;
+  width: 1.35rem;
+  height: 1.35rem;
+  border-radius: 50%;
+  background: #fdf2f8;
+  border: 1px solid #f9a8d4;
+  color: #be185d;
+  font-size: 0.7rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.theater-menu-prose blockquote {
+  border-left: 3px solid #f9a8d4;
+  background: linear-gradient(90deg, rgba(253, 242, 248, 0.7) 0%, rgba(253, 242, 248, 0) 100%);
+  padding: 0.75rem 1rem;
+  margin: 1rem 0;
+  color: rgb(75, 85, 99);
+  font-style: normal;
+  border-radius: 0 8px 8px 0;
+}
+.theater-menu-prose blockquote p {
+  margin: 0.25rem 0;
+}
+.theater-menu-prose blockquote::before,
+.theater-menu-prose blockquote::after {
+  content: none;
+}
+
+/* インラインコード */
+.theater-menu-prose :not(pre) > code {
+  color: rgb(190, 24, 93);
+  background: rgb(253, 242, 248);
+  border: 1px solid rgb(251, 207, 232);
+  padding: 0.1em 0.4em;
+  border-radius: 4px;
+  font-size: 0.9em;
+  font-weight: 500;
+}
+.theater-menu-prose :not(pre) > code::before,
+.theater-menu-prose :not(pre) > code::after {
+  content: none;
+}
+
+/* コードブロック (ライト基調) */
+.theater-menu-prose pre {
+  background: linear-gradient(180deg, #ffffff 0%, #fafafa 100%);
+  border: 1px solid rgb(229, 231, 235);
+  border-radius: 10px;
+  padding: 1rem 1.25rem;
+  margin: 1.25rem 0;
+  color: rgb(31, 41, 55);
+  overflow-x: auto;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+  font-size: 0.85em;
+  line-height: 1.7;
+}
+.theater-menu-prose pre code {
+  background: transparent !important;
+  color: inherit !important;
+  border: none !important;
+  padding: 0 !important;
+  font-size: 1em;
+  font-weight: 400;
+  border-radius: 0;
+}
+.theater-menu-prose pre code::before,
+.theater-menu-prose pre code::after {
+  content: none;
+}
+
+/* テーブル */
+.theater-menu-prose table {
+  font-size: 0.9em;
+  border-collapse: separate;
+  border-spacing: 0;
+  border: 1px solid rgb(229, 231, 235);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.theater-menu-prose thead th {
+  background: rgb(249, 250, 251);
+  color: rgb(75, 85, 99);
+  font-weight: 600;
+  padding: 0.6rem 0.9rem;
+  text-align: left;
+  border-bottom: 1px solid rgb(229, 231, 235);
+}
+.theater-menu-prose tbody td {
+  padding: 0.55rem 0.9rem;
+  border-top: 1px solid rgb(243, 244, 246);
+  color: rgb(55, 65, 81);
+}
+
+.theater-menu-prose hr {
+  border-color: rgb(229, 231, 235);
+  margin: 2rem 0;
+}

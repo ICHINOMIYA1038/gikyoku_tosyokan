@@ -141,7 +141,7 @@ async function fetchPerformanceList(options = {}) {
 
   const response = await fetch(url);
   const html = await response.text();
-  const dom = new JSDOM(html);
+  const dom = new JSDOM(html, { url });
   const doc = dom.window.document;
 
   const links = [];
@@ -272,7 +272,7 @@ async function fetchOfficialSiteSynopsis(officialUrl) {
       }
     }
 
-    const dom = new JSDOM(html);
+    const dom = new JSDOM(html, { url: officialUrl });
     const doc = dom.window.document;
 
     let synopsis = '';
@@ -302,7 +302,7 @@ async function fetchPerformanceDetail(url) {
     console.log(`Fetching: ${url}`);
     const response = await fetch(url);
     const html = await response.text();
-    const dom = new JSDOM(html);
+    const dom = new JSDOM(html, { url });
     const doc = dom.window.document;
 
     let officialUrl = null;
@@ -318,6 +318,8 @@ async function fetchPerformanceDetail(url) {
         !href.includes('facebook.com') &&
         !href.includes('instagram.com') &&
         !href.includes('youtube.com') &&
+        !href.includes('shibai-engine.net') &&
+        !href.includes('confetti-web.com') &&
         !officialUrl
       ) {
         officialUrl = href;

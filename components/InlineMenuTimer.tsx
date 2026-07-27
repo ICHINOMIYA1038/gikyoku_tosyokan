@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Play, Pause, RotateCcw, Bell } from "lucide-react";
 import { trackTheaterMenuEvent } from "@/lib/gtag";
+import { playTimerEnd } from "@/lib/theater-menu-sfx";
 
 export function InlineMenuTimer({ minutes }: { minutes: number }) {
   const totalSec = minutes * 60;
@@ -21,18 +22,7 @@ export function InlineMenuTimer({ minutes }: { minutes: number }) {
     if (remaining === 0 && running && !notified) {
       setRunning(false);
       setNotified(true);
-      // 音: 短いbeep (Web Audio API)
-      try {
-        const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.frequency.value = 880;
-        gain.gain.setValueAtTime(0.2, ctx.currentTime);
-        osc.start();
-        osc.stop(ctx.currentTime + 0.5);
-      } catch {}
+      playTimerEnd();
       // ブラウザ通知 (許可されていれば)
       if (typeof Notification !== "undefined" && Notification.permission === "granted") {
         new Notification("メニュー終了", { body: `${minutes}分経ちました` });

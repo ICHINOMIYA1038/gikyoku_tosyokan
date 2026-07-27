@@ -13,6 +13,8 @@ import {
   Flame,
   Puzzle,
   Heart,
+  Dice6,
+  UserCog,
 } from "lucide-react";
 
 export type SidebarCategory = {
@@ -98,6 +100,20 @@ export function TheaterMenuSidebar({ categories }: { categories: SidebarCategory
           >
             <Shuffle className="w-4 h-4" />
             ランダムに1つ引く
+          </Link>
+          <Link
+            href="/theater-menu/etude-generator"
+            className="flex items-center justify-center gap-2 rounded-xl border border-fuchsia-200 bg-gradient-to-r from-rose-50 to-fuchsia-50 px-4 py-2.5 text-xs font-medium text-fuchsia-700 hover:from-rose-100 hover:to-fuchsia-100 transition"
+          >
+            <Dice6 className="w-3.5 h-3.5" />
+            エチュードお題ジェネレーター
+          </Link>
+          <Link
+            href="/theater-menu/role-picker"
+            className="flex items-center justify-center gap-2 rounded-xl border border-indigo-200 bg-gradient-to-r from-indigo-50 to-purple-50 px-4 py-2.5 text-xs font-medium text-indigo-700 hover:from-indigo-100 hover:to-purple-100 transition"
+          >
+            <UserCog className="w-3.5 h-3.5" />
+            役割を割り振る
           </Link>
           <Link
             href="/theater-menu/favorites"

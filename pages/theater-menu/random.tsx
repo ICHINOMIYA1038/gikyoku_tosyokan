@@ -5,8 +5,9 @@ import Layout from "@/components/Layout";
 import Seo from "@/components/seo";
 import { prisma } from "@/lib/prisma";
 import { TheaterMenuSidebar, SidebarCategory } from "@/components/TheaterMenuSidebar";
-import { Shuffle } from "lucide-react";
+import { Shuffle, ArrowRight, RefreshCw } from "lucide-react";
 import { trackTheaterMenuEvent } from "@/lib/gtag";
+import { playDiceRoll, playClick } from "@/lib/theater-menu-sfx";
 
 type Menu = {
   id: number;
@@ -22,8 +23,10 @@ export default function RandomPickerPage({ categories }: Props) {
   const [selected, setSelected] = useState<string>("");
   const [menu, setMenu] = useState<Menu | null>(null);
   const [loading, setLoading] = useState(false);
+  const [muted, setMuted] = useState(false);
 
   const pick = async () => {
+    if (!muted) playDiceRoll();
     setLoading(true);
     const qs = selected ? `?category=${selected}` : "";
     const r = await fetch(`/api/theater-menu/random${qs}`);
@@ -54,27 +57,30 @@ export default function RandomPickerPage({ categories }: Props) {
           <TheaterMenuSidebar categories={categories} />
 
           <main className="flex-1 min-w-0 mt-6 md:mt-0">
-            <div className="rounded-2xl bg-gradient-to-br from-rose-500 to-pink-600 text-white p-6 md:p-10 shadow-lg">
-              <div className="flex items-center gap-3 mb-2">
-                <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
-                  <Shuffle className="w-5 h-5" />
-                </div>
-                <h1 className="text-xl md:text-2xl font-bold">
-                  ランダムに1つ引く
-                </h1>
-              </div>
-              <p className="text-sm text-rose-50/90 mb-6">
-                エチュードのお題出し、今日のワークショップメニュー選び、
-                稽古の一発目のアイスブレイクに。ジャンルを選んで引くだけ。
+            <header className="mb-6 pb-5 border-b border-gray-200">
+              <p className="text-[10px] font-semibold text-rose-600 tracking-widest uppercase mb-1.5">
+                Random Picker
               </p>
+              <h1 className="text-2xl md:text-3xl font-bold text-gray-900 leading-tight mb-2">
+                ランダムに1つ引く
+              </h1>
+              <p className="text-sm text-gray-600 leading-relaxed max-w-2xl">
+                今日の稽古メニュー、エチュードのお題、アイスブレイクに。ジャンルを選んで引くだけ。
+              </p>
+            </header>
 
-              <div className="flex flex-wrap gap-2 mb-6">
+            {/* ジャンル選択 */}
+            <div className="mb-5">
+              <p className="text-[10px] font-semibold text-gray-400 tracking-widest uppercase mb-2">
+                Genre
+              </p>
+              <div className="flex flex-wrap gap-1.5">
                 <button
-                  onClick={() => setSelected("")}
-                  className={`px-3 py-1.5 text-xs rounded-full border transition ${
+                  onClick={() => { if (!muted) playClick(); setSelected(""); }}
+                  className={`px-3 py-1.5 text-xs rounded transition ${
                     selected === ""
-                      ? "bg-white text-rose-700 border-white font-medium"
-                      : "bg-white/10 text-white border-white/30 hover:bg-white/20"
+                      ? "bg-gray-900 text-white"
+                      : "bg-white text-gray-700 border border-gray-200 hover:border-gray-400"
                   }`}
                 >
                   すべて
@@ -82,49 +88,81 @@ export default function RandomPickerPage({ categories }: Props) {
                 {categories.map((c) => (
                   <button
                     key={c.slug}
-                    onClick={() => setSelected(c.slug)}
-                    className={`px-3 py-1.5 text-xs rounded-full border transition ${
+                    onClick={() => { if (!muted) playClick(); setSelected(c.slug); }}
+                    className={`px-3 py-1.5 text-xs rounded transition ${
                       selected === c.slug
-                        ? "bg-white text-rose-700 border-white font-medium"
-                        : "bg-white/10 text-white border-white/30 hover:bg-white/20"
+                        ? "bg-gray-900 text-white"
+                        : "bg-white text-gray-700 border border-gray-200 hover:border-gray-400"
                     }`}
                   >
                     {c.name}
                   </button>
                 ))}
               </div>
-
-              <button
-                onClick={pick}
-                disabled={loading}
-                className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-gray-900 text-white py-4 text-base font-bold hover:bg-black disabled:opacity-60 transition shadow-lg"
-              >
-                <Shuffle className={`w-5 h-5 ${loading ? "animate-spin" : ""}`} />
-                {loading ? "引いています…" : menu ? "もう一度引く" : "引く"}
-              </button>
             </div>
 
+            {/* 引くボタン */}
+            <button
+              onClick={pick}
+              disabled={loading}
+              className="w-full inline-flex items-center justify-center gap-2 rounded-lg bg-gray-900 text-white py-3.5 text-sm font-medium hover:bg-black disabled:opacity-60 transition"
+            >
+              {loading ? (
+                <>
+                  <RefreshCw className="w-4 h-4 animate-spin" />
+                  引いています…
+                </>
+              ) : (
+                <>
+                  <Shuffle className="w-4 h-4" />
+                  {menu ? "もう一度引く" : "引く"}
+                </>
+              )}
+            </button>
+
+            {/* 結果 */}
             {menu && (
-              <div key={menu.id} className="mt-6 rounded-2xl border border-gray-200 bg-white p-6 md:p-8 animate-fadeIn">
-                <p className="text-xs text-rose-600 font-medium mb-2">
-                  今回のお題 — {menu.category.name}
-                </p>
+              <article
+                key={menu.id}
+                className="mt-6 rounded-xl border border-gray-200 bg-white overflow-hidden animate-fadeIn"
+              >
+                <div className="px-6 py-4 border-b border-gray-100 bg-gray-50/50 flex items-center justify-between">
+                  <p className="text-[10px] font-semibold text-gray-500 tracking-widest uppercase">
+                    Today&apos;s Pick
+                  </p>
+                  <p className="text-[10px] text-gray-500">
+                    {menu.category.name}
+                  </p>
+                </div>
                 <Link
                   href={`/theater-menu/${menu.category.slug}/${menu.slug}`}
-                  className="block group"
+                  className="block px-6 py-6 md:px-8 md:py-8 group hover:bg-gray-50/50 transition"
                 >
-                  <h2 className="text-xl md:text-2xl font-bold text-gray-900 group-hover:text-rose-600 mb-3 transition">
+                  <h2 className="text-xl md:text-2xl font-serif font-bold text-gray-900 mb-3 leading-tight tracking-tight">
                     {menu.title}
                   </h2>
-                  <p className="text-sm md:text-base text-gray-700 leading-relaxed">
+                  <p className="text-sm md:text-base text-gray-700 leading-relaxed mb-4">
                     {menu.summary}
                   </p>
-                  <span className="inline-block mt-4 text-sm text-rose-600 group-hover:underline font-medium">
-                    詳しく見る →
+                  <span className="inline-flex items-center gap-1 text-xs text-gray-900 font-medium group-hover:gap-2 transition-all">
+                    詳細を見る
+                    <ArrowRight className="w-3.5 h-3.5" />
                   </span>
                 </Link>
-              </div>
+              </article>
             )}
+
+            {!menu && (
+              <p className="mt-6 text-center text-xs text-gray-400 py-8 border border-dashed border-gray-200 rounded-lg">
+                「引く」ボタンでメニューを1つランダムに抽選します
+              </p>
+            )}
+
+            <div className="mt-8 text-xs text-gray-500 leading-relaxed space-y-1">
+              <p><span className="text-gray-400">TIP.</span> ジャンルを絞ると稽古の目的にあったメニューが引けます</p>
+              <p><span className="text-gray-400">TIP.</span> 気に入らなければ「もう一度引く」で何度でも</p>
+              <p><span className="text-gray-400">TIP.</span> 詳細ページには稽古タイマーが内蔵されています</p>
+            </div>
           </main>
         </div>
       </div>

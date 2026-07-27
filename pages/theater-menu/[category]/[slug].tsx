@@ -93,69 +93,86 @@ export default function TheaterMenuDetail({ categories, menu, related }: Props) 
           <TheaterMenuSidebar categories={categories} />
 
           <main className="flex-1 min-w-0 mt-6 md:mt-0">
-            <article className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-              {menu.imageUrl && (
-                <div className="aspect-video bg-gray-100">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={menu.imageUrl}
-                    alt={menu.title}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              )}
-              <div className="p-5 md:p-8">
-                <p className="text-xs text-rose-600 font-medium mb-2">
-                  {menu.category.name}
-                </p>
-                <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3">
-                  {menu.title}
-                </h1>
-                <p className="text-gray-700 leading-relaxed mb-4">{menu.summary}</p>
-
-                <div className="mb-4 flex flex-wrap gap-2">
-                  <TheaterMenuFavoriteButton menuId={menu.id} />
-                  <AddToPlanButton menuId={menu.id} />
-                </div>
-
-                <div className="flex flex-wrap gap-3 text-xs text-gray-600 border-t border-b border-gray-100 py-3 mb-6">
-                  {menu.duration && (
-                    <span className="inline-flex items-center gap-1">
-                      <Clock className="w-3.5 h-3.5" /> 所要 {menu.duration}分
-                    </span>
-                  )}
-                  {(menu.minPeople || menu.maxPeople) && (
-                    <span className="inline-flex items-center gap-1">
-                      <Users className="w-3.5 h-3.5" />
-                      {menu.minPeople === menu.maxPeople
-                        ? `${menu.minPeople}人`
-                        : `${menu.minPeople ?? "?"}〜${menu.maxPeople ?? "?"}人`}
-                    </span>
-                  )}
-                  {menu.difficulty && (
-                    <span className="inline-flex items-center gap-1">
-                      <Flame className="w-3.5 h-3.5" />
-                      難易度 {"★".repeat(menu.difficulty)}
-                      {"☆".repeat(5 - menu.difficulty)}
-                    </span>
-                  )}
-                  {menu.ageGroup && (
-                    <span className="inline-flex items-center gap-1">
-                      <Baby className="w-3.5 h-3.5" /> {menu.ageGroup}
-                    </span>
-                  )}
-                  {menu.hasPhysicalContact === true && (
-                    <span className="inline-flex items-center gap-1 text-amber-700 bg-amber-50 px-2 py-0.5 rounded">
-                      <Hand className="w-3.5 h-3.5" /> 身体接触あり
-                    </span>
-                  )}
-                </div>
-
-                {menu.aliases.length > 0 && (
-                  <p className="text-xs text-gray-500 mb-4">
-                    別名: {menu.aliases.join(" / ")}
-                  </p>
+            {/* ヒーロー: 画像+情報を side-by-side */}
+            <section className="mb-6">
+              <div className="grid md:grid-cols-2 gap-5 items-start">
+                {menu.imageUrl ? (
+                  <div className="aspect-video md:aspect-[4/3] rounded-2xl overflow-hidden bg-gray-100 shadow-sm border border-gray-100">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={menu.imageUrl} alt={menu.title} className="w-full h-full object-cover" />
+                  </div>
+                ) : (
+                  <div className="aspect-video md:aspect-[4/3] rounded-2xl bg-gradient-to-br from-rose-100 to-pink-50 flex items-center justify-center">
+                    <span className="text-4xl text-rose-300">🎭</span>
+                  </div>
                 )}
+                <div className="flex flex-col">
+                  <p className="text-xs font-semibold text-rose-600 uppercase tracking-wider mb-2">
+                    {menu.category.name}
+                  </p>
+                  <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3 leading-tight">
+                    {menu.title}
+                  </h1>
+                  {menu.aliases.length > 0 && (
+                    <p className="text-xs text-gray-500 mb-3">
+                      別名: {menu.aliases.join(" / ")}
+                    </p>
+                  )}
+                  <p className="text-sm md:text-base text-gray-700 leading-relaxed mb-4">
+                    {menu.summary}
+                  </p>
+
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    <TheaterMenuFavoriteButton menuId={menu.id} />
+                    <AddToPlanButton menuId={menu.id} />
+                    {menu.category.slug === "etude" && (
+                      <Link
+                        href="/theater-menu/etude-generator"
+                        className="inline-flex items-center gap-1.5 rounded-full border border-fuchsia-300 bg-gradient-to-r from-rose-50 to-fuchsia-50 px-3 py-1.5 text-xs text-fuchsia-700 hover:from-rose-100 hover:to-fuchsia-100 transition"
+                      >
+                        🎲 このメニュー用にお題を振る
+                      </Link>
+                    )}
+                  </div>
+
+                  <dl className="grid grid-cols-2 gap-2 text-xs">
+                    {menu.duration && (
+                      <MetaCell icon={<Clock className="w-3.5 h-3.5" />} label="所要" value={`${menu.duration}分`} />
+                    )}
+                    {(menu.minPeople || menu.maxPeople) && (
+                      <MetaCell
+                        icon={<Users className="w-3.5 h-3.5" />}
+                        label="人数"
+                        value={
+                          menu.minPeople === menu.maxPeople
+                            ? `${menu.minPeople}人`
+                            : `${menu.minPeople ?? "?"}〜${menu.maxPeople ?? "?"}人`
+                        }
+                      />
+                    )}
+                    {menu.difficulty && (
+                      <MetaCell
+                        icon={<Flame className="w-3.5 h-3.5" />}
+                        label="難易度"
+                        value={"★".repeat(menu.difficulty) + "☆".repeat(5 - menu.difficulty)}
+                      />
+                    )}
+                    {menu.ageGroup && (
+                      <MetaCell icon={<Baby className="w-3.5 h-3.5" />} label="対象" value={menu.ageGroup} />
+                    )}
+                  </dl>
+
+                  {menu.hasPhysicalContact === true && (
+                    <p className="mt-3 inline-flex items-center gap-1.5 text-xs text-amber-800 bg-amber-50 border border-amber-200 rounded-lg px-3 py-1.5 self-start">
+                      <Hand className="w-3.5 h-3.5" /> 身体接触あり — 事前説明を推奨
+                    </p>
+                  )}
+                </div>
+              </div>
+            </section>
+
+            <article className="bg-white rounded-2xl border border-gray-200">
+              <div className="p-5 md:p-8">
 
                 {(menu.learningObjectives.length > 0 || menu.materials.length > 0 || menu.spaceRequirement) && (
                   <div className="grid gap-3 md:grid-cols-2 mb-6 p-4 bg-gray-50 rounded-lg border border-gray-100 text-sm">
@@ -209,7 +226,7 @@ export default function TheaterMenuDetail({ categories, menu, related }: Props) 
                   <InlineMenuTimer minutes={menu.duration} />
                 )}
 
-                <div className="prose prose-sm md:prose-base max-w-none prose-headings:text-gray-900 prose-h2:text-lg prose-h2:font-bold prose-h2:mt-8 prose-h2:mb-3 prose-h2:pb-2 prose-h2:border-b prose-h2:border-rose-100 prose-h3:text-base prose-h3:font-semibold prose-h3:mt-6 prose-h3:mb-2 prose-h3:text-rose-700 prose-p:text-gray-700 prose-p:leading-relaxed prose-li:text-gray-700 prose-strong:text-gray-900 prose-strong:font-semibold prose-a:text-rose-600 prose-blockquote:border-l-rose-400 prose-blockquote:bg-rose-50 prose-blockquote:py-1 prose-blockquote:px-4 prose-blockquote:not-italic prose-blockquote:text-gray-700 prose-code:text-rose-700 prose-code:bg-rose-50 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-code:before:content-none prose-code:after:content-none prose-table:text-sm prose-th:bg-gray-50 prose-th:px-3 prose-th:py-2 prose-td:px-3 prose-td:py-2 prose-td:border-gray-200 prose-hr:border-gray-200">
+                <div className="prose prose-sm md:prose-base max-w-none theater-menu-prose">
                   <PlainMarkdown content={menu.content} />
                 </div>
 
@@ -307,6 +324,26 @@ export default function TheaterMenuDetail({ categories, menu, related }: Props) 
         </div>
       </div>
     </Layout>
+  );
+}
+
+function MetaCell({
+  icon,
+  label,
+  value,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  value: string;
+}) {
+  return (
+    <div className="rounded-lg border border-gray-100 bg-gray-50 px-3 py-2">
+      <div className="flex items-center gap-1 text-gray-500 text-[10px]">
+        {icon}
+        {label}
+      </div>
+      <p className="text-sm font-semibold text-gray-900 mt-0.5">{value}</p>
+    </div>
   );
 }
 
