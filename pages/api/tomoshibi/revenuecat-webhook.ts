@@ -40,8 +40,19 @@ const PRO_GRANTING_TYPES = new Set([
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') return res.status(405).end();
 
+  // 環境変数未設定など設定ミスもJSONで返す (Next.jsの汎用500 HTMLページに
+  // フォールバックすると原因の切り分けが難しくなるため)。
+  let expectedAuth: string;
+  try {
+    expectedAuth = `Bearer ${revenueCatWebhookSecret()}`;
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err);
+    console.error('[revenuecat-webhook] config error:', msg);
+    return res.status(500).json({ error: msg });
+  }
+
   const auth = req.headers['authorization'];
-  if (auth !== `Bearer ${revenueCatWebhookSecret()}`) {
+  if (auth !== expectedAuth) {
     return res.status(401).send('Unauthorized');
   }
 
