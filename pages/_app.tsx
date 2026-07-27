@@ -1,5 +1,6 @@
 import "@/styles/globals.css";
 import "@/styles/markdown.css";
+import "@/styles/theater-menu.css";
 
 import type { AppProps } from "next/app";
 import { SessionProvider } from "next-auth/react";
@@ -73,17 +74,18 @@ export default function App({ Component, pageProps }: AppProps) {
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             window.gtag = gtag;
+            // 日本ユーザーを主対象とするため、個情法に基づく利用目的公表方式で
+            // デフォルト granted 運用。バナーは情報提供+オプトアウト用途。
+            // GDPR等の対象地域はサーバー側での地域判定+上書き対応を別途検討。
             gtag('consent', 'default', {
-              ad_storage: 'denied',
-              ad_user_data: 'denied',
-              ad_personalization: 'denied',
-              analytics_storage: 'denied',
+              ad_storage: 'granted',
+              ad_user_data: 'granted',
+              ad_personalization: 'granted',
+              analytics_storage: 'granted',
               functionality_storage: 'granted',
               security_storage: 'granted',
               wait_for_update: 500
             });
-            gtag('set', 'ads_data_redaction', true);
-            gtag('set', 'url_passthrough', true);
           `,
         }}
       />

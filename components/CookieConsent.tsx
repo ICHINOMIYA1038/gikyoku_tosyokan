@@ -29,7 +29,7 @@ const CookieConsent: React.FC = () => {
   const handleReject = () => {
     setConsent('rejected');
     setVisible(false);
-    // 明示的な拒否を記録（デフォルトで既にdeniedだが念のため）
+    // 明示的にオプトアウトしたユーザーには広告・分析Cookieを全て停止する。
     if (typeof window !== 'undefined' && (window as any).gtag) {
       (window as any).gtag('consent', 'update', {
         ad_storage: 'denied',
