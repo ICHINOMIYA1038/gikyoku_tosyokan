@@ -32,6 +32,9 @@ export default function Header() {
         <Link href="/diary/plot" className="text-theater-neutral-800 hover:text-theater-neutral-600">
           オリジナル作品
         </Link>
+        <Link href="/announcements" className="text-theater-neutral-800 hover:text-theater-neutral-600">
+          上演告知
+        </Link>
         <Link
           href="/support/posting-request"
           className="text-theater-neutral-800 hover:text-theater-neutral-600"

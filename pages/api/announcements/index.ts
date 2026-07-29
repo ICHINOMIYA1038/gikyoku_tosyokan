@@ -117,6 +117,8 @@ export default async function handler(
           theaterGroupName: theaterGroupName || null,
           images: images || [],
           scriptTitle: scriptTitle || null,
+          status: 'approved',
+          reviewedAt: new Date(),
         },
       });
 

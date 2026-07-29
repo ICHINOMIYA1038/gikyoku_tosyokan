@@ -167,7 +167,7 @@ export default function NewAnnouncementPage() {
       }
 
       await response.json();
-      alert('投稿を受け付けました。管理者の承認後、公開されます。マイページから審査状況を確認できます。');
+      alert('告知を投稿しました。ご覧いただけるようになりました。');
       router.push(`/mypage?tab=announcements`);
     } catch (error) {
       console.error('Error creating announcement:', error);
@@ -243,8 +243,8 @@ export default function NewAnnouncementPage() {
                   <div className="text-sm text-theater-neutral-700">
                     <p className="font-bold mb-1">投稿時の注意事項</p>
                     <ul className="list-disc list-inside space-y-1">
-                      <li><strong>投稿後、管理者の承認を経て公開されます</strong>（通常1〜2営業日）</li>
-                      <li>審査状況はマイページから確認できます</li>
+                      <li><strong>投稿後すぐに公開されます</strong></li>
+                      <li>投稿内容はマイページからいつでも削除できます</li>
                       <li>個人情報の取り扱いにご注意ください</li>
                       <li>誹謗中傷や不適切な内容は投稿しないでください</li>
                       <li>投稿後の編集はできません（削除のみ可能）</li>
