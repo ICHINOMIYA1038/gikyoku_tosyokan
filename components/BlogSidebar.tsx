@@ -155,20 +155,32 @@ function JapaneseSidebar({ category, currentPath }: { category?: string; current
         </Link>
       </div>
 
-      {/* 戯曲パレット バナー */}
+      {/* エチュードメーカー バナー (com.gikyokutosyokan.etude) */}
       <a
-        href="https://palette.gikyokutosyokan.com"
+        href="https://apps.apple.com/us/app/%E3%82%A8%E3%83%81%E3%83%A5%E3%83%BC%E3%83%89%E3%83%A1%E3%83%BC%E3%82%AB%E3%83%BC/id6794500656"
         target="_blank"
         rel="noopener noreferrer"
-        className="block cursor-pointer hover:opacity-90 transition-opacity"
+        className="block cursor-pointer hover:opacity-95 transition-opacity"
+        aria-label="エチュードメーカー - 即興演劇のお題をワンタップで生成するiOSアプリ"
       >
-        <OptimizedImage
-          src="https://gikyokutosyokan-public.s3.ap-northeast-1.amazonaws.com/assets/banners/palette-rect.png"
-          alt="戯曲パレット - 戯曲の投稿・公開・上演許可プラットフォーム"
-          width={300}
-          height={250}
-          className="w-full h-auto rounded-lg shadow-md"
-        />
+        <div className="relative w-full overflow-hidden rounded-lg shadow-md bg-[#7a3a3a]">
+          <div className="relative p-5 text-center">
+            {/* 舞台のカーテン風装飾 */}
+            <div className="absolute top-0 left-0 right-0 h-6 bg-gradient-to-b from-[#f5e6d3] to-transparent opacity-70" aria-hidden />
+            <div className="relative">
+              <div className="text-3xl mb-1" aria-hidden>🐰 🧸</div>
+              <div className="text-[#fdf6ec] font-bold text-lg tracking-wide">
+                エチュードメーカー
+              </div>
+              <div className="mt-1 text-[#f5d5b8] text-xs">
+                即興のお題を、ワンタップで
+              </div>
+              <div className="mt-3 inline-block px-3 py-1 rounded-full bg-[#fdf6ec] text-[#7a3a3a] text-xs font-bold">
+                App Storeで見る
+              </div>
+            </div>
+          </div>
+        </div>
       </a>
 
       {/* TOMOSHIBI小屋 バナー */}
@@ -309,20 +321,31 @@ function EnglishSidebar({ currentPath }: { currentPath?: string }) {
         </Link>
       </div>
 
-      {/* Gikyoku Palette Banner */}
+      {/* Etude Maker Banner (com.gikyokutosyokan.etude) */}
       <a
-        href="https://palette.gikyokutosyokan.com"
+        href="https://apps.apple.com/us/app/%E3%82%A8%E3%83%81%E3%83%A5%E3%83%BC%E3%83%89%E3%83%A1%E3%83%BC%E3%82%AB%E3%83%BC/id6794500656"
         target="_blank"
         rel="noopener noreferrer"
-        className="block cursor-pointer hover:opacity-90 transition-opacity"
+        className="block cursor-pointer hover:opacity-95 transition-opacity"
+        aria-label="Etude Maker - iOS app that generates improv theater prompts"
       >
-        <OptimizedImage
-          src="https://gikyokutosyokan-public.s3.ap-northeast-1.amazonaws.com/assets/banners/palette-rect.png"
-          alt="Gikyoku Palette - Publish and license theatrical scripts"
-          width={300}
-          height={250}
-          className="w-full h-auto rounded-lg shadow-md"
-        />
+        <div className="relative w-full overflow-hidden rounded-lg shadow-md bg-[#7a3a3a]">
+          <div className="relative p-5 text-center">
+            <div className="absolute top-0 left-0 right-0 h-6 bg-gradient-to-b from-[#f5e6d3] to-transparent opacity-70" aria-hidden />
+            <div className="relative">
+              <div className="text-3xl mb-1" aria-hidden>🐰 🧸</div>
+              <div className="text-[#fdf6ec] font-bold text-lg tracking-wide">
+                Etude Maker
+              </div>
+              <div className="mt-1 text-[#f5d5b8] text-xs">
+                Improv prompts, one tap away
+              </div>
+              <div className="mt-3 inline-block px-3 py-1 rounded-full bg-[#fdf6ec] text-[#7a3a3a] text-xs font-bold">
+                View on App Store
+              </div>
+            </div>
+          </div>
+        </div>
       </a>
     </div>
   );
