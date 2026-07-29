@@ -144,21 +144,34 @@ export default function Home({ news, authors, posts, categories, blogPosts, tren
           </div>
         </div>
 
-        {/* 戯曲パレット プロモーションバナー */}
+        {/* エチュードメーカー プロモーションバナー (横長, com.gikyokutosyokan.etude) */}
         <div className="max-w-6xl mx-auto px-4 py-6">
           <a
-            href="https://palette.gikyokutosyokan.com"
+            href="https://apps.apple.com/us/app/%E3%82%A8%E3%83%81%E3%83%A5%E3%83%BC%E3%83%89%E3%83%A1%E3%83%BC%E3%82%AB%E3%83%BC/id6794500656"
             target="_blank"
             rel="noopener noreferrer"
-            className="block cursor-pointer hover:opacity-90 transition-opacity"
+            className="block cursor-pointer hover:opacity-95 transition-opacity"
+            aria-label="エチュードメーカー - 即興演劇のお題をワンタップで生成するiOSアプリ"
           >
-            <OptimizedImage
-              src="https://gikyokutosyokan-public.s3.ap-northeast-1.amazonaws.com/assets/banners/palette-wide.png"
-              alt="戯曲パレット - 戯曲の投稿・公開・上演許可プラットフォーム"
-              width={970}
-              height={250}
-              className="w-full h-auto rounded-lg shadow-md"
-            />
+            <div className="relative w-full overflow-hidden rounded-lg shadow-md bg-[#7a3a3a] aspect-[970/250]">
+              {/* 舞台カーテン装飾 */}
+              <div className="absolute top-0 left-0 right-0 h-10 bg-gradient-to-b from-[#f5e6d3]/80 to-transparent pointer-events-none" aria-hidden />
+              <div className="absolute inset-0 flex items-center justify-between px-8 md:px-16">
+                <div className="text-4xl md:text-6xl" aria-hidden>🐰 🧸</div>
+                <div className="flex-1 text-center px-4">
+                  <div className="text-[#fdf6ec] font-bold text-xl md:text-3xl tracking-wide">
+                    エチュードメーカー
+                  </div>
+                  <div className="mt-1 text-[#f5d5b8] text-xs md:text-base">
+                    即興演劇のお題を、ワンタップで生成
+                  </div>
+                  <div className="mt-2 md:mt-3 inline-block px-3 md:px-4 py-1 md:py-1.5 rounded-full bg-[#fdf6ec] text-[#7a3a3a] text-xs md:text-sm font-bold">
+                    App Storeで見る
+                  </div>
+                </div>
+                <div className="text-3xl md:text-5xl" aria-hidden>🎭</div>
+              </div>
+            </div>
           </a>
         </div>
 
