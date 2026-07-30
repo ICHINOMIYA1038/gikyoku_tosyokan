@@ -562,6 +562,7 @@ export async function getStaticProps() {
       ` as Promise<Array<{ postId: number; access_count: bigint }>>,
       // 最新の上演告知3件
       prisma.announcement.findMany({
+        where: { status: 'approved', deletedAt: null },
         take: 3,
         orderBy: { createdAt: 'desc' },
         select: {
