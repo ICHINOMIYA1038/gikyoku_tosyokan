@@ -11,6 +11,10 @@ import { useRouter } from 'next/router';
 function safeNextUrl(raw: unknown): string {
   if (typeof raw !== 'string' || !raw) return '/';
   if (raw.startsWith('/')) return raw;
+  // tomoshibiモバイルアプリのASWebAuthenticationSessionが終着点として使う
+  // カスタムスキーム。任意のtomoshibi://は許可せずこの完全一致のみ許可する
+  // (authOptions.ts の redirect コールバックと同じ方針)。
+  if (raw === 'tomoshibi://auth-callback') return raw;
   try {
     const u = new URL(raw);
     if (u.protocol === 'https:' && /(^|\.)gikyokutosyokan\.com$/.test(u.hostname)) return u.toString();
@@ -69,6 +73,16 @@ export default function Welcome({ user }: Props) {
 
   const nextUrl = safeNextUrl(router.query.next);
 
+  // next/router の router.push は http(s) の自サイト内遷移が前提で、
+  // tomoshibi:// のようなカスタムスキームには遷移できない。
+  const navigateToNext = () => {
+    if (nextUrl.startsWith('tomoshibi://')) {
+      window.location.href = nextUrl;
+    } else {
+      router.push(nextUrl);
+    }
+  };
+
   const handleSave = async () => {
     setSaving(true);
     await fetch('/api/account/profile', {
@@ -76,7 +90,7 @@ export default function Welcome({ user }: Props) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ displayName, bio, groupName, emailOptIn, completeOnboarding: true }),
     });
-    router.push(nextUrl);
+    navigateToNext();
   };
 
   const handleSkip = async () => {
@@ -86,7 +100,7 @@ export default function Welcome({ user }: Props) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ completeOnboarding: true }),
     });
-    router.push(nextUrl);
+    navigateToNext();
   };
 
   return (

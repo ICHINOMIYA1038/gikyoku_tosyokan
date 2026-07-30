@@ -178,6 +178,10 @@ export const authOptions: NextAuthOptions = {
       // 同一サイトの相対URL / baseUrl と同じオリジン / *.gikyokutosyokan.com サブドメインを許可。
       // それ以外は baseUrl にフォールバック (オープンリダイレクト防止)。
       const isSafeAbsolute = (u: string): boolean => {
+        // tomoshibiモバイルアプリのASWebAuthenticationSessionが終着点として使う
+        // カスタムスキーム。任意のtomoshibi://を許可すると実質オープンリダイレクトに
+        // なるため、この完全一致のリテラルのみ許可する。
+        if (u === 'tomoshibi://auth-callback') return true;
         try {
           const p = new URL(u);
           if (p.origin === baseUrl) return true;

@@ -28,8 +28,20 @@ const notoSansJP = Noto_Sans_JP({
 
 const queryClient = new QueryClient();
 
+// tomoshibiモバイルアプリがATT(App Tracking Transparency)で拒否された場合、
+// middleware.ts が X-ATT-Status ヘッダから att-status=denied Cookie を発行する。
+// このレンダー内で(useEffectを待たず)同期的に読むことで、AdSenseスクリプトが
+// 一度もリクエストされないうちに確実に読み込みをスキップできる
+// (Script strategy="afterInteractive" はマウント後のeffectで初めて注入されるため、
+// 条件分岐がuseEffectより後だと一瞬でも読み込まれてしまう)。
+function isTrackingDeniedByAtt(): boolean {
+  if (typeof document === "undefined") return false;
+  return document.cookie.split("; ").includes("att-status=denied");
+}
+
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
+  const attTrackingDenied = isTrackingDeniedByAtt();
 
   // 既に同意済みならConsent Modeをgrantedに上げる
   useEffect(() => {
@@ -91,12 +103,16 @@ export default function App({ Component, pageProps }: AppProps) {
       />
       {/* AdSense: 手動広告ユニット用スクリプト（自動広告OFF）
           afterInteractive: 直帰ユーザーにも広告がロードされるよう、
-          interactive直後に投入する。lazyOnloadだとPV/imp比が大きく毀損する。 */}
-      <Script
-        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8691137965825158"
-        crossOrigin="anonymous"
-        strategy="afterInteractive"
-      />
+          interactive直後に投入する。lazyOnloadだとPV/imp比が大きく毀損する。
+          tomoshibiアプリでATTが拒否された場合はこのスクリプト自体を読み込まない
+          (App Store審査 Guideline 5.1.2(i) 対応)。 */}
+      {!attTrackingDenied && (
+        <Script
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8691137965825158"
+          crossOrigin="anonymous"
+          strategy="afterInteractive"
+        />
+      )}
       <Script
         strategy="afterInteractive"
         src={`https://www.googletagmanager.com/gtag/js?id=${gtag.GA_MEASUREMENT_ID}`}
