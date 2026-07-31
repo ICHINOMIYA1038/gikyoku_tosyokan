@@ -2,11 +2,26 @@ import { GetServerSideProps } from 'next';
 import { signIn, getProviders, ClientSafeProvider } from 'next-auth/react';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/authOptions';
+import { createMobileHandoffToken } from '@/lib/mobileHandoffToken';
 import Layout from '@/components/Layout';
 import Seo from '@/components/seo';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { FaGoogle } from 'react-icons/fa';
+
+// pages/auth/signin.tsx の safeCallbackUrl と同じ方針
+// (相対パス / *.gikyokutosyokan.com の https URL / tomoshibiアプリのカスタムスキームの
+// 完全一致のみ許可し、それ以外は '/' にフォールバック)。
+function safeCallbackUrl(raw: unknown): string {
+  if (typeof raw !== 'string' || !raw) return '/';
+  if (raw.startsWith('/')) return raw;
+  if (raw === 'tomoshibi://auth-callback') return raw;
+  try {
+    const u = new URL(raw);
+    if (u.protocol === 'https:' && /(^|\.)gikyokutosyokan\.com$/.test(u.hostname)) return u.toString();
+  } catch { /* fallthrough */ }
+  return '/';
+}
 
 interface Props {
   providers: Record<string, ClientSafeProvider> | null;
@@ -157,12 +172,19 @@ export default function SignUp({ providers, callbackUrl }: Props) {
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const session = await getServerSession(context.req, context.res, authOptions);
   if (session) {
-    return {
-      redirect: {
-        destination: (context.query.callbackUrl as string) || '/',
-        permanent: false,
-      },
-    };
+    const destination = safeCallbackUrl(context.query.callbackUrl);
+    if (destination === 'tomoshibi://auth-callback') {
+      // signin.tsx と同じ理由: tomoshibiアプリ本体のWebViewにセッションを
+      // 引き継ぐための使い捨てトークンを発行してから遷移する。
+      const token = await createMobileHandoffToken(session.user.id);
+      return {
+        redirect: {
+          destination: `${destination}?token=${encodeURIComponent(token)}`,
+          permanent: false,
+        },
+      };
+    }
+    return { redirect: { destination, permanent: false } };
   }
   const providers = await getProviders();
   const callbackUrl = (context.query.callbackUrl as string) || '/';
