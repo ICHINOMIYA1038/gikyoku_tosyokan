@@ -2,11 +2,26 @@ import { GetServerSideProps } from 'next';
 import { signIn, getProviders, ClientSafeProvider } from 'next-auth/react';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/authOptions';
+import { createMobileHandoffToken } from '@/lib/mobileHandoffToken';
 import Layout from '@/components/Layout';
 import Seo from '@/components/seo';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { FaGoogle, FaApple } from 'react-icons/fa';
+
+// 相対パス / *.gikyokutosyokan.com の https URL / tomoshibiアプリのカスタムスキーム
+// (完全一致のみ) を許可し、それ以外は '/' にフォールバックする
+// (authOptions.ts の redirect コールバック・welcome.tsx の safeNextUrl と同じ方針)。
+function safeCallbackUrl(raw: unknown): string {
+  if (typeof raw !== 'string' || !raw) return '/';
+  if (raw.startsWith('/')) return raw;
+  if (raw === 'tomoshibi://auth-callback') return raw;
+  try {
+    const u = new URL(raw);
+    if (u.protocol === 'https:' && /(^|\.)gikyokutosyokan\.com$/.test(u.hostname)) return u.toString();
+  } catch { /* fallthrough */ }
+  return '/';
+}
 
 interface Props {
   providers: Record<string, ClientSafeProvider> | null;
@@ -114,12 +129,21 @@ export default function SignIn({ providers, callbackUrl }: Props) {
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const session = await getServerSession(context.req, context.res, authOptions);
   if (session) {
-    return {
-      redirect: {
-        destination: (context.query.callbackUrl as string) || '/',
-        permanent: false,
-      },
-    };
+    const destination = safeCallbackUrl(context.query.callbackUrl);
+    if (destination === 'tomoshibi://auth-callback') {
+      // 既にログイン済みの状態でtomoshibiアプリからサインイン導線を開いた場合。
+      // アプリ本体のWebViewにセッションを引き継ぐための使い捨てトークンを発行する
+      // (welcome.tsx の同ロジックと同じ理由。ここを経由しないとトークンなしで
+      // 素通りしてしまい、アプリ側でログイン状態にならない)。
+      const token = await createMobileHandoffToken(session.user.id);
+      return {
+        redirect: {
+          destination: `${destination}?token=${encodeURIComponent(token)}`,
+          permanent: false,
+        },
+      };
+    }
+    return { redirect: { destination, permanent: false } };
   }
   const providers = await getProviders();
   const callbackUrl = (context.query.callbackUrl as string) || '/';
