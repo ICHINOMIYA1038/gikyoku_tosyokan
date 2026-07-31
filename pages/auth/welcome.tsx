@@ -4,6 +4,7 @@ import { authOptions } from '@/lib/authOptions';
 import Layout from '@/components/Layout';
 import Seo from '@/components/seo';
 import { prisma } from '@/lib/prisma';
+import { createMobileHandoffToken } from '@/lib/mobileHandoffToken';
 import { useState, useRef } from 'react';
 import { useRouter } from 'next/router';
 
@@ -75,7 +76,22 @@ export default function Welcome({ user }: Props) {
 
   // next/router の router.push は http(s) の自サイト内遷移が前提で、
   // tomoshibi:// のようなカスタムスキームには遷移できない。
-  const navigateToNext = () => {
+  // また tomoshibi 宛の場合、アプリ本体のWebViewはこのページ(ASWebAuthenticationSession)
+  // とは別のCookieストアなのでセッションが引き継がれない。引き継ぎ用の使い捨てトークンを
+  // 発行し、mobile-handoff 経由でアプリ側WebViewに正式なセッションCookieを発行させる。
+  const navigateToNext = async () => {
+    if (nextUrl === 'tomoshibi://auth-callback') {
+      try {
+        const res = await fetch('/api/auth/mobile-token', { method: 'POST' });
+        if (res.ok) {
+          const { token } = await res.json();
+          window.location.href = `${nextUrl}?token=${encodeURIComponent(token)}`;
+          return;
+        }
+      } catch { /* フォールバックへ */ }
+      window.location.href = nextUrl;
+      return;
+    }
     if (nextUrl.startsWith('tomoshibi://')) {
       window.location.href = nextUrl;
     } else {
@@ -90,7 +106,7 @@ export default function Welcome({ user }: Props) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ displayName, bio, groupName, emailOptIn, completeOnboarding: true }),
     });
-    navigateToNext();
+    await navigateToNext();
   };
 
   const handleSkip = async () => {
@@ -100,7 +116,7 @@ export default function Welcome({ user }: Props) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ completeOnboarding: true }),
     });
-    navigateToNext();
+    await navigateToNext();
   };
 
   return (
@@ -236,7 +252,12 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
   });
 
   if (user?.onboardedAt) {
-    return { redirect: { destination: safeNextUrl(context.query.next), permanent: false } };
+    const nextUrl = safeNextUrl(context.query.next);
+    if (nextUrl === 'tomoshibi://auth-callback') {
+      const token = await createMobileHandoffToken(session.user.id);
+      return { redirect: { destination: `${nextUrl}?token=${encodeURIComponent(token)}`, permanent: false } };
+    }
+    return { redirect: { destination: nextUrl, permanent: false } };
   }
 
   return { props: { user: { name: user?.name ?? null, image: user?.image ?? null } } };
