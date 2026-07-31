@@ -53,6 +53,9 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 
 function isSafeRedirect(u: string): boolean {
   if (u.startsWith('/')) return true;
+  // tomoshibiモバイルアプリがASWebAuthenticationSession経由でこのエンドポイントを
+  // 叩き、共有Cookieストア側のセッションも消すために使う終着点 (完全一致のみ許可)。
+  if (u === 'tomoshibi://auth-callback') return true;
   try {
     const url = new URL(u);
     return url.protocol === 'https:' && /(^|\.)gikyokutosyokan\.com$/.test(url.hostname);
