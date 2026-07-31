@@ -101,17 +101,31 @@ export default function App({ Component, pageProps }: AppProps) {
           `,
         }}
       />
-      {/* AdSense: 手動広告ユニット用スクリプト（自動広告OFF）
+      {/* AdSense: 手動広告 + 自動広告 併用
           afterInteractive: 直帰ユーザーにも広告がロードされるよう、
           interactive直後に投入する。lazyOnloadだとPV/imp比が大きく毀損する。
           tomoshibiアプリでATTが拒否された場合はこのスクリプト自体を読み込まない
           (App Store審査 Guideline 5.1.2(i) 対応)。 */}
       {!attTrackingDenied && (
-        <Script
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8691137965825158"
-          crossOrigin="anonymous"
-          strategy="afterInteractive"
-        />
+        <>
+          <Script
+            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8691137965825158"
+            crossOrigin="anonymous"
+            strategy="afterInteractive"
+          />
+          <Script
+            id="adsense-auto-ads"
+            strategy="afterInteractive"
+            dangerouslySetInnerHTML={{
+              __html: `
+                (adsbygoogle = window.adsbygoogle || []).push({
+                  google_ad_client: "ca-pub-8691137965825158",
+                  enable_page_level_ads: true
+                });
+              `,
+            }}
+          />
+        </>
       )}
       <Script
         strategy="afterInteractive"
