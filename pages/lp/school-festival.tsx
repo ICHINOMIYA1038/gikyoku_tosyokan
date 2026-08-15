@@ -24,6 +24,11 @@ export default function SchoolFestivalPage({
 }: SchoolFestivalPageProps) {
   const faqItems = [
     {
+      question: "文化祭の劇ネタで最も定番なのはどれですか？",
+      answer:
+        "コメディ(喜劇)が最も定番です。観客が笑いやすく盛り上がりが分かりやすいため、演劇に慣れていない観客が多い文化祭では失敗が少ないジャンルです。次点で青春もの・ヒューマンドラマが人気で、感動系で締めたい場合におすすめです。",
+    },
+    {
       question: "文化祭の演劇でおすすめの上演時間はどのくらいですか？",
       answer:
         "文化祭では30分〜45分の作品が最もおすすめです。観客の集中力が持続しやすく、準備や転換の時間も確保できます。初めての演劇なら30分以内の作品から始めるのがよいでしょう。",
@@ -37,6 +42,11 @@ export default function SchoolFestivalPage({
       question: "文化祭の演劇で著作権使用料はかかりますか？",
       answer:
         "入場無料の学校行事であっても、台本の著作権使用料が必要になる場合があります。一般的に5,000円〜20,000円程度が目安です。上演前に必ず作者や出版社に確認してください。フリー台本を利用する方法もあります。",
+    },
+    {
+      question: "オリジナル脚本と既存の戯曲、どちらが良いですか？",
+      answer:
+        "初めての文化祭演劇なら既存の戯曲がおすすめです。実績のある作品は完成度が高く、演出の参考資料も豊富です。オリジナル脚本は自由度が高い反面、脚本執筆と稽古の両立が難しくなります。時間に余裕がある場合や、部活動などで経験を積んでから挑戦するのが良いでしょう。",
     },
   ];
 
@@ -60,13 +70,17 @@ export default function SchoolFestivalPage({
   return (
     <Layout>
       <Seo
-        pageTitle="文化祭におすすめの演劇台本・脚本"
-        pageDescription="文化祭・学園祭で上演しやすい演劇台本を厳選紹介。30分〜60分で上演でき、少人数でも取り組める脚本を高評価順に掲載。初めての演劇でも成功させるためのヒントも。"
+        pageTitle="文化祭の劇ネタ｜おすすめ台本と選び方【ジャンル別まとめ】"
+        pageDescription="文化祭の劇ネタに困ったらこれ。コメディ・感動・ミステリーなどジャンル別に、上演しやすい演劇台本を厳選。30分〜60分・少人数OKな脚本を高評価順に紹介。人数や時間からも探せます。"
         pagePath="/lp/school-festival"
         pageKeywords={[
+          "文化祭 劇 ネタ",
+          "文化祭 劇",
+          "文化祭 劇 おすすめ",
+          "文化祭 劇 定番",
+          "文化祭 劇 コメディ",
           "文化祭 演劇 台本",
           "学園祭 脚本",
-          "文化祭 劇 おすすめ",
           "高校 演劇 台本",
           "クラス劇 台本",
         ]}
@@ -94,15 +108,33 @@ export default function SchoolFestivalPage({
         {/* ヘッダー */}
         <header className="mb-10">
           <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            文化祭におすすめの演劇台本・脚本
+            文化祭の劇ネタに困ったら｜おすすめ台本と選び方
           </h1>
           <p className="text-lg text-gray-600 leading-relaxed">
-            文化祭や学園祭で上演しやすい脚本を集めました。短時間で準備でき、少人数でも見応えのある作品を高評価順にご紹介します。
+            文化祭・学園祭の劇ネタ選びに悩んでいる人へ。コメディ・感動系・ミステリーなどジャンル別に、実際に上演しやすい演劇台本を厳選しました。上演時間や人数から絞り込むこともできます。
           </p>
           <p className="text-sm text-gray-500 mt-3">
             {totalCount}作品が見つかりました
           </p>
         </header>
+
+        {/* ネタ選びのステップ */}
+        <section className="bg-blue-50/40 border border-blue-100 rounded-lg p-6 mb-10">
+          <h2 className="font-bold text-gray-800 mb-3">
+            文化祭の劇ネタ 選び方の3ステップ
+          </h2>
+          <ol className="space-y-2 text-sm text-gray-700 list-decimal list-inside">
+            <li>
+              <span className="font-semibold">ジャンルを決める</span> — 観客層に合わせてコメディ/感動/ミステリー/オリジナル系から選ぶ
+            </li>
+            <li>
+              <span className="font-semibold">上演時間と人数を確認</span> — 持ち時間とクラスの人数に合う作品に絞る
+            </li>
+            <li>
+              <span className="font-semibold">著作権と入手方法をチェック</span> — 有料台本ならライセンス、無料なら<Link href="/lp/free-scripts" className="text-blue-600 underline">フリー台本</Link>を検討
+            </li>
+          </ol>
+        </section>
 
         {/* 脚本選びのポイント */}
         <section className="bg-gray-50 border border-gray-200 rounded-lg p-6 mb-10">
@@ -197,6 +229,60 @@ export default function SchoolFestivalPage({
             >
               <span className="font-semibold block text-sm">10〜15人</span>
               <p className="text-xs text-gray-500 mt-1">クラス劇向け</p>
+            </Link>
+          </div>
+        </section>
+
+        {/* ジャンル別のネタ */}
+        <section className="mb-12">
+          <h2 className="text-xl font-bold text-gray-900 mb-2">
+            ジャンル別｜文化祭で定番の劇ネタ
+          </h2>
+          <p className="text-sm text-gray-500 mb-6">
+            観客のウケを狙うか、感動で締めるか。目的別に定番ジャンルの作品一覧へ。
+          </p>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+            <Link
+              href="/?category=%E3%82%B3%E3%83%A1%E3%83%87%E3%82%A3&maxPlaytime=60"
+              className="block p-4 border border-gray-200 rounded-lg hover:border-orange-400 hover:bg-orange-50/50 transition-all"
+            >
+              <span className="font-semibold block">🎭 コメディ・喜劇</span>
+              <p className="text-xs text-gray-500 mt-1">笑いで盛り上げる王道ネタ</p>
+            </Link>
+            <Link
+              href="/?category=%E3%83%92%E3%83%A5%E3%83%BC%E3%83%9E%E3%83%B3%E3%83%89%E3%83%A9%E3%83%9E&maxPlaytime=60"
+              className="block p-4 border border-gray-200 rounded-lg hover:border-pink-400 hover:bg-pink-50/50 transition-all"
+            >
+              <span className="font-semibold block">💫 ヒューマンドラマ</span>
+              <p className="text-xs text-gray-500 mt-1">感動で締める定番</p>
+            </Link>
+            <Link
+              href="/?category=%E3%83%9F%E3%82%B9%E3%83%86%E3%83%AA%E3%83%BC&maxPlaytime=60"
+              className="block p-4 border border-gray-200 rounded-lg hover:border-indigo-400 hover:bg-indigo-50/50 transition-all"
+            >
+              <span className="font-semibold block">🔍 ミステリー・サスペンス</span>
+              <p className="text-xs text-gray-500 mt-1">最後まで目が離せない</p>
+            </Link>
+            <Link
+              href="/?category=%E3%83%95%E3%82%A1%E3%83%B3%E3%82%BF%E3%82%B8%E3%83%BC&maxPlaytime=60"
+              className="block p-4 border border-gray-200 rounded-lg hover:border-purple-400 hover:bg-purple-50/50 transition-all"
+            >
+              <span className="font-semibold block">✨ ファンタジー</span>
+              <p className="text-xs text-gray-500 mt-1">世界観で魅せる</p>
+            </Link>
+            <Link
+              href="/?category=%E9%9D%92%E6%98%A5&maxPlaytime=60"
+              className="block p-4 border border-gray-200 rounded-lg hover:border-green-400 hover:bg-green-50/50 transition-all"
+            >
+              <span className="font-semibold block">🌱 青春</span>
+              <p className="text-xs text-gray-500 mt-1">学生が演じやすい</p>
+            </Link>
+            <Link
+              href="/lp/two-person-plays"
+              className="block p-4 border border-gray-200 rounded-lg hover:border-gray-400 hover:bg-gray-50 transition-all"
+            >
+              <span className="font-semibold block">👥 少人数(2〜3人)</span>
+              <p className="text-xs text-gray-500 mt-1">濃密な会話劇で勝負</p>
             </Link>
           </div>
         </section>
