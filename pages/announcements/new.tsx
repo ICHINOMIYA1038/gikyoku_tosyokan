@@ -503,16 +503,18 @@ export default function NewAnnouncementPage() {
               <div className="bg-blue-50/50 border border-blue-100 rounded-lg p-4">
                 <p className="text-sm text-gray-600">
                   <FaInfoCircle className="inline text-blue-400 mr-1" />
+                  <span className="inline-block bg-gray-200 text-gray-600 text-[10px] px-1.5 py-0.5 rounded mr-1 align-middle">PR</span>
                   公演のチラシ・パンフレットの印刷がまだの方へ ―
                   <a
-                    href="https://raksul.com/flyer/"
+                    href="https://px.a8.net/svt/ejp?a8mat=4BA6D7+G3AT5M+4JZ2+5YJRM"
                     target="_blank"
-                    rel="noopener noreferrer"
+                    rel="nofollow noopener noreferrer sponsored"
                     className="text-theater-primary-600 hover:underline ml-1"
                   >
-                    ラクスルのネット印刷
+                    いろぷり(ネット印刷)
                   </a>
                   なら小ロットから注文できて便利です。
+                  <img src="https://www17.a8.net/0.gif?a8mat=4BA6D7+G3AT5M+4JZ2+5YJRM" width="1" height="1" alt="" style={{ border: 0 }} />
                 </p>
               </div>
 

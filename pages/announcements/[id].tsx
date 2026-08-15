@@ -280,16 +280,18 @@ export default function AnnouncementDetailPage() {
             <div className="bg-gray-50 rounded-lg p-4 mb-6 border border-gray-100">
               <p className="text-sm text-gray-600">
                 <FaInfoCircle className="inline text-gray-400 mr-1" />
+                <span className="inline-block bg-gray-200 text-gray-600 text-[10px] px-1.5 py-0.5 rounded mr-1 align-middle">PR</span>
                 公演チラシ・パンフレットの印刷なら、ネット印刷サービスが便利です。
                 <a
-                  href="https://raksul.com/flyer/"
+                  href="https://px.a8.net/svt/ejp?a8mat=4BA6D7+G3AT5M+4JZ2+5YJRM"
                   target="_blank"
-                  rel="noopener noreferrer"
+                  rel="nofollow noopener noreferrer sponsored"
                   className="text-theater-primary-600 hover:underline ml-1"
                 >
-                  ラクスルのチラシ印刷
+                  いろぷり(ネット印刷)
                   <FaExternalLinkAlt className="inline text-[10px] ml-0.5" />
                 </a>
+                <img src="https://www17.a8.net/0.gif?a8mat=4BA6D7+G3AT5M+4JZ2+5YJRM" width="1" height="1" alt="" style={{ border: 0 }} />
               </p>
             </div>
 

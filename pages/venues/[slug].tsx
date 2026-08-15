@@ -329,12 +329,16 @@ export default function VenueDetail({ venue, nearbyVenues, announcements, perfor
             <div className="flex items-start gap-2.5">
               <FaFileAlt className="text-amber-400 mt-0.5 flex-shrink-0 text-xs" />
               <div>
-                <p className="text-sm font-medium text-gray-700">チラシ・パンフレットの準備</p>
+                <p className="text-sm font-medium text-gray-700">
+                  チラシ・パンフレットの準備
+                  <span className="inline-block bg-gray-200 text-gray-600 text-[10px] px-1.5 py-0.5 rounded ml-1 align-middle">PR</span>
+                </p>
                 <p className="text-xs text-gray-500">
                   チラシ・パンフレットの印刷は
-                  <a href="https://raksul.com/flyer/" target="_blank" rel="noopener noreferrer"
-                    className="text-theater-primary-600 hover:underline">ラクスル</a>
+                  <a href="https://px.a8.net/svt/ejp?a8mat=4BA6D7+G3AT5M+4JZ2+5YJRM" target="_blank" rel="nofollow noopener noreferrer sponsored"
+                    className="text-theater-primary-600 hover:underline">いろぷり</a>
                   などのネット印刷サービスが便利です。小ロットから対応しており、コストを抑えられます。
+                  <img src="https://www17.a8.net/0.gif?a8mat=4BA6D7+G3AT5M+4JZ2+5YJRM" width="1" height="1" alt="" style={{ border: 0 }} />
                 </p>
               </div>
             </div>
