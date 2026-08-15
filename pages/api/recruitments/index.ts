@@ -17,21 +17,28 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const limitNum = Math.min(parseInt(limit as string), 50);
     const skip = (pageNum - 1) * limitNum;
 
-    const where: any = { status: 'ACTIVE' };
-    if (prefecture) where.OR = [
-      { venue: { contains: prefecture as string } },
-      { rehearsalLocation: { contains: prefecture as string } },
-      { theaterGroup: { prefecture: prefecture as string } },
+    const now = new Date();
+    const andConditions: any[] = [
+      { status: 'ACTIVE' },
+      { OR: [{ expiresAt: null }, { expiresAt: { gte: now } }] },
     ];
-    if (role) where.rolesWanted = { has: role as string };
-    if (experience && experience !== 'ANY') where.experienceLevel = experience;
-    if (q) where.AND = [
-      { OR: [
+    if (prefecture) andConditions.push({
+      OR: [
+        { venue: { contains: prefecture as string } },
+        { rehearsalLocation: { contains: prefecture as string } },
+        { theaterGroup: { prefecture: prefecture as string } },
+      ],
+    });
+    if (role) andConditions.push({ rolesWanted: { has: role as string } });
+    if (experience && experience !== 'ANY') andConditions.push({ experienceLevel: experience });
+    if (q) andConditions.push({
+      OR: [
         { title: { contains: q as string, mode: 'insensitive' } },
         { description: { contains: q as string, mode: 'insensitive' } },
         { theaterGroupName: { contains: q as string, mode: 'insensitive' } },
-      ]},
-    ];
+      ],
+    });
+    const where: any = { AND: andConditions };
 
     const [recruitments, total] = await Promise.all([
       prisma.recruitment.findMany({
@@ -48,7 +55,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       prisma.recruitment.count({ where }),
     ]);
 
-    res.setHeader('Cache-Control', 'public, s-maxage=3600, stale-while-revalidate=7200');
+    res.setHeader('Cache-Control', 'private, no-store');
     return res.status(200).json({
       recruitments: recruitments.map((r) => ({
         ...r,
@@ -111,7 +118,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         endDate: endDate ? new Date(endDate) : null,
         images: images || [],
         contactMethod: contactMethod || null,
-        expiresAt: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000), // 3ヶ月で自動期限切れ
+        expiresAt: endDate
+          ? new Date(endDate)
+          : new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
       },
     });
 

@@ -67,6 +67,27 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(400).json({ error: 'メッセージは2000文字以内です' });
     }
 
+    // レートリミット: 直近60秒5件 / 直近1時間30件 / 直近1時間の宛先ユニーク10人
+    const oneMinuteAgo = new Date(Date.now() - 60 * 1000);
+    const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000);
+    const [recentMinute, recentHour] = await Promise.all([
+      prisma.message.count({ where: { senderId: userId, createdAt: { gte: oneMinuteAgo } } }),
+      prisma.message.findMany({
+        where: { senderId: userId, createdAt: { gte: oneHourAgo } },
+        select: { receiverId: true },
+      }),
+    ]);
+    if (recentMinute >= 5) {
+      return res.status(429).json({ error: '送信が多すぎます。少し時間をおいて再度お試しください。' });
+    }
+    if (recentHour.length >= 30) {
+      return res.status(429).json({ error: '1時間あたりの送信上限に達しました。' });
+    }
+    const uniqueReceivers = new Set(recentHour.map((m) => m.receiverId));
+    if (!uniqueReceivers.has(receiverId) && uniqueReceivers.size >= 10) {
+      return res.status(429).json({ error: '短時間に多数のユーザーへ送信することはできません。' });
+    }
+
     // 相手が存在するか
     const receiver = await prisma.user.findUnique({ where: { id: receiverId } });
     if (!receiver) {
@@ -116,7 +137,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           text: `${receiver.displayName || receiver.name}さん\n\n${senderName}さんからメッセージが届きました。\n\n「${content.substring(0, 100)}${content.length > 100 ? '...' : ''}」\n\n確認する: https://gikyokutosyokan.com/messages/${conversation.id}\n\n---\n戯曲図書館`,
         });
       }
-    } catch {}
+    } catch (err) {
+      console.error('[messages] mail notification failed:', err);
+    }
 
     return res.status(201).json({
       id: message.id,

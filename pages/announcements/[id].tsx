@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
+import { useSession } from 'next-auth/react';
 import Layout from '@/components/Layout';
 import Link from 'next/link';
 import { FaCalendarAlt, FaMapMarkerAlt, FaYenSign, FaPhone, FaUser, FaEye, FaClock, FaTheaterMasks, FaArrowLeft, FaTrash, FaShareAlt, FaBook, FaUsers, FaInfoCircle, FaExternalLinkAlt } from 'react-icons/fa';
@@ -23,6 +24,7 @@ type Announcement = {
   ticketPrice?: string;
   contactInfo?: string;
   authorName: string;
+  userId?: string;
   ipAddress?: string;
   createdAt: string;
   updatedAt: string;
@@ -35,16 +37,23 @@ type Announcement = {
 
 export default function AnnouncementDetailPage() {
   const router = useRouter();
+  const { data: session } = useSession();
   const { id } = router.query;
   const [announcement, setAnnouncement] = useState<Announcement | null>(null);
   const [loading, setLoading] = useState(true);
-  const [canDelete, setCanDelete] = useState(false);
   const [showShareButtons, setShowShareButtons] = useState(false);
+
+  const canDelete = !!(
+    session?.user?.id &&
+    announcement?.userId &&
+    session.user.id === announcement.userId
+  );
 
   useEffect(() => {
     if (id) {
       fetchAnnouncement();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   const fetchAnnouncement = async () => {
@@ -53,12 +62,6 @@ export default function AnnouncementDetailPage() {
       if (response.ok) {
         const data = await response.json();
         setAnnouncement(data);
-
-        // 削除権限のチェック（簡易的にローカルストレージで管理）
-        const userIp = localStorage.getItem('userIpAddress');
-        if (userIp && data.ipAddress === userIp) {
-          setCanDelete(true);
-        }
       } else if (response.status === 404) {
         router.push('/announcements');
       }
