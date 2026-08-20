@@ -77,7 +77,13 @@ export const authOptions: NextAuthOptions = {
 
   // 関連サービス (tomoshibi.gikyokutosyokan.com 等) とログイン状態を共有するため
   // セッションCookieは親ドメイン .gikyokutosyokan.com に発行する。
-  // __Host- 接頭辞は domain 指定不可なので csrfToken は付け替えず既定のまま。
+  // __Host- 接頭辞は domain 指定不可なのでこれらは付け替えず既定のまま。
+  //
+  // state/pkceCodeVerifier/csrfToken は SameSite=Lax のままだと、Apple Sign In が使う
+  // response_mode: 'form_post' (appleid.apple.com からのクロスサイトPOST) でブラウザが
+  // Cookieを送らず、コールバック側でstate/PKCE検証が失敗してサインインエラーになる
+  // (GoogleはトップレベルのGETリダイレクトなのでLaxでも問題なかった)。
+  // このため認可フロー中しか使わないこれらのCookieだけSameSite=Noneにする。
   cookies: process.env.NODE_ENV === 'production'
     ? {
         sessionToken: {
@@ -97,6 +103,44 @@ export const authOptions: NextAuthOptions = {
             path: '/',
             secure: true,
             domain: '.gikyokutosyokan.com',
+          },
+        },
+        csrfToken: {
+          name: '__Host-next-auth.csrf-token',
+          options: {
+            httpOnly: true,
+            sameSite: 'none',
+            path: '/',
+            secure: true,
+          },
+        },
+        state: {
+          name: '__Secure-next-auth.state',
+          options: {
+            httpOnly: true,
+            sameSite: 'none',
+            path: '/',
+            secure: true,
+            maxAge: 900,
+          },
+        },
+        pkceCodeVerifier: {
+          name: '__Secure-next-auth.pkce.code_verifier',
+          options: {
+            httpOnly: true,
+            sameSite: 'none',
+            path: '/',
+            secure: true,
+            maxAge: 900,
+          },
+        },
+        nonce: {
+          name: '__Secure-next-auth.nonce',
+          options: {
+            httpOnly: true,
+            sameSite: 'none',
+            path: '/',
+            secure: true,
           },
         },
       }
