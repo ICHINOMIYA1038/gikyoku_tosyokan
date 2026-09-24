@@ -19,6 +19,9 @@ interface RevenueCatEventPayload {
   id: string;
   type: string;
   app_user_id: string;
+  /** 匿名IDで購入→サインインで logIn した場合、旧IDと新IDの両方がここに入る */
+  aliases?: string[] | null;
+  original_app_user_id?: string;
   product_id?: string;
   entitlement_ids?: string[] | null;
   expiration_at_ms?: number | null;
@@ -83,19 +86,30 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
-    const userId = event.app_user_id;
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-      select: { id: true, name: true, displayName: true, email: true },
-    });
+    // アプリは未ログインでも購入できる (Guideline 5.1.1(v))。その場合 app_user_id は
+    // RevenueCat の匿名ID ($RCAnonymousID:...) で、あとから Purchases.logIn(User.id) で
+    // 紐付けると以降のイベントの aliases に User.id が入る。app_user_id だけでなく
+    // aliases / original_app_user_id からも該当ユーザーを探す。
+    const candidateIds = [
+      event.app_user_id,
+      event.original_app_user_id,
+      ...(event.aliases ?? []),
+    ].filter((id): id is string => typeof id === 'string' && !id.startsWith('$RCAnonymousID:'));
+    const user = candidateIds.length === 0
+      ? null
+      : await prisma.user.findFirst({
+          where: { id: { in: candidateIds } },
+          select: { id: true, name: true, displayName: true, email: true },
+        });
     if (!user) {
       console.warn(
         '[revenuecat-webhook] unknown app_user_id (purchased before Sign In?):',
-        userId,
+        event.app_user_id,
         event.type
       );
       return res.json({ received: true, unknownUser: true });
     }
+    const userId = user.id;
 
     const hasProEntitlement = (event.entitlement_ids ?? []).includes(REVENUECAT_PRO_ENTITLEMENT_ID);
 
