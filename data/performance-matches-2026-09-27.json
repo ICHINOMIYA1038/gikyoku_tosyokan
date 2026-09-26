@@ -1,0 +1,154 @@
+[
+  {
+    "idx": 68,
+    "theaterGroupName": "東北えびす",
+    "sourceUrl": "https://www.tohokuebisu.com/",
+    "sourceType": "official",
+    "postTitle": "スパイス",
+    "confidence": "medium"
+  },
+  {
+    "idx": 82,
+    "theaterGroupName": "快快",
+    "sourceUrl": "https://www.faifai.tv/",
+    "sourceType": "official",
+    "postTitle": "ハムレット",
+    "confidence": "medium"
+  },
+  {
+    "idx": 91,
+    "theaterGroupName": "少年王者舘",
+    "sourceUrl": "http://www.oujakan.jp/",
+    "sourceType": "official",
+    "postTitle": "くだんの件",
+    "confidence": "medium"
+  },
+  {
+    "idx": 112,
+    "theaterGroupName": "劇団そらのゆめ",
+    "sourceUrl": "http://soranoyume.com/",
+    "sourceType": "official",
+    "postTitle": "見よ、飛行機の高く飛べるを",
+    "confidence": "high"
+  },
+  {
+    "idx": 117,
+    "theaterGroupName": "烏丸ストロークロック",
+    "sourceUrl": "https://www.karasuma69.org/",
+    "sourceType": "official",
+    "postTitle": "まほろば",
+    "confidence": "medium"
+  },
+  {
+    "idx": 144,
+    "theaterGroupName": "劇団ドリームカンパニー",
+    "sourceUrl": "https://www.dream-company.net/",
+    "sourceType": "official",
+    "postTitle": "まほろば",
+    "confidence": "medium"
+  },
+  {
+    "idx": 162,
+    "theaterGroupName": "劇団ACM",
+    "sourceUrl": "https://www.arttowermito.or.jp/theatre/acm/",
+    "sourceType": "official",
+    "postTitle": "美貌の流星",
+    "confidence": "medium"
+  },
+  {
+    "idx": 183,
+    "theaterGroupName": "第七劇場",
+    "sourceUrl": "https://dainanagekijo.tumblr.com/",
+    "sourceType": "official",
+    "postTitle": "美女と野獣",
+    "confidence": "medium"
+  },
+  {
+    "idx": 186,
+    "theaterGroupName": "劇団麦",
+    "sourceUrl": "http://mugi1964.net/",
+    "sourceType": "official",
+    "postTitle": "海と日傘",
+    "confidence": "medium"
+  },
+  {
+    "idx": 190,
+    "theaterGroupName": "コマイぬ",
+    "sourceUrl": "https://www.comainu.com/",
+    "sourceType": "official",
+    "postTitle": "カナリア",
+    "confidence": "medium"
+  },
+  {
+    "idx": 200,
+    "theaterGroupName": "劇団そらのゆめ",
+    "sourceUrl": "http://soranoyume.com/",
+    "sourceType": "official",
+    "postTitle": "見よ、飛行機の高く飛べるを",
+    "confidence": "high"
+  },
+  {
+    "idx": 201,
+    "theaterGroupName": "はこうまプロジェクト",
+    "sourceUrl": "https://hakouma.ashnt.net/",
+    "sourceType": "official",
+    "postTitle": "アテルイ",
+    "confidence": "medium"
+  },
+  {
+    "idx": 218,
+    "theaterGroupName": "劇団無限",
+    "sourceUrl": "https://activehakata.com/theatre/",
+    "sourceType": "official",
+    "postTitle": "DOLL",
+    "confidence": "medium"
+  },
+  {
+    "idx": 218,
+    "theaterGroupName": "劇団無限",
+    "sourceUrl": "https://activehakata.com/theatre/",
+    "sourceType": "official",
+    "postTitle": "銀河旋律",
+    "confidence": "medium"
+  },
+  {
+    "idx": 274,
+    "theaterGroupName": "劇団三日月座",
+    "sourceUrl": "https://gekidanmikadukiza.wixsite.com/crescent",
+    "sourceType": "official",
+    "postTitle": "ハムレット",
+    "confidence": "high"
+  },
+  {
+    "idx": 278,
+    "theaterGroupName": "音楽座ミュージカル",
+    "sourceUrl": "https://www.ongakuza-musical.com/",
+    "sourceType": "official",
+    "postTitle": "スパイス",
+    "confidence": "medium"
+  },
+  {
+    "idx": 287,
+    "theaterGroupName": "OiBokkeShi",
+    "sourceUrl": "https://oibokkeshi.net/",
+    "sourceType": "official",
+    "postTitle": "ドキュメンタリー",
+    "confidence": "high"
+  },
+  {
+    "idx": 294,
+    "theaterGroupName": "世界劇団",
+    "sourceUrl": "https://worldtheater.main.jp/",
+    "sourceType": "official",
+    "postTitle": "トリガー",
+    "confidence": "medium"
+  },
+  {
+    "idx": 298,
+    "theaterGroupName": "PARCO劇場",
+    "sourceUrl": "https://stage.parco.jp/",
+    "sourceType": "official",
+    "postTitle": "ロマンス",
+    "confidence": "medium"
+  }
+]
