@@ -16,8 +16,8 @@ const decodeEntities = (value: string) =>
 const metaTags = (html: string) =>
   Array.from(html.matchAll(/<meta\b[^>]*>/gi), ([tag]) => {
     const attrs: Record<string, string> = {};
-    for (const [, name, , dq, sq, bare] of tag.matchAll(
-      /([^\s=\/>]+)\s*(=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'>]+)))?/g
+    for (const [, name, , dq, sq, bare] of Array.from(
+      tag.matchAll(/([^\s=\/>]+)\s*(=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'>]+)))?/g)
     )) {
       attrs[name.toLowerCase()] = decodeEntities(dq ?? sq ?? bare ?? "");
     }
