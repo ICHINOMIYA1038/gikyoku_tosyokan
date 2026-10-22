@@ -64,7 +64,7 @@ export default async function handler(
       // 管理者への通知メール
       const adminEmail = await sendMail({
         from: FROM,
-        to: [`gekidankatakago@gmail.com`], // または process.env.ADMIN_EMAIL
+        to: ["support@gikyokutosyokan.com"],
         subject: `新規お問い合わせ：${subject}`,
         html: `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
