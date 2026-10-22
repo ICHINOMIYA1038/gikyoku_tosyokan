@@ -264,9 +264,12 @@ export default function MobileSearchForm({
       {/* フローティング検索ボタン（モバイルのみ、フッターメニューの上に配置） */}
       <div className="md:hidden fixed bottom-20 right-4 z-40">
         <button
+          type="button"
           onClick={() => setIsOpen(true)}
           className="bg-theater-primary-300 text-white p-4 rounded-full shadow-lg hover:bg-theater-primary-400 transition-all transform hover:scale-110"
           aria-label="詳細検索を開く"
+          aria-expanded={isOpen}
+          aria-controls="mobile-search-panel"
         >
           <FaSearch size={24} />
           {hasActiveFilters() && (
@@ -278,14 +281,14 @@ export default function MobileSearchForm({
       </div>
 
       {/* モバイル検索パネル */}
-      <div className={`md:hidden fixed inset-0 z-50 transform transition-transform duration-300 overflow-hidden ${
+      <div id="mobile-search-panel" className={`md:hidden fixed inset-0 z-50 transform transition-transform duration-300 overflow-hidden ${
         isOpen ? "translate-y-0" : "translate-y-full"
-      }`}>
+      }`} aria-hidden={!isOpen}>
         <div className="bg-white h-full w-full overflow-y-auto overflow-x-hidden">
           {/* ヘッダー */}
           <div className="sticky top-0 bg-theater-primary-300 text-white p-4 flex items-center justify-between shadow-md">
             <h2 className="text-lg font-bold">脚本を検索</h2>
-            <button onClick={() => setIsOpen(false)} aria-label="閉じる">
+            <button type="button" onClick={() => setIsOpen(false)} aria-label="閉じる">
               <FaTimes size={24} />
             </button>
           </div>
@@ -294,11 +297,13 @@ export default function MobileSearchForm({
           <div className="p-4 bg-gray-50">
             <div className="relative">
               <input
-                type="text"
+                type="search"
                 placeholder="作品名・作者名で検索"
                 className="w-full p-3 pr-10 rounded-lg border border-theater-neutral-300 focus:border-theater-primary-400 focus:outline-none"
                 value={keyword}
                 onChange={(e) => setKeyword(e.target.value)}
+                aria-label="作品名・作者名で検索"
+                enterKeyHint="search"
               />
               <FaSearch className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
             </div>
@@ -310,6 +315,7 @@ export default function MobileSearchForm({
             <div className="grid grid-cols-2 gap-2">
               {quickPresets.map((preset, index) => (
                 <button
+                  type="button"
                   key={index}
                   onClick={() => applyPreset(preset)}
                   className="min-w-0 p-3 bg-white border border-theater-neutral-300 rounded-lg hover:bg-theater-primary-50 hover:border-theater-primary-400 transition-colors text-center"
@@ -326,8 +332,11 @@ export default function MobileSearchForm({
             {/* 人数フィルター */}
             <div className="mb-4">
               <button
+                type="button"
                 onClick={() => toggleSection("people")}
                 className="w-full flex items-center justify-between p-3 bg-theater-neutral-100 rounded-lg hover:bg-theater-neutral-200 transition-colors"
+                aria-expanded={expandedSections.includes("people")}
+                aria-controls="mobile-search-people"
               >
                 <span className="font-bold flex items-center">
                   <FaFilter className="mr-2" />
@@ -337,7 +346,7 @@ export default function MobileSearchForm({
               </button>
               
               {expandedSections.includes("people") && (
-                <div className="mt-3 p-3 bg-white rounded-lg border border-theater-neutral-200">
+                <div id="mobile-search-people" className="mt-3 p-3 bg-white rounded-lg border border-theater-neutral-200">
                   <div className="space-y-4">
                     <RangeRow label="男性人数" minVal={minMaleCount} maxVal={maxMaleCount} setMin={setMinMaleCount} setMax={setMaxMaleCount} />
                     <RangeRow label="女性人数" minVal={minFemaleCount} maxVal={maxFemaleCount} setMin={setMinFemaleCount} setMax={setMaxFemaleCount} />
@@ -350,8 +359,11 @@ export default function MobileSearchForm({
             {/* 上演時間フィルター */}
             <div className="mb-4">
               <button
+                type="button"
                 onClick={() => toggleSection("time")}
                 className="w-full flex items-center justify-between p-3 bg-theater-neutral-100 rounded-lg hover:bg-theater-neutral-200 transition-colors"
+                aria-expanded={expandedSections.includes("time")}
+                aria-controls="mobile-search-time"
               >
                 <span className="font-bold flex items-center">
                   <FaFilter className="mr-2" />
@@ -361,7 +373,7 @@ export default function MobileSearchForm({
               </button>
               
               {expandedSections.includes("time") && (
-                <div className="mt-3 p-3 bg-white rounded-lg border border-theater-neutral-200">
+                <div id="mobile-search-time" className="mt-3 p-3 bg-white rounded-lg border border-theater-neutral-200">
                   <RangeRow
                     minVal={minPlaytime} maxVal={maxPlaytime}
                     setMin={setMinPlaytime} setMax={setMaxPlaytime}
@@ -374,8 +386,11 @@ export default function MobileSearchForm({
             {/* カテゴリーフィルター */}
             <div className="mb-4">
               <button
+                type="button"
                 onClick={() => toggleSection("category")}
                 className="w-full flex items-center justify-between p-3 bg-theater-neutral-100 rounded-lg hover:bg-theater-neutral-200 transition-colors"
+                aria-expanded={expandedSections.includes("category")}
+                aria-controls="mobile-search-category"
               >
                 <span className="font-bold flex items-center">
                   <FaFilter className="mr-2" />
@@ -390,7 +405,7 @@ export default function MobileSearchForm({
               </button>
               
               {expandedSections.includes("category") && (
-                <div className="mt-3 p-3 bg-white rounded-lg border border-theater-neutral-200">
+                <div id="mobile-search-category" className="mt-3 p-3 bg-white rounded-lg border border-theater-neutral-200">
                   {categoriesLoading ? (
                     <p className="text-center text-gray-500">読み込み中...</p>
                   ) : (
@@ -409,12 +424,14 @@ export default function MobileSearchForm({
           <div className="sticky bottom-0 p-4 bg-white border-t shadow-lg">
             <div className="flex gap-2">
               <button
+                type="button"
                 onClick={resetFilters}
                 className="flex-1 p-3 bg-theater-neutral-200 text-theater-neutral-700 rounded-lg hover:bg-theater-neutral-300 transition-colors"
               >
                 リセット
               </button>
               <button
+                type="button"
                 onClick={handleSearch}
                 className="flex-1 p-3 bg-theater-primary-600 text-white rounded-lg hover:bg-theater-primary-700 transition-colors font-bold"
               >
