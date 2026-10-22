@@ -1,67 +1,17 @@
 /**
- * Google Workspace (Gmail) SMTP 経由でメール送信する共通ユーティリティ。
+ * Resend の HTTP API 経由でメール送信する共通ユーティリティ。
  *
- * 認証方式は2系統サポート:
- *   1. OAuth2 (推奨・Workspace ではこちらしか動かないケース多い)
- *      - GMAIL_CLIENT_ID
- *      - GMAIL_CLIENT_SECRET
- *      - GMAIL_REFRESH_TOKEN
- *      - GMAIL_USER (送信元アドレス。例: support@gikyokutosyokan.com)
- *   2. アプリパスワード (個人 Gmail / Workspace で許可されている場合)
- *      - GMAIL_USER
- *      - GMAIL_APP_PASSWORD
+ * SMTP は Cloudflare Workers で使えないため、fetch だけで送れる Resend を使う。
+ *   - RESEND_API_KEY
+ *   - MAIL_FROM（任意。from 未指定時の送信元。無ければ GMAIL_USER）
  *
- * OAuth2 が優先。RefreshToken があればそちらが使われる。
+ * 送信元のドメイン（gikyokutosyokan.com）は Resend 側で認証済みであること。
  */
-import nodemailer, { type Transporter } from "nodemailer";
 
-let _transporter: Transporter | null = null;
-
-function getTransporter(): Transporter {
-  if (_transporter) return _transporter;
-
-  const user = process.env.GMAIL_USER;
-  if (!user) {
-    throw new Error("GMAIL_USER が未設定です（送信元アドレス）。");
-  }
-
-  const clientId = process.env.GMAIL_CLIENT_ID;
-  const clientSecret = process.env.GMAIL_CLIENT_SECRET;
-  const refreshToken = process.env.GMAIL_REFRESH_TOKEN;
-  const appPassword = process.env.GMAIL_APP_PASSWORD;
-
-  // OAuth2 を優先
-  if (clientId && clientSecret && refreshToken) {
-    _transporter = nodemailer.createTransport({
-      host: "smtp.gmail.com",
-      port: 465,
-      secure: true,
-      auth: {
-        type: "OAuth2",
-        user,
-        clientId,
-        clientSecret,
-        refreshToken,
-      },
-    });
-    return _transporter;
-  }
-
-  // フォールバック: アプリパスワード
-  if (appPassword) {
-    _transporter = nodemailer.createTransport({
-      host: "smtp.gmail.com",
-      port: 465,
-      secure: true,
-      auth: { user, pass: appPassword },
-    });
-    return _transporter;
-  }
-
-  throw new Error(
-    "GMAIL の認証情報が未設定です。OAuth2 (CLIENT_ID/SECRET/REFRESH_TOKEN) もしくは APP_PASSWORD のどちらかを設定してください。"
-  );
-}
+const RESEND_ENDPOINT = "https://api.resend.com/emails";
+// Resend は 1 秒あたりの送信数に上限があり、超えると 429 を返す。
+// 一斉送信のループで当たるので、少し待って再送する。
+const MAX_RETRIES = 3;
 
 export type MailInput = {
   from?: string;
@@ -72,17 +22,54 @@ export type MailInput = {
   replyTo?: string;
 };
 
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
 export async function sendMail(input: MailInput) {
-  const transporter = getTransporter();
-  const fromHeader =
-    input.from || process.env.MAIL_FROM || process.env.GMAIL_USER;
-  const info = await transporter.sendMail({
-    from: fromHeader,
-    to: input.to,
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) {
+    throw new Error("RESEND_API_KEY が未設定です。");
+  }
+
+  const from = input.from || process.env.MAIL_FROM || process.env.GMAIL_USER;
+  if (!from) {
+    throw new Error("送信元アドレスが未設定です（MAIL_FROM または GMAIL_USER）。");
+  }
+
+  const body = JSON.stringify({
+    from,
+    to: Array.isArray(input.to) ? input.to : [input.to],
     subject: input.subject,
     html: input.html,
     text: input.text,
-    replyTo: input.replyTo,
+    reply_to: input.replyTo,
   });
-  return { id: info.messageId };
+
+  for (let attempt = 0; ; attempt++) {
+    const res = await fetch(RESEND_ENDPOINT, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
+      },
+      body,
+    });
+
+    if (res.status === 429 && attempt < MAX_RETRIES) {
+      const retryAfter = Number(res.headers.get("retry-after"));
+      await sleep(retryAfter > 0 ? retryAfter * 1000 : 1000 * (attempt + 1));
+      continue;
+    }
+
+    const data = (await res.json().catch(() => ({}))) as {
+      id?: string;
+      name?: string;
+      message?: string;
+    };
+    if (!res.ok) {
+      throw new Error(
+        `Resend への送信に失敗しました（${res.status} ${data.name ?? ""}）: ${data.message ?? ""}`
+      );
+    }
+    return { id: data.id ?? "" };
+  }
 }

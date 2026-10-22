@@ -1,18 +1,20 @@
-import { ImageResponse } from "@vercel/og";
-import type { NextRequest } from "next/server";
+import { loadImageResponse } from "@/lib/imageResponse";
+import type { NextApiRequest, NextApiResponse } from "next";
+import { notoSansJpFonts } from "@/lib/ogFont";
 
-export const config = {
-  runtime: "edge",
-};
-
-export default async function handler(req: NextRequest) {
-  const { searchParams } = new URL(req.url);
+// Cloudflare Workers（OpenNext）は edge runtime に対応していないため、Node.js ランタイムで動かす
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  const { searchParams } = new URL(req.url ?? "/", "http://localhost");
   const title = (searchParams.get("title") || "戯曲図書館").slice(0, 28);
   const author = (searchParams.get("author") || "").slice(0, 20);
   const playtime = searchParams.get("playtime");
   const people = searchParams.get("people");
+  const fonts = await notoSansJpFonts(
+    ["戯曲図書館", "gikyokutosyokan.com", `『${title}』`, author, `${playtime}分`, `${people}人`].join("")
+  );
 
-  return new ImageResponse(
+  const ImageResponse = await loadImageResponse();
+  const image = new ImageResponse(
     (
       <div
         style={{
@@ -23,7 +25,7 @@ export default async function handler(req: NextRequest) {
           justifyContent: "space-between",
           padding: "60px",
           background: "linear-gradient(135deg, #fce7f3 0%, #fbcfe8 100%)",
-          fontFamily: "sans-serif",
+          fontFamily: "\"Noto Sans JP\", sans-serif",
         }}
       >
         <div style={{ display: "flex", color: "#ec4899", fontSize: 28, fontWeight: 700 }}>
@@ -57,9 +59,13 @@ export default async function handler(req: NextRequest) {
     {
       width: 1200,
       height: 630,
+      fonts,
       headers: {
         "Cache-Control": "public, max-age=31536000, immutable",
       },
     }
   );
+
+  image.headers.forEach((value, key) => res.setHeader(key, value));
+  res.status(image.status).send(Buffer.from(await image.arrayBuffer()));
 }

@@ -1,17 +1,17 @@
-import { ImageResponse } from '@vercel/og';
-import { NextRequest } from 'next/server';
+import { loadImageResponse } from '@/lib/imageResponse';
+import type { NextApiRequest, NextApiResponse } from 'next';
+import { notoSansJpFonts } from '@/lib/ogFont';
 
-export const config = {
-  runtime: 'edge',
-};
-
-export default function handler(req: NextRequest) {
-  const { searchParams } = new URL(req.url);
+// Cloudflare Workers（OpenNext）は edge runtime に対応していないため、Node.js ランタイムで動かす
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  const { searchParams } = new URL(req.url ?? '/', 'http://localhost');
   const title = searchParams.get('title') || '戯曲図書館';
   const date = searchParams.get('date') || '';
   const tags = searchParams.get('tags')?.split(',').filter(Boolean) || [];
+  const fonts = await notoSansJpFonts(['戯曲図書館ブログ', title, date, ...tags.slice(0, 3)].join(''));
 
-  return new ImageResponse(
+  const ImageResponse = await loadImageResponse();
+  const image = new ImageResponse(
     (
       <div
         style={{
@@ -98,6 +98,10 @@ export default function handler(req: NextRequest) {
     {
       width: 1200,
       height: 630,
+      fonts,
     }
   );
+
+  image.headers.forEach((value, key) => res.setHeader(key, value));
+  res.status(image.status).send(Buffer.from(await image.arrayBuffer()));
 }
