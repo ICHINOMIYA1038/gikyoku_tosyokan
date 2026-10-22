@@ -22,6 +22,9 @@ services:
     command: sh -c 'apk update && apk add --no-cache openssl && npm install && yarn dev & npx prisma studio --port 5555 --schema /usr/src/app/prisma/schema.prisma'
     env_file: # ここで .env.local を指定
       - ./.env.local
+    environment:
+      # Docker のボリューム越しだとファイル変更を検知できないため、ポーリングで監視する
+      WATCHPACK_POLLING: "true"
     ports:
       - "8001:3000"
       - 5555:5555

@@ -31,7 +31,7 @@ export default async function handler(req: NextRequest) {
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
           <div style={{ fontSize: 72, fontWeight: 800, color: "#1f2937", lineHeight: 1.15 }}>
-            『{title}』
+            {`『${title}』`}
           </div>
           {author && (
             <div style={{ fontSize: 36, color: "#4b5563" }}>{author}</div>
