@@ -3,6 +3,11 @@ const nextConfig = {
   reactStrictMode: true,
   compress: true,
   poweredByHeader: false,
+  webpack: (config) => {
+    // CSV を文字列として import する（Workers には fs が無いため、ビルド時に取り込む）
+    config.module.rules.push({ test: /\.csv$/, type: "asset/source" });
+    return config;
+  },
   images: {
     domains: [
       "www.hanmoto.com",

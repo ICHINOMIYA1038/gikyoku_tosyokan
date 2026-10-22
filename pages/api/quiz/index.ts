@@ -1,9 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { parse } from "papaparse";
-import fs from "fs";
-
-// ファイルを同期的に読み込む
-const csvData = fs.readFileSync("./public/quiz.csv", "utf-8");
+import csvData from "../../../public/quiz.csv";
 
 export default (req: NextApiRequest, res: NextApiResponse) => {
   // CSVをパース
