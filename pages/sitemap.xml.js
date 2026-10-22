@@ -1,7 +1,6 @@
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/lib/prisma";
 
 const EXTERNAL_DATA_URL = "https://gikyokutosyokan.com";
-const prisma = new PrismaClient();
 function generateSiteMap(posts, authors, categories, blogPosts, studentGroups, shogekijoGroups, venues, awardSlugs, venuePrefectureSlugs, theaterMenuCategories, theaterMenus) {
   const currentDate = new Date().toISOString();
   

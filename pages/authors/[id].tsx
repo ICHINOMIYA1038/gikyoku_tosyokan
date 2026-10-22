@@ -1,6 +1,7 @@
 import * as React from "react";
 import Link from "next/link";
-import { PrismaClient, Author as AuthorType } from "@prisma/client";
+import { Author as AuthorType } from "@prisma/client";
+import { prisma } from "@/lib/prisma";
 import Layout from "@/components/Layout";
 import PostCardSmall from "@/components/PostCardSmall";
 import Seo from "@/components/seo";
@@ -11,7 +12,6 @@ import CustomMarkdown from "@/components/CustomMarkdown";
 import { FaUser, FaUsers, FaGlobe, FaBook, FaTheaterMasks, FaExternalLinkAlt } from "react-icons/fa";
 import AdSlot from "@/components/Ad/AdSlot";
 import { AD_SLOTS } from "@/lib/adSlots";
-const prisma = new PrismaClient();
 
 function AuthorPage({ author }: any) {
   const postCount = author.posts?.length || 0;

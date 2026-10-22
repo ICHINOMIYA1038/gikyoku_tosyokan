@@ -1,12 +1,11 @@
 import Layout from "@/components/Layout";
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/lib/prisma";
 import Seo from "@/components/seo";
 import StructuredData from "@/components/StructuredData";
 import CategoryCard from "@/components/CategoryCard";
 import AdSlot from "@/components/Ad/AdSlot";
 import { AD_SLOTS } from "@/lib/adSlots";
 
-const prisma = new PrismaClient();
 
 type CategoryItem = {
   id: number;
