@@ -2,9 +2,8 @@ import TwitterIntroduction from "@/components/Ad/TwitterIntroduction";
 import Layout from "@/components/Layout";
 import Seo from "@/components/seo";
 import MessageModal from "@/components/Modal/MessageModalProps";
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/lib/prisma";
 import { useState } from "react";
-const prisma = new PrismaClient();
 
 export default function Home({ post, categories, authors }: any) {
   const [formData, setFormData] = useState<any>({

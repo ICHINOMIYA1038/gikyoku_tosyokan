@@ -1,14 +1,13 @@
 import Layout from "@/components/Layout";
 import Seo from "@/components/seo";
 import StructuredData from "@/components/StructuredData";
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import { useState, useMemo } from "react";
 import { FaSearch, FaUser, FaPen } from "react-icons/fa";
 import AdSlot from "@/components/Ad/AdSlot";
 import { AD_SLOTS } from "@/lib/adSlots";
 
-const prisma = new PrismaClient();
 
 type AuthorListItem = {
   id: number;

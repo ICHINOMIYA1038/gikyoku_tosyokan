@@ -3,6 +3,10 @@ const nextConfig = {
   reactStrictMode: true,
   compress: true,
   poweredByHeader: false,
+  outputFileTracingRoot: __dirname,
+  // Cloudflare Workers（OpenNext）向け。workerd 用の export 条件を持つパッケージは、
+  // 丸ごと含めないと workerd 向けのファイルが追跡されない
+  serverExternalPackages: ["@prisma/client", ".prisma/client", "stripe", "jose", "@panva/hkdf"],
   webpack: (config) => {
     // CSV を文字列として import する（Workers には fs が無いため、ビルド時に取り込む）
     config.module.rules.push({ test: /\.csv$/, type: "asset/source" });

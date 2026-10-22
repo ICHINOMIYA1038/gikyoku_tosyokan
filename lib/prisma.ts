@@ -1,80 +1,56 @@
 import { PrismaClient } from "@prisma/client";
+import { PrismaPg } from "@prisma/adapter-pg";
+import { getCloudflareContext } from "@opennextjs/cloudflare";
 
 declare global {
   var prisma: PrismaClient | undefined;
-  var prismaInitTime: number | undefined;
 }
 
-// 初期化時刻を記録
-const initStartTime = Date.now();
-
-// Prismaクライアントの設定を最適化
-const prismaClientSingleton = () => {
-  console.log(`[Prisma] Creating new PrismaClient instance...`);
-  
-  // Supabase用の接続URLを修正
-  let databaseUrl = process.env.POSTGRES_PRISMA_URL || '';
-  
-  // 接続プールサイズとタイムアウトを調整
-  if (!databaseUrl.includes('connection_limit')) {
-    const separator = databaseUrl.includes('?') ? '&' : '?';
-    databaseUrl = `${databaseUrl}${separator}connection_limit=30&pool_timeout=60`;
-  }
-  
-  const client = new PrismaClient({
-    log: process.env.NODE_ENV === 'development'
-      ? [
-          {
-            emit: 'event',
-            level: 'query',
-          },
-          {
-            emit: 'stdout',
-            level: 'error',
-          },
-          {
-            emit: 'stdout',
-            level: 'warn',
-          },
-        ]
-      : ['error'],
-    datasources: {
-      db: {
-        url: databaseUrl,
-      },
-    },
+const createClient = (connectionString: string) =>
+  new PrismaClient({
+    adapter: new PrismaPg({ connectionString, max: 1 }),
+    log: process.env.NODE_ENV === "development" ? ["warn", "error"] : ["error"],
   });
 
-  // 開発環境でのみクエリイベントをリッスン
-  if (process.env.NODE_ENV === 'development') {
-    client.$on('query' as any, (e: any) => {
-      console.log(`[Query] ${e.query} - Duration: ${e.duration}ms`);
-    });
+// Workers ではリクエストをまたいで I/O オブジェクト（DB 接続）を使い回せないため、
+// リクエストごとの ctx をキーにクライアントを作る。接続プールは Hyperdrive が持つ。
+const perRequestClients = new WeakMap<object, PrismaClient>();
+
+const resolveClient = (): PrismaClient => {
+  let cf: ReturnType<typeof getCloudflareContext> | undefined;
+  try {
+    cf = getCloudflareContext();
+  } catch {
+    // next build / next dev（Node.js）ではリクエストコンテキストが無い
   }
 
-  const initTime = Date.now() - initStartTime;
-  console.log(`[Prisma] Client created in ${initTime}ms`);
-  
-  return client;
+  if (cf) {
+    const key = cf.ctx as object;
+    const cached = perRequestClients.get(key);
+    if (cached) return cached;
+    const env = cf.env as { HYPERDRIVE?: { connectionString: string } };
+    const client = createClient(
+      env.HYPERDRIVE?.connectionString ?? process.env.POSTGRES_PRISMA_URL ?? ""
+    );
+    perRequestClients.set(key, client);
+    return client;
+  }
+
+  if (!global.prisma) {
+    global.prisma = createClient(process.env.POSTGRES_PRISMA_URL ?? "");
+  }
+  return global.prisma;
 };
 
-// グローバルインスタンスを使用（コネクションプールの枯渇を防ぐ）
-const isNewInstance = !global.prisma;
-
-if (isNewInstance) {
-  console.log(`[Prisma] Creating NEW instance (Cold Start)`);
-  global.prisma = prismaClientSingleton();
-  global.prismaInitTime = Date.now();
-}
-
-// TypeScriptの型エラーを回避しつつ、undefinedチェックを行う
-export const prisma: PrismaClient = global.prisma as PrismaClient;
-
-// ログ出力
-if (!isNewInstance && global.prismaInitTime) {
-  const reuseTime = Date.now() - global.prismaInitTime;
-  console.log(`[Prisma] Reusing existing instance (Warm - alive for ${reuseTime}ms)`);
-}
-
-// 本番環境では自動的なdisconnectを行わない
-// Vercelが自動的にプロセスを終了するため
+// 既存の `import { prisma } from "@/lib/prisma"` をそのまま使えるよう、
+// プロパティアクセスのたびにリクエストに対応するクライアントへ委譲する。
+export const prisma: PrismaClient = new Proxy({} as PrismaClient, {
+  get(_target, prop) {
+    // 共有クライアントのプールを閉じないよう、各所の $disconnect() は無視する。
+    // Workers ではリクエスト終了時にソケットが閉じられる。
+    if (prop === "$disconnect") return async () => {};
+    const client = resolveClient();
+    const value = Reflect.get(client, prop, client);
+    return typeof value === "function" ? value.bind(client) : value;
+  },
+});

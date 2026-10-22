@@ -1,6 +1,7 @@
 import * as React from "react";
 import { useState, useMemo } from "react";
-import { PrismaClient, Author as AuthorType } from "@prisma/client";
+import { Author as AuthorType } from "@prisma/client";
+import { prisma } from "@/lib/prisma";
 import Layout from "@/components/Layout";
 import PostCardSmall from "@/components/PostCardSmall";
 import Seo from "@/components/seo";
@@ -10,7 +11,6 @@ import { FaTheaterMasks, FaBook, FaTag, FaClock, FaUsers, FaFilter, FaSearch, Fa
 import AdSlot from "@/components/Ad/AdSlot";
 import OptimizedImage from "@/components/OptimizedImage";
 import { AD_SLOTS } from "@/lib/adSlots";
-const prisma = new PrismaClient();
 
 // カテゴリごとのSEO最適化コンテンツ
 const categoryDescriptions: { [key: string]: { intro: string; keywords: string[]; relatedSearches: string[] } } = {

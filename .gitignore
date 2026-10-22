@@ -44,3 +44,8 @@ next-env.d.ts
 
 # SEO daily reports (regenerated daily, large JSON files)
 /data/seo-reports/
+# OpenNext / wrangler
+.open-next
+.wrangler
+.dev.vars
+.secrets.production

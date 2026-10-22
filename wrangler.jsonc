@@ -1,0 +1,32 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "gikyoku-tosyokan",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-10-01",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "assets": { "directory": ".open-next/assets", "binding": "ASSETS" },
+  // 本番ドメイン。DNS レコード（プロキシ有効）はそのままで、Worker がリクエストを受ける
+  "routes": [
+    { "pattern": "gikyokutosyokan.com/*", "zone_name": "gikyokutosyokan.com" },
+    { "pattern": "www.gikyokutosyokan.com/*", "zone_name": "gikyokutosyokan.com" }
+  ],
+  // DB（Supabase / 東京）とのやり取りが多いので、Worker を DB の近くで動かす
+  "placement": { "mode": "smart" },
+  "services": [{ "binding": "WORKER_SELF_REFERENCE", "service": "gikyoku-tosyokan" }],
+  // ISR のキャッシュ
+  "r2_buckets": [{ "binding": "NEXT_INC_CACHE_R2_BUCKET", "bucket_name": "gikyoku-tosyokan-inc-cache" }],
+  // ISR の再生成キュー
+  "durable_objects": {
+    "bindings": [{ "name": "NEXT_CACHE_DO_QUEUE", "class_name": "DOQueueHandler" }]
+  },
+  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["DOQueueHandler"] }],
+  // Supabase（セッションプーラー）への接続。クエリのキャッシュは無効（書き込み直後に古い結果を返さないため）
+  "hyperdrive": [
+    {
+      "binding": "HYPERDRIVE",
+      "id": "cc264cf43d9b46888abc24ac3689be5e",
+      "localConnectionString": "postgresql://postgres:password@localhost:5432/sample"
+    }
+  ],
+  "observability": { "enabled": true }
+}
