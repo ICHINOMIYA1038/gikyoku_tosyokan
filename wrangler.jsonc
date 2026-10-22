@@ -5,11 +5,11 @@
   "compatibility_date": "2026-10-01",
   "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
   "assets": { "directory": ".open-next/assets", "binding": "ASSETS" },
-  // 本番ドメイン。DNS レコード（プロキシ有効）はそのままで、Worker がリクエストを受ける
-  "routes": [
-    { "pattern": "gikyokutosyokan.com/*", "zone_name": "gikyokutosyokan.com" },
-    { "pattern": "www.gikyokutosyokan.com/*", "zone_name": "gikyokutosyokan.com" }
-  ],
+  // 本番ドメイン。DNS レコード（プロキシ有効）はそのままで、Worker がリクエストを受ける。
+  // www は別の Worker（redirect-www）が www なしへリダイレクトしている
+  "routes": [{ "pattern": "gikyokutosyokan.com/*", "zone_name": "gikyokutosyokan.com" }],
+  // 切り替え後も確認用に workers.dev の URL を残す
+  "workers_dev": true,
   // DB（Supabase / 東京）とのやり取りが多いので、Worker を DB の近くで動かす
   "placement": { "mode": "smart" },
   "services": [{ "binding": "WORKER_SELF_REFERENCE", "service": "gikyoku-tosyokan" }],
