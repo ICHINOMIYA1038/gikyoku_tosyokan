@@ -1,0 +1,27 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "gikyoku-tosyokan",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-10-01",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "assets": { "directory": ".open-next/assets", "binding": "ASSETS" },
+  // DB（Supabase / 東京）とのやり取りが多いので、Worker を DB の近くで動かす
+  "placement": { "mode": "smart" },
+  "services": [{ "binding": "WORKER_SELF_REFERENCE", "service": "gikyoku-tosyokan" }],
+  // ISR のキャッシュ
+  "r2_buckets": [{ "binding": "NEXT_INC_CACHE_R2_BUCKET", "bucket_name": "gikyoku-tosyokan-inc-cache" }],
+  // ISR の再生成キュー
+  "durable_objects": {
+    "bindings": [{ "name": "NEXT_CACHE_DO_QUEUE", "class_name": "DOQueueHandler" }]
+  },
+  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["DOQueueHandler"] }],
+  // Supabase への接続。id は Hyperdrive を作成したときのものに置き換える
+  "hyperdrive": [
+    {
+      "binding": "HYPERDRIVE",
+      "id": "00000000000000000000000000000000",
+      "localConnectionString": "postgresql://postgres:password@localhost:5432/sample"
+    }
+  ],
+  "observability": { "enabled": true }
+}
