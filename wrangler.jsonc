@@ -15,11 +15,11 @@
     "bindings": [{ "name": "NEXT_CACHE_DO_QUEUE", "class_name": "DOQueueHandler" }]
   },
   "migrations": [{ "tag": "v1", "new_sqlite_classes": ["DOQueueHandler"] }],
-  // Supabase への接続。id は Hyperdrive を作成したときのものに置き換える
+  // Supabase（セッションプーラー）への接続。クエリのキャッシュは無効（書き込み直後に古い結果を返さないため）
   "hyperdrive": [
     {
       "binding": "HYPERDRIVE",
-      "id": "00000000000000000000000000000000",
+      "id": "cc264cf43d9b46888abc24ac3689be5e",
       "localConnectionString": "postgresql://postgres:password@localhost:5432/sample"
     }
   ],
