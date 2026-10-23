@@ -1,8 +1,8 @@
-import React, { SetStateAction, useState, useEffect } from "react";
+import React, { SetStateAction, useState, useEffect, useRef } from "react";
 import TagSelector from "./TagSelecter";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/router";
-import { FaSearch, FaTag, FaUsers, FaClock, FaFilter } from "react-icons/fa";
+import { FaSearch } from "react-icons/fa";
 
 const getCategories = async (): Promise<any> => {
   const res = await fetch("/api/categories");
@@ -32,7 +32,6 @@ export default function SearchForm({
   const [maxPlaytime, setMaxPlaytime] = useState<string>("");
 
   const [selectedTags, setSelectedTags] = useState<number[]>([]);
-  const [activeTab, setActiveTab] = useState<string>("search");
   const per = 8;
   const searchParams: Record<string, string> = {
     keyword: keyword,
@@ -58,8 +57,6 @@ export default function SearchForm({
     getCategories
   );
 
-  // 初期化フラグ
-  const [isInitialized, setIsInitialized] = useState(false);
 
   // URLパラメータから初期値を設定
   useEffect(() => {
@@ -67,6 +64,39 @@ export default function SearchForm({
     
     let hasParams = false;
     
+    // URL の条件を、検索に直接渡す値としても集める
+    const URL_KEYS = ["minPlaytime", "maxPlaytime", "minTotalCount", "maxTotalCount", "minMaleCount", "maxMaleCount", "minFemaleCount", "maxFemaleCount", "keyword"];
+    const overrides: Record<string, string> = {};
+    URL_KEYS.forEach((key) => {
+      if (router.query[key]) overrides[key] = String(router.query[key]);
+    });
+    if (router.query.category) overrides.categories = String(parseInt(router.query.category as string));
+    // URL に条件があるときは、URL にない条件を空に戻す（チップは「その条件だけ」で探すリンクなので）
+    const hasUrlParams = Object.keys(overrides).length > 0;
+    if (hasUrlParams) {
+      const CLEAR: Record<string, [string, (v: string) => void]> = {
+        minPlaytime: ["0", setMinPlaytime],
+        maxPlaytime: ["999", setMaxPlaytime],
+        minTotalCount: ["", setMinTotalCount],
+        maxTotalCount: ["", setMaxTotalCount],
+        minMaleCount: ["", setMinMaleCount],
+        maxMaleCount: ["", setMaxMaleCount],
+        minFemaleCount: ["", setMinFemaleCount],
+        maxFemaleCount: ["", setMaxFemaleCount],
+        keyword: ["", setKeyword],
+      };
+      Object.entries(CLEAR).forEach(([key, [empty, setter]]) => {
+        if (!(key in overrides)) {
+          overrides[key] = empty;
+          setter(key === "minPlaytime" || key === "maxPlaytime" ? "" : empty);
+        }
+      });
+      if (!router.query.category) {
+        overrides.categories = "";
+        setSelectedTags([]);
+      }
+    }
+
     if (router.query.minPlaytime) {
       setMinPlaytime(router.query.minPlaytime as string);
       hasParams = true;
@@ -109,15 +139,12 @@ export default function SearchForm({
       hasParams = true;
     }
 
-    // パラメータがある場合は初期化完了として検索実行
-    if (hasParams && !isInitialized) {
-      setIsInitialized(true);
-      // 少し遅延させて状態の更新を待つ
-      setTimeout(() => {
-        handleSubmit();
-      }, 100);
+    // setState はこの処理の中ではまだ反映されないので、URL の値を直接渡して検索する。
+    // 同じページでチップを押して URL が変わったときも、ここで検索し直す
+    if (hasParams) {
+      handleSubmit(overrides);
     }
-  }, [router.isReady, router.query, isInitialized]);
+  }, [router.isReady, router.query]);
 
   useEffect(() => {
     // URLパラメータがない場合のみ初回検索を実行
@@ -140,10 +167,13 @@ export default function SearchForm({
     handleSubmit();
   }, [selectedTags]);
 
-  const handleSubmit = async () => {
-    setData([]);
+  // 検索は同時に何本も走るので、最後に始めたものの結果だけを反映する（古い結果での上書きを防ぐ）
+  const latestRequest = useRef(0);
 
-    const query = new URLSearchParams(searchParams).toString();
+  const handleSubmit = async (overrides: Record<string, string> = {}) => {
+    const requestId = ++latestRequest.current;
+    setData([]);
+    const query = new URLSearchParams({ ...searchParams, ...overrides }).toString();
 
     try {
       const response = await fetch(`/api/search?${query}`);
@@ -152,223 +182,113 @@ export default function SearchForm({
       }
 
       const data = await response.json();
+      if (requestId !== latestRequest.current) return;
       setData(data);
     } catch (error) {
       console.error("An error occurred:", error);
     }
   };
 
+  const submit = () => {
+    if (page != 1) {
+      setPage(1);
+    } else {
+      handleSubmit();
+      onSearch();
+    }
+  };
+
+  const clearAll = () => {
+    setKeyword("");
+    setMinTotalCount("");
+    setMaxTotalCount("");
+    setMinMaleCount("");
+    setMaxMaleCount("");
+    setMinFemaleCount("");
+    setMaxFemaleCount("");
+    setMinPlaytime("");
+    setMaxPlaytime("");
+    setSelectedTags([]);
+  };
+
+  const numberField =
+    "w-full min-w-0 h-10 px-2 bg-white border border-[#D9D5CF] rounded text-center text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-theater-primary-600 focus:ring-1 focus:ring-theater-primary-600";
+
+  // 「下限〜上限 単位」の1行
+  const rangeRow = (
+    label: string,
+    unit: string,
+    min: string,
+    setMin: (v: string) => void,
+    max: string,
+    setMax: (v: string) => void
+  ) => (
+    <div>
+      <span className="block text-sm font-medium text-gray-800 mb-1">{label}</span>
+      <div className="flex items-center gap-2">
+        <input className={numberField} type="number" inputMode="numeric" min="0" placeholder="下限" aria-label={`${label}の下限`}
+          value={min} onChange={(e) => setMin(e.target.value)} onKeyDown={(e) => e.key === "Enter" && submit()} />
+        <span className="text-gray-500">〜</span>
+        <input className={numberField} type="number" inputMode="numeric" min="0" placeholder="上限" aria-label={`${label}の上限`}
+          value={max} onChange={(e) => setMax(e.target.value)} onKeyDown={(e) => e.key === "Enter" && submit()} />
+        <span className="text-sm text-gray-600 w-5 flex-shrink-0">{unit}</span>
+      </div>
+    </div>
+  );
+
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden mb-8">
-      {/* タブヘッダー */}
-      <div className="flex border-b border-gray-100">
-        <button
-          className={`flex-1 py-4 px-6 text-sm font-bold flex items-center justify-center gap-2 transition-all ${
-            activeTab === "search"
-              ? "text-theater-primary-600 bg-white border-b-2 border-theater-primary-500"
-              : "text-gray-500 bg-gray-50 hover:bg-gray-100 hover:text-gray-700"
-          }`}
-          onClick={() => setActiveTab("search")}
-        >
-          <FaSearch />
-          詳細検索
-        </button>
-        <button
-          className={`flex-1 py-4 px-6 text-sm font-bold flex items-center justify-center gap-2 transition-all ${
-            activeTab === "categories"
-              ? "text-theater-primary-600 bg-white border-b-2 border-theater-primary-500"
-              : "text-gray-500 bg-gray-50 hover:bg-gray-100 hover:text-gray-700"
-          }`}
-          onClick={() => setActiveTab("categories")}
-        >
-          <FaTag />
-          カテゴリーから探す
+    <div className="bg-white border border-[#D9D5CF] rounded mb-8">
+      <div className="flex items-baseline justify-between px-4 pt-4">
+        <h2 className="text-base font-bold text-gray-900 my-0">絞り込み</h2>
+        <button type="button" className="text-sm text-gray-600 hover:text-gray-900 underline" onClick={clearAll}>
+          条件をクリア
         </button>
       </div>
 
-      <div className="p-6">
-        {activeTab === "search" && (
-          <div className="space-y-6">
-            {/* キーワード検索 */}
-            <div>
-              <label className="block text-sm font-bold text-gray-700 mb-2">キーワード</label>
-              <div className="relative">
-                <input
-                  className="w-full p-3 pl-10 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-theater-primary-100 focus:border-theater-primary-300 transition-all outline-none"
-                  placeholder="作品名、作者名など..."
-                  value={keyword}
-                  onChange={(e) => setKeyword(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                        if (page != 1) {
-                            setPage(1);
-                          } else {
-                            handleSubmit();
-                            onSearch();
-                          }
-                    }
-                  }}
-                />
-                <FaSearch className="absolute left-3 top-3.5 text-gray-400" />
-              </div>
-            </div>
-
-            <div className="grid md:grid-cols-2 gap-6">
-              {/* 人数条件 */}
-              <div className="space-y-4 p-4 bg-gray-50 rounded-lg border border-gray-100">
-                <div className="flex items-center gap-2 text-gray-700 font-bold border-b border-gray-200 pb-2 mb-2">
-                  <FaUsers className="text-blue-500" />
-                  <span>人数条件</span>
-                </div>
-                
-                <div>
-                  <label className="text-xs font-bold text-gray-500 mb-1 block">総人数</label>
-                  <div className="flex items-center gap-2">
-                    <input
-                      className="w-full p-2 bg-white border border-gray-200 rounded text-center focus:border-theater-primary-300 outline-none"
-                      type="number" inputMode="numeric" pattern="[0-9]*"
-                      placeholder="下限"
-                      value={minTotalCount}
-                      onChange={(e) => setMinTotalCount(e.target.value)}
-                    />
-                    <span className="text-gray-400">〜</span>
-                    <input
-                      className="w-full p-2 bg-white border border-gray-200 rounded text-center focus:border-theater-primary-300 outline-none"
-                      type="number" inputMode="numeric" pattern="[0-9]*"
-                      placeholder="上限"
-                      value={maxTotalCount}
-                      onChange={(e) => setMaxTotalCount(e.target.value)}
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label className="text-xs font-bold text-gray-500 mb-1 block">男性</label>
-                  <div className="flex items-center gap-2">
-                    <input
-                      className="w-full p-2 bg-white border border-gray-200 rounded text-center focus:border-theater-primary-300 outline-none"
-                      type="number" inputMode="numeric" pattern="[0-9]*"
-                      placeholder="0"
-                      value={minMaleCount}
-                      onChange={(e) => setMinMaleCount(e.target.value)}
-                    />
-                    <span className="text-gray-400">〜</span>
-                    <input
-                      className="w-full p-2 bg-white border border-gray-200 rounded text-center focus:border-theater-primary-300 outline-none"
-                      type="number" inputMode="numeric" pattern="[0-9]*"
-                      placeholder="上限なし"
-                      value={maxMaleCount}
-                      onChange={(e) => setMaxMaleCount(e.target.value)}
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label className="text-xs font-bold text-gray-500 mb-1 block">女性</label>
-                  <div className="flex items-center gap-2">
-                    <input
-                      className="w-full p-2 bg-white border border-gray-200 rounded text-center focus:border-theater-primary-300 outline-none"
-                      type="number" inputMode="numeric" pattern="[0-9]*"
-                      placeholder="0"
-                      value={minFemaleCount}
-                      onChange={(e) => setMinFemaleCount(e.target.value)}
-                    />
-                    <span className="text-gray-400">〜</span>
-                    <input
-                      className="w-full p-2 bg-white border border-gray-200 rounded text-center focus:border-theater-primary-300 outline-none"
-                      type="number" inputMode="numeric" pattern="[0-9]*"
-                      placeholder="上限なし"
-                      value={maxFemaleCount}
-                      onChange={(e) => setMaxFemaleCount(e.target.value)}
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {/* 上演時間 */}
-              <div className="space-y-4 p-4 bg-gray-50 rounded-lg border border-gray-100 h-fit">
-                <div className="flex items-center gap-2 text-gray-700 font-bold border-b border-gray-200 pb-2 mb-2">
-                  <FaClock className="text-green-500" />
-                  <span>上演時間（分）</span>
-                </div>
-                
-                <div className="flex items-center gap-2">
-                  <input
-                    className="w-full p-2 bg-white border border-gray-200 rounded text-center focus:border-theater-primary-300 outline-none"
-                    type="number" inputMode="numeric" pattern="[0-9]*"
-                    min="0"
-                    max="999"
-                    placeholder="0"
-                    value={minPlaytime}
-                    onChange={(e) => setMinPlaytime(e.target.value)}
-                  />
-                  <span className="text-gray-400">〜</span>
-                  <input
-                    className="w-full p-2 bg-white border border-gray-200 rounded text-center focus:border-theater-primary-300 outline-none"
-                    type="number" inputMode="numeric" pattern="[0-9]*"
-                    min="0"
-                    max="999"
-                    placeholder="上限なし"
-                    value={maxPlaytime}
-                    onChange={(e) => setMaxPlaytime(e.target.value)}
-                  />
-                </div>
-                
-                <div className="pt-4">
-                  <button
-                    className="w-full py-3 bg-theater-primary-600 text-white font-bold rounded-lg shadow-md hover:bg-theater-primary-700 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-center gap-2"
-                    onClick={() => {
-                      if (page != 1) {
-                        setPage(1);
-                      } else {
-                        handleSubmit();
-                        onSearch();
-                      }
-                    }}
-                  >
-                    <FaSearch />
-                    この条件で検索する
-                  </button>
-                </div>
-              </div>
-            </div>
+      <div className="p-4 space-y-4">
+        <div>
+          <label htmlFor="search-keyword" className="block text-sm font-medium text-gray-800 mb-1">キーワード</label>
+          <div className="relative">
+            <input
+              id="search-keyword"
+              className="w-full h-10 pl-9 pr-3 bg-white border border-[#D9D5CF] rounded text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-theater-primary-600 focus:ring-1 focus:ring-theater-primary-600"
+              placeholder="作品名・作者名など"
+              value={keyword}
+              onChange={(e) => setKeyword(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && submit()}
+            />
+            <FaSearch className="absolute left-3 top-3 text-gray-400 text-sm" />
           </div>
-        )}
+        </div>
 
-        {activeTab === "categories" && (
-          <div className="w-full">
+        {rangeRow("総人数", "人", minTotalCount, setMinTotalCount, maxTotalCount, setMaxTotalCount)}
+        {rangeRow("男性", "人", minMaleCount, setMinMaleCount, maxMaleCount, setMaxMaleCount)}
+        {rangeRow("女性", "人", minFemaleCount, setMinFemaleCount, maxFemaleCount, setMaxFemaleCount)}
+        {rangeRow("上演時間", "分", minPlaytime, setMinPlaytime, maxPlaytime, setMaxPlaytime)}
+
+        <details className="border-t border-[#D9D5CF] pt-3">
+          <summary className="cursor-pointer text-sm font-medium text-gray-800">
+            カテゴリで絞り込む{selectedTags.length > 0 ? `（${selectedTags.length}件選択中）` : ""}
+          </summary>
+          <div className="mt-3">
             {categoriesLoading ? (
-              <div className="text-center py-8 text-gray-500">カテゴリーを読み込み中...</div>
+              <p className="text-sm text-gray-600">カテゴリを読み込んでいます</p>
             ) : categoriesError ? (
-              <div className="text-center py-8 text-red-500">カテゴリーの読み込みに失敗しました</div>
+              <p className="text-sm text-theater-primary-700">カテゴリを読み込めませんでした。ページを再読み込みしてください。</p>
             ) : (
-              <TagSelector
-                category_ids={categories}
-                selectedTags={selectedTags}
-                setSelectedTags={(tags) => {
-                  setSelectedTags(tags);
-                }}
-              />
+              <TagSelector category_ids={categories} selectedTags={selectedTags} setSelectedTags={(tags) => setSelectedTags(tags)} />
             )}
-            
-            <div className="mt-6 pt-6 border-t border-gray-100">
-               <button
-                  className="w-full py-3 bg-theater-primary-600 text-white font-bold rounded-lg shadow-md hover:bg-theater-primary-700 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-center gap-2"
-                  onClick={() => {
-                    if (page != 1) {
-                      setPage(1);
-                    } else {
-                      handleSubmit();
-                      onSearch();
-                    }
-                  }}
-                >
-                  <FaSearch />
-                  選択したカテゴリーで検索
-                </button>
-            </div>
           </div>
-        )}
+        </details>
+
+        <button
+          type="button"
+          className="w-full h-11 bg-theater-primary-600 text-white font-bold rounded hover:bg-theater-primary-700 transition-colors flex items-center justify-center gap-2"
+          onClick={submit}
+        >
+          <FaSearch className="text-sm" />
+          この条件で探す
+        </button>
       </div>
     </div>
   );

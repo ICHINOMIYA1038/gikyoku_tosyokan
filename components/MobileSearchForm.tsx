@@ -1,5 +1,5 @@
-import React, { SetStateAction, useState, useEffect } from "react";
-import { FaSearch, FaTimes, FaFilter, FaChevronDown, FaChevronUp } from "react-icons/fa";
+import React, { SetStateAction, useState, useEffect, useRef } from "react";
+import { FaSearch, FaTimes, FaChevronDown, FaChevronUp } from "react-icons/fa";
 import TagSelector from "./TagSelecter";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/router";
@@ -17,23 +17,23 @@ interface QuickPreset {
 
 const quickPresets: QuickPreset[] = [
   {
-    label: "少人数\n(〜5人)",
-    icon: "👥",
+    label: "〜5人",
+    icon: "",
     params: { minTotalCount: "", maxTotalCount: "5" }
   },
   {
-    label: "中人数\n(6〜10人)",
-    icon: "👥👥",
+    label: "6〜10人",
+    icon: "",
     params: { minTotalCount: "6", maxTotalCount: "10" }
   },
   {
-    label: "短時間\n(〜30分)",
-    icon: "⏱️",
+    label: "〜30分",
+    icon: "",
     params: { minPlaytime: "0", maxPlaytime: "30" }
   },
   {
-    label: "標準時間\n(30〜60分)",
-    icon: "⏰",
+    label: "30〜60分",
+    icon: "",
     params: { minPlaytime: "30", maxPlaytime: "60" }
   }
 ];
@@ -102,7 +102,6 @@ export default function MobileSearchForm({
   const [minPlaytime, setMinPlaytime] = useState<string>("");
   const [maxPlaytime, setMaxPlaytime] = useState<string>("");
   const [selectedTags, setSelectedTags] = useState<number[]>([]);
-  const [isInitialized, setIsInitialized] = useState(false);
   
   // アコーディオン状態管理
   const [expandedSections, setExpandedSections] = useState<string[]>([]);
@@ -137,6 +136,39 @@ export default function MobileSearchForm({
     
     let hasParams = false;
     
+    // URL の条件を、検索に直接渡す値としても集める
+    const URL_KEYS = ["minPlaytime", "maxPlaytime", "minTotalCount", "maxTotalCount", "minMaleCount", "maxMaleCount", "minFemaleCount", "maxFemaleCount", "keyword"];
+    const overrides: Record<string, string> = {};
+    URL_KEYS.forEach((key) => {
+      if (router.query[key]) overrides[key] = String(router.query[key]);
+    });
+    if (router.query.category) overrides.categories = String(parseInt(router.query.category as string));
+    // URL に条件があるときは、URL にない条件を空に戻す（チップは「その条件だけ」で探すリンクなので）
+    const hasUrlParams = Object.keys(overrides).length > 0;
+    if (hasUrlParams) {
+      const CLEAR: Record<string, [string, (v: string) => void]> = {
+        minPlaytime: ["0", setMinPlaytime],
+        maxPlaytime: ["999", setMaxPlaytime],
+        minTotalCount: ["", setMinTotalCount],
+        maxTotalCount: ["", setMaxTotalCount],
+        minMaleCount: ["", setMinMaleCount],
+        maxMaleCount: ["", setMaxMaleCount],
+        minFemaleCount: ["", setMinFemaleCount],
+        maxFemaleCount: ["", setMaxFemaleCount],
+        keyword: ["", setKeyword],
+      };
+      Object.entries(CLEAR).forEach(([key, [empty, setter]]) => {
+        if (!(key in overrides)) {
+          overrides[key] = empty;
+          setter(key === "minPlaytime" || key === "maxPlaytime" ? "" : empty);
+        }
+      });
+      if (!router.query.category) {
+        overrides.categories = "";
+        setSelectedTags([]);
+      }
+    }
+
     if (router.query.minPlaytime) {
       setMinPlaytime(router.query.minPlaytime as string);
       hasParams = true;
@@ -179,14 +211,12 @@ export default function MobileSearchForm({
       hasParams = true;
     }
 
-    // パラメータがある場合は初期化完了として検索実行
-    if (hasParams && !isInitialized) {
-      setIsInitialized(true);
-      setTimeout(() => {
-        handleSubmit();
-      }, 100);
+    // setState はこの処理の中ではまだ反映されないので、URL の値を直接渡して検索する。
+    // 同じページでチップを押して URL が変わったときも、ここで検索し直す
+    if (hasParams) {
+      handleSubmit(overrides);
     }
-  }, [router.isReady, router.query, isInitialized]);
+  }, [router.isReady, router.query]);
 
   useEffect(() => {
     // URLパラメータがない場合のみ初回検索を実行
@@ -199,9 +229,13 @@ export default function MobileSearchForm({
     handleSubmit();
   }, [page, sort_by, sortDirection, selectedTags]);
 
-  const handleSubmit = async () => {
+  // 検索は同時に何本も走るので、最後に始めたものの結果だけを反映する（古い結果での上書きを防ぐ）
+  const latestRequest = useRef(0);
+
+  const handleSubmit = async (overrides: Record<string, string> = {}) => {
+    const requestId = ++latestRequest.current;
     setData([]);
-    const query = new URLSearchParams(searchParams).toString();
+    const query = new URLSearchParams({ ...searchParams, ...overrides }).toString();
 
     try {
       const response = await fetch(`/api/search?${query}`);
@@ -209,6 +243,7 @@ export default function MobileSearchForm({
         throw new Error("API request failed");
       }
       const data = await response.json();
+      if (requestId !== latestRequest.current) return;
       setData(data);
     } catch (error) {
       console.error("An error occurred:", error);
@@ -266,17 +301,14 @@ export default function MobileSearchForm({
         <button
           type="button"
           onClick={() => setIsOpen(true)}
-          className="bg-theater-primary-300 text-white p-4 rounded-full shadow-lg hover:bg-theater-primary-400 transition-all transform hover:scale-110"
+          className="relative inline-flex items-center gap-2 h-11 px-5 rounded-full bg-gray-900 text-white text-sm font-bold shadow-lg"
           aria-label="詳細検索を開く"
           aria-expanded={isOpen}
           aria-controls="mobile-search-panel"
         >
-          <FaSearch size={24} />
-          {hasActiveFilters() && (
-            <span className="absolute -top-1 -right-1 bg-theater-accent-yellow text-theater-neutral-800 text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
-              !
-            </span>
-          )}
+          <FaSearch size={14} />
+          絞り込み
+          {hasActiveFilters() && <span className="w-2 h-2 rounded-full bg-theater-primary-400" aria-label="条件を指定中" />}
         </button>
       </div>
 
@@ -286,20 +318,20 @@ export default function MobileSearchForm({
       }`} aria-hidden={!isOpen}>
         <div className="bg-white h-full w-full overflow-y-auto overflow-x-hidden">
           {/* ヘッダー */}
-          <div className="sticky top-0 bg-theater-primary-300 text-white p-4 flex items-center justify-between shadow-md">
-            <h2 className="text-lg font-bold">脚本を検索</h2>
+          <div className="sticky top-0 bg-white text-gray-900 px-4 h-14 flex items-center justify-between border-b border-[#D9D5CF] z-10">
+            <h2 className="text-lg font-bold my-0">絞り込み</h2>
             <button type="button" onClick={() => setIsOpen(false)} aria-label="閉じる">
               <FaTimes size={24} />
             </button>
           </div>
 
           {/* キーワード検索（常に表示） */}
-          <div className="p-4 bg-gray-50">
+          <div className="p-4">
             <div className="relative">
               <input
                 type="search"
                 placeholder="作品名・作者名で検索"
-                className="w-full p-3 pr-10 rounded-lg border border-theater-neutral-300 focus:border-theater-primary-400 focus:outline-none"
+                className="w-full h-11 px-3 pr-10 rounded border border-[#D9D5CF] focus:border-theater-primary-600 focus:outline-none"
                 value={keyword}
                 onChange={(e) => setKeyword(e.target.value)}
                 aria-label="作品名・作者名で検索"
@@ -311,17 +343,16 @@ export default function MobileSearchForm({
 
           {/* クイック選択プリセット */}
           <div className="p-4 border-b">
-            <h3 className="text-sm font-bold text-gray-700 mb-3">クイック選択</h3>
-            <div className="grid grid-cols-2 gap-2">
+            <h3 className="text-sm font-bold text-gray-800 mb-2 mt-0">よく使われる条件</h3>
+            <div className="flex flex-wrap gap-2">
               {quickPresets.map((preset, index) => (
                 <button
                   type="button"
                   key={index}
                   onClick={() => applyPreset(preset)}
-                  className="min-w-0 p-3 bg-white border border-theater-neutral-300 rounded-lg hover:bg-theater-primary-50 hover:border-theater-primary-400 transition-colors text-center"
+                  className="h-9 px-4 bg-white border border-gray-300 rounded-full text-sm text-gray-800 active:border-theater-primary-600"
                 >
-                  <div className="text-2xl mb-1">{preset.icon}</div>
-                  <div className="text-xs whitespace-pre-line break-keep">{preset.label}</div>
+                  {preset.label}
                 </button>
               ))}
             </div>
@@ -334,12 +365,12 @@ export default function MobileSearchForm({
               <button
                 type="button"
                 onClick={() => toggleSection("people")}
-                className="w-full flex items-center justify-between p-3 bg-theater-neutral-100 rounded-lg hover:bg-theater-neutral-200 transition-colors"
+                className="w-full flex items-center justify-between py-3 border-b border-[#D9D5CF] text-gray-900"
                 aria-expanded={expandedSections.includes("people")}
                 aria-controls="mobile-search-people"
               >
                 <span className="font-bold flex items-center">
-                  <FaFilter className="mr-2" />
+                  
                   人数で絞り込む
                 </span>
                 {expandedSections.includes("people") ? <FaChevronUp /> : <FaChevronDown />}
@@ -361,12 +392,12 @@ export default function MobileSearchForm({
               <button
                 type="button"
                 onClick={() => toggleSection("time")}
-                className="w-full flex items-center justify-between p-3 bg-theater-neutral-100 rounded-lg hover:bg-theater-neutral-200 transition-colors"
+                className="w-full flex items-center justify-between py-3 border-b border-[#D9D5CF] text-gray-900"
                 aria-expanded={expandedSections.includes("time")}
                 aria-controls="mobile-search-time"
               >
                 <span className="font-bold flex items-center">
-                  <FaFilter className="mr-2" />
+                  
                   上演時間で絞り込む
                 </span>
                 {expandedSections.includes("time") ? <FaChevronUp /> : <FaChevronDown />}
@@ -388,12 +419,12 @@ export default function MobileSearchForm({
               <button
                 type="button"
                 onClick={() => toggleSection("category")}
-                className="w-full flex items-center justify-between p-3 bg-theater-neutral-100 rounded-lg hover:bg-theater-neutral-200 transition-colors"
+                className="w-full flex items-center justify-between py-3 border-b border-[#D9D5CF] text-gray-900"
                 aria-expanded={expandedSections.includes("category")}
                 aria-controls="mobile-search-category"
               >
                 <span className="font-bold flex items-center">
-                  <FaFilter className="mr-2" />
+                  
                   カテゴリーで絞り込む
                   {selectedTags.length > 0 && (
                     <span className="ml-2 bg-theater-primary-500 text-white text-xs px-2 py-1 rounded-full">
@@ -421,19 +452,19 @@ export default function MobileSearchForm({
           </div>
 
           {/* アクションボタン */}
-          <div className="sticky bottom-0 p-4 bg-white border-t shadow-lg">
+          <div className="sticky bottom-0 p-4 bg-white border-t border-[#D9D5CF]">
             <div className="flex gap-2">
               <button
                 type="button"
                 onClick={resetFilters}
-                className="flex-1 p-3 bg-theater-neutral-200 text-theater-neutral-700 rounded-lg hover:bg-theater-neutral-300 transition-colors"
+                className="flex-1 h-12 bg-white border border-gray-300 text-gray-800 rounded"
               >
                 リセット
               </button>
               <button
                 type="button"
                 onClick={handleSearch}
-                className="flex-1 p-3 bg-theater-primary-600 text-white rounded-lg hover:bg-theater-primary-700 transition-colors font-bold"
+                className="flex-1 h-12 bg-theater-primary-600 text-white rounded font-bold"
               >
                 検索する
               </button>
