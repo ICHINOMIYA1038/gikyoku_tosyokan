@@ -1,8 +1,19 @@
+// 静的ページをビルドする環境のタイムゾーンを、ISR で再生成する Workers（UTC）にそろえる。
+// 手元（日本時間）でビルドすると、静的ページと再生成されたページで日付が 1 日ずれる
+process.env.TZ = "UTC";
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
   compress: true,
   poweredByHeader: false,
+  // ビルド時にクライアントへ埋め込む公開値。どこでビルド・デプロイしても同じ結果になるよう既定値を持たせる
+  // （未設定だと機能フラグが false になり、劇団員募集・メッセージが「準備中」になる）
+  env: {
+    NEXT_PUBLIC_GA_ID: process.env.NEXT_PUBLIC_GA_ID || "G-3187PW4BZL",
+    NEXT_PUBLIC_FEATURE_RECRUIT: process.env.NEXT_PUBLIC_FEATURE_RECRUIT || "true",
+    NEXT_PUBLIC_FEATURE_MESSAGES: process.env.NEXT_PUBLIC_FEATURE_MESSAGES || "true",
+  },
   outputFileTracingRoot: __dirname,
   // Cloudflare Workers（OpenNext）向け。workerd 用の export 条件を持つパッケージは、
   // 丸ごと含めないと workerd 向けのファイルが追跡されない

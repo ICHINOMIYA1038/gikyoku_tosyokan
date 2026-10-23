@@ -9,11 +9,9 @@
   // workers.dev への常設公開はしない
   "workers_dev": false,
   "preview_urls": true,
-  // 本番ドメイン。DNS レコード（プロキシ有効）はそのままで、Worker がリクエストを受ける
-  "routes": [
-    { "pattern": "gikyokutosyokan.com/*", "zone_name": "gikyokutosyokan.com" },
-    { "pattern": "www.gikyokutosyokan.com/*", "zone_name": "gikyokutosyokan.com" }
-  ],
+  // 本番ドメイン。DNS レコード（プロキシ有効）はそのままで、Worker がリクエストを受ける。
+  // www は別の Worker（redirect-www）が www なしへリダイレクトしているので、ここでは受けない
+  "routes": [{ "pattern": "gikyokutosyokan.com/*", "zone_name": "gikyokutosyokan.com" }],
   // DB（Supabase / 東京）とのやり取りが多いので、Worker を DB の近くで動かす
   "placement": { "mode": "smart" },
   "services": [{ "binding": "WORKER_SELF_REFERENCE", "service": "gikyoku-tosyokan" }],
