@@ -69,9 +69,8 @@ export default function MobileHeader() {
     <>
       <header className="flex items-center justify-between h-16 px-4 md:px-6 bg-white border-b border-gray-200">
         <Link className="flex items-center cursor-pointer min-w-0" href={"/"} onClick={closeMenu}>
-          <span className="font-serif font-extrabold text-[22px] leading-none text-gray-900 tracking-wide" style={{ fontFeatureSettings: '"palt"' }}>
-            <span className="text-theater-primary-600">戯</span>曲図書館
-          </span>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/logo.svg" alt="戯曲図書館" width={123} height={26} className="h-[26px] w-auto" />
         </Link>
 
         {/* デスクトップメニュー（lg以上で表示） */}

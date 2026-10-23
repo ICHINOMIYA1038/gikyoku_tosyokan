@@ -8,7 +8,8 @@ export default function Header() {
   return (
     <header className="flex items-center justify-between p-4 bg-white border-b border-gray-200">
       <Link className="flex items-center cursor-pointer" href={"/"}>
-        <OptimizedImage src="https://gikyokutosyokan-public.s3.ap-northeast-1.amazonaws.com/assets/logo-tosyokan.png" alt="戯曲図書館" width={320} height={48} className="h-14 w-auto" priority />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/logo.svg" alt="戯曲図書館" width={123} height={26} className="h-[26px] w-auto" />
       </Link>
       <nav className="space-x-4 hidden md:block font-semibold">
         <Link href="/" className="text-theater-neutral-800 hover:text-theater-neutral-600">
