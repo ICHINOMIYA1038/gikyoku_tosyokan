@@ -39,9 +39,19 @@ function isTrackingDeniedByAtt(): boolean {
   return document.cookie.split("; ").includes("att-status=denied");
 }
 
+// AdSense は本番ドメインでだけ読み込む。Vercel の旧デプロイ URL や Workers のプレビュー URL など、
+// 本番以外のホストで広告が配信されないようにする。ATT と同じ理由でレンダー内で同期的に判定する
+const ADSENSE_HOSTS = ["gikyokutosyokan.com"];
+
+function isAdSenseHost(): boolean {
+  if (typeof window === "undefined") return true;
+  return ADSENSE_HOSTS.includes(window.location.hostname);
+}
+
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
   const attTrackingDenied = isTrackingDeniedByAtt();
+  const adSenseEnabled = !attTrackingDenied && isAdSenseHost();
 
   // 既に同意済みならConsent Modeをgrantedに上げる
   useEffect(() => {
@@ -106,7 +116,7 @@ export default function App({ Component, pageProps }: AppProps) {
           interactive直後に投入する。lazyOnloadだとPV/imp比が大きく毀損する。
           tomoshibiアプリでATTが拒否された場合はこのスクリプト自体を読み込まない
           (App Store審査 Guideline 5.1.2(i) 対応)。 */}
-      {!attTrackingDenied && (
+      {adSenseEnabled && (
         <>
           <Script
             src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8691137965825158"
