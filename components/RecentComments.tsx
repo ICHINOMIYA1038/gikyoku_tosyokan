@@ -40,12 +40,9 @@ const RecentComments: React.FC = () => {
 
   if (isLoading) {
     return (
-      <section className="py-8 px-4 bg-gradient-to-b from-theater-primary-50/50 to-white">
+      <section className="py-8 px-4 bg-white">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-2xl md:text-3xl font-bold text-center mb-6 flex items-center justify-center gap-2">
-            <FaCommentDots className="text-theater-primary-500" />
-            みんなの声
-          </h2>
+          <h2 className="text-lg md:text-xl font-bold text-gray-900 mb-3 mt-0">みんなの声</h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
             {[1, 2, 3].map((i) => (
               <div key={i} className="bg-white rounded-lg p-4 border border-gray-200 animate-pulse">
@@ -65,16 +62,11 @@ const RecentComments: React.FC = () => {
   }
 
   return (
-    <section className="py-8 px-4 bg-gradient-to-b from-theater-primary-50/50 to-white">
+    <section className="py-8 px-4 bg-white">
       <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-6">
-          <h2 className="text-2xl md:text-3xl font-bold flex items-center justify-center gap-2">
-            <FaCommentDots className="text-theater-primary-500" />
-            みんなの声
-          </h2>
-          <p className="text-gray-500 text-sm mt-2">
-            作品を読んだ方、上演した方からのコメント
-          </p>
+        <div className="flex items-baseline justify-between mb-3">
+          <h2 className="text-lg md:text-xl font-bold text-gray-900 my-0">みんなの声</h2>
+          <span className="text-sm text-gray-600">作品を読んだ人・上演した人のコメント</span>
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">

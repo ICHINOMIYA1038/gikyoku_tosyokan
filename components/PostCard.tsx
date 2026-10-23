@@ -1,145 +1,81 @@
 import * as React from "react";
 import { Post as PostType } from "@prisma/client";
-import { useRouter } from "next/router";
 import Link from "next/link";
-import AiImageBadge from "./AiImageBadge";
 import OptimizedImage from "./OptimizedImage";
-import { FaClock, FaUsers, FaMale, FaFemale, FaTag, FaPen, FaTheaterMasks, FaCommentDots, FaStar } from "react-icons/fa";
+import TypeCover from "./TypeCover";
 import FavoriteButton from "@/components/FavoriteButton";
 
 type PostPageProps = {
   post: PostType & { author: { id: number; name: string } };
+  rank?: number;
 };
 
-const PostCard: React.FC<PostPageProps> = ({ post }: any) => {
-  const primaryCategory = post.categories && post.categories.length > 0 ? post.categories[0] : null;
-  const additionalCategories = post.categories && post.categories.length > 1 ? post.categories.length - 1 : 0;
+const FREE_CATEGORY = "無料で読める！";
+// ジャンルではないカテゴリ（台本の入手先、時間や人数の目安、賞）は、ジャンル欄に出さない
+const NON_GENRE = new Set([FREE_CATEGORY, "戯曲デジタルアーカイブ", "60分以内", "人数多数", "岸田國士戯曲賞", "OMS戯曲賞"]);
+
+function castLabel(post: any) {
+  if (!post.totalNumber || post.totalNumber <= 0) return null;
+  const parts = [];
+  if (post.man > 0) parts.push(`男${post.man}`);
+  if (post.woman > 0) parts.push(`女${post.woman}`);
+  return parts.length > 0 ? `${post.totalNumber}人（${parts.join("・")}）` : `${post.totalNumber}人`;
+}
+
+// 一覧の1行。人数・時間・ジャンル・台本の桁がそろうよう、PC では列で並べる
+const PostCard: React.FC<PostPageProps> = ({ post, rank }: any) => {
+  const genres = (post.categories || []).filter((c: any) => !NON_GENRE.has(c.name));
+  const isFree = (post.categories || []).some((c: any) => c.name === FREE_CATEGORY);
+  const cast = castLabel(post);
+  const playtime = post.playtime && post.playtime > 0 ? `${post.playtime}分` : null;
 
   return (
-    <Link href={`/posts/${post.id}`} className="block mb-3" aria-label={`${post.title} - ${post.author?.name ?? ""}`}>
-      <div className="group relative bg-white rounded-lg border border-gray-100 shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden hover:-translate-y-0.5">
-        <div className="flex flex-col md:flex-row h-full">
-          {/* 画像部分 */}
-          <div className="relative w-full md:w-48 h-48 md:h-auto flex-shrink-0 bg-gray-50">
-             {post.image_url ? (
-              <OptimizedImage
-                src={post.image_url}
-                alt={`${post.title}のサムネイル`}
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                loading="lazy"
-                width={400}
-                height={400}
-                sizes="(max-width: 768px) 100vw, 192px"
-              />
-            ) : (
-              <div className="w-full h-full flex flex-col items-center justify-center bg-gray-50 text-gray-300">
-                <FaTheaterMasks className="text-4xl mb-2 opacity-50" />
-                <span className="text-xs font-serif opacity-70">No Image</span>
-              </div>
-            )}
-            <AiImageBadge imageUrl={post.image_url} size="xs" />
-            {/* お気に入りボタン（右上） */}
-            <div className="absolute top-3 right-3 z-10">
-              <FavoriteButton postId={post.id} size="sm" />
-            </div>
-             {/* カテゴリーバッジ（左上） */}
-             {primaryCategory && (
-              <div className="absolute top-3 left-3 flex gap-1 z-10">
-                <span className="px-2.5 py-1 bg-white/90 backdrop-blur-sm border border-gray-100 text-theater-primary-700 text-xs font-medium rounded-full shadow-sm">
-                  {primaryCategory.name}
-                </span>
-                {additionalCategories > 0 && (
-                  <span className="px-2 py-1 bg-gray-800/80 text-white text-xs rounded-full">
-                    +{additionalCategories}
-                  </span>
-                )}
-              </div>
-            )}
-          </div>
-          
-          {/* テキスト部分 */}
-          <div className="flex-1 p-4 md:p-5 flex flex-col justify-between">
-            <div>
-              <div className="flex justify-between items-start mb-2">
-                 <h3 className="text-lg md:text-xl font-serif font-bold text-gray-800 group-hover:text-theater-primary-700 transition-colors line-clamp-2 md:line-clamp-1 leading-snug">
-                  {post.title}
-                </h3>
-              </div>
-              
-              <div className="flex items-center gap-2 mb-4 text-sm text-gray-500">
-                <span className="flex items-center gap-1.5 px-2 py-0.5 bg-gray-50 rounded text-gray-600 border border-gray-100">
-                  <FaPen className="text-gray-400 text-xs" />
-                  {post.author.name}
-                </span>
-              </div>
-
-              {/* あらすじ（synopsis優先、なければAI概要） */}
-              {post.synopsis ? (
-                <p className="text-sm text-gray-600 line-clamp-2 leading-relaxed mb-4 font-sans">
-                  {post.synopsis}
-                </p>
-              ) : post.aiDescription ? (
-                <p className="text-sm text-gray-600 line-clamp-2 leading-relaxed mb-4 font-sans">
-                  <span className="inline-block text-[10px] font-bold text-purple-600 bg-purple-50 border border-purple-100 px-1.5 py-0.5 rounded mr-1.5 align-middle">AI</span>
-                  {post.aiDescription}
-                </p>
-              ) : null}
-            </div>
-            
-            {/* メタ情報（下部） */}
-            <div className="flex flex-wrap items-center gap-4 pt-4 border-t border-gray-50 mt-auto">
-              {post.playtime && post.playtime > 0 && (
-                <div className="flex items-center gap-1.5 text-gray-600 text-sm">
-                  <FaClock className="text-green-500/70" />
-                  <span className="font-medium">{post.playtime}分</span>
-                </div>
-              )}
-
-              {post.totalNumber && post.totalNumber > 0 && (
-                <div className="flex items-center gap-1.5 text-gray-600 text-sm">
-                  <FaUsers className="text-theater-primary-400/70" />
-                  <span className="font-medium">{post.totalNumber}人</span>
-                </div>
-              )}
-
-              {/* 平均評価 */}
-              {post.averageRating != null && post.averageRating > 0 && (
-                <div className="flex items-center gap-1 text-gray-600 text-sm">
-                  <FaStar className="text-yellow-400/80" />
-                  <span className="font-medium">{post.averageRating.toFixed(1)}</span>
-                </div>
-              )}
-
-              {/* コメント数 */}
-              {post._count?.comments > 0 && (
-                <div className="flex items-center gap-1.5 text-gray-600 text-sm">
-                  <FaCommentDots className="text-theater-primary-400/70" />
-                  <span className="font-medium">{post._count.comments}</span>
-                </div>
-              )}
-
-              {/* 男女内訳 */}
-              {(post.man > 0 || post.woman > 0) && (
-                <div className="flex items-center gap-3 ml-auto text-xs text-gray-500 bg-gray-50 px-3 py-1 rounded-full border border-gray-100">
-                   {post.man > 0 && (
-                    <div className="flex items-center gap-1">
-                      <span className="w-2 h-2 rounded-full bg-theater-primary-400"></span>
-                      <span>男 {post.man}</span>
-                    </div>
-                  )}
-                  {post.woman > 0 && (
-                    <div className="flex items-center gap-1">
-                      <span className="w-2 h-2 rounded-full bg-theater-primary-400"></span>
-                      <span>女 {post.woman}</span>
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-          </div>
+    <div className="group relative border-b border-[#D9D5CF] hover:bg-[#F4F2EE] transition-colors">
+      <Link
+        href={`/posts/${post.id}`}
+        className="grid grid-cols-[56px_minmax(0,1fr)_auto] md:grid-cols-[48px_minmax(0,1fr)_9rem_4.5rem_8rem_4.5rem_2.5rem] items-center gap-x-4 py-3 pr-10 md:pr-2"
+        aria-label={`${post.title} - ${post.author?.name ?? ""}`}
+      >
+        <div className="w-14 h-[75px] md:w-12 md:h-16 overflow-hidden">
+          {post.image_url ? (
+            <OptimizedImage
+              src={post.image_url}
+              alt=""
+              className="w-full h-full object-cover grayscale"
+              loading="lazy"
+              width={96}
+              height={128}
+              sizes="56px"
+            />
+          ) : (
+            <TypeCover title={post.title} className="w-full h-full" titleClassName="text-[9px]" />
+          )}
         </div>
+
+        <div className="min-w-0">
+          <h3 className="font-serif font-bold text-[17px] md:text-lg leading-snug text-gray-900 group-hover:text-theater-primary-700 line-clamp-2 md:line-clamp-1">
+            {rank ? <span className="font-sans font-bold text-gray-500 mr-2">{rank}.</span> : null}
+            {post.title}
+          </h3>
+          <p className="text-sm text-gray-600 truncate">{post.author?.name}</p>
+          {/* スマホでは人数・時間・台本を1行にまとめる */}
+          <p className="md:hidden mt-1 text-sm text-gray-800">
+            {[cast, playtime, isFree ? "無料" : null].filter(Boolean).join("・")}
+          </p>
+        </div>
+
+        <span className="hidden md:block text-sm text-gray-800 tabular-nums">{cast ?? "—"}</span>
+        <span className="hidden md:block text-sm text-gray-800 tabular-nums">{playtime ?? "—"}</span>
+        <span className="hidden md:block text-sm text-gray-600 truncate">{genres[0]?.name ?? "—"}</span>
+        <span className="hidden md:block">
+          {isFree && <span className="inline-block px-2 py-0.5 rounded text-xs font-medium text-[#1F7A4D] bg-[#E6F2EC]">無料</span>}
+        </span>
+        <span className="hidden md:block" />
+      </Link>
+      <div className="absolute right-2 top-3 md:top-1/2 md:-translate-y-1/2">
+        <FavoriteButton postId={post.id} size="sm" />
       </div>
-    </Link>
+    </div>
   );
 };
 
