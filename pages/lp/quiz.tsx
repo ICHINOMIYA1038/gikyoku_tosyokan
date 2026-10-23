@@ -15,6 +15,7 @@ import {
 import QuizHeader from "@/components/quiz/puiz-header";
 import AdSlot from "@/components/Ad/AdSlot";
 import { AD_SLOTS } from "@/lib/adSlots";
+import { getRandomQuizQuestions } from "@/lib/quiz";
 
 export const QUIZ_TITLE = 0;
 export const QUIZ_QUESTION = 1;
@@ -254,10 +255,7 @@ function QuizApp({ quizData }: any) {
 }
 
 export async function getServerSideProps() {
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/quiz`
-  );
-  const quizData = await response.json();
+  const quizData = getRandomQuizQuestions(10);
 
   return {
     props: {
