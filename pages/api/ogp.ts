@@ -1,7 +1,28 @@
 import { NextApiHandler, NextApiRequest, NextApiResponse } from "next";
-import { JSDOM } from "jsdom";
 
 /*https://tuka.dev/posts/implement-link-card-with-nextjs/を参考に実装 */
+
+// jsdom は Cloudflare Workers で動かないため、<meta> タグだけを正規表現で読む
+const decodeEntities = (value: string) =>
+  value
+    .replace(/&#(\d+);/g, (_, code) => String.fromCodePoint(Number(code)))
+    .replace(/&#x([0-9a-f]+);/gi, (_, code) => String.fromCodePoint(parseInt(code, 16)))
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;|&apos;/g, "'")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&amp;/g, "&");
+
+const metaTags = (html: string) =>
+  Array.from(html.matchAll(/<meta\b[^>]*>/gi), ([tag]) => {
+    const attrs: Record<string, string> = {};
+    for (const [, name, , dq, sq, bare] of Array.from(
+      tag.matchAll(/([^\s=\/>]+)\s*(=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'>]+)))?/g)
+    )) {
+      attrs[name.toLowerCase()] = decodeEntities(dq ?? sq ?? bare ?? "");
+    }
+    return attrs;
+  });
 
 export type OgData = {
   url: string;
@@ -30,14 +51,11 @@ const handler: NextApiHandler = async (
   }
 
   const resHtml = await httpRes.text();
-  const jsdom = new JSDOM(resHtml);
 
   const og: OgData = { url };
-  const metaTags = jsdom.window.document.getElementsByTagName("meta");
-  const metaTagsArray = Array.from(metaTags);
-  for (const metaTag of metaTagsArray) {
-    const property = metaTag.getAttribute("property");
-    const content = metaTag.getAttribute("content");
+  for (const metaTag of metaTags(resHtml)) {
+    const property = metaTag.property;
+    const content = metaTag.content;
     switch (property) {
       case "og:site_name":
         og.siteName = content || undefined;
