@@ -1,4 +1,5 @@
 import * as React from "react";
+import PostCardList from "@/components/PostCardList";
 import { useState, useMemo } from "react";
 import { Author as AuthorType } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
@@ -256,7 +257,7 @@ function CategoryPage({ category }: any) {
       />
       
       <Layout ishead="true">
-        <div className="min-h-screen bg-gradient-to-b from-theater-neutral-50 to-white">
+        <div className="min-h-screen bg-white">
           {/* パンくずリスト */}
           <nav className="bg-white border-b">
             <div className="max-w-6xl mx-auto px-4 py-2">
@@ -279,11 +280,10 @@ function CategoryPage({ category }: any) {
           </nav>
 
           {/* ヒーローセクション */}
-          <div className="bg-gradient-to-r from-theater-primary-100 to-theater-primary-50 py-12 px-4">
+          <div className="border-b border-[#D9D5CF] py-10 px-4">
             <div className="max-w-6xl mx-auto">
-              <div className="flex items-center gap-3 mb-4">
-                <FaTag className="text-3xl text-theater-primary-500" />
-                <h1 className="text-3xl md:text-4xl font-bold text-theater-neutral-900">
+              <div className="mb-3">
+                <h1 className="text-[28px] md:text-[40px] font-serif font-bold leading-tight text-gray-900">
                   {category.name}の演劇脚本
                 </h1>
               </div>
@@ -292,26 +292,18 @@ function CategoryPage({ category }: any) {
                 {categoryInfo.intro}
               </p>
               
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                <div className="bg-white rounded-lg p-3 text-center">
-                  <FaBook className="text-2xl text-theater-primary-400 mx-auto mb-1" />
-                  <div className="text-2xl font-bold text-theater-neutral-900">{postCount}</div>
+              <div className="grid grid-cols-3 gap-3 mb-6 max-w-xl">
+                <div className="bg-[#F4F2EE] rounded p-3">
+                  <div className="text-xl font-bold text-gray-900 tabular-nums">{postCount}</div>
                   <div className="text-sm text-theater-neutral-600">作品数</div>
                 </div>
-                <div className="bg-white rounded-lg p-3 text-center">
-                  <FaClock className="text-2xl text-theater-primary-400 mx-auto mb-1" />
-                  <div className="text-2xl font-bold text-theater-neutral-900">{stats.avgPlaytime}分</div>
+                <div className="bg-[#F4F2EE] rounded p-3">
+                  <div className="text-xl font-bold text-gray-900 tabular-nums">{stats.avgPlaytime}分</div>
                   <div className="text-sm text-theater-neutral-600">平均上演時間</div>
                 </div>
-                <div className="bg-white rounded-lg p-3 text-center">
-                  <FaUsers className="text-2xl text-theater-accent-blue mx-auto mb-1" />
-                  <div className="text-2xl font-bold text-theater-neutral-900">{stats.minPeople}-{stats.maxPeople}人</div>
+                <div className="bg-[#F4F2EE] rounded p-3">
+                  <div className="text-xl font-bold text-gray-900 tabular-nums">{stats.minPeople}-{stats.maxPeople}人</div>
                   <div className="text-sm text-theater-neutral-600">必要人数</div>
-                </div>
-                <div className="bg-white rounded-lg p-3 text-center">
-                  <FaTheaterMasks className="text-2xl text-theater-accent-purple mx-auto mb-1" />
-                  <div className="text-2xl font-bold text-theater-neutral-900">{category.name}</div>
-                  <div className="text-sm text-theater-neutral-600">ジャンル</div>
                 </div>
               </div>
 
@@ -319,7 +311,7 @@ function CategoryPage({ category }: any) {
               {categoryInfo.keywords.length > 0 && (
                 <div className="flex flex-wrap gap-2">
                   {categoryInfo.keywords.map((keyword: string) => (
-                    <span key={keyword} className="px-3 py-1 bg-white/80 rounded-full text-sm text-theater-neutral-700">
+                    <span key={keyword} className="px-3 py-1 border border-gray-300 rounded-full text-sm text-gray-700">
                       #{keyword}
                     </span>
                   ))}
@@ -355,9 +347,8 @@ function CategoryPage({ category }: any) {
             )}
 
             {/* 検索・フィルター */}
-            <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-              <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
-                <FaFilter className="text-theater-primary-500" />
+            <div className="bg-white border border-[#D9D5CF] rounded p-5 mb-8">
+              <h2 className="text-lg font-bold mb-4 mt-0">
                 作品を絞り込む
               </h2>
               
@@ -422,7 +413,7 @@ function CategoryPage({ category }: any) {
             {/* 作品一覧セクション */}
             <div className="bg-white rounded-lg shadow-md p-6 mb-8">
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-bold text-theater-neutral-900">
+                <h2 className="text-lg md:text-xl font-bold text-gray-900 my-0">
                   {searchQuery || filterByTime !== "all" || filterByPeople !== "all" 
                     ? `検索結果（${filteredAndSortedPosts.length}作品）`
                     : `${category.name}作品一覧`
@@ -434,11 +425,7 @@ function CategoryPage({ category }: any) {
               </div>
 
               {filteredAndSortedPosts.length > 0 ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 justify-items-center">
-                  {filteredAndSortedPosts.map((post: any) => (
-                    <PostCardSmall post={post} key={post.id} />
-                  ))}
-                </div>
+                <PostCardList posts={filteredAndSortedPosts} />
               ) : (
                 <div className="text-center py-12">
                   <FaTheaterMasks className="text-6xl text-theater-neutral-300 mx-auto mb-4" />
@@ -469,7 +456,7 @@ function CategoryPage({ category }: any) {
             {categoryInfo.relatedSearches.length > 0 && (
               <div className="bg-theater-neutral-50 rounded-lg p-6 mb-8">
                 <h3 className="text-lg font-bold mb-4 text-theater-neutral-900">
-                  🔍 関連する検索キーワード
+                  関連する検索キーワード
                 </h3>
                 <div className="flex flex-wrap gap-2">
                   {categoryInfo.relatedSearches.map((search: string) => (
@@ -599,6 +586,11 @@ export async function getStaticProps(context: any) {
                 id: true,
                 name: true,
               },
+            },
+            // 一覧の行でジャンルと「無料」を出すため、カテゴリ名だけ取る
+            categories: {
+              select: { name: true },
+              orderBy: { id: "asc" },
             },
             _count: {
               select: {

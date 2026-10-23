@@ -82,11 +82,8 @@ export default function TimeDurationPage({ posts, totalCount, duration, config }
       />
 
       <div className="max-w-7xl mx-auto px-4 py-8">
-        <header className="text-center mb-12">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-emerald-100 rounded-full mb-4">
-            <FaClock className="text-3xl text-emerald-500" />
-          </div>
-          <h1 className="text-3xl md:text-4xl font-bold mb-4">
+        <header className="mb-8">
+          <h1 className="text-[28px] md:text-[40px] font-serif font-bold leading-tight mb-3">
             {config.title}
           </h1>
           <p className="text-lg text-gray-600 mb-2">

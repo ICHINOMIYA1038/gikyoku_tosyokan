@@ -31,11 +31,8 @@ export default function BunkasaiPage({ posts, totalCount }: BunkasaiPageProps) {
       />
 
       <div className="max-w-7xl mx-auto px-4 py-8">
-        <header className="text-center mb-12">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-orange-100 rounded-full mb-4">
-            <FaSchool className="text-3xl text-orange-500" />
-          </div>
-          <h1 className="text-3xl md:text-4xl font-bold mb-4">
+        <header className="mb-8">
+          <h1 className="text-[28px] md:text-[40px] font-serif font-bold leading-tight mb-3">
             文化祭におすすめの戯曲・脚本
           </h1>
           <p className="text-lg text-gray-600 mb-2">
@@ -47,15 +44,13 @@ export default function BunkasaiPage({ posts, totalCount }: BunkasaiPageProps) {
         </header>
 
         {/* 文化祭の脚本選びのポイント */}
-        <section className="mb-12 bg-gradient-to-r from-orange-50 to-yellow-50 p-6 rounded-lg">
+        <section className="mb-12 bg-[#F4F2EE] p-6 rounded-lg">
           <h2 className="text-xl font-bold mb-4 flex items-center">
-            <FaTheaterMasks className="mr-2 text-orange-500" />
             文化祭の脚本選び 3つのポイント
           </h2>
           <div className="grid md:grid-cols-3 gap-4">
             <div className="bg-white p-4 rounded-lg">
               <div className="flex items-center mb-2">
-                <FaClock className="text-orange-400 mr-2" />
                 <h3 className="font-semibold">上演時間は60分以内</h3>
               </div>
               <p className="text-sm text-gray-600">
@@ -64,7 +59,6 @@ export default function BunkasaiPage({ posts, totalCount }: BunkasaiPageProps) {
             </div>
             <div className="bg-white p-4 rounded-lg">
               <div className="flex items-center mb-2">
-                <FaUsers className="text-orange-400 mr-2" />
                 <h3 className="font-semibold">出演者は15人以下</h3>
               </div>
               <p className="text-sm text-gray-600">
@@ -73,7 +67,6 @@ export default function BunkasaiPage({ posts, totalCount }: BunkasaiPageProps) {
             </div>
             <div className="bg-white p-4 rounded-lg">
               <div className="flex items-center mb-2">
-                <FaSchool className="text-orange-400 mr-2" />
                 <h3 className="font-semibold">観客を楽しませる</h3>
               </div>
               <p className="text-sm text-gray-600">
@@ -168,19 +161,19 @@ export default function BunkasaiPage({ posts, totalCount }: BunkasaiPageProps) {
         <section className="mt-12 border-t pt-8">
           <h2 className="text-xl font-bold mb-4">関連ページ</h2>
           <div className="flex flex-wrap gap-3">
-            <Link href="/search/school" className="px-4 py-2 bg-gray-100 rounded-full hover:bg-gray-200">
+            <Link href="/search/school" className="px-4 py-1.5 border border-gray-300 rounded-full text-gray-800 hover:border-theater-primary-600 hover:text-theater-primary-700">
               学校演劇向け
             </Link>
-            <Link href="/search/comedy" className="px-4 py-2 bg-gray-100 rounded-full hover:bg-gray-200">
+            <Link href="/search/comedy" className="px-4 py-1.5 border border-gray-300 rounded-full text-gray-800 hover:border-theater-primary-600 hover:text-theater-primary-700">
               コメディ戯曲
             </Link>
-            <Link href="/search/short" className="px-4 py-2 bg-gray-100 rounded-full hover:bg-gray-200">
+            <Link href="/search/short" className="px-4 py-1.5 border border-gray-300 rounded-full text-gray-800 hover:border-theater-primary-600 hover:text-theater-primary-700">
               短編戯曲
             </Link>
-            <Link href="/search/futarishibai" className="px-4 py-2 bg-gray-100 rounded-full hover:bg-gray-200">
+            <Link href="/search/futarishibai" className="px-4 py-1.5 border border-gray-300 rounded-full text-gray-800 hover:border-theater-primary-600 hover:text-theater-primary-700">
               2人芝居
             </Link>
-            <Link href="/guide/cast-size" className="px-4 py-2 bg-gray-100 rounded-full hover:bg-gray-200">
+            <Link href="/guide/cast-size" className="px-4 py-1.5 border border-gray-300 rounded-full text-gray-800 hover:border-theater-primary-600 hover:text-theater-primary-700">
               人数別ガイド
             </Link>
           </div>

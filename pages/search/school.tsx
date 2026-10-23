@@ -38,11 +38,8 @@ export default function SchoolPage({ posts, totalCount }: SchoolPageProps) {
       />
 
       <div className="max-w-7xl mx-auto px-4 py-8">
-        <header className="text-center mb-12">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-4">
-            <FaGraduationCap className="text-3xl text-green-500" />
-          </div>
-          <h1 className="text-3xl md:text-4xl font-bold mb-4">
+        <header className="mb-8">
+          <h1 className="text-[28px] md:text-[40px] font-serif font-bold leading-tight mb-3">
             高校演劇・学校演劇向け脚本
           </h1>
           <p className="text-lg text-gray-600 mb-2">
@@ -223,16 +220,16 @@ export default function SchoolPage({ posts, totalCount }: SchoolPageProps) {
         <section className="mt-12 border-t pt-8">
           <h2 className="text-xl font-bold mb-4">関連ページ</h2>
           <div className="flex flex-wrap gap-3">
-            <Link href="/search/comedy" className="px-4 py-2 bg-gray-100 rounded-full hover:bg-gray-200">
+            <Link href="/search/comedy" className="px-4 py-1.5 border border-gray-300 rounded-full text-gray-800 hover:border-theater-primary-600 hover:text-theater-primary-700">
               コメディ戯曲
             </Link>
-            <Link href="/search/short" className="px-4 py-2 bg-gray-100 rounded-full hover:bg-gray-200">
+            <Link href="/search/short" className="px-4 py-1.5 border border-gray-300 rounded-full text-gray-800 hover:border-theater-primary-600 hover:text-theater-primary-700">
               短編戯曲
             </Link>
-            <Link href="/guide/cast-size" className="px-4 py-2 bg-gray-100 rounded-full hover:bg-gray-200">
+            <Link href="/guide/cast-size" className="px-4 py-1.5 border border-gray-300 rounded-full text-gray-800 hover:border-theater-primary-600 hover:text-theater-primary-700">
               人数別ガイド
             </Link>
-            <Link href="/guide/time" className="px-4 py-2 bg-gray-100 rounded-full hover:bg-gray-200">
+            <Link href="/guide/time" className="px-4 py-1.5 border border-gray-300 rounded-full text-gray-800 hover:border-theater-primary-600 hover:text-theater-primary-700">
               上演時間別ガイド
             </Link>
           </div>

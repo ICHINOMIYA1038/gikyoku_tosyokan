@@ -85,7 +85,7 @@ function AuthorPage({ author }: any) {
         }}
       />
       
-      <div className="min-h-screen bg-gradient-to-b from-theater-neutral-50 to-white">
+      <div className="min-h-screen bg-white">
         <div className="max-w-6xl mx-auto px-4 pt-3">
           <Breadcrumb
             items={[
@@ -96,19 +96,13 @@ function AuthorPage({ author }: any) {
           />
         </div>
         {/* ヒーローセクション */}
-        <div className="bg-gradient-to-r from-theater-primary-100 to-theater-primary-50 py-12 px-4">
+        <div className="border-b border-[#D9D5CF] py-10 px-4">
           <div className="max-w-6xl mx-auto">
             <div className="flex items-start gap-6">
-              {/* アバター部分 */}
-              <div className="hidden md:block">
-                <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center shadow-lg">
-                  <FaUser className="text-4xl text-theater-primary-500" />
-                </div>
-              </div>
               
               {/* 作者情報 */}
               <div className="flex-1">
-                <h1 className="text-3xl md:text-4xl font-bold text-theater-neutral-900 mb-2">
+                <h1 className="text-[28px] md:text-[40px] font-serif font-bold leading-tight text-gray-900 mb-2">
                   {author.name}
                 </h1>
                 
@@ -145,9 +139,8 @@ function AuthorPage({ author }: any) {
         <div className="max-w-6xl mx-auto px-4 py-8">
           {/* プロフィール */}
           {(author.profile || author.website) && (
-            <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-              <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
-                <FaUser className="text-theater-primary-500" />
+            <div className="bg-white border border-[#D9D5CF] rounded p-5 mb-8">
+              <h2 className="text-lg font-bold mb-3 mt-0">
                 プロフィール
               </h2>
               
@@ -167,7 +160,7 @@ function AuthorPage({ author }: any) {
 
           {/* 代表作セクション（評価×レビュー数で抽出） */}
           {topPosts.length > 0 && (
-            <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+            <div className="bg-white border border-[#D9D5CF] rounded p-5 mb-6">
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-2xl font-bold text-theater-neutral-900 flex items-center gap-2">
                   ⭐ {author.name}の代表作
@@ -183,10 +176,9 @@ function AuthorPage({ author }: any) {
           )}
 
           {/* 作品一覧セクション */}
-          <div className="bg-white rounded-lg shadow-md p-6">
+          <div className="bg-white">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold text-theater-neutral-900 flex items-center gap-2">
-                <FaTheaterMasks className="text-theater-primary-500" />
+              <h2 className="text-lg md:text-xl font-bold text-gray-900 my-0">
                 作品一覧
               </h2>
               <span className="text-sm text-theater-neutral-600">
