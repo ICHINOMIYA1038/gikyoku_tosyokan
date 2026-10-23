@@ -29,13 +29,13 @@ const CustomDropdown = ({ options, value, onChange, label }: any) => {
     <div className="relative inline-block w-full" ref={dropdownRef}>
       <button
         type="button"
-        className="flex justify-between items-center w-full bg-white border border-green-600 hover:border-green-700 px-4 py-2 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors"
+        className="flex justify-between items-center w-full bg-white border border-gray-300 hover:border-gray-500 px-4 py-2 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-theater-primary-600 focus:border-theater-primary-600 transition-colors"
         onClick={() => setIsOpen(!isOpen)}
-        style={{ color: "#2e7d32" }}
+        style={{ color: "#1A1A1A" }}
       >
         <span>{selectedOption.label}</span>
         <svg
-          className={`fill-current h-4 w-4 text-green-600 transition-transform duration-200 ${isOpen ? 'transform rotate-180' : ''}`}
+          className={`fill-current h-4 w-4 text-gray-500 transition-transform duration-200 ${isOpen ? 'transform rotate-180' : ''}`}
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 20 20"
         >
@@ -48,11 +48,11 @@ const CustomDropdown = ({ options, value, onChange, label }: any) => {
       </button>
 
       {isOpen && (
-        <div className="absolute z-10 w-full mt-1 bg-white border border-green-200 rounded-md shadow-lg max-h-60 overflow-auto">
+        <div className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-auto">
           {options.map((option: any) => (
             <div
               key={option.value}
-              className={`px-4 py-2 cursor-pointer hover:bg-green-50 ${selectedOption.value === option.value ? 'bg-green-100 font-medium text-green-800' : 'text-gray-700'
+              className={`px-4 py-2 cursor-pointer hover:bg-gray-50 ${selectedOption.value === option.value ? 'bg-theater-primary-50 font-medium text-theater-primary-800' : 'text-gray-700'
                 }`}
               onClick={() => handleSelect(option)}
             >

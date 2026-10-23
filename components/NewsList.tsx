@@ -56,7 +56,7 @@ const NewsList: React.FC<NewsListProps> = ({ news, limit = 3, showAll = false })
   return (
     <div>
       <div className="flex items-center justify-between mb-2">
-        <h2 className="text-xl font-bold">News</h2>
+        <h2 className="text-xl font-bold">お知らせ</h2>
         {!showAll && sorted.length > limit && (
           <Link href="/news" className="text-sm text-blue-600 hover:underline">
             すべて見る

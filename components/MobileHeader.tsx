@@ -67,9 +67,11 @@ export default function MobileHeader() {
 
   return (
     <>
-      <header className="flex items-center justify-between p-3 bg-theater-primary-300">
+      <header className="flex items-center justify-between h-16 px-4 md:px-6 bg-white border-b border-gray-200">
         <Link className="flex items-center cursor-pointer min-w-0" href={"/"} onClick={closeMenu}>
-          <OptimizedImage src="https://gikyokutosyokan-public.s3.ap-northeast-1.amazonaws.com/assets/logo-tosyokan.png" alt="戯曲図書館" width={280} height={40} className="h-12 w-auto" priority />
+          <span className="font-serif font-extrabold text-[22px] leading-none text-gray-900 tracking-wide" style={{ fontFeatureSettings: '"palt"' }}>
+            <span className="text-theater-primary-600">戯</span>曲図書館
+          </span>
         </Link>
 
         {/* デスクトップメニュー（lg以上で表示） */}
@@ -141,7 +143,7 @@ export default function MobileHeader() {
         />
 
         <div className="absolute right-0 top-0 h-full w-80 max-w-[80%] bg-white shadow-xl">
-          <div className="flex items-center justify-between p-4 bg-theater-primary-300 border-b">
+          <div className="flex items-center justify-between p-4 bg-white border-b">
             <span className="text-xl font-bold">メニュー</span>
             <button
               onClick={closeMenu}

@@ -2,6 +2,7 @@ import * as React from "react";
 import { useRouter } from "next/router";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
+import PostCardList from "@/components/PostCardList";
 import { FaClock, FaUsers, FaTag, FaPen, FaStar, FaTheaterMasks, FaArrowRight } from "react-icons/fa";
 
 const fetchAuthor = async (authorId: any) => {
@@ -74,134 +75,18 @@ const OtherPosts = ({ authorId, postId, authorName }: any) => {
     );
   }
 
+  // 一覧と同じ行の部品で並べる（作者名は API の結果に含まれないので補う）
   return (
     <div className="w-full">
-      {/* ヘッダー */}
-      <div className="mb-4 pb-3 border-b border-gray-200">
-        <div className="flex items-center justify-between">
-          <h2 className="text-lg font-bold text-gray-800 flex items-center">
-            <FaTheaterMasks className="mr-2 text-purple-500" />
-            {authorName}さんの他の作品
-          </h2>
-          {otherPosts.length > 4 && (
-            <Link 
-              href={`/authors/${authorId}`}
-              className="text-sm text-purple-600 hover:text-purple-700 flex items-center"
-            >
-              全{otherPosts.length}作品を見る
-              <FaArrowRight className="ml-1 text-xs" />
-            </Link>
-          )}
-        </div>
-      </div>
-
-      {/* 作品リスト */}
-      <div className="space-y-3">
-        {displayPosts.map((post: any) => (
-          <Link key={post.id} href={`/posts/${post.id}`}>
-            <div className="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md hover:border-purple-300 transition-all cursor-pointer">
-              <div className="flex justify-between items-start gap-3">
-                {/* サムネイル */}
-                <div className="flex-shrink-0 w-16 h-20 sm:w-20 sm:h-28 rounded-md overflow-hidden bg-gray-100">
-                  {post.image_url ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      src={post.image_url}
-                      alt=""
-                      className="w-full h-full object-cover"
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center text-gray-300">
-                      <FaTheaterMasks className="text-2xl" />
-                    </div>
-                  )}
-                </div>
-
-                {/* 左側：タイトルと情報 */}
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-gray-800 hover:text-purple-600 mb-2 line-clamp-1">
-                    {post.title}
-                  </h3>
-                  
-                  {/* メタ情報 */}
-                  <div className="flex flex-wrap gap-3 text-xs text-gray-600">
-                    {post.playtime > 0 && (
-                      <div className="flex items-center">
-                        <FaClock className="mr-1 text-gray-400" />
-                        <span>{formatPlaytime(post.playtime)}</span>
-                      </div>
-                    )}
-                    
-                    {(post.totalNumber > 0 || post.man > 0 || post.woman > 0) && (
-                      <div className="flex items-center">
-                        <FaUsers className="mr-1 text-gray-400" />
-                        <span>{formatCast(post)}</span>
-                      </div>
-                    )}
-                    
-                    {post.categories && post.categories.length > 0 && (
-                      <div className="flex items-center">
-                        <FaTag className="mr-1 text-gray-400" />
-                        <span>{post.categories[0].name}</span>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* あらすじ（あれば） */}
-                  {post.synopsis && (
-                    <p className="mt-2 text-xs text-gray-600 line-clamp-2">
-                      {post.synopsis}
-                    </p>
-                  )}
-                </div>
-
-                {/* 右側：評価 */}
-                {post.averageRating > 0 && (
-                  <div className="flex-shrink-0 text-right">
-                    <div className="flex items-center text-yellow-500">
-                      <FaStar className="mr-1" />
-                      <span className="font-semibold">{post.averageRating.toFixed(1)}</span>
-                    </div>
-                    <span className="text-xs text-gray-500">
-                      {post._count?.ratings || 0}件
-                    </span>
-                  </div>
-                )}
-              </div>
-
-              {/* バッジ */}
-              <div className="mt-2 flex gap-2">
-                {post.playtime > 0 && post.playtime <= 30 && (
-                  <span className="inline-block px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full font-medium">
-                    短編
-                  </span>
-                )}
-                {post.totalNumber > 0 && post.totalNumber <= 5 && (
-                  <span className="inline-block px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full font-medium">
-                    少人数
-                  </span>
-                )}
-              </div>
-            </div>
+      <div className="mb-3 flex items-baseline justify-between">
+        <h2 className="text-lg font-bold text-gray-900 my-0">{authorName}さんの他の作品</h2>
+        {otherPosts.length > 4 && (
+          <Link href={`/authors/${authorId}`} className="text-sm text-theater-primary-700 hover:underline">
+            全{otherPosts.length}作品を見る
           </Link>
-        ))}
+        )}
       </div>
-
-      {/* もっと見るボタン */}
-      {otherPosts.length > 4 && (
-        <div className="mt-6 text-center">
-          <Link 
-            href={`/authors/${authorId}`}
-            className="inline-flex items-center px-6 py-3 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors font-medium"
-          >
-            <FaPen className="mr-2" />
-            {authorName}さんの全作品を見る
-            <FaArrowRight className="ml-2" />
-          </Link>
-        </div>
-      )}
+      <PostCardList posts={displayPosts.map((post: any) => ({ ...post, author: post.author ?? { id: authorId, name: authorName } }))} />
     </div>
   );
 };

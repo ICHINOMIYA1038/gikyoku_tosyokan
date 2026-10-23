@@ -31,10 +31,16 @@ body {
 }
 
 /* 明朝体の適用 */
-h1, h2, h3, .serif-font, .section-title, .logo-text {
+h1, .serif-font, .section-title, .logo-text {
   font-family: 'Shippori Mincho', serif;
   font-weight: 700;
-  letter-spacing: 0.05em;
+  font-feature-settings: "palt";
+}
+
+/* 見出しは文節で折り返し、行頭に1〜2文字だけ残る改行を避ける */
+h1, h2, h3, h4, .serif-font {
+  word-break: auto-phrase;
+  text-wrap: balance;
 }
 
 img, video {
@@ -83,16 +89,7 @@ h2 {
   padding-bottom: 0.35em;
 }
 
-h2::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 60px;
-  height: 3px;
-  @apply bg-theater-primary-600;
-  opacity: 0.8;
-}
+h2::after { content: none; }
 
 h2::before { content: none; }
 
@@ -109,8 +106,7 @@ h2::before { content: none; }
 
 h3 {
   @apply text-lg md:text-xl font-semibold my-4 text-gray-800;
-  padding: 0 0 0 1rem;
-  border-left: 3px solid theme('colors.theater.primary.600');
+  padding: 0;
   background: transparent;
 }
 h3::before { content: none; }

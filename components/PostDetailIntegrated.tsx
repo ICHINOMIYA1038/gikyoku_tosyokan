@@ -1,4 +1,5 @@
 import * as React from "react";
+import TypeCover from "./TypeCover";
 import Link from "next/link";
 import Star from "./Widget/Star";
 import CustomMarkdown from './CustomMarkdown';
@@ -20,7 +21,6 @@ type PostPageProps = {
 
 // --- ヒーロー: Filmarks/AniList型 ---
 export const PostHero: React.FC<PostPageProps> = ({ post }) => {
-  const initial = post.title.charAt(0);
   const man = (post.man != null && post.man > 0) ? post.man : 0;
   const woman = (post.woman != null && post.woman > 0) ? post.woman : 0;
   const others = (post.others != null && post.others > 0) ? post.others : 0;
@@ -38,9 +38,7 @@ export const PostHero: React.FC<PostPageProps> = ({ post }) => {
               sizes="(max-width: 768px) 144px, 160px"
               className="w-36 h-[200px] md:w-40 md:h-[220px] object-cover rounded-lg shadow-md" />
           ) : (
-            <div className="w-36 h-[200px] md:w-40 md:h-[220px] bg-gradient-to-br from-theater-primary-400 via-pink-400 to-purple-500 rounded-lg shadow-md flex items-center justify-center">
-              <span className="text-5xl font-serif font-bold text-white/90 drop-shadow">{initial}</span>
-            </div>
+            <TypeCover title={post.title} author={post.author?.name} className="w-36 h-[200px] md:w-40 md:h-[220px] rounded" />
           )}
           <AiImageBadge imageUrl={post.image_url} />
         </div>
@@ -53,7 +51,7 @@ export const PostHero: React.FC<PostPageProps> = ({ post }) => {
 
       {/* メイン情報 */}
       <div className="flex-1 min-w-0">
-        <h1 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-900 leading-tight">
+        <h1 className="text-[28px] md:text-[40px] font-serif font-bold text-gray-900 leading-tight">
           {post.title}
         </h1>
 
@@ -72,59 +70,42 @@ export const PostHero: React.FC<PostPageProps> = ({ post }) => {
           </div>
         )}
 
-        {/* スペックテーブル — AniList型 */}
-        <dl className="mt-3 grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 text-sm">
-          {post.playtime != null && post.playtime > 0 && (
-            <>
-              <dt className="text-gray-400">上演時間</dt>
-              <dd className="text-gray-800 font-medium">{post.playtime}分</dd>
-            </>
+        {/* 仕様表。項目名と値を点線でつなぎ、値を右にそろえる */}
+        <dl className="mt-4 max-w-md text-[15px]">
+          {castTotal > 0 && (
+            <SpecRow label="人数">
+              {castTotal}人{(man > 0 || woman > 0) && `（${[man > 0 ? `男${man}` : "", woman > 0 ? `女${woman}` : "", others > 0 ? `他${others}` : ""].filter(Boolean).join("・")}）`}
+            </SpecRow>
           )}
-          {post.totalNumber != null && post.totalNumber > 0 && (
-            <>
-              <dt className="text-gray-400">総人数</dt>
-              <dd className="text-gray-800 font-medium">{post.totalNumber}人</dd>
-            </>
-          )}
+          {post.playtime != null && post.playtime > 0 && <SpecRow label="上演時間">{post.playtime}分</SpecRow>}
           {post.categories && post.categories.length > 0 && (
-            <>
-              <dt className="text-gray-400">カテゴリ</dt>
-              <dd className="flex flex-wrap gap-1">
-                {post.categories.map((cat: any) => (
-                  <Link key={cat.id} href={`/categories/${cat.id}`}
-                    className="text-theater-primary-600 hover:underline text-sm font-medium">
-                    {cat.name}
-                  </Link>
-                ))}
-              </dd>
-            </>
+            <SpecRow label="ジャンル">
+              {post.categories.map((cat: any, i: number) => (
+                <React.Fragment key={cat.id}>
+                  {i > 0 && "、"}
+                  <Link href={`/categories/${cat.id}`} className="text-theater-primary-700 hover:underline">{cat.name}</Link>
+                </React.Fragment>
+              ))}
+            </SpecRow>
           )}
+          <SpecRow label="台本">
+            {post.link_to_plot ? "無料で読める（外部サイト）" : post.amazon_text_url || post.ISBN_13 ? "書籍あり" : "入手先は未確認"}
+          </SpecRow>
         </dl>
 
-        {/* 男女比 — 目立つバー */}
-        {castTotal > 0 && (
-          <div className="mt-4">
-            <p className="text-xs font-bold text-gray-500 mb-1.5">キャスト男女比</p>
-            <div className="flex h-6 rounded overflow-hidden text-xs font-bold text-white">
-              {man > 0 && (
-                <div className="bg-blue-500 flex items-center justify-center px-2 min-w-[2rem]"
-                  style={{ width: `${(man / castTotal) * 100}%` }}>
-                  ♂{man}
-                </div>
-              )}
-              {woman > 0 && (
-                <div className="bg-pink-500 flex items-center justify-center px-2 min-w-[2rem]"
-                  style={{ width: `${(woman / castTotal) * 100}%` }}>
-                  ♀{woman}
-                </div>
-              )}
-              {others > 0 && (
-                <div className="bg-gray-400 flex items-center justify-center px-2 min-w-[2rem]"
-                  style={{ width: `${(others / castTotal) * 100}%` }}>
-                  他{others}
-                </div>
-              )}
+        {/* 配役の図。男は塗り、女は線、その他は薄い塗り */}
+        {castTotal > 0 && castTotal <= 40 && (
+          <div className="mt-3" aria-label={`配役 ${castTotal}人（男${man}・女${woman}${others > 0 ? `・他${others}` : ""}）`}>
+            <div className="flex flex-wrap gap-1">
+              {Array.from({ length: man }).map((_, i) => <CastFigure key={`m${i}`} kind="man" />)}
+              {Array.from({ length: woman }).map((_, i) => <CastFigure key={`w${i}`} kind="woman" />)}
+              {Array.from({ length: others }).map((_, i) => <CastFigure key={`o${i}`} kind="other" />)}
             </div>
+            <p className="mt-1 flex gap-3 text-xs text-gray-600">
+              {man > 0 && <span className="inline-flex items-center gap-1"><CastFigure kind="man" small />男</span>}
+              {woman > 0 && <span className="inline-flex items-center gap-1"><CastFigure kind="woman" small />女</span>}
+              {others > 0 && <span className="inline-flex items-center gap-1"><CastFigure kind="other" small />その他</span>}
+            </p>
           </div>
         )}
 
@@ -132,6 +113,30 @@ export const PostHero: React.FC<PostPageProps> = ({ post }) => {
         <PurchaseCTAs post={post} />
       </div>
     </div>
+  );
+};
+
+const SpecRow: React.FC<{ label: string; children: React.ReactNode }> = ({ label, children }) => (
+  <div className="flex items-baseline gap-2 py-1">
+    <dt className="text-gray-600 flex-shrink-0">{label}</dt>
+    <span className="flex-1 border-b border-dotted border-gray-400 translate-y-[-4px]" aria-hidden="true" />
+    <dd className="text-gray-900 text-right">{children}</dd>
+  </div>
+);
+
+const CastFigure: React.FC<{ kind: "man" | "woman" | "other"; small?: boolean }> = ({ kind, small }) => {
+  const size = small ? 10 : 16;
+  const style =
+    kind === "man"
+      ? { fill: "#1A1A1A", stroke: "#1A1A1A" }
+      : kind === "woman"
+        ? { fill: "none", stroke: "#5E5A55" }
+        : { fill: "#D9D5CF", stroke: "#D9D5CF" };
+  return (
+    <svg width={size} height={size * 1.25} viewBox="0 0 16 20" aria-hidden="true">
+      <circle cx="8" cy="5" r="3.5" fill={style.fill} stroke={style.stroke} strokeWidth="1.5" />
+      <path d="M2 19c0-4.5 2.7-7.5 6-7.5s6 3 6 7.5z" fill={style.fill} stroke={style.stroke} strokeWidth="1.5" />
+    </svg>
   );
 };
 
@@ -172,13 +177,13 @@ const PurchaseCTAs: React.FC<{ post: any }> = ({ post }) => {
       {post.link_to_plot && (
         <a href={post.link_to_plot} target="_blank" rel="noopener noreferrer"
           className={`${btnBase} bg-theater-primary-600 hover:bg-theater-primary-700 text-white`}>
-          <FaBook className="text-xs" /> 無料で読む
+          <FaBook className="text-xs" /> 台本を読む（外部サイト）
         </a>
       )}
       {post.amazon_text_url && (
         <a href={post.amazon_text_url} target="_blank" rel="noopener noreferrer sponsored"
           onClick={() => trackAffiliateClick("Amazon", post.title, post.id)}
-          className={`${btnBase} bg-[#FF9900] hover:bg-[#e68a00] text-white`}>
+          className={`${btnBase} border border-gray-400 bg-white text-gray-800 hover:bg-gray-50`}>
           Amazonで購入
         </a>
       )}
@@ -201,7 +206,7 @@ const PurchaseCTAs: React.FC<{ post: any }> = ({ post }) => {
       {post.kangeki_url && (
         <a href={post.kangeki_url} target="_blank" rel="noopener noreferrer sponsored"
           onClick={() => trackAffiliateClick("KangekiZanmai", post.title, post.id)}
-          className={`${btnBase} bg-red-600 hover:bg-red-700 text-white`}>
+          className={`${btnBase} border border-gray-400 bg-white text-gray-800 hover:bg-gray-50`}>
           観劇三昧で観る
         </a>
       )}

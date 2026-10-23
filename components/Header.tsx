@@ -6,7 +6,7 @@ import OptimizedImage from "./OptimizedImage";
 
 export default function Header() {
   return (
-    <header className="flex items-center justify-between p-4 bg-theater-primary-300">
+    <header className="flex items-center justify-between p-4 bg-white border-b border-gray-200">
       <Link className="flex items-center cursor-pointer" href={"/"}>
         <OptimizedImage src="https://gikyokutosyokan-public.s3.ap-northeast-1.amazonaws.com/assets/logo-tosyokan.png" alt="戯曲図書館" width={320} height={48} className="h-14 w-auto" priority />
       </Link>

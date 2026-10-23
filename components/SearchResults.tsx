@@ -39,12 +39,13 @@ const SearchResults: React.FC<SearchResultsProps> = ({
                             <>
                                 {data.searchResults.length !== 0 ? (
                                     <>
-                                        <div className="flex justify-between items-center mb-4">
-                                            <div className="text-lg font-semibold text-gray-700">
-                                                検索結果: <span className="text-green-700">{data.pagination?.count || data.pagination?.total || 0}</span> 件
+                                        <div className="flex justify-between items-baseline mb-3">
+                                            <div className="text-base font-bold text-gray-900">
+                                                {data.pagination?.count || 0}件
                                             </div>
-                                            <div className="text-sm text-gray-500">
-                                                {data.pagination?.current_page || 1} / {data.pagination?.total_pages || 1} ページ
+                                            <div className="text-sm text-gray-600">
+                                                {/* API は count / per / current を返す */}
+                                                {data.pagination?.current || 1} / {Math.max(1, Math.ceil((data.pagination?.count || 0) / (data.pagination?.per || 1)))} ページ
                                             </div>
                                         </div>
                                         <PostCardList posts={data.searchResults} />

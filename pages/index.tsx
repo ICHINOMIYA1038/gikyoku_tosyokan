@@ -4,7 +4,8 @@ import { useRef, useState } from "react";
 import { useRouter } from "next/router";
 import { prisma } from "@/lib/prisma";
 import NewsList from "@/components/NewsList";
-import TopImage from "@/components/TopImage"
+import HeroSearchBand from "@/components/HeroSearchBand";
+import SisterApps from "@/components/SisterApps";
 import Seo from "@/components/seo";
 import StructuredData from "@/components/StructuredData";
 import ContentSection from "@/components/ContentSection";
@@ -18,7 +19,7 @@ import AdSlot from "@/components/Ad/AdSlot";
 import { AD_SLOTS } from "@/lib/adSlots";
 import OptimizedImage from "@/components/OptimizedImage";
 
-export default function Home({ news, authors, posts, categories, blogPosts, trendingPosts, announcements }: any) {
+export default function Home({ news, authors, posts, categories, blogPosts, trendingPosts, announcements, totalPosts }: any) {
   const [data, setData] = useState<any>(null); // 取得したデータを格納
   const [page, setPage] = useState(1);
   const [sort_by, setSortIndex] = useState<number>(2);
@@ -92,110 +93,9 @@ export default function Home({ news, authors, posts, categories, blogPosts, tren
             }}
           />
         )}
-        <TopImage buttonClick={handleScrollToRegistrationForm} />
-
-        {/* モバイル常時表示キーワード検索バー */}
-        <div className="sm:hidden max-w-6xl mx-auto px-3 pt-3">
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              const fd = new FormData(e.currentTarget);
-              const q = String(fd.get("q") || "").trim();
-              if (q) router.push(`/?keyword=${encodeURIComponent(q)}`);
-              handleScrollToRegistrationForm();
-            }}
-            className="flex gap-2"
-            role="search"
-          >
-            <input
-              type="search"
-              name="q"
-              placeholder="タイトル・作者・キーワードで検索"
-              className="flex-1 min-h-[44px] px-3 rounded-lg border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-theater-primary-300"
-              aria-label="戯曲を検索"
-            />
-            <button
-              type="submit"
-              className="min-h-[44px] px-4 bg-theater-primary-500 text-white text-sm font-bold rounded-lg active:bg-theater-primary-600"
-            >
-              検索
-            </button>
-          </form>
-        </div>
+        <HeroSearchBand totalPosts={totalPosts} onSearch={handleScrollToRegistrationForm} />
 
         <NewsList news={news} />
-
-        {/* モバイル向けクイック導線（PCではsm:hidden） */}
-        <div className="sm:hidden max-w-6xl mx-auto px-3 pt-3">
-          <p className="text-xs font-bold text-gray-500 mb-2">目的から探す</p>
-          <div className="grid grid-cols-2 gap-2">
-            <Link href="/lp/school-festival" className="flex items-center justify-center min-h-[52px] px-3 py-3 bg-theater-primary-500 text-white text-sm font-bold rounded-lg shadow-sm active:bg-theater-primary-600">
-              文化祭の脚本
-            </Link>
-            <Link href="/lp/two-person-plays" className="flex items-center justify-center min-h-[52px] px-3 py-3 bg-white border border-theater-primary-300 text-theater-primary-700 text-sm font-bold rounded-lg shadow-sm active:bg-theater-primary-50">
-              2人で上演
-            </Link>
-            <Link href="/search/short-plays" className="flex items-center justify-center min-h-[52px] px-3 py-3 bg-white border border-theater-primary-300 text-theater-primary-700 text-sm font-bold rounded-lg shadow-sm active:bg-theater-primary-50">
-              短編（30分以内）
-            </Link>
-            <Link href="/lp/free-scripts" className="flex items-center justify-center min-h-[52px] px-3 py-3 bg-white border border-theater-primary-300 text-theater-primary-700 text-sm font-bold rounded-lg shadow-sm active:bg-theater-primary-50">
-              無料で読める
-            </Link>
-          </div>
-        </div>
-
-        {/* エチュードメーカー プロモーションバナー (横長, com.gikyokutosyokan.etude) */}
-        <div className="max-w-6xl mx-auto px-4 py-6">
-          <a
-            href="https://apps.apple.com/us/app/%E3%82%A8%E3%83%81%E3%83%A5%E3%83%BC%E3%83%89%E3%83%A1%E3%83%BC%E3%82%AB%E3%83%BC/id6794500656"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="block cursor-pointer hover:opacity-90 transition-opacity"
-            aria-label="エチュードメーカー - 即興演劇のお題をワンタップで生成するiOSアプリ"
-          >
-            <OptimizedImage
-              src="https://gikyokutosyokan-public.s3.ap-northeast-1.amazonaws.com/assets/banners/etude-wide.png"
-              alt="エチュードメーカー - 即興演劇のお題をワンタップで生成"
-              width={970}
-              height={250}
-              className="w-full h-auto rounded-lg shadow-md"
-            />
-          </a>
-        </div>
-
-        {/* TOMOSHIBI小屋 プロモーションバナー (横長) */}
-        <div className="max-w-6xl mx-auto px-4 pb-6">
-          <a
-            href="https://tomoshibi.gikyokutosyokan.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="block cursor-pointer hover:opacity-90 transition-opacity"
-            aria-label="TOMOSHIBI小屋 - ブラウザで動く舞台照明シミュレーター"
-          >
-            <div className="relative w-full overflow-hidden rounded-lg shadow-md border border-amber-900/30 bg-gradient-to-br from-[#1a1208] via-[#2a1a10] to-[#3a2a18] aspect-[970/250]">
-              {/* 背景のスポット光 */}
-              <div className="absolute inset-0 opacity-70 pointer-events-none">
-                <div className="absolute top-0 left-[15%] w-48 h-full -rotate-12 bg-gradient-to-b from-amber-200/40 via-amber-300/20 to-transparent blur-md" />
-                <div className="absolute top-0 left-[40%] w-32 h-full bg-gradient-to-b from-yellow-100/40 via-amber-200/20 to-transparent blur-sm" />
-                <div className="absolute top-0 right-[20%] w-40 h-full rotate-12 bg-gradient-to-b from-orange-200/30 via-orange-300/15 to-transparent blur-md" />
-              </div>
-              <div className="relative h-full flex items-center justify-center text-center px-6">
-                <div>
-                  <div className="text-amber-300 text-3xl mb-1" aria-hidden>✦</div>
-                  <div className="text-amber-50 font-serif text-3xl md:text-4xl tracking-wide">
-                    TOMOSHIBI<span className="text-amber-200 text-xl md:text-2xl ml-2">小屋</span>
-                  </div>
-                  <div className="mt-2 text-amber-200/80 text-sm md:text-base tracking-wider">
-                    舞台に灯をともす、ちいさな小屋
-                  </div>
-                  <div className="mt-3 inline-block px-4 py-1.5 rounded-full bg-amber-900/40 border border-amber-700/40 text-amber-100 text-xs md:text-sm">
-                    ブラウザで舞台照明をデザイン・プレビュー・共有
-                  </div>
-                </div>
-              </div>
-            </div>
-          </a>
-        </div>
 
         {/* 今週の人気作品 */}
         <TrendingPosts posts={trendingPosts} />
@@ -205,46 +105,12 @@ export default function Home({ news, authors, posts, categories, blogPosts, tren
           <AdSlot slot={AD_SLOTS.HOME_AFTER_TRENDING} format="horizontal" />
         </div>
 
-        {/* 人気の検索 - クイックフィルタチップ */}
-        <section className="max-w-6xl mx-auto px-4 py-4">
-          <h2 className="text-sm font-bold text-gray-600 mb-3">🔥 人気の検索条件</h2>
-          <div className="flex flex-wrap gap-2 text-sm">
-            <Link href="/?maxPlaytime=30" className="inline-flex items-center gap-1 px-3 py-1.5 bg-white border border-gray-200 rounded-full text-theater-primary-700 hover:bg-theater-primary-50 hover:border-theater-primary-300 transition-colors">
-              30分以内の短編
-            </Link>
-            <Link href="/?minTotalCount=2&maxTotalCount=5" className="inline-flex items-center gap-1 px-3 py-1.5 bg-white border border-gray-200 rounded-full text-theater-primary-700 hover:bg-theater-primary-50 hover:border-theater-primary-300 transition-colors">
-              2〜5人の少人数
-            </Link>
-            <Link href="/?minTotalCount=2&maxTotalCount=2" className="inline-flex items-center gap-1 px-3 py-1.5 bg-white border border-gray-200 rounded-full text-theater-primary-700 hover:bg-theater-primary-50 hover:border-theater-primary-300 transition-colors">
-              二人芝居
-            </Link>
-            <Link href="/?minTotalCount=1&maxTotalCount=1" className="inline-flex items-center gap-1 px-3 py-1.5 bg-white border border-gray-200 rounded-full text-theater-primary-700 hover:bg-theater-primary-50 hover:border-theater-primary-300 transition-colors">
-              一人芝居
-            </Link>
-            <Link href="/?maxMaleCount=0" className="inline-flex items-center gap-1 px-3 py-1.5 bg-white border border-gray-200 rounded-full text-theater-primary-700 hover:bg-theater-primary-50 hover:border-theater-primary-300 transition-colors">
-              女性のみ
-            </Link>
-            <Link href="/categories/4" className="inline-flex items-center gap-1 px-3 py-1.5 bg-white border border-gray-200 rounded-full text-theater-primary-700 hover:bg-theater-primary-50 hover:border-theater-primary-300 transition-colors">
-              無料で読める
-            </Link>
-            <Link href="/categories/14" className="inline-flex items-center gap-1 px-3 py-1.5 bg-white border border-gray-200 rounded-full text-theater-primary-700 hover:bg-theater-primary-50 hover:border-theater-primary-300 transition-colors">
-              コメディ
-            </Link>
-            <Link href="/categories/11" className="inline-flex items-center gap-1 px-3 py-1.5 bg-white border border-gray-200 rounded-full text-theater-primary-700 hover:bg-theater-primary-50 hover:border-theater-primary-300 transition-colors">
-              ヒューマンドラマ
-            </Link>
-            <Link href="/categories/1" className="inline-flex items-center gap-1 px-3 py-1.5 bg-white border border-gray-200 rounded-full text-theater-primary-700 hover:bg-theater-primary-50 hover:border-theater-primary-300 transition-colors">
-              岸田國士戯曲賞
-            </Link>
-          </div>
-        </section>
-
         <div
           className="lg:flex relative box-border"
           id="registration-form"
           ref={searchFormRef}
         >
-          <div className="mx-3 my-3 md:m-5 lg:w-1/2 lg:sticky lg:top-24">
+          <div className="mx-3 my-3 md:m-5 lg:w-[420px] lg:flex-shrink-0 lg:sticky lg:top-24 lg:self-start">
             <ResponsiveSearchForm
               setData={setData}
               page={page}
@@ -254,7 +120,7 @@ export default function Home({ news, authors, posts, categories, blogPosts, tren
               onSearch={handleScrollToRegistrationForm}
             />
           </div>
-          <div className="lg:w-2/3 flex flex-col gap-3 mx-3 my-3 md:m-5">
+          <div className="lg:flex-1 min-w-0 flex flex-col gap-3 mx-3 my-3 md:m-5">
             <SearchResults
               data={data}
               sort_by={sort_by}
@@ -456,6 +322,8 @@ export default function Home({ news, authors, posts, categories, blogPosts, tren
         
         {/* FAQセクション */}
         <FAQ items={faqItems} />
+
+        <SisterApps />
       </Layout>
     </>
   );
@@ -635,6 +503,10 @@ export async function getStaticProps() {
               name: true,
             },
           },
+          categories: {
+            select: { id: true, name: true },
+            orderBy: { id: "asc" },
+          },
         },
       });
       // 元の順序（アクセス数順）を維持し、アクセス数を付与
@@ -662,8 +534,11 @@ export async function getStaticProps() {
     };
   }
 
+  const totalPosts = await prisma.post.count().catch(() => 0);
+
   return {
     props: {
+      totalPosts,
       news: formattedNews,
       authors,
       posts,
