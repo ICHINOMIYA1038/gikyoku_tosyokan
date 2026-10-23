@@ -22,7 +22,7 @@ const Seo = ({
   const defaultDescription = isEnglish
     ? "Search Japanese play scripts by cast size, duration, and genre. Read reviews, find performance reports, and discover your next theater production. Japan's largest play script search service."
     : "戯曲図書館は、演劇の脚本を上演時間・人数・ジャンルで検索できる日本最大級の戯曲検索サービスです。レビューや上演報告も共有できます。";
-  const defaultImg = "https://gikyokutosyokan.com/logo.png";
+  const defaultImg = "https://gikyokutosyokan.com/og-default.png";
   const siteUrl = "https://gikyokutosyokan.com";
 
   const title = pageTitle
@@ -88,7 +88,7 @@ const Seo = ({
         </>
       )}
       <link rel="icon" href="/favicon.ico" />
-      <link rel="apple-touch-icon" href="/logo.png" />
+      <link rel="apple-touch-icon" href="/apple-icon.png" />
       <link rel="alternate" type="application/rss+xml" title="戯曲図書館 RSS Feed" href="/api/feed.xml" />
       <link rel="manifest" href="/manifest.json" />
     </Head>

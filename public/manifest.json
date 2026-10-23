@@ -13,24 +13,19 @@
   "categories": ["books", "education", "entertainment"],
   "icons": [
     {
-      "src": "/logo.png",
+      "src": "/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
     },
     {
-      "src": "/logo.png",
+      "src": "/icon-192.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "/logo.png",
-      "sizes": "96x96",
-      "type": "image/png"
-    },
-    {
       "src": "/favicon.ico",
-      "sizes": "64x64 32x32 24x24 16x16",
+      "sizes": "48x48 32x32 16x16",
       "type": "image/x-icon"
     }
   ],
@@ -50,21 +45,21 @@
       "short_name": "メニュー",
       "description": "発声・エチュード・ゲーム・台本のメニュー集",
       "url": "/theater-menu",
-      "icons": [{ "src": "/logo.png", "sizes": "192x192" }]
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
     },
     {
       "name": "ランダムに1つ引く",
       "short_name": "ランダム",
       "description": "今日のメニューをランダム抽出",
       "url": "/theater-menu/random",
-      "icons": [{ "src": "/logo.png", "sizes": "192x192" }]
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
     },
     {
       "name": "レッスンプラン",
       "short_name": "プラン",
       "description": "自分の稽古プランを作成・共有",
       "url": "/theater-menu/plans",
-      "icons": [{ "src": "/logo.png", "sizes": "192x192" }]
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
     }
   ]
 }
