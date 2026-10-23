@@ -38,11 +38,8 @@ export default function ComedyPage({ posts, totalCount }: ComedyPageProps) {
       />
 
       <div className="max-w-7xl mx-auto px-4 py-8">
-        <header className="text-center mb-12">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-yellow-100 rounded-full mb-4">
-            <FaLaugh className="text-3xl text-yellow-500" />
-          </div>
-          <h1 className="text-3xl md:text-4xl font-bold mb-4">
+        <header className="mb-8">
+          <h1 className="text-[28px] md:text-[40px] font-serif font-bold leading-tight mb-3">
             コメディ・喜劇の戯曲
           </h1>
           <p className="text-lg text-gray-600 mb-2">
@@ -54,9 +51,8 @@ export default function ComedyPage({ posts, totalCount }: ComedyPageProps) {
         </header>
 
         {/* コメディの魅力 */}
-        <section className="mb-12 bg-gradient-to-r from-yellow-50 to-orange-50 p-6 rounded-lg">
+        <section className="mb-12 bg-[#F4F2EE] p-6 rounded-lg">
           <h2 className="text-xl font-bold mb-4 flex items-center">
-            <FaTheaterMasks className="mr-2 text-yellow-500" />
             コメディ戯曲の魅力
           </h2>
           <div className="grid md:grid-cols-3 gap-4">
@@ -87,7 +83,6 @@ export default function ComedyPage({ posts, totalCount }: ComedyPageProps) {
           <div className="grid md:grid-cols-2 gap-4">
             <Link href="/?category=コメディ&maxPlaytime=30" className="block p-4 border rounded-lg hover:bg-gray-50 transition-colors">
               <div className="flex items-center">
-                <FaGraduationCap className="text-2xl text-blue-500 mr-3" />
                 <div>
                   <h3 className="font-semibold">文化祭・学園祭</h3>
                   <p className="text-sm text-gray-600">30分以内の短編コメディ</p>
@@ -96,7 +91,6 @@ export default function ComedyPage({ posts, totalCount }: ComedyPageProps) {
             </Link>
             <Link href="/?category=コメディ&minTotalCount=5&maxTotalCount=10" className="block p-4 border rounded-lg hover:bg-gray-50 transition-colors">
               <div className="flex items-center">
-                <FaUsers className="text-2xl text-green-500 mr-3" />
                 <div>
                   <h3 className="font-semibold">演劇部の新人公演</h3>
                   <p className="text-sm text-gray-600">5-10人で演じるコメディ</p>
@@ -137,13 +131,13 @@ export default function ComedyPage({ posts, totalCount }: ComedyPageProps) {
         <section className="mt-12 border-t pt-8">
           <h2 className="text-xl font-bold mb-4">関連カテゴリ</h2>
           <div className="flex flex-wrap gap-3">
-            <Link href="/search/school" className="px-4 py-2 bg-gray-100 rounded-full hover:bg-gray-200">
+            <Link href="/search/school" className="px-4 py-1.5 border border-gray-300 rounded-full text-gray-800 hover:border-theater-primary-600 hover:text-theater-primary-700">
               学校演劇向け
             </Link>
-            <Link href="/search/short" className="px-4 py-2 bg-gray-100 rounded-full hover:bg-gray-200">
+            <Link href="/search/short" className="px-4 py-1.5 border border-gray-300 rounded-full text-gray-800 hover:border-theater-primary-600 hover:text-theater-primary-700">
               短編戯曲
             </Link>
-            <Link href="/categories" className="px-4 py-2 bg-gray-100 rounded-full hover:bg-gray-200">
+            <Link href="/categories" className="px-4 py-1.5 border border-gray-300 rounded-full text-gray-800 hover:border-theater-primary-600 hover:text-theater-primary-700">
               すべてのカテゴリ
             </Link>
           </div>

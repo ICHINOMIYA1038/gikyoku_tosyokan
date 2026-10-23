@@ -38,11 +38,8 @@ export default function ShortPage({ posts, totalCount }: ShortPageProps) {
       />
 
       <div className="max-w-7xl mx-auto px-4 py-8">
-        <header className="text-center mb-12">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-4">
-            <FaClock className="text-3xl text-blue-500" />
-          </div>
-          <h1 className="text-3xl md:text-4xl font-bold mb-4">
+        <header className="mb-8">
+          <h1 className="text-[28px] md:text-[40px] font-serif font-bold leading-tight mb-3">
             短編戯曲・30分以内の脚本
           </h1>
           <p className="text-lg text-gray-600 mb-2">
@@ -54,9 +51,8 @@ export default function ShortPage({ posts, totalCount }: ShortPageProps) {
         </header>
 
         {/* 短編の魅力 */}
-        <section className="mb-12 bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-lg">
+        <section className="mb-12 bg-[#F4F2EE] p-6 rounded-lg">
           <h2 className="text-xl font-bold mb-4 flex items-center">
-            <FaTheaterMasks className="mr-2 text-blue-500" />
             短編戯曲のメリット
           </h2>
           <div className="grid md:grid-cols-4 gap-4">
@@ -138,7 +134,6 @@ export default function ShortPage({ posts, totalCount }: ShortPageProps) {
               href="/?maxPlaytime=30&minTotalCount=3&maxTotalCount=5"
               className="flex items-center p-4 bg-white rounded-lg hover:shadow-md transition-shadow"
             >
-              <FaUsers className="text-3xl text-green-500 mr-4" />
               <div>
                 <h3 className="font-semibold">3-5人で30分以内</h3>
                 <p className="text-sm text-gray-600">少人数グループに最適</p>
@@ -148,7 +143,6 @@ export default function ShortPage({ posts, totalCount }: ShortPageProps) {
               href="/?maxPlaytime=30&category=コメディ"
               className="flex items-center p-4 bg-white rounded-lg hover:shadow-md transition-shadow"
             >
-              <FaGraduationCap className="text-3xl text-blue-500 mr-4" />
               <div>
                 <h3 className="font-semibold">30分以内のコメディ</h3>
                 <p className="text-sm text-gray-600">文化祭で盛り上がる</p>
@@ -203,13 +197,13 @@ export default function ShortPage({ posts, totalCount }: ShortPageProps) {
         <section className="mt-12 border-t pt-8">
           <h2 className="text-xl font-bold mb-4">関連ページ</h2>
           <div className="flex flex-wrap gap-3">
-            <Link href="/search/comedy" className="px-4 py-2 bg-gray-100 rounded-full hover:bg-gray-200">
+            <Link href="/search/comedy" className="px-4 py-1.5 border border-gray-300 rounded-full text-gray-800 hover:border-theater-primary-600 hover:text-theater-primary-700">
               コメディ戯曲
             </Link>
-            <Link href="/search/school" className="px-4 py-2 bg-gray-100 rounded-full hover:bg-gray-200">
+            <Link href="/search/school" className="px-4 py-1.5 border border-gray-300 rounded-full text-gray-800 hover:border-theater-primary-600 hover:text-theater-primary-700">
               学校演劇向け
             </Link>
-            <Link href="/guide/school/culture-festival" className="px-4 py-2 bg-gray-100 rounded-full hover:bg-gray-200">
+            <Link href="/guide/school/culture-festival" className="px-4 py-1.5 border border-gray-300 rounded-full text-gray-800 hover:border-theater-primary-600 hover:text-theater-primary-700">
               文化祭演劇ガイド
             </Link>
           </div>
