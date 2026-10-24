@@ -1,25 +1,21 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faReply, faTimes, faInfoCircle, faThumbsUp, faTheaterMasks, faCommentDots, faQuestionCircle, faPaperPlane, faStar, faFire, faClock, faShareAlt, faCheck, faTrash, faSignInAlt, faFlag } from "@fortawesome/free-solid-svg-icons";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 
 const ReportDialog = dynamic(() => import("@/components/ReportDialog"), { ssr: false });
 
-const COMMENT_TYPES = [
-  { value: "感想", label: "感想", icon: faCommentDots, color: "blue", bg: "bg-gray-100", text: "text-gray-600", border: "border-gray-200" },
-  { value: "上演報告", label: "上演報告", icon: faTheaterMasks, color: "green", bg: "bg-amber-50", text: "text-amber-700", border: "border-amber-200" },
-  { value: "レビュー", label: "レビュー", icon: faStar, color: "purple", bg: "bg-purple-50", text: "text-purple-700", border: "border-purple-200" },
-  { value: "質問", label: "質問", icon: faQuestionCircle, color: "orange", bg: "bg-sky-50", text: "text-sky-700", border: "border-sky-200" },
+const COMMENT_TYPES: { value: string; label: string }[] = [
+  { value: "感想", label: "感想" },
+  { value: "上演報告", label: "上演報告" },
+  { value: "レビュー", label: "レビュー" },
+  { value: "質問", label: "質問" },
 ];
 
-const COMMENT_TYPE_STYLES: Record<string, { bg: string; text: string; border: string }> = {
-  "感想": { bg: "bg-blue-50", text: "text-blue-700", border: "border-blue-200" },
-  "上演報告": { bg: "bg-green-50", text: "text-green-700", border: "border-green-200" },
-  "レビュー": { bg: "bg-purple-50", text: "text-purple-700", border: "border-purple-200" },
-  "質問": { bg: "bg-orange-50", text: "text-orange-700", border: "border-orange-200" },
-};
+const COMMENT_TYPE_STYLES: Record<string, true> = { "感想": true, "上演報告": true, "レビュー": true, "質問": true };
+
+// コメントの下に並べる文字だけの操作ボタン
+const ACTION = "min-h-[44px] px-1 text-sm text-gray-600 hover:text-gray-900 hover:underline underline-offset-4";
 
 const MAX_CHARS_DEFAULT = 500;
 const MAX_CHARS_REVIEW = 1000;
@@ -40,7 +36,6 @@ const Comments = ({ comments: initialComments, postid, postTitle, inline = false
   const [showGuidelines, setShowGuidelines] = useState(false);
   const [selectedType, setSelectedType] = useState<string | null>(null);
   const [showAllComments, setShowAllComments] = useState(false);
-  const [showForm, setShowForm] = useState(comments.length === 0);
   const [likedComments, setLikedComments] = useState<Set<string>>(new Set());
   const [sortMode, setSortMode] = useState<SortMode>("newest");
   const [filterType, setFilterType] = useState<FilterType>("all");
@@ -159,7 +154,6 @@ const Comments = ({ comments: initialComments, postid, postTitle, inline = false
           setNewComment("");
           setReplyTo(null);
           setSelectedType(null);
-          setShowForm(false);
           setShowAllComments(true);
           try {
             localStorage.setItem("comment_author_name", name);
@@ -226,7 +220,6 @@ const Comments = ({ comments: initialComments, postid, postTitle, inline = false
 
   const handleReplyClick = (comment: any) => {
     setReplyTo(comment);
-    setShowForm(true);
     setTimeout(() => {
       document.getElementById("comment-input")?.focus();
     }, 100);
@@ -287,515 +280,265 @@ const Comments = ({ comments: initialComments, postid, postTitle, inline = false
     : processedComments;
   const hasMore = inline && !showAllComments && processedComments.length > INITIAL_DISPLAY_COUNT;
 
-  const renderCommentTypeTag = (commentType: string | null) => {
-    if (!commentType || !COMMENT_TYPE_STYLES[commentType]) return null;
-    const style = COMMENT_TYPE_STYLES[commentType];
-    const typeConfig = COMMENT_TYPES.find(t => t.value === commentType);
-    return (
-      <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-medium whitespace-nowrap ${style.bg} ${style.text} border ${style.border}`}>
-        {typeConfig && <FontAwesomeIcon icon={typeConfig.icon} className="w-2.5 h-2.5" />}
-        {commentType}
-      </span>
-    );
-  };
+  const typeLabel = (commentType: string | null) =>
+    commentType && COMMENT_TYPES.some((t) => t.value === commentType) ? (
+      <span className="px-1.5 py-px border border-[#D9D5CF] rounded text-xs text-gray-700">{commentType}</span>
+    ) : null;
 
   const renderLikeButton = (id: number, likes: number, isParent: boolean) => {
     const key = `${isParent ? "p" : "c"}_${id}`;
     const isLiked = likedComments.has(key);
     return (
       <button
-        className={`flex items-center gap-1.5 text-sm transition-colors rounded-full px-2.5 py-1.5 min-h-[44px] ${
-          isLiked
-            ? "text-theater-primary-600 bg-theater-primary-50 cursor-default"
-            : "text-gray-400 hover:text-theater-primary-600 hover:bg-theater-primary-50 active:bg-theater-primary-100"
-        }`}
+        className={`${ACTION} ${isLiked ? "!text-theater-primary-700 cursor-default" : ""}`}
         onClick={() => !isLiked && handleLike(id, isParent)}
         disabled={isLiked}
-        aria-label="いいね"
+        aria-pressed={isLiked}
       >
-        <FontAwesomeIcon icon={faThumbsUp} className={`w-3 h-3 ${isLiked ? "text-theater-primary-600" : ""}`} />
-        {likes > 0 && <span className="font-medium text-xs">{likes}</span>}
-        {!isLiked && likes === 0 && <span className="text-xs hidden sm:inline">参考になった</span>}
+        参考になった{likes > 0 && <span className="ml-1 tabular-nums">{likes}</span>}
       </button>
     );
   };
 
-  const hasFilterableTypes = Object.keys(typeCountMap).some(
-    (t) => COMMENT_TYPE_STYLES[t]
+  const renderAuthor = (c: any) => (
+    <span className="inline-flex items-center gap-2">
+      {(c.user?.avatarUrl || c.user?.image) && (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img src={c.user.avatarUrl || c.user.image} alt="" className="w-6 h-6 rounded-full object-cover" />
+      )}
+      {c.user?.id ? (
+        <Link href={`/users/${c.user.id}`} className="font-bold text-gray-900 hover:underline">
+          {c.user.displayName || c.author}
+        </Link>
+      ) : (
+        <span className="font-bold text-gray-900">{c.author}</span>
+      )}
+    </span>
   );
 
+  const hasFilterableTypes = Object.keys(typeCountMap).some((t) => COMMENT_TYPE_STYLES[t]);
+  const loginHref = `/auth/signin?callbackUrl=${encodeURIComponent(`/posts/${postid}#comments-section`)}`;
+  const maxChars = selectedType === "レビュー" ? MAX_CHARS_REVIEW : MAX_CHARS_DEFAULT;
+  const resultIsError = /失敗|エラー|不正/.test(commentResult);
+
   return (
-    <div className={`comments-section transition-all duration-1000 ${isHighlighted ? "ring-2 ring-theater-primary-300 ring-offset-4 rounded-xl" : ""}`} id="comments-section" ref={sectionRef}>
-      {/* ヘッダー */}
-      <div className="flex items-center justify-between mb-5">
-        <div className="flex items-center gap-3">
-          <div className="w-1 h-7 bg-theater-primary-600 rounded-full"></div>
-          <h2 className="text-xl md:text-2xl font-bold font-serif text-gray-800">
-            みんなの声
-          </h2>
-          {totalCommentCount > 0 && (
-            <span className="bg-theater-primary-600 text-white text-sm font-bold px-2.5 py-0.5 rounded-full">
-              {totalCommentCount}
-            </span>
-          )}
-        </div>
+    <section
+      className={`comments-section scroll-mt-20 transition-shadow duration-1000 ${isHighlighted ? "ring-2 ring-theater-primary-300 ring-offset-8" : ""}`}
+      id="comments-section"
+      ref={sectionRef}
+      aria-labelledby="comments-heading"
+    >
+      <div className="flex items-baseline gap-3">
+        <h2 id="comments-heading" className="!my-0 !pb-0 !text-xl md:!text-2xl !font-bold !text-gray-900">みんなの声</h2>
+        {totalCommentCount > 0 && <span className="text-sm text-gray-600 tabular-nums">{totalCommentCount}件</span>}
       </div>
+      <p className="mt-2 text-sm text-gray-700">
+        読んだ感想、上演した記録、演出の工夫、質問など。次にこの作品を選ぶ人の参考になります。
+      </p>
 
-      {/* CTA: コメントがない場合 */}
-      {comments.length === 0 && !showForm && (
-        <div className="py-8 text-center">
-          <p className="text-sm text-gray-400 mb-4">
-            まだコメントはありません
-          </p>
-          {session ? (
-            <button
-              className="inline-flex items-center gap-1.5 px-6 py-3 bg-theater-primary-600 hover:bg-theater-primary-700 active:bg-theater-primary-800 text-white text-sm font-bold rounded-full transition-colors min-h-[44px]"
-              onClick={() => setShowForm(true)}
-            >
-              <FontAwesomeIcon icon={faPaperPlane} className="w-3 h-3" />
-              最初のコメントを書く
-            </button>
-          ) : (
-            <Link
-              href={`/auth/signup`}
-              className="inline-flex items-center gap-1.5 px-6 py-3 bg-theater-primary-600 hover:bg-theater-primary-700 text-white text-sm font-bold rounded-full transition-colors min-h-[44px]"
-            >
-              <FontAwesomeIcon icon={faSignInAlt} className="w-3 h-3" />
-              ログインしてコメントする
-            </Link>
-          )}
-        </div>
-      )}
-
-      {/* CTA: コメントがある場合 */}
-      {comments.length > 0 && !showForm && (
-        session ? (
-        <button
-          className="w-full mb-5 flex items-center gap-2.5 px-4 py-3 bg-gray-50 hover:bg-gray-100 active:bg-gray-200 rounded-lg text-left transition-colors min-h-[48px] group"
-          onClick={() => setShowForm(true)}
-        >
-          <FontAwesomeIcon icon={faPaperPlane} className="text-theater-primary-400 w-3.5 h-3.5" />
-          <span className="text-sm text-gray-400 group-hover:text-gray-500 transition-colors">
-            コメントを書く...
-          </span>
-        </button>
-        ) : (
-        <Link
-          href="/auth/signup"
-          className="w-full mb-5 flex items-center gap-2.5 px-4 py-3 bg-theater-primary-50 hover:bg-theater-primary-100 rounded-lg text-left transition-colors min-h-[48px] border border-theater-primary-200"
-        >
-          <FontAwesomeIcon icon={faSignInAlt} className="text-theater-primary-500 w-3.5 h-3.5" />
-          <span className="text-sm text-theater-primary-600 font-medium">
-            ログインしてコメントする
-          </span>
-        </Link>
-        )
-      )}
-
-      {/* コメント入力フォーム */}
-      {showForm && session && (
-        <div className="bg-white shadow-md rounded-xl p-4 md:p-6 mb-6 border border-gray-100">
-          {/* 返信先表示 */}
-          {replyTo && (
-            <div className="mb-4 p-3 bg-blue-50 border-l-4 border-blue-500 rounded-r-lg flex justify-between items-center">
-              <div className="flex items-center min-w-0">
-                <FontAwesomeIcon icon={faReply} className="text-blue-500 w-3 h-3 mr-2 flex-shrink-0" />
-                <div className="min-w-0">
-                  <span className="text-sm font-bold text-gray-700">返信先: </span>
-                  <span className="text-sm text-gray-600 truncate">
-                    {replyTo.author}: {replyTo.content.substring(0, 30)}{replyTo.content.length > 30 ? "..." : ""}
-                  </span>
-                </div>
-              </div>
-              <button
-                className="text-gray-400 hover:text-red-500 transition-colors ml-2 flex-shrink-0 min-h-[44px] min-w-[44px] flex items-center justify-center"
-                onClick={cancelReply}
-                aria-label="返信をキャンセル"
-              >
-                <FontAwesomeIcon icon={faTimes} />
+      {/* 入力欄。ログイン中はいつも開いておき、すぐ書けるようにする */}
+      {session ? (
+        <div className="mt-5 border border-[#D9D5CF] rounded p-4">
+          {replyTo ? (
+            <div className="mb-3 flex items-start justify-between gap-3 text-sm">
+              <p className="min-w-0 text-gray-700">
+                <span className="font-bold text-gray-900">{replyTo.author}</span>さんへの返信：
+                <span className="text-gray-600">{replyTo.content.substring(0, 30)}{replyTo.content.length > 30 ? "…" : ""}</span>
+              </p>
+              <button className="shrink-0 text-gray-600 underline underline-offset-4 hover:text-gray-900" onClick={cancelReply}>
+                返信をやめる
               </button>
             </div>
-          )}
-
-          {/* コメントタイプ選択 - セグメントコントロール */}
-          {!replyTo && (
-            <div className="mb-4">
-              <p className="text-xs text-gray-400 mb-1.5">種類（任意）</p>
-              <div className="flex gap-0.5 p-1 bg-gray-100 rounded-lg overflow-x-auto">
-                <button
-                  className={`flex-1 flex items-center justify-center py-2 px-2 rounded-md text-xs font-medium transition-colors whitespace-nowrap ${
-                    selectedType === null
-                      ? "bg-white text-gray-800 shadow-sm"
-                      : "text-gray-400 hover:text-gray-600"
-                  }`}
-                  onClick={() => setSelectedType(null)}
-                >
-                  自由
-                </button>
-                {COMMENT_TYPES.map((type) => (
-                  <button
-                    key={type.value}
-                    className={`flex-1 flex items-center justify-center py-2 px-2 rounded-md text-xs font-medium transition-colors whitespace-nowrap ${
-                      selectedType === type.value
-                        ? "bg-white text-gray-800 shadow-sm"
-                        : "text-gray-400 hover:text-gray-600"
-                    }`}
-                    onClick={() => setSelectedType(selectedType === type.value ? null : type.value)}
-                  >
-                    {type.label}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* 名前入力 / ログイン中の表示 */}
-          {session ? (
-            <div className="mb-3 flex items-center gap-2 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-              {session.user.image && (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={session.user.image}
-                  alt={session.user.name ?? "user"}
-                  className="w-7 h-7 rounded-full"
-                />
-              )}
-              <div className="flex-1 min-w-0">
-                <p className="text-xs text-blue-700">
-                  <span className="font-medium">{session.user.name ?? "ユーザー"}</span>{" "}
-                  としてログイン中
-                </p>
-              </div>
-            </div>
-          ) : null}
-
-          {/* コメント入力 */}
-          <div className="mb-3 relative">
-            <textarea
-              id="comment-input"
-              placeholder={replyTo ? `${replyTo.author}さんに返信...` : "この作品の感想、上演した際の体験談など、自由にお書きください"}
-              className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-theater-primary-300 focus:border-theater-primary-300 transition min-h-[120px] text-sm resize-y"
-              value={newComment}
-              onChange={(e) => setNewComment(e.target.value)}
-              maxLength={selectedType === "レビュー" ? MAX_CHARS_REVIEW : MAX_CHARS_DEFAULT}
-            />
-            <div className={`absolute bottom-2 right-3 text-xs ${
-              newComment.length > (selectedType === "レビュー" ? MAX_CHARS_REVIEW : MAX_CHARS_DEFAULT) * 0.9 ? "text-red-500" : "text-gray-400"
-            }`}>
-              {newComment.length}/{selectedType === "レビュー" ? MAX_CHARS_REVIEW : MAX_CHARS_DEFAULT}
-            </div>
-          </div>
-
-          {/* 送信ボタンエリア */}
-          <div className="flex items-center justify-between gap-3">
-            <button
-              className="text-sm text-gray-400 hover:text-gray-600 active:text-gray-800 transition-colors px-3 py-2.5 min-h-[44px]"
-              onClick={() => { setShowForm(false); setReplyTo(null); }}
-            >
-              キャンセル
-            </button>
-            <button
-              className={`flex items-center gap-2 px-6 py-2.5 rounded-full text-sm font-bold transition-colors min-h-[44px] ${
-                isSendingComment || !newComment.trim()
-                  ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-                  : "bg-theater-primary-600 hover:bg-theater-primary-700 active:bg-theater-primary-800 text-white"
-              }`}
-              onClick={handleCommentSubmit}
-              disabled={isSendingComment || !newComment.trim()}
-            >
-              <FontAwesomeIcon icon={faPaperPlane} className="w-3 h-3" />
-              {isSendingComment ? "送信中..." : "送信"}
-            </button>
-          </div>
-
-          {commentResult && (
-            <p className={`mt-2 text-sm font-medium ${
-              commentResult.includes("失敗") || commentResult.includes("エラー") || commentResult.includes("不正")
-                ? "text-red-500"
-                : "text-green-600"
-            }`}>
-              <FontAwesomeIcon icon={commentResult.includes("失敗") || commentResult.includes("エラー") || commentResult.includes("不正") ? faTimes : faCheck} className="w-3 h-3 mr-1" />
-              {commentResult}
-            </p>
-          )}
-
-          {/* 注意事項 */}
-          <div className="mt-4 pt-3 border-t border-gray-100">
-            <button
-              onClick={() => setShowGuidelines(!showGuidelines)}
-              className="flex items-center text-xs text-gray-400 hover:text-gray-600 transition-colors"
-            >
-              <FontAwesomeIcon icon={faInfoCircle} className="w-3 h-3 mr-1" />
-              コメント投稿時の注意事項 {showGuidelines ? "▲" : "▼"}
-            </button>
-
-            {showGuidelines && (
-              <div className="mt-2 p-3 bg-gray-50 rounded-lg text-xs text-gray-600 border border-gray-100">
-                <ul className="list-disc pl-4 space-y-1">
-                  <li>誹謗中傷、他人へのなりすましの禁止</li>
-                  <li>本記事と関係のない投稿、事実に反する投稿の禁止</li>
-                  <li>重複投稿やスパム行為の禁止</li>
-                  <li>個人情報を含む投稿の禁止</li>
-                  <li>削除を希望される場合はお問い合わせフォームよりご連絡ください</li>
-                </ul>
-                <p className="mt-2">
-                  <span className="font-medium">面白かった！上演します！上演しました！</span>
-                  などご自由にお書きください。公演の宣伝も大歓迎です！
-                </p>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
-
-      {/* ソート＆フィルターバー */}
-      {comments.length > 1 && (
-        <div className="flex flex-wrap items-center gap-2 mb-4">
-          <div className="flex bg-gray-100 rounded-lg p-0.5">
-            <button
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-colors min-h-[36px] ${
-                sortMode === "newest"
-                  ? "bg-white text-gray-800 shadow-sm"
-                  : "text-gray-500 hover:text-gray-700"
-              }`}
-              onClick={() => setSortMode("newest")}
-            >
-              <FontAwesomeIcon icon={faClock} className="w-2.5 h-2.5" />
-              新着順
-            </button>
-            <button
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-colors min-h-[36px] ${
-                sortMode === "popular"
-                  ? "bg-white text-gray-800 shadow-sm"
-                  : "text-gray-500 hover:text-gray-700"
-              }`}
-              onClick={() => setSortMode("popular")}
-            >
-              <FontAwesomeIcon icon={faFire} className="w-2.5 h-2.5" />
-              人気順
-            </button>
-          </div>
-
-          {hasFilterableTypes && (
-            <>
-              <div className="w-px h-5 bg-gray-200 hidden sm:block"></div>
-              <div className="flex flex-wrap gap-1.5">
-                <button
-                  className={`px-2.5 py-1 rounded-full text-xs font-medium transition-colors border min-h-[32px] ${
-                    filterType === "all"
-                      ? "bg-gray-800 text-white border-gray-800"
-                      : "bg-white text-gray-500 border-gray-200 hover:border-gray-300"
-                  }`}
-                  onClick={() => setFilterType("all")}
-                >
-                  すべて
-                </button>
-                {COMMENT_TYPES.map((type) => {
-                  const count = typeCountMap[type.value] || 0;
-                  if (count === 0) return null;
+          ) : (
+            <fieldset className="mb-3">
+              <legend className="sr-only">コメントの種類</legend>
+              <div className="flex flex-wrap gap-2 text-sm">
+                {[{ value: null, label: "自由に" }, ...COMMENT_TYPES].map((type) => {
+                  const active = selectedType === type.value;
                   return (
                     <button
-                      key={type.value}
-                      className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium transition-colors border min-h-[32px] ${
-                        filterType === type.value
-                          ? `${COMMENT_TYPE_STYLES[type.value].bg} ${COMMENT_TYPE_STYLES[type.value].text} ${COMMENT_TYPE_STYLES[type.value].border}`
-                          : "bg-white text-gray-500 border-gray-200 hover:border-gray-300"
-                      }`}
-                      onClick={() => setFilterType(filterType === type.value ? "all" : type.value as FilterType)}
+                      key={type.label}
+                      type="button"
+                      aria-pressed={active}
+                      onClick={() => setSelectedType(type.value)}
+                      className={`h-9 px-3 rounded border ${active ? "border-gray-900 text-gray-900 font-bold" : "border-[#D9D5CF] text-gray-700 hover:border-gray-500"}`}
                     >
-                      <FontAwesomeIcon icon={type.icon} className="w-2.5 h-2.5" />
                       {type.label}
-                      <span className="text-[10px] opacity-70">{count}</span>
                     </button>
                   );
                 })}
               </div>
-            </>
+            </fieldset>
+          )}
+
+          <label htmlFor="comment-input" className="sr-only">コメント</label>
+          <textarea
+            id="comment-input"
+            placeholder={
+              replyTo
+                ? `${replyTo.author}さんに返信`
+                : selectedType === "上演報告"
+                  ? "いつ・どこで・何人で上演したか、やってみて分かったことなど"
+                  : selectedType === "質問"
+                    ? "上演したことがある人に聞きたいこと"
+                    : "読んだ感想、上演した記録、演出の工夫など"
+            }
+            className="w-full min-h-[112px] p-3 rounded border border-[#D9D5CF] text-base leading-relaxed resize-y focus:outline-none focus:border-theater-primary-600"
+            value={newComment}
+            onChange={(e) => setNewComment(e.target.value)}
+            maxLength={maxChars}
+          />
+
+          <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
+            <p className="text-xs text-gray-600">
+              <span className={newComment.length > maxChars * 0.9 ? "text-theater-primary-700 font-bold" : ""}>{newComment.length}</span>/{maxChars}字
+              <span className="mx-2">・</span>
+              {session.user.name ?? "ユーザー"}として投稿
+              <span className="mx-2">・</span>
+              <button className="underline underline-offset-4 hover:text-gray-900" onClick={() => setShowGuidelines(!showGuidelines)} aria-expanded={showGuidelines}>
+                投稿のルール
+              </button>
+            </p>
+            <button
+              className="h-11 px-6 rounded bg-theater-primary-600 hover:bg-theater-primary-700 text-white text-sm font-bold disabled:bg-gray-300 disabled:text-gray-600 disabled:cursor-not-allowed"
+              onClick={handleCommentSubmit}
+              disabled={isSendingComment || !newComment.trim()}
+            >
+              {isSendingComment ? "送信中…" : replyTo ? "返信する" : "投稿する"}
+            </button>
+          </div>
+
+          {commentResult && (
+            <p role="status" className={`mt-2 text-sm ${resultIsError ? "text-theater-primary-700" : "text-[#1F7A4D]"}`}>{commentResult}</p>
+          )}
+
+          {showGuidelines && (
+            <div className="mt-3 pt-3 border-t border-[#D9D5CF] text-xs leading-relaxed text-gray-700">
+              <ul className="list-disc pl-4 space-y-1">
+                <li>誹謗中傷、他人へのなりすましはしない</li>
+                <li>作品と関係のない投稿、事実と違う投稿はしない</li>
+                <li>同じ内容を何度も投稿しない</li>
+                <li>個人情報を書かない</li>
+                <li>削除を希望するときは、お問い合わせフォームから連絡してください</li>
+              </ul>
+              <p className="mt-2">「面白かった」「上演します」「上演しました」など、気軽に書いてください。公演の宣伝も歓迎です。</p>
+            </div>
+          )}
+        </div>
+      ) : (
+        <div className="mt-5 border border-[#D9D5CF] rounded p-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-sm text-gray-700">
+            {comments.length === 0 ? "まだ書き込みはありません。最初のひとことを書いてみませんか。" : "書き込むには、無料のログインが必要です。"}
+          </p>
+          <Link href={loginHref} className="inline-flex items-center justify-center h-11 px-5 rounded bg-theater-primary-600 hover:bg-theater-primary-700 text-white text-sm font-bold shrink-0">
+            ログインして書く
+          </Link>
+        </div>
+      )}
+
+      {/* 並べ替えと種類の絞り込み */}
+      {comments.length > 1 && (
+        <div className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm">
+          <div className="flex gap-4" role="group" aria-label="並べ替え">
+            {([["newest", "新着順"], ["popular", "参考になった順"]] as const).map(([mode, label]) => (
+              <button
+                key={mode}
+                aria-pressed={sortMode === mode}
+                onClick={() => setSortMode(mode)}
+                className={sortMode === mode ? "font-bold text-gray-900 underline underline-offset-[6px] decoration-2 decoration-theater-primary-600" : "text-gray-600 hover:text-gray-900"}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+          {hasFilterableTypes && (
+            <div className="flex flex-wrap gap-2" role="group" aria-label="種類">
+              {[{ value: "all", label: "すべて" }, ...COMMENT_TYPES.filter((t) => typeCountMap[t.value])].map((t) => {
+                const active = filterType === t.value;
+                return (
+                  <button
+                    key={t.value}
+                    aria-pressed={active}
+                    onClick={() => setFilterType(active && t.value !== "all" ? "all" : (t.value as FilterType))}
+                    className={`h-8 px-2.5 rounded border text-xs ${active ? "border-gray-900 text-gray-900 font-bold" : "border-[#D9D5CF] text-gray-700 hover:border-gray-500"}`}
+                  >
+                    {t.label}
+                    {t.value !== "all" && <span className="ml-1 tabular-nums text-gray-500">{typeCountMap[t.value]}</span>}
+                  </button>
+                );
+              })}
+            </div>
           )}
         </div>
       )}
 
-      {/* フィルター結果が0件の場合 */}
       {comments.length > 0 && processedComments.length === 0 && (
-        <div className="text-center py-8 text-gray-500 text-sm">
-          この種類のコメントはまだありません
-        </div>
+        <p className="mt-6 py-8 text-center text-sm text-gray-600 border-y border-[#D9D5CF]">この種類の書き込みはまだありません。</p>
       )}
 
-      {/* コメントリスト */}
       {processedComments.length > 0 && (
-        <div className="space-y-4">
-          {displayedComments.map((comment: any, index: number) => (
-            <div key={comment.id} className="comment-thread">
-              {sortMode === "popular" && index === 0 && (comment.likes || 0) > 0 && (
-                <div className="flex items-center gap-1.5 mb-1.5 ml-1">
-                  <FontAwesomeIcon icon={faFire} className="text-orange-400 w-3 h-3" />
-                  <span className="text-xs font-medium text-orange-600">人気のコメント</span>
-                </div>
-              )}
-              <div className={`rounded-xl p-4 border transition ${
-                comment.commentType === "レビュー"
-                  ? "bg-purple-50/50 border-purple-200 border-2 hover:border-purple-300"
-                  : "bg-white border-gray-200 hover:border-gray-300"
-              }`}>
-                {!comment.deleted ? (
-                  <>
-                    {comment.commentType && (
-                      <div className="mb-2">
-                        {renderCommentTypeTag(comment.commentType)}
-                      </div>
+        <ul className="mt-4 border-t border-[#D9D5CF]">
+          {displayedComments.map((comment: any) => (
+            <li key={comment.id} className="border-b border-[#D9D5CF] py-4">
+              {!comment.deleted ? (
+                <>
+                  <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm">
+                    {renderAuthor(comment)}
+                    <span className="text-gray-500">{comment.date}</span>
+                    {typeLabel(comment.commentType)}
+                  </div>
+                  <p className="mt-2 text-base leading-relaxed text-gray-900 whitespace-pre-wrap break-words">{comment.content}</p>
+                  <div className="mt-2 flex flex-wrap items-center gap-x-4 -ml-1">
+                    {renderLikeButton(comment.id, comment.likes || 0, true)}
+                    <button className={ACTION} onClick={() => (session ? handleReplyClick(comment) : (window.location.href = loginHref))}>返信</button>
+                    <button className={ACTION} onClick={(e) => handleShareComment(comment, e)}>Xで共有</button>
+                    {isOwnComment(comment) && <button className={ACTION} onClick={() => handleDelete(comment.id, true)}>削除</button>}
+                    {session && !isOwnComment(comment) && (
+                      <button className={ACTION} onClick={() => setReportTarget({ id: comment.id, isParent: true })}>通報</button>
                     )}
-                    <p className="text-gray-800 text-sm leading-relaxed whitespace-pre-wrap">
-                      {comment.content}
-                    </p>
-                    <div className="flex flex-wrap items-center justify-between gap-2 mt-3 pt-2 border-t border-gray-100">
-                      <div className="flex items-center gap-2 text-xs text-gray-400">
-                        {(comment.user?.avatarUrl || comment.user?.image) && (
-                          // eslint-disable-next-line @next/next/no-img-element
-                          <img
-                            src={comment.user.avatarUrl || comment.user.image}
-                            alt={comment.author}
-                            className="w-5 h-5 rounded-full object-cover"
-                          />
-                        )}
-                        {comment.user?.id ? (
-                          <Link href={`/users/${comment.user.id}`} className="font-medium text-gray-600 hover:text-blue-600 hover:underline">
-                            {comment.user.displayName || comment.author}
-                          </Link>
-                        ) : (
-                          <span className="font-medium text-gray-600">{comment.author}</span>
-                        )}
-                        {comment.user && (
-                          <span className="text-[10px] bg-blue-50 text-blue-600 px-1.5 rounded">認証済</span>
-                        )}
-                        <span className="mx-0.5">·</span>
-                        {comment.date}
-                      </div>
-                      <div className="flex items-center gap-0.5">
-                        {renderLikeButton(comment.id, comment.likes || 0, true)}
-                        <button
-                          className="flex items-center gap-1 text-sm text-gray-400 hover:text-theater-primary-500 hover:bg-theater-primary-50 active:bg-theater-primary-100 rounded-full px-2 py-1.5 min-h-[44px] transition-colors"
-                          onClick={() => handleReplyClick(comment)}
-                        >
-                          <FontAwesomeIcon icon={faReply} className="w-3 h-3" />
-                          <span className="text-xs hidden sm:inline">返信</span>
-                        </button>
-                        <button
-                          className="flex items-center text-sm text-gray-400 hover:text-blue-500 hover:bg-blue-50 active:bg-blue-100 rounded-full px-2 py-1.5 min-h-[44px] transition-colors"
-                          onClick={(e) => handleShareComment(comment, e)}
-                          aria-label="シェア"
-                        >
-                          <FontAwesomeIcon icon={faShareAlt} className="w-3 h-3" />
-                        </button>
-                        {isOwnComment(comment) && (
-                          <button
-                            className="flex items-center text-sm text-gray-400 hover:text-red-500 hover:bg-red-50 active:bg-red-100 rounded-full px-2 py-1.5 min-h-[44px] transition-colors"
-                            onClick={() => handleDelete(comment.id, true)}
-                            aria-label="削除"
-                          >
-                            <FontAwesomeIcon icon={faTrash} className="w-3 h-3" />
-                          </button>
-                        )}
-                        {session && !isOwnComment(comment) && (
-                          <button
-                            className="flex items-center text-sm text-gray-400 hover:text-orange-500 hover:bg-orange-50 rounded-full px-2 py-1.5 min-h-[44px] transition-colors"
-                            onClick={() => setReportTarget({ id: comment.id, isParent: true })}
-                            aria-label="通報"
-                          >
-                            <FontAwesomeIcon icon={faFlag} className="w-3 h-3" />
-                          </button>
-                        )}
-                      </div>
-                    </div>
-                  </>
-                ) : (
-                  <div className="text-gray-400 italic text-sm">このコメントは削除されました</div>
-                )}
-              </div>
+                  </div>
+                </>
+              ) : (
+                <p className="text-sm text-gray-500">このコメントは削除されました</p>
+              )}
 
               {comment.children && comment.children.length > 0 && (
-                <div className="ml-6 md:ml-10 mt-2 space-y-2 border-l-2 border-gray-200 pl-4">
+                <ul className="mt-3 ml-3 md:ml-6 pl-4 border-l-2 border-[#D9D5CF] space-y-4">
                   {comment.children.map((elem: any) => (
-                    <div
-                      key={elem.id}
-                      className="bg-gray-50 rounded-lg p-3 hover:bg-gray-100 transition"
-                    >
+                    <li key={elem.id}>
                       {!elem.deleted ? (
                         <>
-                          <p className="text-gray-800 text-sm leading-relaxed whitespace-pre-wrap">
-                            {elem.content}
-                          </p>
-                          <div className="flex items-center justify-between mt-2">
-                            <div className="flex items-center gap-2 text-xs text-gray-400">
-                              {(elem.user?.avatarUrl || elem.user?.image) && (
-                                // eslint-disable-next-line @next/next/no-img-element
-                                <img
-                                  src={elem.user.avatarUrl || elem.user.image}
-                                  alt={elem.author}
-                                  className="w-5 h-5 rounded-full object-cover"
-                                />
-                              )}
-                              <span className="font-medium text-gray-600">{elem.user?.displayName || elem.author}</span>
-                              {elem.user && (
-                                <span className="text-[10px] bg-blue-50 text-blue-600 px-1.5 rounded">認証済</span>
-                              )}
-                              <span className="mx-0.5">·</span>
-                              {elem.date}
-                            </div>
-                            <div className="flex items-center gap-0.5">
-                              {renderLikeButton(elem.id, elem.likes || 0, false)}
-                              {isOwnComment(elem) && (
-                                <button
-                                  className="flex items-center text-xs text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-full px-2 py-1 transition-colors"
-                                  onClick={() => handleDelete(elem.id, false)}
-                                  aria-label="削除"
-                                >
-                                  <FontAwesomeIcon icon={faTrash} className="w-3 h-3" />
-                                </button>
-                              )}
-                            </div>
+                          <div className="flex flex-wrap items-center gap-x-2 text-sm">
+                            {renderAuthor(elem)}
+                            <span className="text-gray-500">{elem.date}</span>
+                          </div>
+                          <p className="mt-1 text-[15px] leading-relaxed text-gray-900 whitespace-pre-wrap break-words">{elem.content}</p>
+                          <div className="mt-1 flex items-center gap-x-4 -ml-1">
+                            {renderLikeButton(elem.id, elem.likes || 0, false)}
+                            {isOwnComment(elem) && <button className={ACTION} onClick={() => handleDelete(elem.id, false)}>削除</button>}
                           </div>
                         </>
                       ) : (
-                        <div className="text-gray-400 italic text-sm">このコメントは削除されました</div>
+                        <p className="text-sm text-gray-500">このコメントは削除されました</p>
                       )}
-                    </div>
+                    </li>
                   ))}
-                </div>
+                </ul>
               )}
-            </div>
+            </li>
           ))}
-
-          {hasMore && (
-            <button
-              className="w-full py-3 text-center text-sm font-medium text-theater-primary-600 hover:text-pink-700 hover:bg-theater-primary-50 rounded-xl transition-colors border border-gray-200 min-h-[44px]"
-              onClick={() => setShowAllComments(true)}
-            >
-              すべてのコメントを表示（{processedComments.length}件）
-            </button>
-          )}
-        </div>
+        </ul>
       )}
 
-      {/* 下部CTA */}
-      {comments.length >= 3 && !showForm && showAllComments && (
-        <div className="mt-6 pt-4 border-t border-gray-100 text-center">
-          <button
-            className="inline-flex items-center gap-2 text-sm font-medium text-theater-primary-600 hover:text-pink-700 transition-colors min-h-[44px] px-4 py-2"
-            onClick={() => {
-              setShowForm(true);
-              setTimeout(() => {
-                document.getElementById("comment-input")?.scrollIntoView({ behavior: "smooth", block: "center" });
-              }, 100);
-            }}
-          >
-            <FontAwesomeIcon icon={faPaperPlane} className="w-3 h-3" />
-            コメントを書く
-          </button>
-        </div>
+      {hasMore && (
+        <button
+          className="mt-4 w-full h-11 rounded border border-[#D9D5CF] text-sm font-bold text-gray-900 hover:bg-[#F4F2EE]"
+          onClick={() => setShowAllComments(true)}
+        >
+          残りの{processedComments.length - INITIAL_DISPLAY_COUNT}件を表示
+        </button>
       )}
 
-      {/* 通報ダイアログ */}
       {reportTarget && (
         <ReportDialog
           targetType="comment"
@@ -804,7 +547,7 @@ const Comments = ({ comments: initialComments, postid, postTitle, inline = false
           onClose={() => setReportTarget(null)}
         />
       )}
-    </div>
+    </section>
   );
 };
 

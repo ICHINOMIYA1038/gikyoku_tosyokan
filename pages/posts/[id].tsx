@@ -19,7 +19,7 @@ import Seo from "@/components/seo";
 import StructuredData from "@/components/StructuredData";
 import OtherPosts from "@/components/Widget/OtherPosts";
 import { useState, useCallback, useEffect } from "react";
-import { FaStar, FaCommentDots, FaShareAlt, FaBook, FaExternalLinkAlt, FaTheaterMasks, FaHeart, FaBalanceScale, FaTrophy, FaMapMarkerAlt } from "react-icons/fa";
+import { FaStar, FaShareAlt, FaBook, FaExternalLinkAlt, FaHeart, FaBalanceScale, FaTrophy } from "react-icons/fa";
 import ReactionBadge from "@/components/ReactionBadge";
 import FavoriteButton from "@/components/FavoriteButton";
 import CompareButton from "@/components/CompareButton";
@@ -49,8 +49,20 @@ function formatDatetime(datetime: any) {
   const hours = jst.getHours();
   const minutes = jst.getMinutes();
 
-  return `${year}/${month}/${day} ${hours}:${minutes}`;
+  return `${year}/${month}/${day} ${hours}:${String(minutes).padStart(2, "0")}`;
 }
+
+// 全体の h2 の余白と大きさ（globals.css）を打ち消す
+const SECTION_TITLE = "!my-0 !pb-0 !text-xl !font-bold !text-gray-900";
+const CHIP = "inline-flex items-center h-9 px-3 rounded-full border border-[#D9D5CF] text-gray-800 hover:border-theater-primary-600 hover:text-theater-primary-700";
+const GROUP_TYPE_LABELS: Record<string, string> = {
+  STUDENT: "学生劇団", INTERCOLLEGE: "インカレ", ACADEMIC: "大学学科",
+  AMATEUR: "社会人", PROFESSIONAL: "プロ", YOUTH: "ユース",
+};
+const VENUE_TYPE_LABELS: Record<string, string> = {
+  small: "小劇場", medium: "中劇場", large: "大劇場",
+  SMALL: "小劇場", MEDIUM: "中劇場", LARGE: "大劇場",
+};
 
 function PostPage({ post, blogMentions }: any) {
   const URL = `https://gikyokutosyokan.com/posts/${post.id}`;
@@ -60,7 +72,6 @@ function PostPage({ post, blogMentions }: any) {
   const [success, setSuccess] = useState("");
   const [showShareButtons, setShowShareButtons] = useState(false);
   const [showReadButtons, setShowReadButtons] = useState(false);
-  const [activeTab, setActiveTab] = useState<"overview" | "community" | "related">("overview");
 
   useEffect(() => {
     // 同一セッション内・同一日付では1回のみ記録（Function Invocations削減）
@@ -106,12 +117,6 @@ function PostPage({ post, blogMentions }: any) {
     }
   }, [post.id, star]);
 
-  const scrollToComments = () => {
-    const el = document.getElementById("comments-section");
-    if (el) {
-      el.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-  };
 
   const toggleShareButtons = () => {
     setShowShareButtons(!showShareButtons);
@@ -330,6 +335,9 @@ function PostPage({ post, blogMentions }: any) {
             <div className="flex items-center gap-3 mt-3 text-gray-400">
               <FavoriteButton postId={post.id} variant="floating" />
               <CompareButton postId={post.id} variant="floating" />
+              <a href="#comments-section" className="text-sm text-gray-700 underline underline-offset-4 hover:text-theater-primary-700">
+                {commentCount > 0 ? `みんなの声 ${commentCount}件` : "感想を書く"}
+              </a>
               <button onClick={toggleShareButtons} className="text-xs hover:text-gray-600 transition-colors" aria-label="共有">
                 <FaShareAlt />
               </button>
@@ -343,220 +351,123 @@ function PostPage({ post, blogMentions }: any) {
               )}
             </div>
 
-            {/* タブナビゲーション */}
-            <nav className="flex gap-0 mt-6 border-b border-gray-200">
-              {([
-                { key: "overview" as const, label: "概要", emphasize: false },
-                { key: "community" as const, label: `みんなの声${commentCount > 0 ? `(${commentCount})` : ""}`, emphasize: true },
-                { key: "related" as const, label: "関連情報", emphasize: false },
-              ]).map((tab) => (
-                <button
-                  key={tab.key}
-                  onClick={() => setActiveTab(tab.key)}
-                  className={`px-4 py-3 min-h-[44px] text-sm font-bold transition-colors relative
-                    ${activeTab === tab.key
-                      ? "text-theater-primary-600"
-                      : tab.emphasize
-                        ? "text-theater-primary-500 hover:text-theater-primary-700"
-                        : "text-gray-400 hover:text-gray-600"
-                    }`}
-                >
-                  <span className="inline-flex items-center gap-1">
-                    {tab.emphasize && <FaCommentDots className="text-[11px]" />}
-                    {tab.label}
-                  </span>
-                  {activeTab === tab.key && (
-                    <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-theater-primary-500" />
-                  )}
-                </button>
-              ))}
-            </nav>
+            {/* 本文。タブで隠さず、紹介・みんなの声・上演の記録・関連作品の順に並べる */}
+            <div className="mt-8 [&>section]:py-8 [&>section]:border-t [&>section]:border-[#D9D5CF]">
+              <section aria-label="作品の紹介" className="space-y-6 !pt-6">
+                <MemoizedPostDetails post={post} />
+                {post.aiDescription && <AiDescription description={post.aiDescription} />}
+              </section>
 
-            {/* タブコンテンツ */}
-            <div className="py-6">
-
-              {/* ━━━ 概要タブ ━━━ */}
-              {activeTab === "overview" && (
-                <div className="space-y-6">
-                  <MemoizedPostDetails post={post} />
-
-                  {/* AIによる作品概要: synopsisの有無に関わらず常に表示（補完情報として有用） */}
-                  {post.aiDescription && (
-                    <AiDescription description={post.aiDescription} />
-                  )}
-
-                  {/* ユーザー投稿概要（一旦OFF）
-                  <UserSynopsis postId={post.id} />
-                  */}
-
-                  {/* 概要タブでも同著者の他作品を見せる（回遊性UP） */}
-                  <MemoizedOtherPosts authorId={post.author_id} postId={post.id} authorName={post.author.name} />
-
-                  {/* もっと探す: カテゴリ・人数・時間で関連作品を探す動線 */}
-                  <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
-                    <h3 className="text-sm font-bold text-gray-700 mb-3">似た条件の作品を探す</h3>
-                    <div className="flex flex-wrap gap-2 text-sm">
-                      {post.categories && post.categories.length > 0 && post.categories.map((c: any) => (
-                        <Link key={c.id} href={`/categories/${c.id}`}
-                          className="inline-flex items-center gap-1 px-3 py-1.5 bg-white border border-gray-200 rounded-full text-theater-primary-700 hover:bg-theater-primary-50 hover:border-theater-primary-300 transition-colors">
-                          #{c.name}
-                        </Link>
-                      ))}
-                      {post.playtime > 0 && (
-                        <Link href={`/?minPlaytime=${Math.max(0, post.playtime - 15)}&maxPlaytime=${post.playtime + 15}`}
-                          className="inline-flex items-center gap-1 px-3 py-1.5 bg-white border border-gray-200 rounded-full text-theater-primary-700 hover:bg-theater-primary-50 hover:border-theater-primary-300 transition-colors">
-                          {post.playtime}分前後
-                        </Link>
-                      )}
-                      {post.totalNumber > 0 && (
-                        <Link href={`/?minTotalNumber=${Math.max(0, post.totalNumber - 2)}&maxTotalNumber=${post.totalNumber + 2}`}
-                          className="inline-flex items-center gap-1 px-3 py-1.5 bg-white border border-gray-200 rounded-full text-theater-primary-700 hover:bg-theater-primary-50 hover:border-theater-primary-300 transition-colors">
-                          {post.totalNumber}人前後の出演
-                        </Link>
-                      )}
-                    </div>
+              <section>
+                <MemoizedComments key={post.id} comments={post.comments || []} postid={post.id} postTitle={post.title} inline={true} />
+                <div className="mt-6 flex flex-wrap items-center gap-x-3 gap-y-2 text-sm">
+                  <span className="text-gray-700">この作品を評価する</span>
+                  <div className="flex items-center" role="group" aria-label="星の数">
+                    {[1, 2, 3, 4, 5].map((value) => (
+                      <button key={value} type="button" onClick={() => handleStarClick(value)} aria-label={`星${value}つ`} aria-pressed={value <= star} className="p-1">
+                        <FaStar className={value <= star ? "text-yellow-500 text-lg" : "text-gray-300 text-lg hover:text-yellow-400"} />
+                      </button>
+                    ))}
                   </div>
+                  <button className="h-9 px-3 rounded border border-gray-900 text-gray-900 text-xs font-bold hover:bg-[#F4F2EE] disabled:opacity-40" onClick={handleSubmit} disabled={star === 0}>
+                    送る
+                  </button>
+                  {error && <span role="status" className="text-xs text-theater-primary-700">{error}</span>}
+                  {success && <span role="status" className="text-xs text-[#1F7A4D]">{success}</span>}
                 </div>
-              )}
+              </section>
 
-              {/* ━━━ みんなの声タブ ━━━ */}
-              {activeTab === "community" && (
-                <div className="space-y-6" id="comments-section">
-                  <div className="flex items-center gap-3">
-                    <span className="text-sm text-gray-500">評価する</span>
-                    <div className="flex items-center">
-                      {[1, 2, 3, 4, 5].map((value) => (
-                        <button key={value} type="button" onClick={() => handleStarClick(value)} className="hover:scale-110 transition-transform">
-                          <FaStar className={value <= star ? "text-yellow-400 text-lg" : "text-gray-200 text-lg hover:text-yellow-300"} />
-                        </button>
-                      ))}
-                    </div>
-                    <button className="py-1 px-3 bg-gray-800 text-white font-bold text-xs rounded hover:bg-gray-700 transition-colors" onClick={handleSubmit}>送信</button>
-                    {error && <span className="text-xs text-red-600">{error}</span>}
-                    {success && <span className="text-xs text-green-600">{success}</span>}
-                  </div>
-
-                  <MemoizedComments key={post.id} comments={post.comments || []} postid={post.id} postTitle={post.title} inline={true} />
-                </div>
-              )}
-
-              {/* ━━━ 関連情報タブ ━━━ */}
-              {activeTab === "related" && (
-                <div className="space-y-8">
-                  {blogMentions && blogMentions.length > 0 && (
-                    <div>
-                      <h2 className="text-base font-bold text-gray-900 mb-3">この作品が登場するブログ記事</h2>
-                      <PostBlogMentions posts={blogMentions} />
-                    </div>
-                  )}
-
-                  {post.theaterGroups && post.theaterGroups.length > 0 && (
-                    <div>
-                      <h2 className="text-base font-bold text-gray-900 mb-3">この脚本を上演した劇団（{post.theaterGroups.length}）</h2>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-1">
+              {(post.theaterGroups?.length > 0 || post.performedVenues?.length > 0) && (
+                <section>
+                  <h2 className={SECTION_TITLE}>上演の記録</h2>
+                  {post.theaterGroups?.length > 0 && (
+                    <>
+                      <h3 className="!mt-5 !mb-2 !text-sm !font-bold !text-gray-700">上演した劇団（{post.theaterGroups.length}）</h3>
+                      <ul className="border-t border-[#D9D5CF]">
                         {post.theaterGroups.map((ptg: any) => {
                           const group = ptg.theaterGroup;
-                          const typeLabels: Record<string, string> = {
-                            STUDENT: '学生劇団', INTERCOLLEGE: 'インカレ', ACADEMIC: '大学学科',
-                            AMATEUR: '社会人', PROFESSIONAL: 'プロ', YOUTH: 'ユース',
-                          };
                           return (
-                            <Link key={group.id} href={`/theater-groups/${group.slug}`}
-                              className="flex items-center gap-2.5 p-2.5 rounded hover:bg-gray-50 transition-colors group">
-                              <div className="w-8 h-8 bg-theater-primary-100 rounded-full flex items-center justify-center flex-shrink-0">
-                                <FaTheaterMasks className="text-theater-primary-500 text-xs" />
-                              </div>
-                              <div className="min-w-0 flex-1">
-                                <p className="font-bold text-sm text-gray-800 group-hover:text-theater-primary-600 truncate">{group.name}</p>
-                                <p className="text-[11px] text-gray-400">
-                                  {typeLabels[group.groupType] || group.groupType}
-                                  {group.prefecture && ` · ${group.prefecture}`}
-                                  {ptg.performanceYear && ` · ${ptg.performanceYear}年`}
-                                </p>
-                              </div>
-                            </Link>
+                            <li key={group.id} className="border-b border-[#D9D5CF]">
+                              <Link href={`/theater-groups/${group.slug}`} className="group flex flex-wrap items-baseline gap-x-3 py-3 px-2 hover:bg-[#F4F2EE]">
+                                <span className="flex-1 min-w-0 font-serif font-bold text-gray-900 group-hover:text-theater-primary-700">{group.name}</span>
+                                <span className="text-sm text-gray-600">
+                                  {[GROUP_TYPE_LABELS[group.groupType] || group.groupType, group.prefecture, ptg.performanceYear && `${ptg.performanceYear}年`].filter(Boolean).join("・")}
+                                </span>
+                              </Link>
+                            </li>
                           );
                         })}
-                      </div>
-                    </div>
+                      </ul>
+                    </>
                   )}
-
-                  {post.performedVenues && post.performedVenues.length > 0 && (
-                    <div>
-                      <h2 className="text-base font-bold text-gray-900 mb-3">この作品が上演された劇場（{post.performedVenues.length}）</h2>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-1">
-                        {post.performedVenues.map((pv: any) => {
-                          const venueTypeLabels: Record<string, string> = {
-                            small: '小劇場', medium: '中劇場', large: '大劇場',
-                            SMALL: '小劇場', MEDIUM: '中劇場', LARGE: '大劇場',
-                          };
-                          const venueTypeColors: Record<string, string> = {
-                            small: 'bg-blue-100 text-blue-700', medium: 'bg-green-100 text-green-700', large: 'bg-purple-100 text-purple-700',
-                            SMALL: 'bg-blue-100 text-blue-700', MEDIUM: 'bg-green-100 text-green-700', LARGE: 'bg-purple-100 text-purple-700',
-                          };
-                          const typeLabel = venueTypeLabels[pv.venueType] || pv.venueType;
-                          const typeColor = venueTypeColors[pv.venueType] || 'bg-gray-100 text-gray-700';
-                          return (
-                            <Link key={pv.venueId} href={`/venues/${pv.venueSlug}`}
-                              className="flex items-center gap-2.5 p-2.5 rounded hover:bg-gray-50 transition-colors group">
-                              <div className="w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center flex-shrink-0">
-                                <FaMapMarkerAlt className="text-indigo-500 text-xs" />
-                              </div>
-                              <div className="min-w-0 flex-1">
-                                <div className="flex items-center gap-1.5">
-                                  <p className="font-bold text-sm text-gray-800 group-hover:text-indigo-600 truncate">{pv.venueName}</p>
-                                  <span className={`shrink-0 px-1.5 py-0.5 text-[10px] font-bold rounded ${typeColor}`}>{typeLabel}</span>
-                                </div>
-                                <p className="text-[11px] text-gray-400">
-                                  {pv.prefecture}
-                                  {pv.performers && pv.performers.length > 0 && (
-                                    <>{' · '}{pv.performers.map((p: any) => `${p.name}${p.year ? `(${p.year}年)` : ''}`).join('、')}</>
-                                  )}
-                                </p>
-                              </div>
+                  {post.performedVenues?.length > 0 && (
+                    <>
+                      <h3 className="!mt-6 !mb-2 !text-sm !font-bold !text-gray-700">上演された劇場（{post.performedVenues.length}）</h3>
+                      <ul className="border-t border-[#D9D5CF]">
+                        {post.performedVenues.map((pv: any) => (
+                          <li key={pv.venueId} className="border-b border-[#D9D5CF]">
+                            <Link href={`/venues/${pv.venueSlug}`} className="group block py-3 px-2 hover:bg-[#F4F2EE]">
+                              <span className="flex flex-wrap items-baseline gap-x-3">
+                                <span className="flex-1 min-w-0 font-bold text-gray-900 group-hover:text-theater-primary-700">{pv.venueName}</span>
+                                <span className="text-sm text-gray-600">{[pv.prefecture, VENUE_TYPE_LABELS[pv.venueType] || pv.venueType].filter(Boolean).join("・")}</span>
+                              </span>
+                              {pv.performers?.length > 0 && (
+                                <span className="block mt-0.5 text-sm text-gray-600">
+                                  {pv.performers.map((p: any) => `${p.name}${p.year ? `（${p.year}年）` : ""}`).join("、")}
+                                </span>
+                              )}
                             </Link>
-                          );
-                        })}
-                      </div>
-                    </div>
+                          </li>
+                        ))}
+                      </ul>
+                    </>
                   )}
+                  <p className="mt-4 text-sm text-gray-700">
+                    この作品を上演する予定がありますか。
+                    <Link href="/announcements/new" className="ml-1 text-theater-primary-700 underline underline-offset-4">上演告知に載せる</Link>
+                  </p>
+                </section>
+              )}
 
-                  <div>
-                    <h2 className="text-base font-bold text-gray-900 mb-3">関連作品</h2>
-                    <MemoizedOtherPosts authorId={post.author_id} postId={post.id} authorName={post.author.name} />
+              {blogMentions && blogMentions.length > 0 && (
+                <section>
+                  <h2 className={SECTION_TITLE}>この作品が出てくるブログ記事</h2>
+                  <div className="mt-4">
+                    <PostBlogMentions posts={blogMentions} />
                   </div>
+                </section>
+              )}
 
-                  <p className="text-sm text-gray-400">
-                    劇団を探す:
-                    <Link href="/university-theater" className="text-theater-primary-600 hover:underline ml-1">大学演劇</Link>
-                    <span className="mx-1">·</span>
-                    <Link href="/shogekijo" className="text-theater-primary-600 hover:underline">小劇場</Link>
+              <section>
+                <MemoizedOtherPosts authorId={post.author_id} postId={post.id} authorName={post.author.name} />
+                <div className="mt-8">
+                  <h2 className="!my-0 !pb-0 !text-base !font-bold !text-gray-900">似た条件の作品を探す</h2>
+                  <div className="mt-3 flex flex-wrap gap-2 text-sm">
+                    {post.categories?.map((c: any) => (
+                      <Link key={c.id} href={`/categories/${c.id}`} className={CHIP}>{c.name}</Link>
+                    ))}
+                    {post.playtime > 0 && (
+                      <Link href={`/?minPlaytime=${Math.max(0, post.playtime - 15)}&maxPlaytime=${post.playtime + 15}`} className={CHIP}>
+                        {post.playtime}分前後
+                      </Link>
+                    )}
+                    {post.totalNumber > 0 && (
+                      <Link href={`/?minTotalCount=${Math.max(0, post.totalNumber - 2)}&maxTotalCount=${post.totalNumber + 2}`} className={CHIP}>
+                        {post.totalNumber}人前後
+                      </Link>
+                    )}
+                  </div>
+                  <p className="mt-4 text-sm text-gray-600">
+                    劇団を探す：
+                    <Link href="/university-theater" className="text-theater-primary-700 hover:underline">大学演劇</Link>
+                    <span className="mx-1">・</span>
+                    <Link href="/shogekijo" className="text-theater-primary-700 hover:underline">小劇場</Link>
                   </p>
                 </div>
-              )}
+              </section>
             </div>
 
-            {/* 広告（タブ外: 全ユーザーに表示） */}
-            {activeTab !== "community" && (
-              <AdSlot slot={AD_SLOTS.POST_AFTER_CONTENT} format="horizontal" />
-            )}
-
-            {/* レビュー促進CTA */}
-            {activeTab !== "community" && (
-              <div className="border-t border-gray-100 pt-6 pb-2">
-                <div className="bg-gray-50 rounded-lg p-5 text-center">
-                  <p className="text-sm font-bold text-gray-700 mb-1">この作品を上演したことがある方へ</p>
-                  <p className="text-xs text-gray-500 mb-3">上演した感想や演出のポイントをコメントで共有しませんか？他の演劇人の参考になります。</p>
-                  <button
-                    onClick={() => setActiveTab("community")}
-                    className="inline-flex items-center gap-1 px-4 py-2 bg-theater-primary-500 text-white text-xs font-bold rounded hover:bg-theater-primary-600 transition-colors"
-                  >
-                    <FaCommentDots className="text-[10px]" />
-                    みんなの声タブへ
-                  </button>
-                </div>
-              </div>
-            )}
+            <AdSlot slot={AD_SLOTS.POST_AFTER_CONTENT} format="horizontal" />
           </div>
           </div>
       </Layout>
