@@ -1,7 +1,11 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { prisma } from '@/lib/prisma';
+import { requireAdminApi } from '@/lib/admin-guard';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  // 管理画面だけが使う API。管理者のログインがないと何もしない
+  if (!(await requireAdminApi(req, res))) return;
+
   const all = await prisma.postTheaterGroup.findMany({
     include: {
       post: { select: { id: true, title: true, author: { select: { name: true } } } },

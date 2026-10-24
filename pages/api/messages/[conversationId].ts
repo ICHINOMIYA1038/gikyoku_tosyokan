@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { prisma } from '@/lib/prisma';
 import { requireAuth } from '@/lib/auth';
+import { publicName } from '@/lib/public-name';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const session = await requireAuth(req, res);
@@ -50,7 +51,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       })),
       other: other ? {
         id: other.id,
-        name: other.displayName || other.name,
+        name: publicName(other),
         image: other.avatarUrl || other.image,
       } : null,
     });

@@ -33,7 +33,8 @@ interface Props {
 
 export default function Welcome({ user }: Props) {
   const router = useRouter();
-  const [displayName, setDisplayName] = useState(user.name ?? '');
+  // Google / Apple のアカウント名（本名のことが多い）を勝手に入れない
+  const [displayName, setDisplayName] = useState('');
   const [groupName, setGroupName] = useState('');
   const [bio, setBio] = useState('');
   const [emailOptIn, setEmailOptIn] = useState(true);
@@ -161,10 +162,11 @@ export default function Welcome({ user }: Props) {
                 type="text"
                 value={displayName}
                 onChange={(e) => setDisplayName(e.target.value)}
-                placeholder="コメント時に表示される名前"
+                placeholder="例：演劇好きのたろう"
                 maxLength={50}
                 className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-theater-primary-300"
               />
+              <p className="mt-1 text-xs text-gray-600">コメントや募集に表示される名前です。本名でなくてかまいません。空のままなら「ユーザー」と表示されます。</p>
             </div>
 
             {/* 劇団名 */}

@@ -52,6 +52,8 @@ function formatDatetime(datetime: any) {
   return `${year}/${month}/${day} ${hours}:${String(minutes).padStart(2, "0")}`;
 }
 
+const HIDDEN_COMMENT = { content: "", author: "", userId: null, user: null };
+
 // 全体の h2 の余白と大きさ（globals.css）を打ち消す
 const SECTION_TITLE = "!my-0 !pb-0 !text-xl !font-bold !text-gray-900";
 const CHIP = "inline-flex items-center h-9 px-3 rounded-full border border-[#D9D5CF] text-gray-800 hover:border-theater-primary-600 hover:text-theater-primary-700";
@@ -551,7 +553,6 @@ export async function getStaticProps(context: any) {
             user: {
               select: {
                 id: true,
-                name: true,
                 displayName: true,
                 image: true,
                 avatarUrl: true,
@@ -570,7 +571,7 @@ export async function getStaticProps(context: any) {
                 user: {
                   select: {
                     id: true,
-                    name: true,
+                    displayName: true,
                     image: true,
                   }
                 },
@@ -716,13 +717,16 @@ export async function getStaticProps(context: any) {
     const formattedPost = {
       ...post,
       performedVenues,
+      // 削除済みのコメントは、本文と投稿者をページに埋め込まない（管理画面からの削除は本文を残しているため）
       comments: post.comments.map((comment: any) => ({
         ...comment,
-        name: comment.author,
+        ...(comment.deleted ? HIDDEN_COMMENT : {}),
+        name: comment.deleted ? "" : comment.author,
         date: formatDatetime(comment.date),
         children: comment.children.map((child: any) => ({
           ...child,
-          name: child.author,
+          ...(child.deleted ? HIDDEN_COMMENT : {}),
+          name: child.deleted ? "" : child.author,
           parent_id: child.parentCommentId,
           date: formatDatetime(child.date),
         })),

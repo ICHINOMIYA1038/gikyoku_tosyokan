@@ -8,7 +8,6 @@ import { FaUser, FaCommentDots, FaTheaterMasks, FaHeart } from 'react-icons/fa';
 interface Props {
   profile: {
     id: string;
-    name: string;
     displayName: string | null;
     image: string | null;
     avatarUrl: string | null;
@@ -31,7 +30,7 @@ interface Props {
 }
 
 export default function UserProfile({ profile, stats, recentComments }: Props) {
-  const displayName = profile.displayName || profile.name || 'ユーザー';
+  const displayName = profile.displayName || 'ユーザー';
   const avatar = profile.avatarUrl || profile.image;
 
   return (
@@ -152,7 +151,6 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ params }) 
     props: {
       profile: {
         id: user.id,
-        name: user.name || '',
         displayName: user.displayName,
         image: user.image,
         avatarUrl: user.avatarUrl,

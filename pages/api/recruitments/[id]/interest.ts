@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { prisma } from '@/lib/prisma';
 import { requireAuth } from '@/lib/auth';
+import { publicNameOf } from '@/lib/public-name';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
@@ -42,7 +43,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       });
     }
 
-    const senderName = session.user.name || 'ユーザー';
+    const senderName = await publicNameOf(session.user.id);
     const content = `「${recruitment.title}」に興味があります！`;
 
     await prisma.message.create({

@@ -21,6 +21,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const now = new Date();
     const andConditions: any[] = [
       { status: 'ACTIVE' },
+      { deletedAt: null },
       { OR: [{ expiresAt: null }, { expiresAt: { gte: now } }] },
     ];
     if (prefecture) andConditions.push({
@@ -48,7 +49,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         skip,
         take: limitNum,
         include: {
-          poster: { select: { id: true, name: true, displayName: true, image: true, avatarUrl: true } },
+          poster: { select: { id: true, displayName: true, image: true, avatarUrl: true } },
           theaterGroup: { select: { id: true, name: true, slug: true, prefecture: true, groupType: true } },
           _count: { select: { applications: true } },
         },

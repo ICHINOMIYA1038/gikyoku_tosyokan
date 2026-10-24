@@ -9,13 +9,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const recruitment = await prisma.recruitment.findUnique({
       where: { id },
       include: {
-        poster: { select: { id: true, name: true, displayName: true, image: true, avatarUrl: true, bio: true, groupName: true } },
+        poster: { select: { id: true, displayName: true, image: true, avatarUrl: true, bio: true, groupName: true } },
         theaterGroup: { select: { id: true, name: true, slug: true, prefecture: true, groupType: true, website: true, twitter: true } },
         _count: { select: { applications: true } },
       },
     });
 
-    if (!recruitment) return res.status(404).json({ error: '募集が見つかりません' });
+    if (!recruitment || recruitment.deletedAt) return res.status(404).json({ error: '募集が見つかりません' });
 
     // 閲覧数を増やす
     await prisma.recruitment.update({ where: { id }, data: { views: { increment: 1 } } });

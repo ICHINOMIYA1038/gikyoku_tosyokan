@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { prisma } from '@/lib/prisma';
 import { requireAuth } from '@/lib/auth';
+import { publicNameOf } from '@/lib/public-name';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
@@ -73,7 +74,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       select: { email: true, displayName: true, name: true },
     });
     if (poster?.email) {
-      const applicantName = session.user.name || 'ユーザー';
+      const applicantName = await publicNameOf(session.user.id);
       const { sendMail } = await import('@/lib/mailer');
       await sendMail({
         from: `戯曲図書館 <${process.env.GMAIL_USER || 'noreply@gikyokutosyokan.com'}>`,
