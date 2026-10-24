@@ -16,7 +16,10 @@ const postsDirectory = path.join(process.cwd(), 'blog/posts');
 async function main() {
   const fileNames = fs.readdirSync(postsDirectory).filter((f) => f.endsWith('.md'));
 
-  console.log(`Found ${fileNames.length} markdown files`);
+  const dryRun = process.argv.includes('--dry-run');
+  let changed = 0;
+  let skipped = 0;
+  console.log(`Found ${fileNames.length} markdown files${dryRun ? ' (dry run)' : ''}`);
 
   for (const fileName of fileNames) {
     const slug = fileName.replace(/\.md$/, '');
@@ -24,43 +27,55 @@ async function main() {
     const fileContents = fs.readFileSync(fullPath, 'utf8');
     const { data, content } = matter(fileContents);
 
+    const existing = await prisma.blogPost.findUnique({
+      where: { slug },
+      select: { title: true, description: true, content: true, tags: true, publishedAt: true },
+    });
     let publishedAt: Date;
     if (data.date) {
       publishedAt =
         data.date instanceof Date ? data.date : new Date(String(data.date));
     } else {
-      publishedAt = new Date();
+      publishedAt = existing?.publishedAt || new Date();
     }
 
+    if (!Number.isFinite(publishedAt.getTime())) throw new Error(`Invalid date: ${slug}`);
+    const values = {
+      title: data.title || slug,
+      description: data.description || null,
+      content,
+      tags: data.tags || [],
+      publishedAt,
+    };
+    if (existing &&
+        existing.title === values.title &&
+        existing.description === values.description &&
+        existing.content === values.content &&
+        JSON.stringify(existing.tags) === JSON.stringify(values.tags) &&
+        existing.publishedAt.getTime() === publishedAt.getTime()) {
+      skipped++;
+      continue;
+    }
+    changed++;
+    if (dryRun) {
+      console.log(`  Would upsert: ${slug}`);
+      continue;
+    }
     await prisma.blogPost.upsert({
       where: { slug },
-      update: {
-        title: data.title || slug,
-        description: data.description || null,
-        content,
-        tags: data.tags || [],
-        publishedAt,
-      },
-      create: {
-        slug,
-        title: data.title || slug,
-        description: data.description || null,
-        content,
-        tags: data.tags || [],
-        publishedAt,
-        published: true,
-      },
+      update: values,
+      create: { slug, ...values, published: true },
     });
 
     console.log(`  Upserted: ${slug}`);
   }
 
-  console.log(`\nDone! ${fileNames.length} posts migrated.`);
+  console.log(`\nDone! ${changed} posts ${dryRun ? 'would be migrated' : 'migrated'}, ${skipped} unchanged.`);
 }
 
 main()
   .catch((e) => {
-    console.error(e);
-    process.exit(1);
+    console.error('Blog sync failed');
+    process.exitCode = 1;
   })
   .finally(() => prisma.$disconnect());
