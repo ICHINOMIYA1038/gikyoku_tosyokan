@@ -140,7 +140,7 @@ function PostPage({ post, blogMentions }: any) {
     .filter((c: any) => c.commentType === "レビュー" && !c.deleted && c.content)
     .slice(0, 5)
     .map((c: any) => ({
-      author: c.author || "名無しさん",
+      author: c.userId ? (c.user?.displayName || "ユーザー") : (c.author || "名無しさん"),
       content: c.content.substring(0, 200),
       date: c.date ? c.date.split(" ")[0]?.replace(/\//g, "-") : undefined,
     }));

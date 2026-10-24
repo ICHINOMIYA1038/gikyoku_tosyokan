@@ -227,7 +227,7 @@ function Home() {
           本ポリシーに関するお問い合わせは、下記の窓口までお願いいたします。
         </p>
         <ul>
-          <li>Eメールアドレス：ichiryo108@gmail.com</li>
+          <li>Eメールアドレス：support@gikyokutosyokan.com</li>
         </ul>
       </div>
     </SupportLayout>

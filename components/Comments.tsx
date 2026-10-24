@@ -308,7 +308,7 @@ const Comments = ({ comments: initialComments, postid, postTitle, inline = false
       )}
       {c.user?.id ? (
         <Link href={`/users/${c.user.id}`} className="font-bold text-gray-900 hover:underline">
-          {c.user.displayName || c.author}
+          {c.user.displayName || "ユーザー"}
         </Link>
       ) : (
         <span className="font-bold text-gray-900">{c.author}</span>
