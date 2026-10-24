@@ -13,7 +13,7 @@ import SearchResults from "@/components/SearchResults";
 import FAQ from "@/components/FAQ";
 import Link from "next/link";
 import LatestBlogPosts from "@/components/LatestBlogPosts";
-import RecentComments from "@/components/RecentComments";
+import HomeCommunity from "@/components/HomeCommunity";
 import TrendingPosts from "@/components/TrendingPosts";
 import AdSlot from "@/components/Ad/AdSlot";
 import { AD_SLOTS } from "@/lib/adSlots";
@@ -95,7 +95,12 @@ export default function Home({ news, authors, posts, categories, blogPosts, tren
         )}
         <HeroSearchBand totalPosts={totalPosts} onSearch={handleScrollToRegistrationForm} />
 
-        <NewsList news={news} />
+        {/* みんなの書き込み（作品への声・上演告知・劇団員募集） */}
+        <HomeCommunity />
+
+        <div className="max-w-6xl mx-auto px-4 py-6">
+          <NewsList news={news} />
+        </div>
 
         {/* 今週の人気作品 */}
         <TrendingPosts posts={trendingPosts} />
@@ -132,9 +137,6 @@ export default function Home({ news, authors, posts, categories, blogPosts, tren
           </div>
         </div>
         
-        {/* みんなの声（最新コメント） */}
-        <RecentComments />
-
         {/* 広告: コンテンツ中間 */}
         <div className="max-w-6xl mx-auto px-4">
           <AdSlot slot={AD_SLOTS.HOME_MID_CONTENT} format="horizontal" />
@@ -143,178 +145,35 @@ export default function Home({ news, authors, posts, categories, blogPosts, tren
         {/* 最新の記事 */}
         <LatestBlogPosts posts={blogPosts} />
 
-        {/* 最新の上演告知 */}
-        <section className="py-8 px-4">
-          <div className="max-w-6xl mx-auto">
-            <h2 className="text-2xl md:text-3xl font-bold text-center mb-6">
-              {"\uD83D\uDCE2"} 最新の上演告知
-            </h2>
-            {announcements && announcements.length > 0 ? (
-              <>
-                <div className="grid md:grid-cols-3 gap-5">
-                  {announcements.map((a: any) => (
-                    <Link key={a.id} href={`/announcements/${a.id}`} className="block group">
-                      <div className="bg-white p-5 rounded-lg shadow hover:shadow-lg transition-all hover:-translate-y-1 border border-gray-100">
-                        <h3 className="text-lg font-bold mb-2 group-hover:text-theater-primary-600 transition-colors line-clamp-2">
-                          {a.title}
-                        </h3>
-                        {a.theaterGroupName && (
-                          <p className="text-sm text-theater-primary-700 mb-1">{a.theaterGroupName}</p>
-                        )}
-                        {a.performanceDate && (
-                          <p className="text-sm text-gray-600 mb-1">{"\uD83D\uDCC5"} {a.performanceDate}</p>
-                        )}
-                        {a.venue && (
-                          <p className="text-sm text-gray-600">{"\uD83D\uDCCD"} {a.venue}</p>
-                        )}
-                      </div>
+        {/* もっと知る。ガイドとデータベースへの入口を、行の一覧で並べる */}
+        <section aria-labelledby="home-more" className="max-w-6xl mx-auto px-4 py-10">
+          <h2 id="home-more" className="!my-0 !pb-0 !text-[22px] !font-bold !text-gray-900">もっと知る</h2>
+          <div className="mt-4 grid grid-cols-1 gap-x-10 md:grid-cols-2">
+            {[
+              [
+                { href: "/guide/beginner/how-to-choose-script", title: "脚本の選び方", note: "上演時間・人数・難易度から選ぶポイント" },
+                { href: "/guide/school/culture-festival", title: "文化祭演劇ガイド", note: "限られた時間と予算で上演するコツ" },
+                { href: "/guide/beginner/acting-basics", title: "演技の基礎", note: "初心者向けのトレーニング" },
+                { href: "/guide", title: "すべてのガイド", note: "" },
+              ],
+              [
+                { href: "/university-theater", title: "大学演劇データベース", note: "全国の学生劇団・演劇サークル" },
+                { href: "/shogekijo", title: "小劇場データベース", note: "プロ・社会人・ユースの劇団" },
+                { href: "/awards", title: "戯曲賞データベース", note: "岸田國士戯曲賞などの受賞作・候補作" },
+                { href: "/venues", title: "劇場データベース", note: "座席数・アクセス・設備" },
+              ],
+            ].map((col, i) => (
+              <ul key={i} className="border-t border-[#D9D5CF]">
+                {col.map((item) => (
+                  <li key={item.href} className="border-b border-[#D9D5CF]">
+                    <Link href={item.href} className="group flex items-baseline justify-between gap-4 py-3 px-1 hover:bg-[#F4F2EE]">
+                      <span className="font-bold text-gray-900 group-hover:text-theater-primary-700">{item.title}</span>
+                      {item.note && <span className="text-sm text-gray-600 text-right">{item.note}</span>}
                     </Link>
-                  ))}
-                </div>
-                <div className="text-center mt-6">
-                  <Link href="/announcements" className="inline-block bg-theater-primary-500 text-white px-6 py-3 rounded-lg hover:bg-theater-primary-600 transition-colors font-bold">
-                    もっと見る →
-                  </Link>
-                </div>
-              </>
-            ) : (
-              <div className="bg-white rounded-lg shadow-md p-8 text-center">
-                <p className="text-gray-600 mb-4">公演情報を投稿しませんか？</p>
-                <Link href="/announcements/new" className="inline-block bg-theater-primary-500 text-white px-6 py-3 rounded-lg hover:bg-theater-primary-600 transition-colors font-bold">
-                  告知を投稿する →
-                </Link>
-              </div>
-            )}
-          </div>
-        </section>
-
-        {/* ガイドセクション */}
-        <section className="bg-gray-50 py-8 px-4">
-          <div className="max-w-6xl mx-auto">
-            <h2 className="text-2xl md:text-3xl font-bold text-center mb-6">
-              演劇を始める方へのガイド
-            </h2>
-            <div className="grid md:grid-cols-3 gap-5">
-              <Link href="/guide/beginner/how-to-choose-script" className="block">
-                <div className="bg-white p-5 rounded-lg shadow hover:shadow-lg transition-shadow">
-                  <h3 className="text-xl font-bold mb-3">脚本の選び方</h3>
-                  <p className="text-gray-600 mb-3">
-                    上演時間、人数、難易度から最適な脚本を選ぶポイントを解説
-                  </p>
-                  <span className="text-blue-600 hover:underline">詳しく見る →</span>
-                </div>
-              </Link>
-              
-              <Link href="/guide/school/culture-festival" className="block">
-                <div className="bg-white p-5 rounded-lg shadow hover:shadow-lg transition-shadow">
-                  <h3 className="text-xl font-bold mb-3">文化祭演劇ガイド</h3>
-                  <p className="text-gray-600 mb-3">
-                    限られた時間と予算で成功させるための実践的アドバイス
-                  </p>
-                  <span className="text-blue-600 hover:underline">詳しく見る →</span>
-                </div>
-              </Link>
-              
-              <Link href="/guide/beginner/acting-basics" className="block">
-                <div className="bg-white p-5 rounded-lg shadow hover:shadow-lg transition-shadow">
-                  <h3 className="text-xl font-bold mb-3">演技の基礎</h3>
-                  <p className="text-gray-600 mb-3">
-                    初心者でもできる演技力向上のトレーニング方法
-                  </p>
-                  <span className="text-blue-600 hover:underline">詳しく見る →</span>
-                </div>
-              </Link>
-            </div>
-            
-            <div className="text-center mt-6">
-              <Link href="/guide" className="inline-block bg-gray-600 text-white px-6 py-3 rounded-lg hover:bg-gray-700">
-                すべてのガイドを見る →
-              </Link>
-            </div>
-          </div>
-        </section>
-
-        {/* 劇団データベースセクション */}
-        <section className="py-8 px-4">
-          <div className="max-w-6xl mx-auto">
-            <h2 className="text-2xl md:text-3xl font-bold text-center mb-3">
-              劇団データベース
-            </h2>
-            <p className="text-gray-600 text-center mb-6 text-sm">
-              全国の劇団・演劇団体の情報を検索できます
-            </p>
-            <div className="grid md:grid-cols-2 gap-6">
-              <Link href="/university-theater" className="block group">
-                <div className="bg-gradient-to-r from-purple-50 to-pink-50 p-5 rounded-xl border border-purple-100 hover:shadow-lg transition-all hover:-translate-y-1">
-                  <div className="flex items-center gap-3 mb-3">
-                    <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
-                      <span className="text-lg">🎓</span>
-                    </div>
-                    <h3 className="text-xl font-bold text-gray-800 group-hover:text-theater-primary-700 transition-colors">大学演劇データベース</h3>
-                  </div>
-                  <p className="text-sm text-gray-600 mb-3">
-                    全国の大学学生劇団・演劇サークルを地図から検索。大学別・地域別に探せます。
-                  </p>
-                  <span className="text-sm text-theater-primary-600 font-medium">詳しく見る →</span>
-                </div>
-              </Link>
-              <Link href="/shogekijo" className="block group">
-                <div className="bg-gradient-to-r from-orange-50 to-amber-50 p-5 rounded-xl border border-orange-100 hover:shadow-lg transition-all hover:-translate-y-1">
-                  <div className="flex items-center gap-3 mb-3">
-                    <div className="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center">
-                      <span className="text-lg">🎭</span>
-                    </div>
-                    <h3 className="text-xl font-bold text-gray-800 group-hover:text-orange-700 transition-colors">小劇場データベース</h3>
-                  </div>
-                  <p className="text-sm text-gray-600 mb-3">
-                    プロ劇団・アマチュア劇団・ユース劇団など、全国の小劇場・演劇団体を検索できます。
-                  </p>
-                  <span className="text-sm text-orange-600 font-medium">詳しく見る →</span>
-                </div>
-              </Link>
-            </div>
-          </div>
-        </section>
-
-        {/* 戯曲賞・劇場データベースセクション */}
-        <section className="bg-gray-50 py-8 px-4">
-          <div className="max-w-6xl mx-auto">
-            <h2 className="text-2xl md:text-3xl font-bold text-center mb-3">
-              もっと演劇を知る
-            </h2>
-            <p className="text-gray-600 text-center mb-6 text-sm">
-              戯曲賞の受賞作品や全国の劇場情報を調べられます
-            </p>
-            <div className="grid md:grid-cols-2 gap-6">
-              <Link href="/awards" className="block group">
-                <div className="bg-gradient-to-r from-yellow-50 to-amber-50 p-5 rounded-xl border border-yellow-100 hover:shadow-lg transition-all hover:-translate-y-1">
-                  <div className="flex items-center gap-3 mb-3">
-                    <div className="w-10 h-10 bg-yellow-100 rounded-full flex items-center justify-center">
-                      <span className="text-lg">{"\uD83C\uDFC6"}</span>
-                    </div>
-                    <h3 className="text-xl font-bold text-gray-800 group-hover:text-yellow-700 transition-colors">戯曲賞データベース</h3>
-                  </div>
-                  <p className="text-sm text-gray-600 mb-3">
-                    岸田國士戯曲賞、鶴屋南北戯曲賞など主要な戯曲賞の受賞作品・最終候補作を一覧で検索できます。
-                  </p>
-                  <span className="text-sm text-yellow-700 font-medium">受賞作品を見る {"\u2192"}</span>
-                </div>
-              </Link>
-              <Link href="/venues" className="block group">
-                <div className="bg-gradient-to-r from-teal-50 to-cyan-50 p-5 rounded-xl border border-teal-100 hover:shadow-lg transition-all hover:-translate-y-1">
-                  <div className="flex items-center gap-3 mb-3">
-                    <div className="w-10 h-10 bg-teal-100 rounded-full flex items-center justify-center">
-                      <span className="text-lg">{"\uD83C\uDFED"}</span>
-                    </div>
-                    <h3 className="text-xl font-bold text-gray-800 group-hover:text-teal-700 transition-colors">劇場データベース</h3>
-                  </div>
-                  <p className="text-sm text-gray-600 mb-3">
-                    全国の劇場・ホールの座席数、アクセス、設備情報を検索。公演会場選びに役立ちます。
-                  </p>
-                  <span className="text-sm text-teal-700 font-medium">劇場を探す {"\u2192"}</span>
-                </div>
-              </Link>
-            </div>
+                  </li>
+                ))}
+              </ul>
+            ))}
           </div>
         </section>
 
