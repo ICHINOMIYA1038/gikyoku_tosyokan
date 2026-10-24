@@ -3,7 +3,7 @@ import Layout from '@/components/Layout';
 import Seo from '@/components/seo';
 import { prisma } from '@/lib/prisma';
 import Link from 'next/link';
-import { FaUser, FaCommentDots, FaTheaterMasks, FaHeart } from 'react-icons/fa';
+import { FaUser, FaTheaterMasks } from 'react-icons/fa';
 
 interface Props {
   profile: {
@@ -42,7 +42,7 @@ export default function UserProfile({ profile, stats, recentComments }: Props) {
       />
       <div className="container mx-auto px-4 py-8 max-w-3xl">
         {/* プロフィールカード */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
+        <div className="bg-white border border-[#D9D5CF] rounded p-6 mb-6">
           <div className="flex items-start gap-4">
             {avatar ? (
               // eslint-disable-next-line @next/next/no-img-element
@@ -53,7 +53,7 @@ export default function UserProfile({ profile, stats, recentComments }: Props) {
               </div>
             )}
             <div className="flex-1">
-              <h1 className="text-xl font-bold text-gray-900">{displayName}</h1>
+              <h1 className="text-xl font-serif font-bold text-gray-900">{displayName}</h1>
               {profile.groupName && (
                 <p className="text-sm text-gray-600 flex items-center gap-1 mt-1">
                   <FaTheaterMasks className="text-xs text-gray-400" />
@@ -71,12 +71,12 @@ export default function UserProfile({ profile, stats, recentComments }: Props) {
 
           <div className="flex gap-6 mt-4 pt-4 border-t border-gray-100">
             <div className="flex items-center gap-1.5 text-sm text-gray-600">
-              <FaCommentDots className="text-theater-primary-500" />
+              
               <span className="font-medium">{stats.commentCount}</span>
               <span className="text-gray-400">コメント</span>
             </div>
             <div className="flex items-center gap-1.5 text-sm text-gray-600">
-              <FaHeart className="text-theater-primary-500" />
+              
               <span className="font-medium">{stats.favoriteCount}</span>
               <span className="text-gray-400">お気に入り</span>
             </div>
@@ -84,7 +84,7 @@ export default function UserProfile({ profile, stats, recentComments }: Props) {
         </div>
 
         {/* 最近のコメント */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+        <div className="bg-white border border-[#D9D5CF] rounded p-6">
           <h2 className="text-lg font-bold mb-4">最近のコメント</h2>
           {recentComments.length === 0 ? (
             <p className="text-sm text-gray-500">まだコメントがありません。</p>

@@ -36,23 +36,20 @@ export default function MessagesPage() {
     <Layout>
       <Seo pageTitle="メッセージ" pageDescription="戯曲図書館のメッセージ" pagePath="/messages" />
       <div className="container mx-auto px-4 py-8 max-w-3xl">
-        <h1 className="text-2xl font-bold mb-6 flex items-center gap-2">
-          <FaEnvelope className="text-theater-primary-500" />
-          メッセージ
-        </h1>
+        <h1 className="text-[26px] font-serif font-bold text-gray-900 mb-6">メッセージ</h1>
 
         {loading ? (
           <div className="flex justify-center py-12">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-theater-primary-500"></div>
           </div>
         ) : conversations.length === 0 ? (
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-12 text-center">
+          <div className="border border-[#D9D5CF] rounded p-12 text-center">
             <FaEnvelope className="text-4xl text-gray-300 mx-auto mb-3" />
             <p className="text-gray-500">メッセージはまだありません</p>
             <p className="text-xs text-gray-400 mt-1">劇団員募集に応募するとメッセージのやりとりが始まります</p>
           </div>
         ) : (
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 divide-y divide-gray-100">
+          <div className="border border-[#D9D5CF] rounded divide-y divide-[#D9D5CF]">
             {conversations.map((c: any) => (
               <Link key={c.id} href={`/messages/${c.id}`} className="block p-4 hover:bg-gray-50 transition-colors">
                 <div className="flex items-center gap-3">

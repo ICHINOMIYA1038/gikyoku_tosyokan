@@ -115,7 +115,7 @@ export default function ConversationPage({ conversationId }: Props) {
               <FaUser className="text-theater-primary-400" />
             </div>
           )}
-          <Link href={`/users/${other?.id || ''}`} className="font-medium text-gray-900 hover:text-blue-600 text-sm">
+          <Link href={`/users/${other?.id || ''}`} className="font-bold text-gray-900 hover:underline text-sm">
             {other?.name || 'ユーザー'}
           </Link>
         </div>
@@ -142,7 +142,7 @@ export default function ConversationPage({ conversationId }: Props) {
                   <div key={m.id}>
                     {showDate && (
                       <div className="flex justify-center my-3">
-                        <span className="text-xs text-gray-400 bg-white px-3 py-1 rounded-full shadow-sm border border-gray-100">
+                        <span className="text-xs text-gray-600 bg-white px-3 py-1 rounded-full border border-[#D9D5CF]">
                           {new Date(m.createdAt).toLocaleDateString('ja-JP', { timeZone: 'Asia/Tokyo', year: 'numeric', month: 'long', day: 'numeric' })}
                         </span>
                       </div>
@@ -151,14 +151,14 @@ export default function ConversationPage({ conversationId }: Props) {
                       <div className={`max-w-[80%] ${m.isMine ? 'order-2' : ''}`}>
                         <div className={`px-4 py-2.5 text-sm whitespace-pre-wrap leading-relaxed ${
                           m.isMine
-                            ? 'bg-theater-primary-600 text-white rounded-2xl rounded-br-md'
-                            : 'bg-white text-gray-800 rounded-2xl rounded-bl-md shadow-sm border border-gray-100'
+                            ? 'bg-theater-primary-600 text-white rounded-lg rounded-br-sm'
+                            : 'bg-white text-gray-900 rounded-lg rounded-bl-sm border border-[#D9D5CF]'
                         } ${m.sending ? 'opacity-60' : ''}`}>
                           {m.content}
                         </div>
                         <div className={`flex items-center gap-1 mt-0.5 ${m.isMine ? 'justify-end' : ''}`}>
                           <span className="text-[10px] text-gray-400">{formatTime(m.createdAt)}</span>
-                          {m.isMine && m.readAt && <FaCheckDouble className="text-[10px] text-blue-400" />}
+                          {m.isMine && m.readAt && <FaCheckDouble className="text-[10px] text-white/80" aria-label="既読" />}
                         </div>
                       </div>
                     </div>
@@ -186,7 +186,7 @@ export default function ConversationPage({ conversationId }: Props) {
               placeholder="メッセージを入力..."
               rows={1}
               maxLength={2000}
-              className="flex-1 px-4 py-2.5 border border-gray-300 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-theater-primary-200 focus:border-theater-primary-400 resize-none leading-relaxed"
+              className="flex-1 px-4 py-2.5 border border-[#D9D5CF] rounded-lg text-base focus:outline-none focus:border-theater-primary-600 resize-none leading-relaxed"
               style={{ maxHeight: '120px' }}
             />
             <button

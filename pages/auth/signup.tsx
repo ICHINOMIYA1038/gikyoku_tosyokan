@@ -7,7 +7,12 @@ import Layout from '@/components/Layout';
 import Seo from '@/components/seo';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { FaGoogle } from 'react-icons/fa';
+import { FaGoogle, FaApple } from 'react-icons/fa';
+
+const PROVIDER_ICONS: Record<string, JSX.Element> = {
+  google: <FaGoogle />,
+  apple: <FaApple />,
+};
 
 // pages/auth/signin.tsx の safeCallbackUrl と同じ方針
 // (相対パス / *.gikyokutosyokan.com の https URL / tomoshibiアプリのカスタムスキームの
@@ -83,10 +88,10 @@ export default function SignUp({ providers, callbackUrl }: Props) {
         pagePath="/auth/signup"
       />
       <div className="container mx-auto px-4 py-12 max-w-md">
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <div className="bg-white border border-[#D9D5CF] rounded overflow-hidden">
           {/* ヘッダー */}
-          <div className="bg-gradient-to-br from-theater-primary-300 to-pink-200 px-6 py-7 text-center">
-            <h1 className="text-xl font-bold text-gray-900">
+          <div className="border-b border-[#D9D5CF] px-6 py-6 text-center">
+            <h1 className="text-xl font-serif font-bold text-gray-900">
               {main.name} に登録
             </h1>
             <p className="text-xs text-gray-700 mt-1.5">
@@ -124,7 +129,7 @@ export default function SignUp({ providers, callbackUrl }: Props) {
                     }
                     className="w-full flex items-center justify-center gap-3 px-4 py-3 bg-gray-900 hover:bg-gray-800 active:bg-gray-700 text-white rounded-lg transition-colors font-medium text-sm"
                   >
-                    <FaGoogle />
+                    {PROVIDER_ICONS[provider.id] ?? null}
                     <span>{provider.name} で登録</span>
                   </button>
                 ))}

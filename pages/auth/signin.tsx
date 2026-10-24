@@ -71,9 +71,9 @@ export default function SignIn({ providers, callbackUrl }: Props) {
         pagePath="/auth/signin"
       />
       <div className="container mx-auto px-4 py-12 max-w-md">
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-7">
+        <div className="bg-white border border-[#D9D5CF] rounded p-7">
           <div className="text-center mb-6">
-            <h1 className="text-xl font-bold text-gray-900">
+            <h1 className="text-xl font-serif font-bold text-gray-900">
               {main.name} にログイン
             </h1>
             <p className="text-xs text-gray-500 mt-1.5">{main.tagline}</p>
