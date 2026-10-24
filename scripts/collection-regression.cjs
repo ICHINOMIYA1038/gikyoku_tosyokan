@@ -5,21 +5,22 @@ const path = require('node:path');
 const vm = require('node:vm');
 const ts = require('typescript');
 const root = process.env.JOB_TEST_SOURCE || path.resolve(__dirname, '..');
-async function execute(file, {args=[], existing=null, date='2026-10-24', dry=false}={}) {
+async function execute(file, {args=[], existing=null, date='2026-10-24', dry=false, env={}, updateCount=1}={}) {
   const calls={reads:[],writes:[],counts:[],errors:[],exitCode:0};
   let finish;
   const done=new Promise(resolve=>{finish=resolve;});
   const client={
-    theaterNewsItem:{count:async q=>{calls.counts.push(q);return 3356;},findMany:async q=>{calls.reads.push(q);return []; }},
+    theaterNewsItem:{updateMany:async q=>{calls.writes.push(q);return {count:updateCount};},count:async q=>{calls.counts.push(q);return 3356;},findMany:async q=>{calls.reads.push(q);return []; }},
     blogPost:{findUnique:async()=>existing,upsert:async q=>{calls.writes.push(q);}},
     $disconnect:async()=>finish(),
   };
+  client.$transaction=async fn=>fn(client);
   const dependencies={
     '@prisma/client':{PrismaClient:function(){return client;}},
     fs:{readdirSync:()=>['post.md'],readFileSync:()=>''},path,
     'gray-matter':()=>({data:{title:'Title',date,tags:['news']},content:'Body'}),
   };
-  const processMock={argv:['node',file,...args,...(dry?['--dry-run']:[])],cwd:()=>'/test',exitCode:0};
+  const processMock={env,argv:['node',file,...args,...(dry?['--dry-run']:[])],cwd:()=>'/test',exitCode:0};
   const source=fs.readFileSync(path.join(root,file),'utf8');
   const code=ts.transpileModule(source,{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS,esModuleInterop:true},reportDiagnostics:true});
   assert.equal(code.diagnostics.length,0);
@@ -41,3 +42,24 @@ test('new articles still publish',async()=>{const c=await execute('scripts/migra
 test('dry run never writes changed content',async()=>{const c=await execute('scripts/migrate-blog-to-db.ts',{dry:true});assert.equal(c.writes.length,0);});
 test('missing date preserves stored timestamp',async()=>{const c=await execute('scripts/migrate-blog-to-db.ts',{existing:record,date:null});assert.equal(c.writes.length,0);});
 test('invalid date fails without writing',async()=>{const c=await execute('scripts/migrate-blog-to-db.ts',{date:'invalid'});assert.equal(c.exitCode,1);assert.equal(c.writes.length,0);});
+
+test('usage refuses absent or unpublished articles before writing',async()=>{
+ for(const existing of [null,{published:false}]) {
+  const c=await execute('scripts/openclaw/mark-news-used.ts',{args:['1'],env:{USED_IN_SLUG:'exact-slug'},existing});
+  assert.equal(c.exitCode,1);assert.equal(c.writes.length,0);
+ }
+});
+test('usage requires a slug and valid positive integer IDs',async()=>{
+ for(const opts of [{args:['1']},{args:['0'],env:{USED_IN_SLUG:'x'}},{args:['1.5'],env:{USED_IN_SLUG:'x'}}]) {
+  const c=await execute('scripts/openclaw/mark-news-used.ts',opts);assert.equal(c.exitCode,1);assert.equal(c.writes.length,0);
+ }
+});
+test('usage records exact published slug and deduplicates input IDs',async()=>{
+ const c=await execute('scripts/openclaw/mark-news-used.ts',{args:['1','1'],env:{USED_IN_SLUG:'2026-10-25-topic'},existing:{published:true}});
+ assert.equal(c.exitCode,0);assert.equal(c.writes.length,1);assert.equal(c.writes[0].data.usedInSlug,'2026-10-25-topic');assert.equal(c.writes[0].where.id.in.length,1);
+ assert.equal(c.writes[0].where.OR[0].used,false);
+});
+test('usage fails the transaction on missing or conflicting IDs',async()=>{
+ const c=await execute('scripts/openclaw/mark-news-used.ts',{args:['1'],env:{USED_IN_SLUG:'x'},existing:{published:true},updateCount:0});
+ assert.equal(c.exitCode,1);assert.match(c.errors[0],/rolled back/);
+});
