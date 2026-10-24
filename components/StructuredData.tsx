@@ -227,7 +227,7 @@ const StructuredData = ({
           "contactPoint": {
             "@type": "ContactPoint",
             "contactType": "customer support",
-            "email": "gekidankatakago@gmail.com",
+            "email": "support@gikyokutosyokan.com",
             "availableLanguage": ["Japanese", "English"]
           },
           "knowsAbout": [

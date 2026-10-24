@@ -141,7 +141,7 @@ function Home() {
           よりお気軽にご連絡ください。
         </p>
         <p className="text-sm text-gray-500 mt-1">
-          メールアドレス: gekidankatakago@gmail.com
+          メールアドレス: support@gikyokutosyokan.com
         </p>
 
         <h3 className="font-bold text-xl mt-8 mb-3">関連サイト</h3>

@@ -61,7 +61,7 @@ function ContentRemoval() {
           削除依頼・発信者情報開示請求に関するお問い合わせは、以下のメールアドレスまでお送りください。
         </p>
         <p>
-          <strong>メール</strong>：gekidankatakago@gmail.com
+          <strong>メール</strong>：support@gikyokutosyokan.com
         </p>
         <p>
           件名に「【削除依頼】」または「【発信者情報開示請求】」と記載していただけますと、迅速に対応いたします。
