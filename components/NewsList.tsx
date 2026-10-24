@@ -38,7 +38,8 @@ interface NewsListProps {
 }
 
 const NewsList: React.FC<NewsListProps> = ({ news, limit = 3, showAll = false }) => {
-  const sorted = [...(news || [])].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  // サーバーで新しい順に並べて渡している。date は「2026年4月12日」の文字なので、ここで Date にして並べ替えない
+  const sorted = news || [];
   const displayed = showAll ? sorted : sorted.slice(0, limit);
 
   return (

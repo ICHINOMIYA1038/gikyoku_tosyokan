@@ -299,9 +299,9 @@ export default function MyPage({
                             <p className={`text-sm font-medium truncate ${isInactive ? 'text-gray-500 line-through' : 'text-gray-900'}`}>{a.title}</p>
                           </div>
                           <p className="text-[11px] text-gray-500">
-                            {a.performanceDate && `公演日: ${new Date(a.performanceDate).toLocaleDateString('ja-JP')} / `}
+                            {a.performanceDate && `公演日: ${new Date(a.performanceDate).toLocaleDateString('ja-JP', { timeZone: 'Asia/Tokyo' })} / `}
                             {a.venue && `${a.venue} / `}
-                            閲覧 {a.views} / {new Date(a.createdAt).toLocaleDateString('ja-JP')}
+                            閲覧 {a.views} / {new Date(a.createdAt).toLocaleDateString('ja-JP', { timeZone: 'Asia/Tokyo' })}
                           </p>
                           {a.status === 'rejected' && (
                             <p className="mt-1.5 text-[11px] text-rose-700 bg-rose-50 border border-rose-200 rounded px-2 py-1">
@@ -310,7 +310,7 @@ export default function MyPage({
                           )}
                           {a.deletedAt && a.deletedBy === 'admin' && (
                             <p className="mt-1.5 text-[11px] text-gray-700 bg-gray-100 border border-gray-300 rounded px-2 py-1">
-                              管理者により削除されました（{new Date(a.deletedAt).toLocaleDateString('ja-JP')}）
+                              管理者により削除されました（{new Date(a.deletedAt).toLocaleDateString('ja-JP', { timeZone: 'Asia/Tokyo' })}）
                             </p>
                           )}
                         </div>
@@ -363,7 +363,7 @@ export default function MyPage({
                           <p className="text-[11px] text-gray-500">
                             {r.theaterGroupName && `${r.theaterGroupName} / `}
                             {r.prefecture && `${r.prefecture} / `}
-                            閲覧 {r.views} / {new Date(r.publishedAt).toLocaleDateString('ja-JP')}
+                            閲覧 {r.views} / {new Date(r.publishedAt).toLocaleDateString('ja-JP', { timeZone: 'Asia/Tokyo' })}
                           </p>
                         </div>
                         <div className="flex flex-shrink-0 gap-2">

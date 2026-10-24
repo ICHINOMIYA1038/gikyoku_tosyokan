@@ -68,7 +68,7 @@ export default function AdminRecruitments({ rows, total, filter }: Props) {
                     {r.posterEmail && ` (${r.posterEmail})`}
                     {` / ${r.status}`}
                     {` / 閲覧 ${r.views}`}
-                    {` / ${new Date(r.createdAt).toLocaleDateString("ja-JP")}`}
+                    {` / ${new Date(r.createdAt).toLocaleDateString("ja-JP", { timeZone: 'Asia/Tokyo' })}`}
                   </p>
                 </div>
                 <a href={`/recruit/${r.id}`} target="_blank" rel="noreferrer" className="shrink-0 text-xs text-rose-600 hover:underline">

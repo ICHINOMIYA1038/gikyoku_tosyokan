@@ -24,7 +24,7 @@ export const QUIZ_ANSWER_WRONG = 3;
 export const QUIZ_END = 4;
 export const QUIZ_TIME_OVER = 5;
 export const SHARE_TEXT =
-  "<戯曲>に関するクイズを出題！あなたは何問答えられますか？ https://gikyokutossyokan.com/lp/quiz";
+  "<戯曲>に関するクイズを出題！あなたは何問答えられますか？ https://gikyokutosyokan.com/lp/quiz";
 
 function QuizApp({ quizData }: any) {
   const [questions, setQuestions] = useState(quizData); // クイズの質問データ

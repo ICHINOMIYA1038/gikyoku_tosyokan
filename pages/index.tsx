@@ -305,7 +305,7 @@ export async function getStaticProps() {
     // 日付データの変換
     formattedNews = newsData.map((item) => ({
       ...item,
-      date: item.date.toLocaleDateString("ja-JP", {
+      date: item.date.toLocaleDateString("ja-JP", { timeZone: 'Asia/Tokyo',
         year: "numeric",
         month: "long",
         day: "numeric",
@@ -319,7 +319,7 @@ export async function getStaticProps() {
     // ブログ記事の日付フォーマット
     blogPosts = blogData.map((bp) => ({
       ...bp,
-      publishedAt: bp.publishedAt.toLocaleDateString("ja-JP", {
+      publishedAt: bp.publishedAt.toLocaleDateString("ja-JP", { timeZone: 'Asia/Tokyo',
         year: "numeric",
         month: "long",
         day: "numeric",
@@ -330,7 +330,7 @@ export async function getStaticProps() {
     announcements = announcementsData.map((a) => ({
       ...a,
       performanceDate: a.performanceDate
-        ? a.performanceDate.toLocaleDateString("ja-JP", {
+        ? a.performanceDate.toLocaleDateString("ja-JP", { timeZone: 'Asia/Tokyo',
             year: "numeric",
             month: "long",
             day: "numeric",

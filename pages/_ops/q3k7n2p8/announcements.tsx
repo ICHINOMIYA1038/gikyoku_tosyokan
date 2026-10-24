@@ -117,9 +117,9 @@ export default function AdminAnnouncements({ rows, total, pendingCount, filter }
                   <p className="mt-0.5 text-[11px] text-gray-500">
                     {r.authorName}
                     {r.userEmail && ` (${r.userEmail})`}
-                    {r.performanceDate && ` / 公演日: ${new Date(r.performanceDate).toLocaleDateString("ja-JP")}`}
+                    {r.performanceDate && ` / 公演日: ${new Date(r.performanceDate).toLocaleDateString("ja-JP", { timeZone: 'Asia/Tokyo' })}`}
                     {` / 閲覧 ${r.views}`}
-                    {` / ${new Date(r.createdAt).toLocaleDateString("ja-JP")}`}
+                    {` / ${new Date(r.createdAt).toLocaleDateString("ja-JP", { timeZone: 'Asia/Tokyo' })}`}
                   </p>
                   {r.rejectionReason && (
                     <p className="mt-1 text-[11px] text-rose-600">却下理由: {r.rejectionReason}</p>

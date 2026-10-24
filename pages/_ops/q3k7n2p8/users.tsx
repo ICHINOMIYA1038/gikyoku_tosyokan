@@ -76,7 +76,7 @@ export default function AdminUsers({ total, adminCount, optInCount, users, filte
               {users.map((u) => (
                 <tr key={u.id} className="hover:bg-gray-50">
                   <td className="px-3 py-2 whitespace-nowrap text-xs text-gray-600">
-                    {new Date(u.createdAt).toLocaleDateString("ja-JP")}
+                    {new Date(u.createdAt).toLocaleDateString("ja-JP", { timeZone: 'Asia/Tokyo' })}
                   </td>
                   <td className="px-3 py-2 font-medium text-gray-900">{u.displayName || u.name || "—"}</td>
                   <td className="px-3 py-2 text-xs text-gray-700">{u.email || "—"}</td>

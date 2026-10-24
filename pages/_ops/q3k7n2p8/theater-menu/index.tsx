@@ -76,7 +76,7 @@ export default function AdminTheaterMenuIndex({ categories, menus }: Props) {
                   )}
                 </td>
                 <td className="px-3 py-2 text-xs text-gray-500">
-                  {new Date(m.updatedAt).toLocaleDateString("ja-JP")}
+                  {new Date(m.updatedAt).toLocaleDateString("ja-JP", { timeZone: 'Asia/Tokyo' })}
                 </td>
                 <td className="px-3 py-2 text-right">
                   <Link

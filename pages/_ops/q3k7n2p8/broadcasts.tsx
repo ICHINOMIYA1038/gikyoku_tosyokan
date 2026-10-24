@@ -276,7 +276,7 @@ export default function AdminBroadcasts({ optInCount, history }: Props) {
               {history.map((b) => (
                 <tr key={b.id}>
                   <td className="px-3 py-2 text-xs text-gray-600 whitespace-nowrap">
-                    {new Date(b.createdAt).toLocaleString("ja-JP", { dateStyle: "short", timeStyle: "short" })}
+                    {new Date(b.createdAt).toLocaleString("ja-JP", { timeZone: 'Asia/Tokyo', dateStyle: "short", timeStyle: "short" })}
                   </td>
                   <td className="px-3 py-2 max-w-xs truncate">{b.subject}</td>
                   <td className="px-3 py-2 text-right">{b.recipientCount}</td>

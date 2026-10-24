@@ -94,7 +94,7 @@ export default function AdminSynopsis() {
                     </Link>
                     <p className="text-xs text-gray-400 mt-0.5">
                       {entry.user.displayName || entry.user.name || "名無し"} ({entry.user.email})
-                      · {new Date(entry.createdAt).toLocaleDateString("ja-JP")}
+                      · {new Date(entry.createdAt).toLocaleDateString("ja-JP", { timeZone: 'Asia/Tokyo' })}
                     </p>
                   </div>
                 </div>

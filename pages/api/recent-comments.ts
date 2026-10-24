@@ -49,7 +49,7 @@ export default async function handler(
       content: c.content.length > 80 ? c.content.substring(0, 80) + "..." : c.content,
       // ログインユーザーは今の表示名で出す（保存された投稿者名にアカウント名が入っていることがあるため）
       author: c.userId ? publicName(c.user) : c.author,
-      date: c.date.toLocaleDateString("ja-JP", {
+      date: c.date.toLocaleDateString("ja-JP", { timeZone: 'Asia/Tokyo',
         year: "numeric",
         month: "short",
         day: "numeric",

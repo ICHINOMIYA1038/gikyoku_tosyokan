@@ -60,7 +60,7 @@ export default function AdminDashboard({ counts, activities }: Props) {
                   <p className="truncate text-xs text-gray-500">{a.detail}</p>
                 </div>
                 <p className="shrink-0 text-[11px] text-gray-400">
-                  {new Date(a.at).toLocaleString("ja-JP", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" })}
+                  {new Date(a.at).toLocaleString("ja-JP", { timeZone: 'Asia/Tokyo', month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" })}
                 </p>
                 {a.href && (
                   <Link href={a.href} className="text-xs text-rose-600 hover:underline">

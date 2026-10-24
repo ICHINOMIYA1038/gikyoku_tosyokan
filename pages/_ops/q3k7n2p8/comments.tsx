@@ -108,7 +108,7 @@ export default function AdminComments({ rows, total, filter }: Props) {
                         </>
                       )}
                       {" / "}
-                      {new Date(r.date).toLocaleString("ja-JP", {
+                      {new Date(r.date).toLocaleString("ja-JP", { timeZone: 'Asia/Tokyo',
                         month: "numeric",
                         day: "numeric",
                         hour: "2-digit",
