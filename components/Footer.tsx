@@ -26,8 +26,8 @@ const footerLinks = [
     links: [
       { href: "/theater-groups", label: "劇団データベース" },
       { href: "/venues", label: "劇場データベース" },
-      { href: "/university-theater", label: "大学演劇" },
-      { href: "/shogekijo", label: "小劇場" },
+      { href: "/theater-groups?type=university", label: "大学演劇" },
+      { href: "/theater-groups", label: "小劇場" },
       { href: "/tools", label: "ツール" },
     ],
   },

@@ -1,5 +1,6 @@
 import { GetStaticProps } from 'next';
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import Link from 'next/link';
 import Layout from '@/components/Layout';
 import Seo from '@/components/seo';
@@ -10,12 +11,13 @@ import { prisma } from '@/lib/prisma';
 
 const PAGE_SIZE = 60;
 
+// slug は URL の ?type= に使う（例：/theater-groups?type=university）
 const TYPE_TABS = [
-  { key: '', label: 'すべて' },
-  { key: 'STUDENT,INTERCOLLEGE,ACADEMIC', label: '大学演劇' },
-  { key: 'PROFESSIONAL', label: 'プロ劇団' },
-  { key: 'AMATEUR', label: '社会人劇団' },
-  { key: 'YOUTH', label: 'ユース' },
+  { key: '', slug: '', label: 'すべて' },
+  { key: 'STUDENT,INTERCOLLEGE,ACADEMIC', slug: 'university', label: '大学演劇' },
+  { key: 'PROFESSIONAL', slug: 'pro', label: 'プロ劇団' },
+  { key: 'AMATEUR', slug: 'amateur', label: '社会人劇団' },
+  { key: 'YOUTH', slug: 'youth', label: 'ユース' },
 ];
 
 const PREFECTURES = [
@@ -36,7 +38,21 @@ type Props = {
 
 export default function TheaterGroupsIndex({ theaterGroups, prefecturesWithData, stats }: Props) {
   const [search, setSearch] = useState('');
+  const router = useRouter();
   const [selectedType, setSelectedType] = useState('');
+
+  // ?type= で種別のタブを開く（大学演劇などへのリンク用）
+  useEffect(() => {
+    if (!router.isReady) return;
+    const tab = TYPE_TABS.find((t) => t.slug && t.slug === router.query.type);
+    setSelectedType(tab ? tab.key : '');
+  }, [router.isReady, router.query.type]);
+
+  const selectTab = (tab: (typeof TYPE_TABS)[number]) => {
+    setSelectedType(tab.key);
+    setDisplayCount(PAGE_SIZE);
+    router.replace({ pathname: '/theater-groups', query: tab.slug ? { type: tab.slug } : {} }, undefined, { shallow: true, scroll: false });
+  };
   const [selectedPrefecture, setSelectedPrefecture] = useState('');
   const [displayCount, setDisplayCount] = useState(PAGE_SIZE);
 
@@ -114,7 +130,7 @@ export default function TheaterGroupsIndex({ theaterGroups, prefecturesWithData,
           {TYPE_TABS.map((tab) => (
             <button
               key={tab.key}
-              onClick={() => handleFilterChange(setSelectedType, tab.key)}
+              onClick={() => selectTab(tab)}
               aria-pressed={selectedType === tab.key}
               className={`-mb-px py-2 whitespace-nowrap border-b-2 ${
                 selectedType === tab.key

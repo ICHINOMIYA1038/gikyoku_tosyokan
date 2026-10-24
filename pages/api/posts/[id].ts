@@ -3,7 +3,15 @@ import { prisma } from "@/lib/prisma";
 export default async (req: any, res: any) => {
   if (req.method === "POST") {
     const postId = parseInt(req.query.id);
-    const star = parseInt(req.body.star);
+    const star = Number(req.body?.star);
+    // 星は1〜5の整数だけ受け付ける（それ以外を保存すると平均が壊れる）
+    if (!Number.isInteger(postId) || !Number.isInteger(star) || star < 1 || star > 5) {
+      return res.status(400).json({ error: "Invalid rating." });
+    }
+    const target = await prisma.post.findUnique({ where: { id: postId }, select: { id: true } });
+    if (!target) {
+      return res.status(404).json({ error: "Post not found." });
+    }
     const ipAddress =
       req.headers["x-real-ip"] ||
       req.headers["x-forwarded-for"] ||
@@ -40,8 +48,10 @@ export default async (req: any, res: any) => {
       _avg: {
         star: true,
       },
+      // 以前の不具合で入った範囲外の値（0 や 6）は平均に入れない
       where: {
         postId: postId,
+        star: { gte: 1, lte: 5 },
       },
     });
 

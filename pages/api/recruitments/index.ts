@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { prisma } from '@/lib/prisma';
+import { parseJstInput } from '@/lib/date-format';
 import { getAuth, requireAuth } from '@/lib/auth';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -114,12 +115,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         rehearsalFrequency: rehearsalFrequency || null,
         rehearsalLocation: rehearsalLocation || null,
         venue: venue || null,
-        startDate: startDate ? new Date(startDate) : null,
-        endDate: endDate ? new Date(endDate) : null,
+        startDate: startDate ? parseJstInput(startDate) : null,
+        endDate: endDate ? parseJstInput(endDate) : null,
         images: images || [],
         contactMethod: contactMethod || null,
+        // 終了日の当日いっぱいは一覧に残す
         expiresAt: endDate
-          ? new Date(endDate)
+          ? new Date(parseJstInput(endDate).getTime() + 24 * 60 * 60 * 1000)
           : new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
       },
     });

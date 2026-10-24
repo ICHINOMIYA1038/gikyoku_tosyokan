@@ -157,8 +157,8 @@ export default function Home({ news, authors, posts, categories, blogPosts, tren
                 { href: "/guide", title: "すべてのガイド", note: "" },
               ],
               [
-                { href: "/university-theater", title: "大学演劇データベース", note: "全国の学生劇団・演劇サークル" },
-                { href: "/shogekijo", title: "小劇場データベース", note: "プロ・社会人・ユースの劇団" },
+                { href: "/theater-groups?type=university", title: "大学演劇データベース", note: "全国の学生劇団・演劇サークル" },
+                { href: "/theater-groups", title: "小劇場データベース", note: "プロ・社会人・ユースの劇団" },
                 { href: "/awards", title: "戯曲賞データベース", note: "岸田國士戯曲賞などの受賞作・候補作" },
                 { href: "/venues", title: "劇場データベース", note: "座席数・アクセス・設備" },
               ],
