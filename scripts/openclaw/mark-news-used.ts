@@ -4,7 +4,7 @@ const prisma = new PrismaClient();
 
 async function main() {
   const values = process.argv.slice(2);
-  const ids = [...new Set(values.map(Number))];
+  const ids = Array.from(new Set(values.map(Number)));
   const slug = process.env.USED_IN_SLUG?.trim();
   if (!slug || !ids.length || ids.some(id => !Number.isSafeInteger(id) || id <= 0)) {
     throw new Error('USED_IN_SLUG must be the exact published BlogPost slug; provide positive news IDs');
