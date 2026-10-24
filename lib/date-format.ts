@@ -26,3 +26,20 @@ export function performanceDateParts(value: string | Date, now: Date = new Date(
   const { y, m, day, w } = toJst(value);
   return { monthDay: `${m}月${day}日`, weekday: w, year: y !== toJst(now).y ? `${y}年` : null };
 }
+
+// フォームの datetime-local（"2026-11-05T19:00"）や date（"2026-11-05"）はタイムゾーンを持たないので、日本時間として読む。
+// サーバーは UTC で動くので、そのまま new Date() すると9時間ずれる
+export function parseJstInput(value: string) {
+  if (/^\d{4}-\d{2}-\d{2}$/.test(value)) return new Date(`${value}T00:00:00+09:00`);
+  if (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2})?$/.test(value)) return new Date(`${value}+09:00`);
+  return new Date(value);
+}
+
+// 「2026年11月5日（木）19:00」の形。時刻が 0:00 ちょうどのときは日付だけ返す（日付だけで入力された告知のため）
+export function formatJstDateTime(value: string | Date, withTime = true) {
+  const d = new Date(new Date(value).getTime() + JST_OFFSET_MS);
+  const date = `${d.getUTCFullYear()}年${d.getUTCMonth() + 1}月${d.getUTCDate()}日（${WEEKDAYS[d.getUTCDay()]}）`;
+  const h = d.getUTCHours(), m = d.getUTCMinutes();
+  if (!withTime || (h === 0 && m === 0)) return date;
+  return `${date}${h}:${String(m).padStart(2, "0")}`;
+}

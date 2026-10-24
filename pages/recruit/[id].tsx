@@ -7,7 +7,10 @@ import { authOptions } from '@/lib/authOptions';
 import Link from 'next/link';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
-import { FaTheaterMasks, FaMapMarkerAlt, FaClock, FaYenSign, FaUsers, FaCalendarAlt, FaArrowLeft, FaPaperPlane, FaSignInAlt, FaHeart } from 'react-icons/fa';
+import Breadcrumb from '@/components/Breadcrumb';
+import LinkifiedText from '@/components/LinkifiedText';
+import { InfoTable, ShareLinks, DETAIL_SECTION_TITLE } from '@/components/BoardDetail';
+import { formatJstDateTime } from '@/lib/date-format';
 
 interface Props {
   recruitment: any;
@@ -67,171 +70,142 @@ export default function RecruitDetailPage({ recruitment: r, isOwner, hasApplied,
   const poster = r.poster;
   const group = r.theaterGroup;
   const expLabels: Record<string, string> = { ANY: '問わない', BEGINNER: '未経験歓迎', EXPERIENCED: '経験者優遇' };
+  const who = r.theaterGroupName || group?.name || poster?.displayName || poster?.name || '個人';
+  const canApply = !isOwner && r.status === 'ACTIVE' && !applied;
 
   return (
     <Layout>
       <Seo pageTitle={r.title} pageDescription={r.description?.substring(0, 120)} pagePath={`/recruit/${r.id}`} />
-      <div className="min-h-screen bg-gradient-to-b from-theater-primary-50 to-white">
-        <div className="max-w-4xl mx-auto px-4 py-8">
-          <Link href="/recruit" className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 mb-4">
-            <FaArrowLeft /> 募集一覧に戻る
-          </Link>
+      <div className="max-w-5xl mx-auto pt-6 md:pt-8 pb-12">
+        <Breadcrumb items={[{ name: 'ホーム', href: '/' }, { name: '劇団員募集', href: '/recruit' }, { name: r.title }]} />
 
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
-            {/* ステータスバッジ */}
-            {r.status !== 'ACTIVE' && (
-              <span className="inline-block px-3 py-1 bg-gray-200 text-gray-600 text-xs font-medium rounded-full mb-3">
-                {r.status === 'CLOSED' ? '募集終了' : '一時停止中'}
-              </span>
-            )}
-
-            <h1 className="text-2xl font-bold text-gray-900 mb-3">{r.title}</h1>
-
-            {/* 劇団・投稿者情報 */}
-            <div className="flex items-center gap-3 mb-4 pb-4 border-b border-gray-100">
-              {poster?.avatarUrl || poster?.image ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={poster.avatarUrl || poster.image} alt="" className="w-10 h-10 rounded-full object-cover" />
-              ) : (
-                <div className="w-10 h-10 rounded-full bg-theater-primary-100 flex items-center justify-center">
-                  <FaTheaterMasks className="text-theater-primary-500" />
-                </div>
-              )}
-              <div>
-                <Link href={`/users/${poster?.id}`} className="text-sm font-medium text-gray-900 hover:text-blue-600">
-                  {r.theaterGroupName || group?.name || poster?.displayName || poster?.name || '個人'}
-                </Link>
-                {group?.prefecture && (
-                  <p className="text-xs text-gray-500 flex items-center gap-1">
-                    <FaMapMarkerAlt /> {group.prefecture}
-                  </p>
+        <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_19rem] lg:gap-10">
+          <article className="min-w-0">
+            <header>
+              <p className="text-sm text-gray-600">
+                劇団員募集
+                {r.status !== 'ACTIVE' && (
+                  <span className="ml-2 px-1.5 py-px border border-gray-500 rounded text-xs text-gray-700">
+                    {r.status === 'CLOSED' ? '募集終了' : '一時停止中'}
+                  </span>
                 )}
+              </p>
+              <h1 className="mt-1 text-[24px] md:text-[32px] font-serif font-bold text-gray-900 leading-snug">{r.title}</h1>
+              <div className="mt-3 flex items-center gap-3 text-sm">
+                {(poster?.avatarUrl || poster?.image) && (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={poster.avatarUrl || poster.image} alt="" className="w-8 h-8 rounded-full object-cover" />
+                )}
+                <div>
+                  {group?.slug ? (
+                    <Link href={`/theater-groups/${group.slug}`} className="font-bold text-gray-900 hover:underline">{who}</Link>
+                  ) : (
+                    <Link href={`/users/${poster?.id}`} className="font-bold text-gray-900 hover:underline">{who}</Link>
+                  )}
+                  <span className="ml-2 text-gray-600">{formatJstDateTime(r.publishedAt || r.createdAt, false)}に投稿</span>
+                </div>
               </div>
+              {canApply && (
+                <a href="#apply" className="lg:hidden mt-4 inline-flex items-center justify-center w-full h-12 rounded bg-theater-primary-600 text-white font-bold">
+                  応募する・興味ありを伝える
+                </a>
+              )}
+            </header>
+
+            <div className="mt-6">
+              <InfoTable
+                rows={[
+                  { label: '募集する役割', value: r.rolesWanted?.length ? r.rolesWanted.join('・') : null },
+                  { label: '経験', value: r.experienceLevel ? expLabels[r.experienceLevel] || r.experienceLevel : null },
+                  { label: '期間', value: r.startDate || r.endDate ? [r.startDate && formatJstDateTime(r.startDate, false), r.endDate && formatJstDateTime(r.endDate, false)].filter(Boolean).join(' 〜 ') : null },
+                  { label: '稽古', value: [r.rehearsalFrequency, r.rehearsalLocation].filter(Boolean).join('　/　') || null },
+                  { label: '公演会場', value: r.venue },
+                  { label: '費用', value: r.feeStructure },
+                  { label: '地域', value: group?.prefecture },
+                  { label: '締切', value: r.expiresAt ? formatJstDateTime(r.expiresAt, false) : null },
+                ]}
+              />
             </div>
 
-            {/* 募集する役割 */}
-            <div className="flex flex-wrap gap-2 mb-4">
-              {r.rolesWanted?.map((role: string) => (
-                <span key={role} className="px-3 py-1 bg-theater-primary-50 text-theater-primary-700 text-sm rounded-full font-medium border border-theater-primary-200">
-                  {role}
-                </span>
-              ))}
-            </div>
-
-            {/* 詳細情報 */}
-            <div className="grid grid-cols-2 gap-3 mb-6">
-              {r.experienceLevel && (
-                <div className="flex items-center gap-2 text-sm text-gray-600">
-                  <FaUsers className="text-gray-400" /> {expLabels[r.experienceLevel] || r.experienceLevel}
-                </div>
-              )}
-              {(r.startDate || r.endDate) && (
-                <div className="flex items-center gap-2 text-sm text-gray-600">
-                  <FaCalendarAlt className="text-gray-400" />
-                  {r.startDate && new Date(r.startDate).toLocaleDateString('ja-JP')}
-                  {r.startDate && r.endDate && ' 〜 '}
-                  {r.endDate && new Date(r.endDate).toLocaleDateString('ja-JP')}
-                </div>
-              )}
-              {r.venue && (
-                <div className="flex items-center gap-2 text-sm text-gray-600">
-                  <FaMapMarkerAlt className="text-gray-400" /> {r.venue}
-                </div>
-              )}
-              {r.rehearsalFrequency && (
-                <div className="flex items-center gap-2 text-sm text-gray-600">
-                  <FaClock className="text-gray-400" /> {r.rehearsalFrequency}
-                </div>
-              )}
-              {r.feeStructure && (
-                <div className="flex items-center gap-2 text-sm text-gray-600">
-                  <FaYenSign className="text-gray-400" /> {r.feeStructure}
-                </div>
-              )}
-              {r.rehearsalLocation && (
-                <div className="flex items-center gap-2 text-sm text-gray-600">
-                  <FaMapMarkerAlt className="text-gray-400" /> 稽古: {r.rehearsalLocation}
-                </div>
-              )}
-            </div>
-
-            {/* 画像 */}
             {r.images?.length > 0 && (
-              <div className="flex gap-3 mb-6 overflow-x-auto">
+              <div className="mt-6 flex gap-3 overflow-x-auto">
                 {r.images.map((img: string, i: number) => (
                   // eslint-disable-next-line @next/next/no-img-element
-                  <img key={i} src={img} alt="" className="w-48 h-32 object-cover rounded-lg border" />
+                  <img key={i} src={img} alt="" className="h-36 w-auto max-w-none rounded object-cover" />
                 ))}
               </div>
             )}
 
-            {/* 募集内容 */}
-            <div className="prose prose-sm max-w-none">
-              <h2 className="text-lg font-bold mb-2">募集内容</h2>
-              <div className="whitespace-pre-wrap text-gray-700">{r.description}</div>
+            <section className="mt-8">
+              <h2 className={DETAIL_SECTION_TITLE}>募集内容</h2>
+              <LinkifiedText text={r.description || ''} className="mt-3 text-base leading-[1.9] text-gray-900" />
+            </section>
+
+            <div className="mt-8 pt-6 border-t border-[#D9D5CF]">
+              <ShareLinks url={`https://gikyokutosyokan.com/recruit/${r.id}`} text={`【劇団員募集】${r.title}`} />
             </div>
-          </div>
+          </article>
 
-          {/* 応募ボタン/フォーム */}
-          {!isOwner && r.status === 'ACTIVE' && (
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-              {result && (
-                <p className={`text-sm font-medium mb-4 ${result.includes('失敗') ? 'text-red-600' : 'text-green-600'}`}>{result}</p>
-              )}
-
-              {!isLoggedIn ? (
-                <div className="text-center">
-                  <p className="text-sm text-gray-600 mb-3">応募するにはログインが必要です</p>
-                  <Link href={`/auth/signin?callbackUrl=/recruit/${r.id}`} className="inline-flex items-center gap-2 px-6 py-3 bg-theater-primary-600 hover:bg-theater-primary-700 text-white rounded-lg font-medium">
-                    <FaSignInAlt /> ログインして応募
+          <aside id="apply" className="mt-10 lg:mt-0 scroll-mt-20">
+            <div className="lg:sticky lg:top-24 border border-[#D9D5CF] rounded p-5">
+              {isOwner ? (
+                <>
+                  <p className="text-sm text-gray-800">あなたの募集です。応募は{r._count?.applications ?? 0}件あります。</p>
+                  <Link href="/messages" className="mt-3 inline-flex items-center justify-center w-full h-11 rounded border border-gray-900 text-sm font-bold text-gray-900 hover:bg-[#F4F2EE]">
+                    メッセージを見る
                   </Link>
-                </div>
+                </>
+              ) : r.status !== 'ACTIVE' ? (
+                <p className="text-sm text-gray-700">この募集は受け付けを終えています。</p>
+              ) : !isLoggedIn ? (
+                <>
+                  <p className="text-sm text-gray-800">応募や「興味あり」を送るには、無料のログインが必要です。</p>
+                  <Link href={`/auth/signin?callbackUrl=/recruit/${r.id}`} className="mt-3 inline-flex items-center justify-center w-full h-12 rounded bg-theater-primary-600 hover:bg-theater-primary-700 text-white font-bold">
+                    ログインして応募する
+                  </Link>
+                </>
               ) : applied ? (
-                <p className="text-center text-sm text-green-600 font-medium">✓ 応募済みです</p>
+                <p className="text-sm font-bold text-[#1F7A4D]">応募済みです。続きはメッセージでやり取りできます。</p>
               ) : showApplyForm ? (
-                <div className="space-y-4">
-                  <h3 className="font-bold">応募メッセージ</h3>
+                <div>
+                  <label htmlFor="apply-message" className="block text-sm font-bold text-gray-900">応募のメッセージ</label>
                   <textarea
+                    id="apply-message"
                     value={applyMessage}
                     onChange={(e) => setApplyMessage(e.target.value)}
-                    placeholder="自己紹介、経歴、意気込みなどを書いてください"
-                    rows={6}
+                    placeholder="自己紹介、これまでの経験、参加できる日など"
+                    rows={7}
                     maxLength={2000}
-                    className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-theater-primary-200 resize-y"
+                    className="mt-2 w-full p-3 rounded border border-[#D9D5CF] text-base resize-y focus:outline-none focus:border-theater-primary-600"
                   />
-                  <div className="flex gap-3 justify-end">
-                    <button onClick={() => setShowApplyForm(false)} className="px-4 py-2 text-sm text-gray-500">キャンセル</button>
-                    <button onClick={handleApply} disabled={applying || !applyMessage.trim()} className={`inline-flex items-center gap-2 px-6 py-2.5 rounded-lg text-sm font-medium ${applying || !applyMessage.trim() ? 'bg-gray-200 text-gray-400' : 'bg-theater-primary-600 hover:bg-theater-primary-700 text-white'}`}>
-                      <FaPaperPlane /> {applying ? '送信中...' : '応募する'}
+                  <p className="mt-1 text-xs text-gray-600">送ると、募集した人とのメッセージの画面に移ります。</p>
+                  <div className="mt-3 flex gap-2">
+                    <button onClick={() => setShowApplyForm(false)} className="h-11 px-3 text-sm text-gray-700 underline underline-offset-4">やめる</button>
+                    <button onClick={handleApply} disabled={applying || !applyMessage.trim()} className="flex-1 h-11 rounded bg-theater-primary-600 hover:bg-theater-primary-700 text-white text-sm font-bold disabled:bg-gray-300 disabled:text-gray-600">
+                      {applying ? '送信中…' : '応募する'}
                     </button>
                   </div>
                 </div>
               ) : (
                 <div className="space-y-3">
-                  <button onClick={() => setShowApplyForm(true)} className="w-full py-3.5 bg-theater-primary-600 hover:bg-theater-primary-700 text-white rounded-lg font-medium text-lg transition-colors flex items-center justify-center gap-2">
-                    <FaPaperPlane /> 応募する
+                  <button onClick={() => setShowApplyForm(true)} className="w-full h-12 rounded bg-theater-primary-600 hover:bg-theater-primary-700 text-white font-bold">
+                    応募する
                   </button>
-                  {!interested && (
-                    <div>
-                      <button
-                        onClick={handleInterest}
-                        disabled={interestLoading}
-                        className="w-full py-3 border-2 border-theater-primary-300 text-theater-primary-600 hover:bg-theater-primary-50 rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
-                      >
-                        <FaHeart /> まずは興味ありを伝える
+                  {interested ? (
+                    <p className="text-sm text-gray-800 text-center">「興味あり」を送りました</p>
+                  ) : (
+                    <>
+                      <button onClick={handleInterest} disabled={interestLoading} className="w-full h-11 rounded border border-theater-primary-600 text-theater-primary-700 text-sm font-bold hover:bg-theater-primary-50">
+                        まずは「興味あり」を伝える
                       </button>
-                      <p className="text-xs text-gray-400 text-center mt-1.5">募集者にメッセージで通知されます</p>
-                    </div>
+                      <p className="text-xs text-gray-600">応募の前に、募集した人へ通知だけ送れます。</p>
+                    </>
                   )}
                 </div>
               )}
-              {interested && (
-                <p className="text-center text-sm text-theater-primary-600 font-medium mt-2">
-                  <FaHeart className="inline mr-1" /> 興味ありを送信しました
-                </p>
-              )}
+              {result && <p role="status" className="mt-3 text-sm text-theater-primary-700">{result}</p>}
             </div>
-          )}
+          </aside>
         </div>
       </div>
     </Layout>

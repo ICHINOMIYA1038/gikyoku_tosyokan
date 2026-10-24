@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { prisma } from '@/lib/prisma';
 import { getAuth, requireAuth } from '@/lib/auth';
+import { parseJstInput } from '@/lib/date-format';
 
 export default async function handler(
   req: NextApiRequest,
@@ -106,7 +107,7 @@ export default async function handler(
         data: {
           title,
           content,
-          performanceDate: performanceDate ? new Date(performanceDate) : null,
+          performanceDate: performanceDate ? parseJstInput(performanceDate) : null,
           venue,
           ticketPrice,
           contactInfo,
