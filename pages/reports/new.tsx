@@ -130,25 +130,20 @@ export default function NewReportPage() {
         pageType="website"
       />
       <Layout>
-        <div className="min-h-screen bg-gradient-to-b from-green-50 to-white">
-          <div className="bg-gradient-to-r from-green-100 via-emerald-50 to-green-100 py-8 px-4">
+        <div className="min-h-screen">
+          <div className="py-8 px-4">
             <div className="max-w-3xl mx-auto">
-              <h1 className="text-2xl md:text-3xl font-bold text-gray-900 flex items-center gap-3">
-                <FaCamera className="text-green-600" />
-                上演レポートを書く
-              </h1>
-              <p className="text-gray-600 mt-2 text-sm">
-                上演した感想や写真を共有して、次に演じる人の参考に
-              </p>
+              <h1 className="text-[26px] md:text-[32px] font-serif font-bold text-gray-900">上演レポートを書く</h1>
+              <p className="text-gray-600 mt-2">上演した感想や稽古・本番で工夫したこと。次にその作品を選ぶ人の参考になります。</p>
             </div>
           </div>
 
           <div className="max-w-3xl mx-auto px-4 py-8">
-            <form onSubmit={handleSubmit} className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 space-y-6">
+            <form onSubmit={handleSubmit} className="bg-white rounded border border-[#D9D5CF] p-6 space-y-6">
               {/* 注意事項 */}
-              <div className="bg-green-50 border-l-4 border-green-400 p-4 rounded">
+              <div className="bg-[#F4F2EE] border-l-4 border-theater-primary-600 p-4">
                 <div className="flex items-start gap-2">
-                  <FaInfoCircle className="text-green-500 mt-0.5 flex-shrink-0" />
+                  
                   <div className="text-sm text-gray-700">
                     <p className="font-bold mb-1">投稿について</p>
                     <ul className="list-disc list-inside space-y-0.5 text-xs">
@@ -162,7 +157,7 @@ export default function NewReportPage() {
 
               {/* タイトル */}
               <div>
-                <label className="block text-sm font-bold text-gray-900 mb-2">
+                <label className="block text-sm font-bold text-gray-900 mb-1.5">
                   タイトル <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -171,9 +166,9 @@ export default function NewReportPage() {
                   value={formData.title}
                   onChange={handleChange}
                   placeholder="例: 文化祭で「夏の夜の夢」を上演しました！"
-                  className={`w-full px-4 py-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 ${
-                    errors.title ? "border-red-500" : "border-gray-300"
-                  }`}
+                  className={`w-full px-4 py-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-theater-primary-600 ${
+ errors.title ? "border-red-500" : "border-gray-300"
+ }`}
                   maxLength={100}
                 />
                 {errors.title && <p className="text-red-500 text-xs mt-1">{errors.title}</p>}
@@ -181,8 +176,7 @@ export default function NewReportPage() {
 
               {/* 写真アップロード */}
               <div>
-                <label className="block text-sm font-bold text-gray-900 mb-2">
-                  <FaCamera className="inline mr-1" />
+                <label className="block text-sm font-bold text-gray-900 mb-1.5">
                   写真（任意）
                 </label>
                 {imagePreview ? (
@@ -192,7 +186,7 @@ export default function NewReportPage() {
                       alt="プレビュー"
                       width={300}
                       height={200}
-                      className="rounded-lg object-cover border border-gray-200"
+                      className="rounded-lg object-cover border border-[#D9D5CF]"
                     />
                     <button
                       type="button"
@@ -206,7 +200,7 @@ export default function NewReportPage() {
                   <button
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
-                    className="w-full py-8 border-2 border-dashed border-gray-300 rounded-lg hover:border-green-400 hover:bg-green-50 transition-colors text-center"
+                    className="w-full py-8 border-2 border-dashed border-gray-300 rounded-lg hover:border-[#D9D5CF] hover:bg-[#F4F2EE] transition-colors text-center"
                   >
                     <FaCamera className="text-gray-400 text-2xl mx-auto mb-2" />
                     <p className="text-sm text-gray-500">クリックして写真を選択</p>
@@ -224,8 +218,7 @@ export default function NewReportPage() {
 
               {/* 上演作品 */}
               <div>
-                <label className="block text-sm font-bold text-gray-900 mb-2">
-                  <FaBook className="inline mr-1" />
+                <label className="block text-sm font-bold text-gray-900 mb-1.5">
                   上演した作品名
                 </label>
                 <input
@@ -234,13 +227,13 @@ export default function NewReportPage() {
                   value={formData.scriptTitle}
                   onChange={handleChange}
                   placeholder="例: 夏の夜の夢"
-                  className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
+                  className="w-full h-11 px-3 border border-[#D9D5CF] rounded bg-white text-base focus:outline-none focus:border-theater-primary-600"
                 />
               </div>
 
               {/* 内容 */}
               <div>
-                <label className="block text-sm font-bold text-gray-900 mb-2">
+                <label className="block text-sm font-bold text-gray-900 mb-1.5">
                   レポート内容 <span className="text-red-500">*</span>
                 </label>
                 <textarea
@@ -249,9 +242,9 @@ export default function NewReportPage() {
                   onChange={handleChange}
                   placeholder="上演してみた感想、工夫した点、大変だったこと、観客の反応などを自由にお書きください"
                   rows={8}
-                  className={`w-full px-4 py-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 ${
-                    errors.content ? "border-red-500" : "border-gray-300"
-                  }`}
+                  className={`w-full px-4 py-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-theater-primary-600 ${
+ errors.content ? "border-red-500" : "border-gray-300"
+ }`}
                   maxLength={2000}
                 />
                 {errors.content && <p className="text-red-500 text-xs mt-1">{errors.content}</p>}
@@ -260,8 +253,7 @@ export default function NewReportPage() {
 
               {/* 劇団名 */}
               <div>
-                <label className="block text-sm font-bold text-gray-900 mb-2">
-                  <FaUsers className="inline mr-1" />
+                <label className="block text-sm font-bold text-gray-900 mb-1.5">
                   劇団・団体名（任意）
                 </label>
                 <input
@@ -270,7 +262,7 @@ export default function NewReportPage() {
                   value={formData.theaterGroupName}
                   onChange={handleChange}
                   placeholder="例: ○○高校演劇部"
-                  className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
+                  className="w-full h-11 px-3 border border-[#D9D5CF] rounded bg-white text-base focus:outline-none focus:border-theater-primary-600"
                   maxLength={100}
                 />
               </div>
@@ -278,8 +270,7 @@ export default function NewReportPage() {
               {/* 会場・日時 */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-bold text-gray-900 mb-2">
-                    <FaMapMarkerAlt className="inline mr-1" />
+                  <label className="block text-sm font-bold text-gray-900 mb-1.5">
                     会場（任意）
                   </label>
                   <input
@@ -288,13 +279,12 @@ export default function NewReportPage() {
                     value={formData.venue}
                     onChange={handleChange}
                     placeholder="例: 学校体育館"
-                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
+                    className="w-full h-11 px-3 border border-[#D9D5CF] rounded bg-white text-base focus:outline-none focus:border-theater-primary-600"
                     maxLength={100}
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-bold text-gray-900 mb-2">
-                    <FaCalendarAlt className="inline mr-1" />
+                  <label className="block text-sm font-bold text-gray-900 mb-1.5">
                     上演日（任意）
                   </label>
                   <input
@@ -302,14 +292,14 @@ export default function NewReportPage() {
                     name="performanceDate"
                     value={formData.performanceDate}
                     onChange={handleChange}
-                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
+                    className="w-full h-11 px-3 border border-[#D9D5CF] rounded bg-white text-base focus:outline-none focus:border-theater-primary-600"
                   />
                 </div>
               </div>
 
               {/* 投稿者名 */}
               <div>
-                <label className="block text-sm font-bold text-gray-900 mb-2">
+                <label className="block text-sm font-bold text-gray-900 mb-1.5">
                   投稿者名（任意）
                 </label>
                 <input
@@ -318,7 +308,7 @@ export default function NewReportPage() {
                   value={formData.authorName}
                   onChange={handleChange}
                   placeholder="未入力の場合は「名無しさん」"
-                  className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
+                  className="w-full h-11 px-3 border border-[#D9D5CF] rounded bg-white text-base focus:outline-none focus:border-theater-primary-600"
                   maxLength={50}
                 />
               </div>
@@ -328,7 +318,7 @@ export default function NewReportPage() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg transition-colors disabled:opacity-50"
+                  className="flex-1 bg-theater-primary-600 hover:bg-theater-primary-700 text-white font-bold py-3 px-6 rounded-lg transition-colors disabled:opacity-50"
                 >
                   {loading ? "投稿中..." : "レポートを投稿する"}
                 </button>

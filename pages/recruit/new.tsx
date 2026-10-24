@@ -95,15 +95,15 @@ function ChipSelect({ options, selected, onToggle, multi = false }: {
             type="button"
             onClick={() => onToggle(opt.value)}
             className={`flex flex-col items-center gap-1.5 p-3 rounded-lg border-2 text-center transition-all min-h-[44px] ${
-              active
-                ? 'border-theater-primary-500 bg-theater-primary-50'
-                : 'border-gray-200 bg-white hover:border-gray-300 active:bg-gray-50'
-            }`}
+ active
+ ? 'border-theater-primary-500 bg-theater-primary-50'
+ : 'border-[#D9D5CF] bg-white hover:border-gray-300 active:bg-gray-50'
+ }`}
           >
             {Icon && (
               <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                active ? 'bg-theater-primary-100 text-theater-primary-600' : 'bg-gray-100 text-gray-400'
-              }`}>
+ active ? 'bg-theater-primary-100 text-theater-primary-600' : 'bg-gray-100 text-gray-400'
+ }`}>
                 <Icon className="text-sm" />
               </div>
             )}
@@ -203,13 +203,13 @@ export default function NewRecruitPage() {
   return (
     <Layout>
       <Seo pageTitle="劇団員募集を投稿" pageDescription="劇団員・スタッフの募集を投稿します" pagePath="/recruit/new" />
-      <div className="min-h-screen bg-gradient-to-b from-theater-primary-50/50 to-white">
+      <div className="min-h-screen">
         <div className="max-w-2xl mx-auto px-4 py-8">
 
           {/* ヘッダー */}
           <div className="flex items-center gap-3 mb-6">
             <Link href="/recruit" className="text-gray-400 hover:text-gray-600"><FaArrowLeft /></Link>
-            <h1 className="text-xl font-bold">募集を投稿</h1>
+            <h1 className="text-[26px] md:text-[32px] font-serif font-bold text-gray-900">劇団員を募集する</h1>
           </div>
 
           {/* ステップインジケーター */}
@@ -217,8 +217,8 @@ export default function NewRecruitPage() {
             {[1, 2].map((s) => (
               <div key={s} className="flex items-center gap-2 flex-1">
                 <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
-                  step >= s ? 'bg-theater-primary-600 text-white' : 'bg-gray-200 text-gray-500'
-                }`}>{s}</div>
+ step >= s ? 'bg-theater-primary-600 text-white' : 'bg-gray-200 text-gray-500'
+ }`}>{s}</div>
                 <span className={`text-sm hidden sm:inline ${step >= s ? 'text-gray-900' : 'text-gray-400'}`}>
                   {s === 1 ? '基本情報' : '詳細・内容'}
                 </span>
@@ -252,10 +252,10 @@ export default function NewRecruitPage() {
                       type="button"
                       onClick={() => toggleArrayField('rolesWanted', role)}
                       className={`px-4 py-2.5 rounded-full text-sm font-medium border transition-all min-h-[44px] ${
-                        form.rolesWanted.includes(role)
-                          ? 'border-theater-primary-500 bg-theater-primary-600 text-white'
-                          : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300 active:bg-gray-50'
-                      }`}
+ form.rolesWanted.includes(role)
+ ? 'border-theater-primary-500 bg-theater-primary-600 text-white'
+ : 'border-[#D9D5CF] bg-white text-gray-600 hover:border-gray-300 active:bg-gray-50'
+ }`}
                     >{role}</button>
                   ))}
                 </div>
@@ -284,10 +284,10 @@ export default function NewRecruitPage() {
                           type="button"
                           onClick={() => setActiveRegion(region.name)}
                           className={`px-3 py-1.5 text-xs font-medium rounded-full whitespace-nowrap transition-colors ${
-                            activeRegion === region.name
-                              ? 'bg-theater-primary-600 text-white'
-                              : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
-                          }`}
+ activeRegion === region.name
+ ? 'bg-theater-primary-600 text-white'
+ : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
+ }`}
                         >{region.name}</button>
                       ))}
                     </div>
@@ -298,7 +298,7 @@ export default function NewRecruitPage() {
                           key={p}
                           type="button"
                           onClick={() => setForm({ ...form, prefecture: p })}
-                          className="px-3.5 py-2 text-sm border border-gray-200 rounded-full bg-white text-gray-600 hover:border-theater-primary-400 hover:text-theater-primary-600 active:bg-theater-primary-50 transition-colors min-h-[40px]"
+                          className="px-3.5 py-2 text-sm border border-[#D9D5CF] rounded-full bg-white text-gray-600 hover:border-gray-500 hover:text-theater-primary-600 active:bg-theater-primary-50 transition-colors min-h-[40px]"
                         >{p.replace(/[都府県]$/, '')}</button>
                       ))}
                     </div>
@@ -319,10 +319,10 @@ export default function NewRecruitPage() {
                         type="button"
                         onClick={() => setForm({ ...form, genre: active ? '' : g.value })}
                         className={`flex items-center gap-1.5 px-4 py-2.5 rounded-full text-sm font-medium border transition-all min-h-[44px] ${
-                          active
-                            ? 'border-theater-primary-500 bg-theater-primary-600 text-white'
-                            : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300 active:bg-gray-50'
-                        }`}
+ active
+ ? 'border-theater-primary-500 bg-theater-primary-600 text-white'
+ : 'border-[#D9D5CF] bg-white text-gray-600 hover:border-gray-300 active:bg-gray-50'
+ }`}
                       >
                         <Icon className="text-xs" /> {g.value}
                       </button>
@@ -350,10 +350,10 @@ export default function NewRecruitPage() {
                   onClick={() => { setStep(2); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
                   disabled={!canProceedStep1}
                   className={`w-full py-3.5 rounded-lg text-sm font-bold flex items-center justify-center gap-2 transition-colors ${
-                    canProceedStep1
-                      ? 'bg-theater-primary-600 hover:bg-theater-primary-700 text-white'
-                      : 'bg-gray-200 text-gray-400 cursor-not-allowed'
-                  }`}
+ canProceedStep1
+ ? 'bg-theater-primary-600 hover:bg-theater-primary-700 text-white'
+ : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+ }`}
                 >
                   次へ <FaArrowRight className="text-xs" />
                 </button>
@@ -377,7 +377,7 @@ export default function NewRecruitPage() {
                   onChange={(e) => setForm({ ...form, title: e.target.value })}
                   placeholder="例: 2026年夏公演「作品名」キャスト募集"
                   maxLength={100}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg text-base sm:text-sm focus:outline-none focus:ring-2 focus:ring-theater-primary-200"
+                  className="w-full h-11 px-3 border border-[#D9D5CF] rounded bg-white text-base focus:outline-none focus:border-theater-primary-600"
                 />
               </div>
 
@@ -390,7 +390,7 @@ export default function NewRecruitPage() {
                     value={form.theaterGroupName}
                     onChange={(e) => setForm({ ...form, theaterGroupName: e.target.value })}
                     placeholder="個人の場合は空欄可"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg text-base sm:text-sm focus:outline-none focus:ring-2 focus:ring-theater-primary-200"
+                    className="w-full h-11 px-3 border border-[#D9D5CF] rounded bg-white text-base focus:outline-none focus:border-theater-primary-600"
                   />
                 </div>
                 <div>
@@ -398,7 +398,7 @@ export default function NewRecruitPage() {
                   <select
                     value={form.groupType}
                     onChange={(e) => setForm({ ...form, groupType: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-theater-primary-200"
+                    className="w-full h-11 px-3 border border-[#D9D5CF] rounded bg-white text-base focus:outline-none focus:border-theater-primary-600"
                   >
                     <option value="">選択してください</option>
                     {GROUP_TYPES.map((g) => <option key={g.value} value={g.value}>{g.label}</option>)}
@@ -413,7 +413,7 @@ export default function NewRecruitPage() {
                   <select
                     value={form.experienceLevel}
                     onChange={(e) => setForm({ ...form, experienceLevel: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-theater-primary-200"
+                    className="w-full h-11 px-3 border border-[#D9D5CF] rounded bg-white text-base focus:outline-none focus:border-theater-primary-600"
                   >
                     <option value="ANY">問わない</option>
                     <option value="BEGINNER">未経験歓迎</option>
@@ -425,7 +425,7 @@ export default function NewRecruitPage() {
                   <select
                     value={form.feeStructure}
                     onChange={(e) => setForm({ ...form, feeStructure: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-theater-primary-200"
+                    className="w-full h-11 px-3 border border-[#D9D5CF] rounded bg-white text-base focus:outline-none focus:border-theater-primary-600"
                   >
                     <option value="">選択してください</option>
                     {FEE_OPTIONS.map((f) => <option key={f} value={f}>{f}</option>)}
@@ -442,7 +442,7 @@ export default function NewRecruitPage() {
                     value={form.rehearsalFrequency}
                     onChange={(e) => setForm({ ...form, rehearsalFrequency: e.target.value })}
                     placeholder="例: 週2回（平日夜）"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg text-base sm:text-sm focus:outline-none focus:ring-2 focus:ring-theater-primary-200"
+                    className="w-full h-11 px-3 border border-[#D9D5CF] rounded bg-white text-base focus:outline-none focus:border-theater-primary-600"
                   />
                 </div>
                 <div>
@@ -456,12 +456,12 @@ export default function NewRecruitPage() {
                 <div>
                   <label className="block text-sm font-bold text-gray-900 mb-1.5">開始日</label>
                   <input type="date" value={form.startDate} onChange={(e) => setForm({ ...form, startDate: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg text-base sm:text-sm focus:outline-none focus:ring-2 focus:ring-theater-primary-200" />
+                    className="w-full h-11 px-3 border border-[#D9D5CF] rounded bg-white text-base focus:outline-none focus:border-theater-primary-600" />
                 </div>
                 <div>
                   <label className="block text-sm font-bold text-gray-900 mb-1.5">終了日</label>
                   <input type="date" value={form.endDate} onChange={(e) => setForm({ ...form, endDate: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg text-base sm:text-sm focus:outline-none focus:ring-2 focus:ring-theater-primary-200" />
+                    className="w-full h-11 px-3 border border-[#D9D5CF] rounded bg-white text-base focus:outline-none focus:border-theater-primary-600" />
                 </div>
               </div>
 
@@ -481,21 +481,21 @@ export default function NewRecruitPage() {
 
               {/* 画像 */}
               <div>
-                <label className="block text-sm font-bold text-gray-900 mb-2">画像（任意）</label>
+                <label className="block text-sm font-bold text-gray-900 mb-1.5">画像（任意）</label>
                 <ImageUploader images={form.images} onChange={(imgs) => setForm({ ...form, images: imgs })} maxImages={5} />
               </div>
 
               {error && <p className="text-sm text-red-600 font-medium bg-red-50 p-3 rounded-lg">{error}</p>}
 
               {/* 投稿ボタン */}
-              <div className="flex items-center justify-between pt-4 border-t border-gray-200">
+              <div className="flex items-center justify-between pt-4 border-t border-[#D9D5CF]">
                 <button onClick={() => setStep(1)} className="text-sm text-gray-500 hover:text-gray-700">戻る</button>
                 <button
                   onClick={handleSubmit}
                   disabled={saving || !canProceedStep2}
                   className={`px-8 py-3.5 rounded-lg text-sm font-bold transition-colors ${
-                    saving || !canProceedStep2 ? 'bg-gray-200 text-gray-400' : 'bg-theater-primary-600 hover:bg-theater-primary-700 text-white shadow-sm'
-                  }`}
+ saving || !canProceedStep2 ? 'bg-gray-200 text-gray-400' : 'bg-theater-primary-600 hover:bg-theater-primary-700 text-white '
+ }`}
                 >
                   {saving ? '投稿中...' : '募集を投稿する'}
                 </button>

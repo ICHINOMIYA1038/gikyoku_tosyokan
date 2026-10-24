@@ -280,7 +280,7 @@ export default function MyPage({
                 + 新規投稿
               </Link>
             </div>
-            <p className="text-xs text-gray-500">投稿は管理者の承認後に一般公開されます。</p>
+            <p className="text-xs text-gray-600">投稿するとすぐに上演告知に載ります。規約に合わない投稿は、運営が非公開にすることがあります。</p>
             {announcements.length === 0 ? (
               <div className="bg-white rounded-lg border border-dashed border-gray-300 p-8 text-center text-sm text-gray-500">
                 まだ上演告知を投稿していません。

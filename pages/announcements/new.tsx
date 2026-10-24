@@ -186,24 +186,19 @@ export default function NewAnnouncementPage() {
         pageType="website"
       />
       <Layout>
-        <div className="min-h-screen bg-gradient-to-b from-theater-neutral-50 to-white">
+        <div className="min-h-screen from-theater-neutral-50">
           {/* ヘッダーセクション */}
-          <div className="bg-gradient-to-r from-theater-primary-100 via-theater-primary-50 to-theater-primary-100 py-8 px-4">
+          <div className="py-8 px-4">
             <div className="max-w-3xl mx-auto">
-              <h1 className="text-3xl font-bold text-theater-neutral-900 flex items-center gap-3">
-                <FaTheaterMasks className="text-theater-primary-500" />
-                公演告知を投稿
-              </h1>
-              <p className="text-theater-neutral-700 mt-2">
-                公演情報を入力して投稿してください
-              </p>
+              <h1 className="text-[26px] md:text-[32px] font-serif font-bold text-gray-900">上演告知を投稿する</h1>
+              <p className="text-gray-600 mt-2">公演の情報を入れてください。投稿するとすぐに上演告知に載ります。</p>
             </div>
           </div>
 
           <div className="max-w-3xl mx-auto px-4 py-8">
             {/* 未ログイン時: ログイン誘導 */}
             {status !== 'loading' && !session && (
-              <div className="bg-white rounded-lg shadow-md p-8 text-center">
+              <div className="bg-white rounded-lg p-8 text-center">
                 <div className="w-16 h-16 bg-theater-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
                   <FaSignInAlt className="text-2xl text-theater-primary-600" />
                 </div>
@@ -235,12 +230,12 @@ export default function NewAnnouncementPage() {
 
             {/* ログイン済み: 投稿フォーム */}
             {session && (
-            <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-md p-6 space-y-6">
+            <form onSubmit={handleSubmit} className="bg-white rounded-lg p-6 space-y-6">
               {/* 注意事項 */}
-              <div className="bg-theater-accent-yellow/10 border-l-4 border-theater-accent-yellow p-4 rounded">
+              <div className="bg-[#F4F2EE] border-l-4 border-theater-primary-600 p-4">
                 <div className="flex items-start gap-2">
-                  <FaInfoCircle className="text-theater-accent-yellow mt-1 flex-shrink-0" />
-                  <div className="text-sm text-theater-neutral-700">
+                  
+                  <div className="text-sm text-gray-800">
                     <p className="font-bold mb-1">投稿時の注意事項</p>
                     <ul className="list-disc list-inside space-y-1">
                       <li><strong>投稿後すぐに公開されます</strong></li>
@@ -256,7 +251,7 @@ export default function NewAnnouncementPage() {
 
               {/* タイトル（必須） */}
               <div>
-                <label htmlFor="title" className="block text-sm font-bold text-theater-neutral-900 mb-2">
+                <label htmlFor="title" className="block text-sm font-bold text-gray-900 mb-1.5">
                   タイトル <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -267,8 +262,8 @@ export default function NewAnnouncementPage() {
                   onChange={handleChange}
                   placeholder="例: 劇団○○ 第10回公演「タイトル」"
                   className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-theater-primary-500 ${
-                    errors.title ? 'border-red-500' : 'border-gray-300'
-                  }`}
+ errors.title ? 'border-red-500' : 'border-gray-300'
+ }`}
                   maxLength={100}
                 />
                 {errors.title && (
@@ -281,7 +276,7 @@ export default function NewAnnouncementPage() {
 
               {/* 内容（必須） */}
               <div>
-                <label htmlFor="content" className="block text-sm font-bold text-theater-neutral-900 mb-2">
+                <label htmlFor="content" className="block text-sm font-bold text-gray-900 mb-1.5">
                   内容 <span className="text-red-500">*</span>
                 </label>
                 <textarea
@@ -292,8 +287,8 @@ export default function NewAnnouncementPage() {
                   placeholder="公演の詳細、あらすじ、見どころなどを記入してください"
                   rows={8}
                   className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-theater-primary-500 ${
-                    errors.content ? 'border-red-500' : 'border-gray-300'
-                  }`}
+ errors.content ? 'border-red-500' : 'border-gray-300'
+ }`}
                   maxLength={2000}
                 />
                 {errors.content && (
@@ -306,8 +301,7 @@ export default function NewAnnouncementPage() {
 
               {/* 上演作品 */}
               <div ref={suggestRef}>
-                <label htmlFor="scriptTitle" className="block text-sm font-bold text-theater-neutral-900 mb-2">
-                  <FaBook className="inline mr-1" />
+                <label htmlFor="scriptTitle" className="block text-sm font-bold text-gray-900 mb-1.5">
                   上演作品
                 </label>
                 {selectedPost ? (
@@ -335,10 +329,10 @@ export default function NewAnnouncementPage() {
                         setFormData(prev => ({ ...prev, scriptTitle: e.target.value }));
                       }}
                       placeholder="作品名を入力して検索（2文字以上で候補表示）"
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-theater-primary-500"
+                      className="w-full h-11 px-3 border border-[#D9D5CF] rounded bg-white text-base focus:outline-none focus:border-theater-primary-600"
                     />
                     {showSuggestions && (
-                      <ul className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                      <ul className="absolute z-10 w-full mt-1 bg-white border border-[#D9D5CF] rounded-lg max-h-60 overflow-y-auto">
                         {suggestions.map((post) => (
                           <li key={post.id}>
                             <button
@@ -362,8 +356,7 @@ export default function NewAnnouncementPage() {
 
               {/* 劇団・団体名 */}
               <div>
-                <label htmlFor="theaterGroupName" className="block text-sm font-bold text-theater-neutral-900 mb-2">
-                  <FaUsers className="inline mr-1" />
+                <label htmlFor="theaterGroupName" className="block text-sm font-bold text-gray-900 mb-1.5">
                   劇団・団体名
                 </label>
                 <input
@@ -374,8 +367,8 @@ export default function NewAnnouncementPage() {
                   onChange={handleChange}
                   placeholder="例: 劇団○○、△△シアターカンパニー"
                   className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-theater-primary-500 ${
-                    errors.theaterGroupName ? 'border-red-500' : 'border-gray-300'
-                  }`}
+ errors.theaterGroupName ? 'border-red-500' : 'border-gray-300'
+ }`}
                   maxLength={100}
                 />
                 {errors.theaterGroupName && (
@@ -385,8 +378,7 @@ export default function NewAnnouncementPage() {
 
               {/* 公演日時 */}
               <div>
-                <label htmlFor="performanceDate" className="block text-sm font-bold text-theater-neutral-900 mb-2">
-                  <FaCalendarAlt className="inline mr-1" />
+                <label htmlFor="performanceDate" className="block text-sm font-bold text-gray-900 mb-1.5">
                   公演日時
                 </label>
                 <input
@@ -395,14 +387,13 @@ export default function NewAnnouncementPage() {
                   name="performanceDate"
                   value={formData.performanceDate}
                   onChange={handleChange}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-theater-primary-500"
+                  className="w-full h-11 px-3 border border-[#D9D5CF] rounded bg-white text-base focus:outline-none focus:border-theater-primary-600"
                 />
               </div>
 
               {/* 会場 */}
               <div>
-                <label htmlFor="venue" className="block text-sm font-bold text-theater-neutral-900 mb-2">
-                  <FaMapMarkerAlt className="inline mr-1" />
+                <label htmlFor="venue" className="block text-sm font-bold text-gray-900 mb-1.5">
                   会場
                 </label>
                 <input
@@ -413,8 +404,8 @@ export default function NewAnnouncementPage() {
                   onChange={handleChange}
                   placeholder="例: ○○劇場、△△ホール"
                   className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-theater-primary-500 ${
-                    errors.venue ? 'border-red-500' : 'border-gray-300'
-                  }`}
+ errors.venue ? 'border-red-500' : 'border-gray-300'
+ }`}
                   maxLength={100}
                 />
                 {errors.venue && (
@@ -424,8 +415,7 @@ export default function NewAnnouncementPage() {
 
               {/* チケット料金 */}
               <div>
-                <label htmlFor="ticketPrice" className="block text-sm font-bold text-theater-neutral-900 mb-2">
-                  <FaYenSign className="inline mr-1" />
+                <label htmlFor="ticketPrice" className="block text-sm font-bold text-gray-900 mb-1.5">
                   チケット料金
                 </label>
                 <input
@@ -436,8 +426,8 @@ export default function NewAnnouncementPage() {
                   onChange={handleChange}
                   placeholder="例: 前売3000円、当日3500円"
                   className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-theater-primary-500 ${
-                    errors.ticketPrice ? 'border-red-500' : 'border-gray-300'
-                  }`}
+ errors.ticketPrice ? 'border-red-500' : 'border-gray-300'
+ }`}
                   maxLength={100}
                 />
                 {errors.ticketPrice && (
@@ -447,8 +437,7 @@ export default function NewAnnouncementPage() {
 
               {/* 連絡先 */}
               <div>
-                <label htmlFor="contactInfo" className="block text-sm font-bold text-theater-neutral-900 mb-2">
-                  <FaPhone className="inline mr-1" />
+                <label htmlFor="contactInfo" className="block text-sm font-bold text-gray-900 mb-1.5">
                   連絡先・予約方法
                 </label>
                 <textarea
@@ -459,8 +448,8 @@ export default function NewAnnouncementPage() {
                   placeholder="メールアドレス、電話番号、予約サイトURLなど"
                   rows={3}
                   className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-theater-primary-500 ${
-                    errors.contactInfo ? 'border-red-500' : 'border-gray-300'
-                  }`}
+ errors.contactInfo ? 'border-red-500' : 'border-gray-300'
+ }`}
                   maxLength={200}
                 />
                 {errors.contactInfo && (
@@ -470,8 +459,7 @@ export default function NewAnnouncementPage() {
 
               {/* 投稿者情報（ログインユーザー） */}
               <div>
-                <label className="block text-sm font-bold text-theater-neutral-900 mb-2">
-                  <FaUser className="inline mr-1" />
+                <label className="block text-sm font-bold text-gray-900 mb-1.5">
                   投稿者
                 </label>
                 <div className="flex items-center gap-3 px-4 py-3 bg-theater-primary-50 border border-theater-primary-200 rounded-lg">
@@ -488,7 +476,7 @@ export default function NewAnnouncementPage() {
 
               {/* 画像 */}
               <div>
-                <label className="block text-sm font-bold text-theater-neutral-900 mb-2">
+                <label className="block text-sm font-bold text-gray-900 mb-1.5">
                   公演画像（任意）
                 </label>
                 <ImageUploader
@@ -500,9 +488,9 @@ export default function NewAnnouncementPage() {
               </div>
 
               {/* チラシ印刷の案内 */}
-              <div className="bg-blue-50/50 border border-blue-100 rounded-lg p-4">
+              <div className="bg-[#F4F2EE] border border-[#D9D5CF] rounded-lg p-4">
                 <p className="text-sm text-gray-600">
-                  <FaInfoCircle className="inline text-blue-400 mr-1" />
+                  <FaInfoCircle className="inline text-gray-500 mr-1" />
                   <span className="inline-block bg-gray-200 text-gray-600 text-[10px] px-1.5 py-0.5 rounded mr-1 align-middle">PR</span>
                   公演のチラシ・パンフレットの印刷がまだの方へ ―
                   <a
@@ -523,7 +511,7 @@ export default function NewAnnouncementPage() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="flex-1 bg-theater-primary-500 hover:bg-theater-primary-600 text-white font-bold py-3 px-6 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex-1 bg-theater-primary-600 hover:bg-theater-primary-700 text-white font-bold py-3 px-6 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {loading ? '投稿中...' : '投稿する'}
                 </button>
