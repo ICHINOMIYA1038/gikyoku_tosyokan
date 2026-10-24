@@ -4,10 +4,9 @@ import Link from 'next/link';
 import Layout from '@/components/Layout';
 import Seo from '@/components/seo';
 import StructuredData from '@/components/StructuredData';
-import TheaterGroupCard from '@/components/TheaterGroupCard';
+import TheaterGroupList from '@/components/TheaterGroupList';
+import Breadcrumb from '@/components/Breadcrumb';
 import { prisma } from '@/lib/prisma';
-import { groupTypeLabels } from '@/lib/university-theater-constants';
-import { FaSearch, FaChevronRight, FaTheaterMasks } from 'react-icons/fa';
 
 const PAGE_SIZE = 60;
 
@@ -59,6 +58,13 @@ export default function TheaterGroupsIndex({ theaterGroups, prefecturesWithData,
     });
   }, [theaterGroups, search, selectedType, selectedPrefecture]);
 
+  const typeCounts: Record<string, number> = {
+    '': stats.total,
+    'STUDENT,INTERCOLLEGE,ACADEMIC': stats.student,
+    PROFESSIONAL: stats.pro,
+    AMATEUR: stats.amateur,
+  };
+
   const displayed = useMemo(() => filtered.slice(0, displayCount), [filtered, displayCount]);
   const hasMore = filtered.length > displayCount;
 
@@ -91,98 +97,81 @@ export default function TheaterGroupsIndex({ theaterGroups, prefecturesWithData,
         numberOfItems={stats.total}
       />
 
-      <div className="container mx-auto px-4 py-6 max-w-6xl">
-        {/* パンくず */}
-        <nav className="flex items-center gap-1 text-xs text-gray-500 mb-4">
-          <Link href="/" className="hover:text-theater-primary-600">ホーム</Link>
-          <FaChevronRight className="text-[8px]" />
-          <span className="text-gray-700">劇団データベース</span>
-        </nav>
+      <div className="max-w-5xl mx-auto pt-6 md:pt-8 pb-12">
+        <Breadcrumb items={[{ name: 'ホーム', href: '/' }, { name: '劇団データベース' }]} />
 
-        {/* ヘッダー */}
-        <div className="mb-6">
-          <h1 className="text-2xl md:text-3xl font-bold text-gray-900 flex items-center gap-2">
-            <FaTheaterMasks className="text-theater-primary-500" />
-            劇団データベース
-          </h1>
-          <p className="text-sm text-gray-500 mt-1">
-            全国{stats.total}団体の演劇団体を検索できます
-          </p>
+        <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+          <div>
+            <h1 className="text-[26px] md:text-[32px] font-serif font-bold text-gray-900 leading-tight">劇団データベース</h1>
+            <p className="mt-2 text-base text-gray-600">全国{stats.total}団体の劇団・演劇団体を、名前・大学・地域から探せます。</p>
+          </div>
+          <Link href="/support/posting-request" className="text-sm text-theater-primary-700 underline underline-offset-4 hover:text-theater-primary-800 shrink-0">
+            劇団の掲載・情報の修正を依頼する
+          </Link>
         </div>
 
-        {/* 統計バー */}
-        <div className="flex flex-wrap gap-3 mb-5 text-sm">
-          <span className="px-3 py-1 bg-purple-50 text-purple-700 rounded-full font-bold">大学演劇 {stats.student}</span>
-          <span className="px-3 py-1 bg-blue-50 text-blue-700 rounded-full font-bold">プロ {stats.pro}</span>
-          <span className="px-3 py-1 bg-green-50 text-green-700 rounded-full font-bold">社会人 {stats.amateur}</span>
-        </div>
-
-        {/* タイプタブ */}
-        <div className="flex gap-0 border-b border-gray-200 mb-4">
+        <nav aria-label="種別" className="mt-6 flex gap-6 border-b border-[#D9D5CF] text-sm overflow-x-auto">
           {TYPE_TABS.map((tab) => (
             <button
               key={tab.key}
               onClick={() => handleFilterChange(setSelectedType, tab.key)}
-              className={`px-3 py-2 text-sm font-bold transition-colors relative whitespace-nowrap
-                ${selectedType === tab.key ? 'text-theater-primary-600' : 'text-gray-400 hover:text-gray-600'}`}
+              aria-pressed={selectedType === tab.key}
+              className={`-mb-px py-2 whitespace-nowrap border-b-2 ${
+                selectedType === tab.key
+                  ? 'border-theater-primary-600 text-gray-900 font-bold'
+                  : 'border-transparent text-gray-600 hover:text-gray-900'
+              }`}
             >
               {tab.label}
-              {selectedType === tab.key && (
-                <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-theater-primary-500" />
-              )}
+              {typeCounts[tab.key] !== undefined && <span className="ml-1 text-gray-500 font-normal tabular-nums">{typeCounts[tab.key]}</span>}
             </button>
           ))}
-        </div>
+        </nav>
 
-        {/* 検索 + 都道府県フィルター */}
-        <div className="flex flex-col sm:flex-row gap-3 mb-5">
-          <div className="relative flex-1">
-            <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm" />
-            <input
-              type="text"
-              placeholder="劇団名・大学名・地域で検索"
-              value={search}
-              onChange={(e) => { setSearch(e.target.value); setDisplayCount(PAGE_SIZE); }}
-              className="w-full pl-9 pr-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-theater-primary-200"
-            />
-          </div>
+        <div className="mt-4 flex flex-wrap gap-2">
+          <input
+            type="search"
+            placeholder="劇団名・大学名・地域"
+            aria-label="劇団名・大学名・地域で絞り込む"
+            value={search}
+            onChange={(e) => { setSearch(e.target.value); setDisplayCount(PAGE_SIZE); }}
+            className="flex-1 min-w-[12rem] h-11 px-3 rounded border border-[#D9D5CF] text-base focus:outline-none focus:border-theater-primary-600"
+          />
           <select
             value={selectedPrefecture}
             onChange={(e) => handleFilterChange(setSelectedPrefecture, e.target.value)}
-            className="px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-theater-primary-200"
+            aria-label="都道府県"
+            className="h-11 px-3 rounded border border-[#D9D5CF] bg-white text-sm"
           >
-            <option value="">全都道府県</option>
+            <option value="">都道府県（すべて）</option>
             {prefecturesWithData.map((p) => (
               <option key={p} value={p}>{p}</option>
             ))}
           </select>
         </div>
 
-        {/* 件数 */}
-        <p className="text-sm text-gray-500 mb-4">{filtered.length}件の劇団</p>
+        <p className="mt-6 mb-2 text-sm text-gray-600 tabular-nums">{filtered.length}団体</p>
 
-        {/* カード一覧 */}
         {filtered.length > 0 ? (
           <>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {displayed.map((g: any) => (
-                <TheaterGroupCard key={g.slug} group={g} />
-              ))}
-            </div>
+            <TheaterGroupList groups={displayed} />
             {hasMore && (
               <div className="text-center mt-8">
                 <button
                   onClick={() => setDisplayCount((prev) => prev + PAGE_SIZE)}
-                  className="px-6 py-2.5 bg-white border border-gray-200 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 hover:border-gray-300 transition-colors shadow-sm"
+                  className="h-11 px-6 rounded border border-[#D9D5CF] text-sm font-medium text-gray-800 hover:bg-[#F4F2EE]"
                 >
-                  さらに表示する（残り{filtered.length - displayCount}件）
+                  さらに表示する（残り{filtered.length - displayCount}団体）
                 </button>
               </div>
             )}
           </>
         ) : (
-          <div className="text-center py-12 text-gray-400">
-            <p>条件に一致する劇団が見つかりませんでした</p>
+          <div className="border-y border-[#D9D5CF] py-12 text-center text-gray-700">
+            <p>条件に合う劇団が見つかりませんでした。</p>
+            <Link href="/support/posting-request" className="mt-3 inline-block text-sm text-theater-primary-700 underline underline-offset-4">
+              劇団の掲載を依頼する
+            </Link>
           </div>
         )}
       </div>
