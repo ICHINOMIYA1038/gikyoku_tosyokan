@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/lib/prisma";
+import { publicName } from "@/lib/public-name";
 
 export default async function handler(
   req: NextApiRequest,
@@ -28,6 +29,7 @@ export default async function handler(
         likes: true,
         commentType: true,
         userId: true,
+        user: { select: { displayName: true } },
         post: {
           select: {
             id: true,
@@ -45,7 +47,8 @@ export default async function handler(
     const formatted = comments.map((c) => ({
       id: c.id,
       content: c.content.length > 80 ? c.content.substring(0, 80) + "..." : c.content,
-      author: c.author,
+      // ログインユーザーは今の表示名で出す（保存された投稿者名にアカウント名が入っていることがあるため）
+      author: c.userId ? publicName(c.user) : c.author,
       date: c.date.toLocaleDateString("ja-JP", {
         year: "numeric",
         month: "short",
