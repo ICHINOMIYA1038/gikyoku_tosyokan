@@ -28,6 +28,8 @@
 - ビルドは UTC で行う（`next.config.js` で `TZ=UTC` に固定済み）。日本時間でビルドすると静的ページの日付が本番とずれる
 - `NEXT_PUBLIC_*` はビルド時に要る。既定値は `next.config.js` にある（GA の ID、`FEATURE_RECRUIT`、`FEATURE_MESSAGES`）。これが無いままビルドして、募集・メッセージが「準備中」になった事故がある（2026-10-23）
 - `DOQueueHandler が見つからない` という警告は、キャッシュを入れるときの一時プログラムから出るもので無害
+- Worker の入口は `worker.ts`（`wrangler.jsonc` の `main`）。OpenNext の `.open-next/worker.js` を包み、`notFound` で Next.js の既定の文字だけが返ったときにサイトの 404 ページを返す。`tsconfig.json` の対象から外している
+- 日付をサーバーで `toLocaleDateString` するときは `timeZone: 'Asia/Tokyo'` を必ず付ける
 
 ## API・個人情報（必ず守る）
 - **`middleware.ts` は `/api` を対象にしていない。** 管理画面（`/_ops/...`）は Basic 認証で守られているが、API は守られていない。書き込む API には必ず認可を入れる: 本人の操作は `requireAuth`（`lib/auth.ts`）＋持ち主の確認、管理用は `requireAdminApi`（`lib/admin-guard.ts`）。サンプルデータを作る API は本番で 404 にする。ログインなしで作品を書き換えられる API が残っていた（2026-10-24 に直した）
@@ -59,10 +61,7 @@
   - **`.env` は作らない。** Prisma の CLI が `.env` を自動で読むので、`prisma migrate dev` などが本番に向く事故になる
 - `BlogPost` への upsert が大量に走っていて、TOAST が膨らんだことがある（2026-10-23 に VACUUM FULL で 2.1GB → 137MB）。発生源は未特定。同じ書き込みを増やさない
 
-## 既知の不具合（2026-10-23 時点）
-- Workers では `getStaticProps` の `notFound` が、サイトの 404 ページではなく素の文字になる
-- `/lp/quiz` が本番で 500（`NEXT_PUBLIC_API_BASE_URL` が未設定）
-- お知らせ（`News`）などの日付が UTC で表示され、1日早く見える（掲示板・コメントは日本時間に直した）
+## 既知の不具合（2026-10-24 時点）
 - コメントは 2026-06-15 から増えていない（2026-04 からログイン必須。API は正常）
 
 ## 掲載依頼（お問い合わせから届く戯曲）

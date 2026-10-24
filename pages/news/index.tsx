@@ -59,7 +59,7 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
 
   const news = newsData.map((n) => ({
     id: n.id,
-    date: n.date.toLocaleDateString('ja-JP', { year: 'numeric', month: 'long', day: 'numeric' }),
+    date: n.date.toLocaleDateString('ja-JP', { timeZone: 'Asia/Tokyo', year: 'numeric', month: 'long', day: 'numeric' }),
     category: n.category,
     title: n.title,
     url: n.url || '',

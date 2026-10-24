@@ -174,7 +174,7 @@ async function notifyProSubscribed(u: NotifyUser): Promise<void> {
 
 async function notifyProCanceled(u: NotifyUser, expirationAtMs: number | null): Promise<void> {
   const endDate = expirationAtMs
-    ? new Date(expirationAtMs).toLocaleDateString('ja-JP', { year: 'numeric', month: 'long', day: 'numeric' })
+    ? new Date(expirationAtMs).toLocaleDateString('ja-JP', { timeZone: 'Asia/Tokyo', year: 'numeric', month: 'long', day: 'numeric' })
     : '不明';
   const emailLine = u.email ? `\nメール: ${u.email}` : '';
   await notifySlack({

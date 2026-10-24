@@ -95,7 +95,7 @@ export default function AdminReports({ rows, pending, total, filter }: Props) {
                     {" / "}
                     通報者: {r.reporterEmail || "—"}
                     {" / "}
-                    {new Date(r.createdAt).toLocaleString("ja-JP", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" })}
+                    {new Date(r.createdAt).toLocaleString("ja-JP", { timeZone: 'Asia/Tokyo', month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" })}
                   </p>
                 </div>
                 {r.status === "PENDING" ? (

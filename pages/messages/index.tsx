@@ -67,7 +67,7 @@ export default function MessagesPage() {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between">
                       <p className="font-medium text-gray-900 text-sm">{c.other?.name || 'ユーザー'}</p>
-                      <p className="text-xs text-gray-400">{new Date(c.lastAt).toLocaleDateString('ja-JP')}</p>
+                      <p className="text-xs text-gray-400">{new Date(c.lastAt).toLocaleDateString('ja-JP', { timeZone: 'Asia/Tokyo' })}</p>
                     </div>
                     <p className="text-sm text-gray-500 truncate">{c.lastMessage}</p>
                   </div>

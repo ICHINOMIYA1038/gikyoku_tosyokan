@@ -122,7 +122,7 @@ export default function PlansIndex({ categories, plans }: Props) {
                       )}
                       <div className="flex items-center gap-3 text-xs text-gray-500">
                         <span>{p.itemCount} メニュー</span>
-                        <span>更新: {new Date(p.updatedAt).toLocaleDateString("ja-JP")}</span>
+                        <span>更新: {new Date(p.updatedAt).toLocaleDateString("ja-JP", { timeZone: 'Asia/Tokyo' })}</span>
                         {p.isPublic && (
                           <span className="text-emerald-700 bg-emerald-50 px-1.5 rounded">公開中</span>
                         )}

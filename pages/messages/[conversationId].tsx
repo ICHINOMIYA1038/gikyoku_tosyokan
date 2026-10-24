@@ -92,10 +92,10 @@ export default function ConversationPage({ conversationId }: Props) {
     const now = new Date();
     const isToday = d.toDateString() === now.toDateString();
     if (isToday) {
-      return d.toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' });
+      return d.toLocaleTimeString('ja-JP', { timeZone: 'Asia/Tokyo', hour: '2-digit', minute: '2-digit' });
     }
-    return d.toLocaleDateString('ja-JP', { month: 'short', day: 'numeric' }) + ' ' +
-      d.toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' });
+    return d.toLocaleDateString('ja-JP', { timeZone: 'Asia/Tokyo', month: 'short', day: 'numeric' }) + ' ' +
+      d.toLocaleTimeString('ja-JP', { timeZone: 'Asia/Tokyo', hour: '2-digit', minute: '2-digit' });
   };
 
   return (
@@ -143,7 +143,7 @@ export default function ConversationPage({ conversationId }: Props) {
                     {showDate && (
                       <div className="flex justify-center my-3">
                         <span className="text-xs text-gray-400 bg-white px-3 py-1 rounded-full shadow-sm border border-gray-100">
-                          {new Date(m.createdAt).toLocaleDateString('ja-JP', { year: 'numeric', month: 'long', day: 'numeric' })}
+                          {new Date(m.createdAt).toLocaleDateString('ja-JP', { timeZone: 'Asia/Tokyo', year: 'numeric', month: 'long', day: 'numeric' })}
                         </span>
                       </div>
                     )}

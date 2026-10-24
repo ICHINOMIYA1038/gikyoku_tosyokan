@@ -234,7 +234,7 @@ async function notifyProCanceled(sub: Stripe.Subscription): Promise<void> {
   const { name, email } = await userSummary(sub);
   const item = sub.items?.data?.[0] as unknown as { current_period_end?: number } | undefined;
   const periodEndSec = item?.current_period_end ?? (sub as unknown as { current_period_end?: number }).current_period_end;
-  const endDate = periodEndSec ? new Date(periodEndSec * 1000).toLocaleDateString('ja-JP', { year: 'numeric', month: 'long', day: 'numeric' }) : '不明';
+  const endDate = periodEndSec ? new Date(periodEndSec * 1000).toLocaleDateString('ja-JP', { timeZone: 'Asia/Tokyo', year: 'numeric', month: 'long', day: 'numeric' }) : '不明';
   const emailLine = email ? `\nメール: ${email}` : '';
   await notifySlack({
     text: `😢 Pro プラン解約予約: ${name}`,
