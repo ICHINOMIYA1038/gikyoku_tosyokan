@@ -121,10 +121,10 @@ export default function EditProfile({ user }: Props) {
           <Link href="/mypage" className="text-gray-500 hover:text-gray-700">
             <FaArrowLeft />
           </Link>
-          <h1 className="text-2xl font-bold">プロフィール編集</h1>
+          <h1 className="text-[26px] font-serif font-bold text-gray-900">プロフィール編集</h1>
         </div>
 
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 space-y-6">
+        <div className="border border-[#D9D5CF] rounded p-6 space-y-6">
           {/* アバター */}
           <div className="flex flex-col items-center gap-3">
             <div className="relative">
@@ -169,10 +169,10 @@ export default function EditProfile({ user }: Props) {
               onChange={(e) => setDisplayName(e.target.value)}
               placeholder="例：演劇好きのたろう（空なら「ユーザー」）"
               maxLength={50}
-              className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-theater-primary-300 focus:border-theater-primary-300"
+              className="w-full px-3 py-2.5 border border-[#D9D5CF] rounded text-base focus:outline-none focus:border-theater-primary-600"
             />
             <p className="text-xs text-gray-400 mt-1">
-              コメント投稿時にこの名前が表示されます。空欄の場合はGoogleアカウントの名前が使用されます。
+              コメントや募集に表示される名前です。本名でなくてかまいません。空欄なら「ユーザー」と表示され、Google・Apple のアカウント名は表示されません。
             </p>
           </div>
 
@@ -188,7 +188,7 @@ export default function EditProfile({ user }: Props) {
               onChange={(e) => setGroupName(e.target.value)}
               placeholder="例: 劇団△△"
               maxLength={100}
-              className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-theater-primary-300 focus:border-theater-primary-300"
+              className="w-full px-3 py-2.5 border border-[#D9D5CF] rounded text-base focus:outline-none focus:border-theater-primary-600"
             />
             <p className="text-xs text-gray-400 mt-1">任意。プロフィールに表示されます。</p>
           </div>
@@ -202,13 +202,13 @@ export default function EditProfile({ user }: Props) {
               placeholder="演劇歴、好きな作品、活動内容などを自由にお書きください"
               maxLength={500}
               rows={4}
-              className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-theater-primary-300 focus:border-theater-primary-300 resize-y"
+              className="w-full px-3 py-2.5 border border-[#D9D5CF] rounded text-base focus:outline-none focus:border-theater-primary-600 resize-y"
             />
             <p className="text-xs text-gray-400 mt-1 text-right">{bio.length}/500</p>
           </div>
 
           {/* 案内メール受信 */}
-          <div className="border border-gray-200 rounded-lg bg-gray-50/40 p-3">
+          <div className="border border-[#D9D5CF] rounded p-3">
             <label className="flex items-start gap-2 cursor-pointer text-sm">
               <input
                 type="checkbox"
@@ -240,7 +240,7 @@ export default function EditProfile({ user }: Props) {
             <button
               onClick={handleSave}
               disabled={saving}
-              className={`px-6 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+              className={`h-11 px-6 rounded text-sm font-bold transition-colors ${
                 saving
                   ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
                   : 'bg-theater-primary-600 hover:bg-theater-primary-700 text-white'

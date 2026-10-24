@@ -124,9 +124,9 @@ export default function Welcome({ user }: Props) {
     <Layout>
       <Seo pageTitle="プロフィール設定" pageDescription="戯曲図書館へようこそ" pagePath="/auth/welcome" />
       <div className="container mx-auto px-4 py-12 max-w-lg">
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-          <div className="bg-gradient-to-br from-theater-primary-300 to-pink-200 px-8 py-6 text-center">
-            <h1 className="text-2xl font-bold text-gray-900">ようこそ、戯曲図書館へ！</h1>
+        <div className="bg-white border border-[#D9D5CF] rounded overflow-hidden">
+          <div className="border-b border-[#D9D5CF] px-8 py-6 text-center">
+            <h1 className="text-2xl font-serif font-bold text-gray-900">ようこそ、戯曲図書館へ</h1>
             <p className="text-sm text-gray-700 mt-1">プロフィールを設定しましょう</p>
           </div>
 

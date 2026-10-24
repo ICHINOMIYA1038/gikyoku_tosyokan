@@ -69,17 +69,17 @@ interface SavedToolDataItem {
 type TabKey = 'overview' | 'announcements' | 'recruitments' | 'favorites' | 'comments' | 'tools' | 'settings';
 
 const annStatusLabel = (a: AnnouncementRow) => {
-  if (a.deletedAt && a.deletedBy === 'admin') return { text: '管理者により削除', cls: 'bg-gray-300 text-gray-800' };
-  if (a.status === 'pending') return { text: '審査待ち', cls: 'bg-amber-100 text-amber-700' };
-  if (a.status === 'rejected') return { text: '却下', cls: 'bg-rose-100 text-rose-700' };
-  if (a.status === 'approved') return { text: '公開中', cls: 'bg-emerald-100 text-emerald-700' };
-  return { text: a.status, cls: 'bg-gray-100 text-gray-600' };
+  if (a.deletedAt && a.deletedBy === 'admin') return { text: '管理者により削除', cls: 'border border-[#D9D5CF] text-gray-700' };
+  if (a.status === 'pending') return { text: '審査待ち', cls: 'border border-gray-900 text-gray-900 font-bold' };
+  if (a.status === 'rejected') return { text: '却下', cls: 'border border-theater-primary-600 text-theater-primary-700' };
+  if (a.status === 'approved') return { text: '公開中', cls: 'border border-[#1F7A4D] text-[#1F7A4D]' };
+  return { text: a.status, cls: 'border border-[#D9D5CF] text-gray-700' };
 };
 
 const recStatusLabel = (s: string) => {
-  if (s === 'CLOSED') return { text: '募集終了', cls: 'bg-gray-200 text-gray-600' };
-  if (s === 'DRAFT') return { text: '下書き', cls: 'bg-amber-100 text-amber-700' };
-  return { text: '募集中', cls: 'bg-emerald-100 text-emerald-700' };
+  if (s === 'CLOSED') return { text: '募集終了', cls: 'border border-[#D9D5CF] text-gray-700' };
+  if (s === 'DRAFT') return { text: '下書き', cls: 'border border-gray-900 text-gray-900' };
+  return { text: '募集中', cls: 'border border-[#1F7A4D] text-[#1F7A4D]' };
 };
 
 export default function MyPage({
@@ -190,7 +190,7 @@ export default function MyPage({
       <Seo pageTitle="マイページ" pageDescription="戯曲図書館マイページ" pagePath="/mypage" />
       <div className="container mx-auto px-4 py-6 max-w-4xl">
         {/* プロフィールヘッダー */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-5 mb-4">
+        <div className="border border-[#D9D5CF] rounded p-5 mb-4">
           <div className="flex items-center gap-4">
             {(user.avatarUrl || user.image) ? (
               // eslint-disable-next-line @next/next/no-img-element
@@ -203,7 +203,7 @@ export default function MyPage({
             )}
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2">
-                <h1 className="text-lg font-bold text-gray-900 truncate">{user.displayName || user.name || 'ユーザー'}</h1>
+                <h1 className="text-xl font-serif font-bold text-gray-900 truncate">{user.displayName || user.name || 'ユーザー'}</h1>
                 <Link href="/mypage/edit" className="text-gray-400 hover:text-theater-primary-600">
                   <FaPen className="text-xs" />
                 </Link>
@@ -219,19 +219,18 @@ export default function MyPage({
         </div>
 
         {/* タブバー */}
-        <div className="sticky top-0 z-10 bg-theater-neutral-50 -mx-4 px-4 mb-4 border-b border-gray-200">
+        <div className="sticky top-0 z-10 bg-[#FCFBF9] -mx-4 px-4 mb-4 border-b border-[#D9D5CF]">
           <div className="flex gap-1 overflow-x-auto no-scrollbar">
             {tabs.map((t) => {
               const isActive = activeTab === t.key;
               return (
                 <button key={t.key} onClick={() => switchTab(t.key)}
                   className={`flex items-center gap-1.5 px-3 py-2.5 text-sm font-medium whitespace-nowrap border-b-2 transition-colors ${
-                    isActive ? 'border-theater-primary-500 text-theater-primary-700' : 'border-transparent text-gray-500 hover:text-gray-700'
+                    isActive ? 'border-theater-primary-600 text-gray-900 font-bold' : 'border-transparent text-gray-600 hover:text-gray-900'
                   }`}>
-                  <span className="text-xs">{t.icon}</span>
                   {t.label}
                   {t.badge ? (
-                    <span className="ml-1 inline-flex items-center justify-center bg-amber-500 text-white text-[10px] font-bold rounded-full px-1.5 py-0.5">{t.badge}</span>
+                    <span className="ml-1 inline-flex items-center justify-center bg-theater-primary-600 text-white text-[10px] font-bold rounded-full px-1.5 py-0.5">{t.badge}</span>
                   ) : null}
                 </button>
               );
@@ -243,29 +242,28 @@ export default function MyPage({
         {activeTab === 'overview' && (
           <div className="space-y-4">
             <div className="grid grid-cols-3 gap-3">
-              <button onClick={() => switchTab('favorites')} className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 text-left hover:border-theater-primary-300 transition">
-                <div className="flex items-center gap-2"><FaHeart className="text-theater-primary-500" />
+              <button onClick={() => switchTab('favorites')} className="border border-[#D9D5CF] rounded p-4 text-left hover:bg-[#F4F2EE]">
+                <div className="flex items-center gap-2">
                   <div><p className="text-[11px] text-gray-500">お気に入り</p><p className="text-xl font-bold">{favoriteCount}</p></div></div>
               </button>
-              <button onClick={() => switchTab('announcements')} className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 text-left hover:border-theater-primary-300 transition">
-                <div className="flex items-center gap-2"><FaBullhorn className="text-theater-primary-600" />
+              <button onClick={() => switchTab('announcements')} className="border border-[#D9D5CF] rounded p-4 text-left hover:bg-[#F4F2EE]">
+                <div className="flex items-center gap-2">
                   <div><p className="text-[11px] text-gray-500">上演告知</p><p className="text-xl font-bold">{announcements.length}</p></div></div>
               </button>
-              <button onClick={() => switchTab('comments')} className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 text-left hover:border-theater-primary-300 transition">
-                <div className="flex items-center gap-2"><FaCommentDots className="text-blue-500" />
+              <button onClick={() => switchTab('comments')} className="border border-[#D9D5CF] rounded p-4 text-left hover:bg-[#F4F2EE]">
+                <div className="flex items-center gap-2">
                   <div><p className="text-[11px] text-gray-500">コメント</p><p className="text-xl font-bold">{stats.parentCommentCount + stats.childCommentCount}</p></div></div>
               </button>
             </div>
 
             {pendingAnnouncementCount > 0 && (
-              <button onClick={() => switchTab('announcements')} className="w-full bg-amber-50 border border-amber-200 rounded-lg p-3 text-sm text-amber-800 flex items-center gap-2 hover:bg-amber-100">
-                <FaExclamationTriangle />
+              <button onClick={() => switchTab('announcements')} className="w-full border border-gray-900 rounded p-3 text-sm text-gray-900 flex items-center gap-2 hover:bg-[#F4F2EE]">
                 審査待ちの上演告知が <strong>{pendingAnnouncementCount}</strong> 件あります（承認後に公開されます）
                 <FaArrowRight className="ml-auto text-xs" />
               </button>
             )}
 
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-5">
+            <div className="border border-[#D9D5CF] rounded p-5">
               <p className="text-xs text-gray-400">登録日: {user.createdAt}</p>
             </div>
           </div>
@@ -276,13 +274,13 @@ export default function MyPage({
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <h2 className="text-base font-bold">自分の上演告知</h2>
-              <Link href="/announcements/new" className="text-sm bg-theater-primary-500 hover:bg-theater-primary-600 text-white px-3 py-1.5 rounded-md">
+              <Link href="/announcements/new" className="text-sm bg-theater-primary-600 hover:bg-theater-primary-700 text-white font-bold px-3 py-1.5 rounded">
                 + 新規投稿
               </Link>
             </div>
             <p className="text-xs text-gray-500">投稿は管理者の承認後に一般公開されます。</p>
             {announcements.length === 0 ? (
-              <div className="bg-white rounded-lg border border-dashed border-gray-300 p-8 text-center text-sm text-gray-500">
+              <div className="border-y border-[#D9D5CF] p-8 text-center text-sm text-gray-500">
                 まだ上演告知を投稿していません。
               </div>
             ) : (
@@ -291,7 +289,7 @@ export default function MyPage({
                   const badge = annStatusLabel(a);
                   const isInactive = !!a.deletedAt || a.status === 'rejected';
                   return (
-                    <li key={a.id} className={`bg-white rounded-lg shadow-sm border border-gray-200 p-4 ${isInactive ? 'opacity-75' : ''}`}>
+                    <li key={a.id} className={`border border-[#D9D5CF] rounded p-4 ${isInactive ? 'opacity-75' : ''}`}>
                       <div className="flex items-start justify-between gap-3">
                         <div className="min-w-0 flex-1">
                           <div className="flex items-center gap-2 mb-1">
@@ -304,26 +302,26 @@ export default function MyPage({
                             閲覧 {a.views} / {new Date(a.createdAt).toLocaleDateString('ja-JP', { timeZone: 'Asia/Tokyo' })}
                           </p>
                           {a.status === 'rejected' && (
-                            <p className="mt-1.5 text-[11px] text-rose-700 bg-rose-50 border border-rose-200 rounded px-2 py-1">
+                            <p className="mt-1.5 text-[11px] text-theater-primary-700 border-l-2 border-theater-primary-600 pl-2 py-0.5">
                               管理者により却下されました{a.rejectionReason ? `（理由: ${a.rejectionReason}）` : ''}
                             </p>
                           )}
                           {a.deletedAt && a.deletedBy === 'admin' && (
-                            <p className="mt-1.5 text-[11px] text-gray-700 bg-gray-100 border border-gray-300 rounded px-2 py-1">
+                            <p className="mt-1.5 text-[11px] text-gray-700 border-l-2 border-[#D9D5CF] pl-2 py-0.5">
                               管理者により削除されました（{new Date(a.deletedAt).toLocaleDateString('ja-JP', { timeZone: 'Asia/Tokyo' })}）
                             </p>
                           )}
                         </div>
                         <div className="flex flex-shrink-0 gap-2">
                           {a.status === 'approved' && !a.deletedAt && (
-                            <Link href={`/announcements/${a.id}`} className="text-xs text-blue-600 hover:underline self-center">表示</Link>
+                            <Link href={`/announcements/${a.id}`} className="text-xs text-gray-700 underline underline-offset-4 self-center">表示</Link>
                           )}
                           {isInactive ? (
                             <button onClick={() => handleDeleteAnnouncement(a.id, true)}
-                              className="text-xs text-gray-500 hover:bg-gray-100 px-2 py-1 rounded">確認して非表示</button>
+                              className="text-xs text-gray-700 underline underline-offset-4 px-2 py-1">確認して非表示</button>
                           ) : (
                             <button onClick={() => handleDeleteAnnouncement(a.id)}
-                              className="text-xs text-rose-600 hover:bg-rose-50 px-2 py-1 rounded">削除</button>
+                              className="text-xs text-theater-primary-700 underline underline-offset-4 px-2 py-1">削除</button>
                           )}
                         </div>
                       </div>
@@ -340,12 +338,12 @@ export default function MyPage({
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <h2 className="text-base font-bold">自分の劇団員募集</h2>
-              <Link href="/recruit/new" className="text-sm bg-theater-primary-500 hover:bg-theater-primary-600 text-white px-3 py-1.5 rounded-md">
+              <Link href="/recruit/new" className="text-sm bg-theater-primary-600 hover:bg-theater-primary-700 text-white font-bold px-3 py-1.5 rounded">
                 + 新規募集
               </Link>
             </div>
             {recruitments.length === 0 ? (
-              <div className="bg-white rounded-lg border border-dashed border-gray-300 p-8 text-center text-sm text-gray-500">
+              <div className="border-y border-[#D9D5CF] p-8 text-center text-sm text-gray-500">
                 まだ劇団員募集を投稿していません。
               </div>
             ) : (
@@ -353,7 +351,7 @@ export default function MyPage({
                 {recruitments.map((r) => {
                   const badge = recStatusLabel(r.status);
                   return (
-                    <li key={r.id} className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+                    <li key={r.id} className="border border-[#D9D5CF] rounded p-4">
                       <div className="flex items-start justify-between gap-3">
                         <div className="min-w-0 flex-1">
                           <div className="flex items-center gap-2 mb-1">
@@ -367,9 +365,9 @@ export default function MyPage({
                           </p>
                         </div>
                         <div className="flex flex-shrink-0 gap-2">
-                          <Link href={`/recruit/${r.id}`} className="text-xs text-blue-600 hover:underline self-center">表示</Link>
+                          <Link href={`/recruit/${r.id}`} className="text-xs text-gray-700 underline underline-offset-4 self-center">表示</Link>
                           <button onClick={() => handleDeleteRecruitment(r.id)}
-                            className="text-xs text-rose-600 hover:bg-rose-50 px-2 py-1 rounded">削除</button>
+                            className="text-xs text-theater-primary-700 underline underline-offset-4 px-2 py-1">削除</button>
                         </div>
                       </div>
                     </li>
@@ -382,7 +380,7 @@ export default function MyPage({
 
         {/* お気に入り */}
         {activeTab === 'favorites' && (
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-5">
+          <div className="border border-[#D9D5CF] rounded p-5">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-base font-bold">お気に入り作品</h2>
               {favoriteCount > 0 && <Link href="/favorites" className="text-xs text-theater-primary-600 hover:underline">すべて見る ({favoriteCount})</Link>}
@@ -404,7 +402,7 @@ export default function MyPage({
 
         {/* コメント */}
         {activeTab === 'comments' && (
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-5">
+          <div className="border border-[#D9D5CF] rounded p-5">
             <h2 className="text-base font-bold mb-4">最近のコメント</h2>
             {recentComments.length === 0 ? (
               <p className="text-sm text-gray-500">まだコメントがありません。</p>
@@ -424,7 +422,7 @@ export default function MyPage({
 
         {/* マイツール */}
         {activeTab === 'tools' && (
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-5">
+          <div className="border border-[#D9D5CF] rounded p-5">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-base font-bold flex items-center gap-2"><FaTools className="text-gray-400" />マイツール</h2>
               <Link href="/tools" className="text-xs text-theater-primary-600 hover:underline">ツール一覧 →</Link>
@@ -437,22 +435,22 @@ export default function MyPage({
                   {savedSchedules.map((item) => (
                     <div key={`s-${item.id}`} className="border-l-4 border-blue-400 border border-gray-200 rounded-lg p-3 flex items-center justify-between">
                       <div className="min-w-0">
-                        <p className="font-semibold text-sm flex items-center gap-2"><FaCalendarAlt className="text-blue-500" />{item.name}</p>
+                        <p className="font-semibold text-sm flex items-center gap-2">{item.name}</p>
                       </div>
                       <div className="flex gap-2">
-                        <Link href={`/tools/schedule-generator?load=${item.id}`} className="text-xs bg-blue-50 text-blue-700 px-2 py-1 rounded">開く</Link>
-                        <button onClick={() => handleDeleteToolData(item.id, 'schedule')} className="text-xs text-gray-400 hover:text-red-500"><FaTrash /></button>
+                        <Link href={`/tools/schedule-generator?load=${item.id}`} className="text-xs text-gray-900 border border-[#D9D5CF] px-2 py-1 rounded hover:bg-[#F4F2EE]">開く</Link>
+                        <button onClick={() => handleDeleteToolData(item.id, 'schedule')} className="text-xs text-gray-600 hover:text-theater-primary-700" aria-label="削除"><FaTrash /></button>
                       </div>
                     </div>
                   ))}
                   {savedTimers.map((item) => (
                     <div key={`t-${item.id}`} className="border-l-4 border-orange-400 border border-gray-200 rounded-lg p-3 flex items-center justify-between">
                       <div className="min-w-0">
-                        <p className="font-semibold text-sm flex items-center gap-2"><FaClock className="text-orange-500" />{item.name}</p>
+                        <p className="font-semibold text-sm flex items-center gap-2">{item.name}</p>
                       </div>
                       <div className="flex gap-2">
-                        <Link href={`/tools/rehearsal-timer?load=${item.id}`} className="text-xs bg-orange-50 text-orange-700 px-2 py-1 rounded">開く</Link>
-                        <button onClick={() => handleDeleteToolData(item.id, 'timer')} className="text-xs text-gray-400 hover:text-red-500"><FaTrash /></button>
+                        <Link href={`/tools/rehearsal-timer?load=${item.id}`} className="text-xs text-gray-900 border border-[#D9D5CF] px-2 py-1 rounded hover:bg-[#F4F2EE]">開く</Link>
+                        <button onClick={() => handleDeleteToolData(item.id, 'timer')} className="text-xs text-gray-600 hover:text-theater-primary-700" aria-label="削除"><FaTrash /></button>
                       </div>
                     </div>
                   ))}
@@ -463,7 +461,7 @@ export default function MyPage({
 
         {/* 設定 */}
         {activeTab === 'settings' && (
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-5">
+          <div className="border border-[#D9D5CF] rounded p-5">
             <h2 className="text-base font-bold mb-4">アカウント設定</h2>
             <div className="space-y-3">
               <Link href="/mypage/edit" className="block text-sm text-theater-primary-600 hover:underline">プロフィールを編集</Link>
@@ -475,26 +473,26 @@ export default function MyPage({
                     <p className="text-sm text-gray-600">アカウントの削除</p>
                     <p className="text-xs text-gray-400 mt-0.5">投稿済みコメントは匿名として残ります。</p>
                   </div>
-                  <button onClick={() => setShowDeleteConfirm(true)} className="flex items-center gap-1.5 px-3 py-2 text-sm text-red-600 hover:bg-red-50 rounded-lg">
+                  <button onClick={() => setShowDeleteConfirm(true)} className="flex items-center gap-1.5 px-3 py-2 text-sm text-theater-primary-700 underline underline-offset-4">
                     <FaTrash className="text-xs" />削除
                   </button>
                 </div>
               ) : (
-                <div className="border border-red-200 rounded-lg p-4 bg-red-50">
+                <div className="border border-theater-primary-600 rounded p-4">
                   <div className="flex items-start gap-3 mb-4">
-                    <FaExclamationTriangle className="text-red-500 mt-0.5 flex-shrink-0" />
+                    <FaExclamationTriangle className="text-theater-primary-600 mt-0.5 flex-shrink-0" />
                     <div>
                       <p className="text-sm font-bold text-red-800">本当に削除しますか？</p>
                       <p className="text-xs text-red-600 mt-1">この操作は取り消せません。</p>
                     </div>
                   </div>
                   <input type="text" value={deleteConfirmText} onChange={(e) => setDeleteConfirmText(e.target.value)}
-                    placeholder="「削除する」と入力" className="w-full px-3 py-2 border border-red-300 rounded-lg text-sm mb-3" />
+                    placeholder="「削除する」と入力" className="w-full px-3 py-2 border border-[#D9D5CF] rounded text-base mb-3" />
                   {deleteError && <p className="text-sm text-red-600 mb-3">{deleteError}</p>}
                   <div className="flex gap-3">
                     <button onClick={handleDeleteAccount} disabled={deleteConfirmText !== '削除する' || isDeleting}
                       className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium ${
-                        deleteConfirmText === '削除する' && !isDeleting ? 'bg-red-600 hover:bg-red-700 text-white' : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                        deleteConfirmText === '削除する' && !isDeleting ? 'bg-theater-primary-600 hover:bg-theater-primary-700 text-white' : 'bg-gray-200 text-gray-500 cursor-not-allowed'
                       }`}>
                       {isDeleting ? '削除中...' : '完全に削除'}
                     </button>
