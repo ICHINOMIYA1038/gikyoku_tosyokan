@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { useState, useCallback } from 'react';
 import Layout from '@/components/Layout';
 import BlogSidebar from '@/components/BlogSidebar';
+import BlogPostRow from '@/components/BlogPostRow';
 import Seo from '@/components/seo';
 import { getPostsByLanguagePaginated, BlogPostMeta } from '@/lib/blog';
 import AdSlot from '@/components/Ad/AdSlot';
@@ -13,80 +14,6 @@ const PER_PAGE = 20;
 interface Props {
   posts: BlogPostMeta[];
   total: number;
-}
-
-function formatDateNice(dateStr: string): string {
-  const d = new Date(dateStr);
-  return `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')}`;
-}
-
-// Featured (latest) post card
-function FeaturedCard({ post }: { post: BlogPostMeta }) {
-  return (
-    <Link href={`/blog/ja/${post.slug}`} className="block group">
-      <article className="relative overflow-hidden rounded-xl border border-gray-100 bg-white hover:shadow-md transition-all duration-200">
-        <div className="p-6 sm:p-8">
-          <div className="flex items-center gap-3 mb-3">
-            <span className="text-xs font-bold text-white bg-theater-primary-500 px-2.5 py-0.5 rounded">
-              NEW
-            </span>
-            <time className="text-sm text-gray-400">
-              {formatDateNice(post.date)}
-            </time>
-          </div>
-          <h2 className="text-xl sm:text-2xl font-bold text-gray-900 group-hover:text-theater-primary-600 transition-colors leading-snug mb-3">
-            {post.title}
-          </h2>
-          <p className="text-gray-500 text-sm leading-relaxed line-clamp-2 mb-4">
-            {post.description}
-          </p>
-          <div className="flex items-center justify-between">
-            <div className="flex flex-wrap gap-1.5">
-              {post.tags.slice(0, 4).map((tag) => (
-                <span key={tag} className="text-xs text-gray-400 bg-gray-50 px-2 py-0.5 rounded">
-                  #{tag}
-                </span>
-              ))}
-            </div>
-            <span className="text-theater-primary-500 text-sm font-medium group-hover:translate-x-1 transition-transform duration-200 whitespace-nowrap">
-              続きを読む &rarr;
-            </span>
-          </div>
-        </div>
-      </article>
-    </Link>
-  );
-}
-
-// Regular post card
-function PostCard({ post }: { post: BlogPostMeta }) {
-  return (
-    <Link href={`/blog/ja/${post.slug}`} className="block group">
-      <article className="flex items-start gap-4 py-5 border-b border-gray-100 last:border-0">
-        <time className="text-xs text-gray-300 font-medium whitespace-nowrap pt-1 w-20 flex-shrink-0 hidden sm:block">
-          {formatDateNice(post.date)}
-        </time>
-        <div className="flex-1 min-w-0">
-          <h3 className="text-base font-bold text-gray-800 group-hover:text-theater-primary-600 transition-colors leading-snug mb-1 line-clamp-2">
-            {post.title}
-          </h3>
-          <time className="text-xs text-gray-300 mb-1.5 block sm:hidden">
-            {formatDateNice(post.date)}
-          </time>
-          <p className="text-gray-400 text-sm leading-relaxed line-clamp-1 mb-2">
-            {post.description}
-          </p>
-          <div className="flex flex-wrap gap-1.5">
-            {post.tags.slice(0, 3).map((tag) => (
-              <span key={tag} className="text-xs text-gray-400">
-                #{tag}
-              </span>
-            ))}
-          </div>
-        </div>
-      </article>
-    </Link>
-  );
 }
 
 export default function BlogJaIndex({ posts: initialPosts, total }: Props) {
@@ -113,7 +40,6 @@ export default function BlogJaIndex({ posts: initialPosts, total }: Props) {
     }
   }, [currentPage, loading, hasMore]);
 
-  const [featured, ...rest] = posts;
 
   return (
     <Layout>
@@ -128,57 +54,35 @@ export default function BlogJaIndex({ posts: initialPosts, total }: Props) {
           { lang: 'x-default', path: '/blog' },
         ]}
       />
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex flex-col lg:flex-row gap-8">
+      <div className="max-w-6xl mx-auto pt-6 md:pt-8 pb-12">
+        <div className="flex flex-col lg:flex-row gap-10">
           <main className="flex-1 min-w-0">
-            {/* Header */}
-            <div className="flex items-center justify-between mb-8">
+            <div className="flex items-end justify-between gap-4">
               <div>
-                <h1 className="text-2xl font-bold text-gray-900">ブログ</h1>
-                <p className="text-sm text-gray-400 mt-1">{total}件の記事</p>
+                <h1 className="text-[26px] md:text-[32px] font-serif font-bold text-gray-900 leading-tight">ブログ</h1>
+                <p className="mt-2 text-base text-gray-600">公演情報・演劇のガイド・戯曲の読み方など。{total.toLocaleString()}本の記事。</p>
               </div>
-              <Link href="/blog/en" className="text-sm text-gray-400 hover:text-theater-primary-600 transition-colors">
-                English &rarr;
-              </Link>
+              <Link href="/blog/en" className="text-sm text-gray-700 underline underline-offset-4 shrink-0">English</Link>
             </div>
 
             {posts.length === 0 ? (
-              <p className="text-gray-600">記事がありません。</p>
+              <p className="mt-8 text-gray-700">記事がありません。</p>
             ) : (
               <>
-                {/* Featured (latest) post */}
-                {featured && <FeaturedCard post={featured} />}
-
-                {/* Rest of posts */}
-                {rest.length > 0 && (
-                  <div className="mt-8">
-                    {rest.map((post) => (
-                      <PostCard key={post.slug} post={post} />
-                    ))}
-                  </div>
-                )}
+                <ul className="mt-6 border-t border-[#D9D5CF]">
+                  {posts.map((post) => <BlogPostRow key={post.slug} post={post} />)}
+                </ul>
 
                 <AdSlot slot={AD_SLOTS.CATEGORY_AFTER_LIST} format="horizontal" />
 
-                {/* Load More */}
                 {hasMore && (
                   <div className="mt-8 text-center">
                     <button
                       onClick={loadMore}
                       disabled={loading}
-                      className="inline-flex items-center gap-2 px-6 py-3 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 hover:border-gray-300 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="h-11 px-6 rounded border border-[#D9D5CF] text-sm font-bold text-gray-900 hover:bg-[#F4F2EE] disabled:opacity-50"
                     >
-                      {loading ? (
-                        <>
-                          <svg className="animate-spin h-4 w-4 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                          </svg>
-                          読み込み中...
-                        </>
-                      ) : (
-                        <>もっと見る ({posts.length} / {total})</>
-                      )}
+                      {loading ? '読み込み中…' : `もっと見る（${posts.length} / ${total}）`}
                     </button>
                   </div>
                 )}

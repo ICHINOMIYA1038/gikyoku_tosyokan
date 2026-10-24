@@ -21,7 +21,7 @@ export function InfoTable({ rows }: { rows: InfoRow[] }) {
 }
 
 // 共有。外部の共有ボタン（丸いアイコン）は使わず、文字のリンクとURLのコピーにする
-export function ShareLinks({ url, text }: { url: string; text: string }) {
+export function ShareLinks({ url, text, lang = 'ja' }: { url: string; text: string; lang?: 'ja' | 'en' }) {
   const [copied, setCopied] = useState(false);
   const copy = async () => {
     try {
@@ -33,7 +33,7 @@ export function ShareLinks({ url, text }: { url: string; text: string }) {
   const link = "inline-flex items-center h-10 px-3 rounded border border-[#D9D5CF] text-sm text-gray-800 hover:bg-[#F4F2EE]";
   return (
     <div className="flex flex-wrap items-center gap-2">
-      <span className="text-sm text-gray-600 mr-1">共有する</span>
+      <span className="text-sm text-gray-600 mr-1">{lang === "en" ? "Share" : "共有する"}</span>
       <a className={link} target="_blank" rel="noopener noreferrer" href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`}>
         X
       </a>
@@ -41,7 +41,7 @@ export function ShareLinks({ url, text }: { url: string; text: string }) {
         LINE
       </a>
       <button type="button" className={link} onClick={copy}>
-        {copied ? "コピーしました" : "URLをコピー"}
+        {lang === "en" ? (copied ? "Copied" : "Copy link") : copied ? "コピーしました" : "URLをコピー"}
       </button>
     </div>
   );

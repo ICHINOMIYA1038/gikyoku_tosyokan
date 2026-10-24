@@ -1,5 +1,6 @@
 import { GetStaticPaths, GetStaticProps } from 'next';
 import Link from 'next/link';
+import Breadcrumb from '@/components/Breadcrumb';
 import { useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -15,7 +16,6 @@ import {
   BlogPost,
   BlogPostMeta,
 } from '@/lib/blog';
-import { FaHome, FaChevronRight, FaClock, FaPen, FaTag } from 'react-icons/fa';
 import BlogTableOfContents from '@/components/BlogTableOfContents';
 import BlogShareButtons from '@/components/BlogShareButtons';
 import BlogRelatedPosts from '@/components/BlogRelatedPosts';
@@ -49,19 +49,6 @@ function tagToHue(tag: string): number {
   return ((hash % 360) + 360) % 360;
 }
 
-/** Generate a gradient CSS string from tags */
-function tagsToGradient(tags: string[]): string {
-  if (tags.length === 0) {
-    return 'linear-gradient(135deg, hsl(220, 60%, 50%), hsl(260, 60%, 50%))';
-  }
-  if (tags.length === 1) {
-    const h = tagToHue(tags[0]);
-    return `linear-gradient(135deg, hsl(${h}, 55%, 45%), hsl(${(h + 40) % 360}, 60%, 55%))`;
-  }
-  const hues = tags.slice(0, 3).map(tagToHue);
-  const stops = hues.map((h, i) => `hsl(${h}, 55%, ${45 + i * 5}%) ${Math.round((i / (hues.length - 1)) * 100)}%`);
-  return `linear-gradient(135deg, ${stops.join(', ')})`;
-}
 
 export default function BlogEnPost({
   post,
@@ -85,7 +72,6 @@ export default function BlogEnPost({
     { lang: 'x-default', path: `/blog/en/${post.slug}` },
     ...(alternateSlug ? [{ lang: 'ja', path: `/blog/ja/${alternateSlug}` }] : []),
   ];
-  const gradient = tagsToGradient(post.tags);
 
   return (
     <Layout>
@@ -126,75 +112,30 @@ export default function BlogEnPost({
         <StructuredData type="FAQPage" faqItems={metadata.faq} />
       )}
 
-      {/* Hero header */}
-      <div
-        className="relative overflow-hidden"
-        style={{ background: gradient }}
-      >
-        <div className="absolute inset-0 opacity-10" style={{
-          backgroundImage: 'radial-gradient(circle at 20% 50%, white 1px, transparent 1px), radial-gradient(circle at 80% 20%, white 1px, transparent 1px)',
-          backgroundSize: '60px 60px, 40px 40px',
-        }} />
-        <div className="container mx-auto px-4 pt-6 pb-10 md:pt-8 md:pb-14 relative z-10">
-          <nav className="mb-6">
-            <ol className="flex items-center flex-wrap gap-1 text-sm text-white/80">
-              <li className="flex items-center">
-                <Link href="/" className="hover:text-white transition-colors">
-                  <FaHome className="inline mr-1" />Home
-                </Link>
-              </li>
-              <li className="flex items-center">
-                <FaChevronRight className="mx-2 text-white/50" size={10} />
-                <Link href="/blog/en" className="hover:text-white transition-colors">
-                  Blog
-                </Link>
-              </li>
-              <li className="flex items-center">
-                <FaChevronRight className="mx-2 text-white/50" size={10} />
-                <span className="text-white font-medium truncate max-w-xs">{post.title}</span>
-              </li>
-            </ol>
-          </nav>
-
-          <h1 className="text-2xl md:text-4xl font-bold text-white leading-tight mb-5 max-w-3xl drop-shadow-sm">
-            {post.title}
-          </h1>
-
-          <div className="flex flex-wrap items-center gap-x-5 gap-y-2 mb-5">
-            <time className="text-sm text-white/90 font-medium">{post.date}</time>
-            <span className="flex items-center gap-1.5 text-sm text-white/90">
-              <FaClock className="text-white/70" />
-              {readingTime} min read
-            </span>
-          </div>
-
+      <div className="max-w-6xl mx-auto pt-6 md:pt-8">
+        <Breadcrumb items={[{ name: 'Home', href: '/' }, { name: 'Blog', href: '/blog/en' }, { name: post.title }]} />
+        <header className="max-w-3xl">
+          <h1 className="text-[26px] md:text-[34px] font-serif font-bold text-gray-900 leading-snug">{post.title}</h1>
+          <p className="mt-3 text-sm text-gray-600">
+            <time dateTime={post.date}>{post.date}</time>
+            <span className="mx-2">·</span>
+            {readingTime} min read
+          </p>
           {post.tags.length > 0 && (
-            <div className="flex flex-wrap gap-2">
-              {post.tags.map((tag) => (
-                <span
-                  key={tag}
-                  className="inline-flex items-center gap-1 text-sm px-3 py-1 rounded-full bg-white/20 text-white backdrop-blur-sm border border-white/20"
-                >
-                  <FaTag className="text-[10px] opacity-70" />
-                  {tag}
-                </span>
-              ))}
-            </div>
+            <p className="mt-3 flex flex-wrap gap-x-3 gap-y-1 text-sm text-gray-700">
+              {post.tags.map((tag) => <span key={tag}>#{tag}</span>)}
+            </p>
           )}
-        </div>
+        </header>
       </div>
 
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex flex-col lg:flex-row gap-8">
+      <div className="max-w-6xl mx-auto pb-12">
+        <div className="flex flex-col lg:flex-row gap-10">
           <main className="flex-1 min-w-0">
-            <article className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 lg:p-10 -mt-6 relative z-10">
-              <div className="flex justify-end mb-6">
-                <BlogShareButtons url={pageUrl} title={post.title} />
-              </div>
+            <article className="max-w-3xl">
+              <BlogTableOfContents content={displayContent} lang="en" />
 
-              <BlogTableOfContents content={displayContent} />
-
-              <div className="my-8 rounded-lg overflow-hidden bg-gray-50 border border-gray-100">
+              <div className="my-8">
                 <AdSlot slot={AD_SLOTS.BLOG_AFTER_TOC} format="horizontal" className="!my-0" />
               </div>
 
@@ -207,7 +148,7 @@ export default function BlogEnPost({
                       return (
                         <h2
                           id={id}
-                          className="text-xl font-bold mt-12 mb-5 scroll-mt-20 text-gray-700"
+                          className="!text-[22px] !font-bold !mt-14 !mb-5 !pb-2 scroll-mt-20 !text-gray-900 border-b border-[#D9D5CF]"
                         >
                           {children}
                         </h2>
@@ -218,7 +159,7 @@ export default function BlogEnPost({
                       return (
                         <h3
                           id={id}
-                          className="text-lg font-bold mt-8 mb-4 scroll-mt-20 text-gray-700"
+                          className="!text-lg !font-bold !mt-9 !mb-3 scroll-mt-20 !text-gray-900"
                         >
                           {children}
                         </h3>
@@ -261,16 +202,16 @@ export default function BlogEnPost({
                       );
                     },
                     hr: () => (
-                      <hr className="my-10 border-0 h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent" />
+                      <hr className="my-10 border-0 h-px bg-[#D9D5CF]" />
                     ),
                     strong: ({ children }) => <strong className="font-bold text-gray-900">{children}</strong>,
                     blockquote: ({ children }) => (
-                      <blockquote className="border-l-4 border-gray-300 pl-5 pr-4 py-3 my-6 text-gray-500 italic">
+                      <blockquote className="border-l-4 border-[#D9D5CF] pl-5 pr-4 py-1 my-6 text-gray-700">
                         {children}
                       </blockquote>
                     ),
                     table: ({ children }) => (
-                      <div className="overflow-x-auto my-8 rounded-lg border border-gray-200">
+                      <div className="overflow-x-auto my-8 border-t border-[#D9D5CF]">
                         <table className="min-w-full border-collapse text-sm">{children}</table>
                       </div>
                     ),
@@ -283,32 +224,18 @@ export default function BlogEnPost({
                 </ReactMarkdown>
               </div>
 
-              {/* Author / meta section */}
-              <div className="mt-14 pt-8 border-t border-gray-200">
-                <div className="flex items-center gap-4 p-5 bg-gray-50 rounded-xl">
-                  <div
-                    className="flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-lg"
-                    style={{ background: gradient }}
-                  >
-                    <FaPen className="text-sm" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-500 mb-0.5">Written by</p>
-                    <p className="font-bold text-gray-900">Gikyoku Tosyokan Editorial</p>
-                    <p className="text-sm text-gray-500 mt-0.5">
-                      Sharing information about theater and dramatic scripts
-                    </p>
-                  </div>
-                </div>
+              <div className="mt-14 pt-6 border-t border-[#D9D5CF] text-sm text-gray-700">
+                <p><span className="font-bold text-gray-900">Gikyoku Tosyokan Editorial</span><span className="mx-2">·</span>{post.date}</p>
+                <p className="mt-1">Sharing information about Japanese theater and dramatic scripts.</p>
               </div>
 
               <BlogRelatedPosts posts={relatedPosts} language="en" />
 
               <div className="mt-12 pt-6 border-t border-gray-200 flex flex-wrap items-center justify-between gap-4">
-                <Link href="/blog/en" className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-800 font-medium transition-colors">
-                  &larr; Back to Blog
+                <Link href="/blog/en" className="text-sm text-gray-700 underline underline-offset-4 hover:text-gray-900">
+                  Back to the blog
                 </Link>
-                <BlogShareButtons url={pageUrl} title={post.title} />
+                <BlogShareButtons url={pageUrl} title={post.title} lang="en" />
               </div>
             </article>
           </main>

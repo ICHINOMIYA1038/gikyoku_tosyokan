@@ -15,27 +15,19 @@ const BlogRelatedPosts: React.FC<BlogRelatedPostsProps> = ({
   const title = language === 'ja' ? '関連記事' : 'Related Articles';
 
   return (
-    <section className="mt-14 pt-8 border-t border-gray-200">
-      <h2 className="text-lg font-bold mb-5 text-gray-800">{title}</h2>
-      <div className="grid gap-4 sm:grid-cols-2">
+    <section className="not-prose mt-14">
+      <h2 className="!my-0 !pb-2 !text-lg !font-bold !text-gray-900 border-b-2 border-gray-900">{title}</h2>
+      <ul>
         {posts.map((post) => (
-          <Link
-            key={post.slug}
-            href={`/blog/${language}/${post.slug}`}
-            className="group block border border-gray-100 rounded-lg p-4 hover:border-gray-200 hover:bg-gray-50 transition-all"
-          >
-            <h3 className="font-bold text-sm text-gray-800 mb-1.5 line-clamp-2 group-hover:text-theater-primary-600 transition-colors">
-              {post.title}
-            </h3>
-            {post.description && (
-              <p className="text-xs text-gray-400 line-clamp-2 mb-2">
-                {post.description}
-              </p>
-            )}
-            <p className="text-xs text-gray-300">{post.date}</p>
-          </Link>
+          <li key={post.slug} className="border-b border-[#D9D5CF]">
+            <Link href={`/blog/${language}/${post.slug}`} className="group block py-3 px-1 hover:bg-[#F4F2EE]">
+              <span className="block font-bold text-gray-900 leading-snug line-clamp-2 group-hover:text-theater-primary-700">{post.title}</span>
+              {post.description && <span className="block mt-0.5 text-sm text-gray-600 line-clamp-1">{post.description}</span>}
+              <span className="block mt-0.5 text-xs text-gray-500 tabular-nums">{post.date.replace(/-/g, '/')}</span>
+            </Link>
+          </li>
         ))}
-      </div>
+      </ul>
     </section>
   );
 };
