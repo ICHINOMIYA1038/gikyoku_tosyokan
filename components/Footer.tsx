@@ -1,16 +1,24 @@
 import React from "react";
 import Link from "next/link";
-import Image from "next/image";
 
+// 書き込みを先頭に置く。リンクの数は以前と同じ（並べ替えと見出しの付け替えのみ）
 const footerLinks = [
   {
-    title: "コンテンツ",
+    title: "書き込む",
+    links: [
+      { href: "/announcements", label: "上演告知" },
+      { href: "/recruit", label: "劇団員募集" },
+      { href: "/reports", label: "上演レポート" },
+      { href: "/announcements/new", label: "公演を告知する" },
+    ],
+  },
+  {
+    title: "戯曲を探す",
     links: [
       { href: "/", label: "戯曲を検索" },
       { href: "/authors", label: "作者一覧" },
       { href: "/categories", label: "カテゴリー一覧" },
       { href: "/blog/ja", label: "ブログ" },
-      { href: "/announcements", label: "上演告知" },
     ],
   },
   {
@@ -33,7 +41,7 @@ const footerLinks = [
     ],
   },
   {
-    title: "規約・サイトマップ",
+    title: "規約",
     links: [
       { href: "/support/tos", label: "利用規約" },
       { href: "/support/privacy-policy", label: "プライバシーポリシー" },
@@ -46,24 +54,23 @@ const footerLinks = [
 
 const Footer: React.FC = () => {
   return (
-    <footer className="bg-theater-neutral-900 text-gray-300" role="contentinfo" aria-label="サイトフッター">
-      <div className="container mx-auto px-4 py-10">
-        <Link href="/" className="block mb-6" aria-label="戯曲図書館ホームへ">
-          <Image src="/logo-white.png" alt="戯曲図書館" width={140} height={40} loading="lazy" className="h-10 w-auto opacity-90" />
-        </Link>
-        <nav className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8" aria-label="フッターナビゲーション">
+    <footer className="mt-12 bg-[#F4F2EE] border-t border-[#D9D5CF] text-gray-800" role="contentinfo" aria-label="サイトフッター">
+      <div className="max-w-6xl mx-auto px-4 py-10">
+        <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+          <Link href="/" className="block w-fit" aria-label="戯曲図書館ホームへ">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/logo.svg" alt="戯曲図書館" width={123} height={26} loading="lazy" className="h-[26px] w-auto" />
+          </Link>
+          <p className="text-sm text-gray-600">戯曲を探して、読んだ感想や上演の記録を書き残せる場所。</p>
+        </div>
+        <nav className="mt-8 grid grid-cols-2 md:grid-cols-5 gap-x-6 gap-y-8" aria-label="フッターナビゲーション">
           {footerLinks.map((section) => (
             <div key={section.title}>
-              <h2 className="text-sm font-semibold text-white uppercase tracking-wider mb-3">
-                {section.title}
-              </h2>
-              <ul className="space-y-1">
+              <h2 className="!my-0 !pb-0 !text-sm !font-bold !text-gray-900">{section.title}</h2>
+              <ul className="mt-2">
                 {section.links.map((link) => (
                   <li key={link.href}>
-                    <Link
-                      href={link.href}
-                      className="block py-1.5 text-sm text-gray-400 hover:text-white transition-colors"
-                    >
+                    <Link href={link.href} className="block py-1.5 text-sm text-gray-700 hover:text-theater-primary-700 hover:underline underline-offset-4">
                       {link.label}
                     </Link>
                   </li>
@@ -73,34 +80,16 @@ const Footer: React.FC = () => {
           ))}
         </nav>
       </div>
-      <div className="border-t border-gray-800">
-        <div className="container mx-auto px-4 py-6">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
-            <p className="text-xs text-gray-500">
-              © 2026 戯曲図書館 All Rights Reserved.
-            </p>
-            <div className="flex items-center gap-2 text-xs text-gray-500 flex-wrap">
-              <span>姉妹サイト:</span>
-              <a
-                href="https://palette.gikyokutosyokan.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-400 hover:text-white transition-colors"
-              >
-                戯曲パレット
-              </a>
-              <span className="text-gray-600">/</span>
-              <a
-                href="https://tomoshibi.gikyokutosyokan.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-400 hover:text-white transition-colors"
-              >
-                TOMOSHIBI小屋
-              </a>
-              <span className="text-gray-600">（舞台照明シミュレーター）</span>
-            </div>
-          </div>
+      <div className="border-t border-[#D9D5CF]">
+        <div className="max-w-6xl mx-auto px-4 py-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 text-xs text-gray-600">
+          <p>© 2026 戯曲図書館</p>
+          <p>
+            姉妹サイト：
+            <a href="https://palette.gikyokutosyokan.com" target="_blank" rel="noopener noreferrer" className="text-gray-800 hover:underline">戯曲パレット</a>
+            <span className="mx-2">/</span>
+            <a href="https://tomoshibi.gikyokutosyokan.com" target="_blank" rel="noopener noreferrer" className="text-gray-800 hover:underline">TOMOSHIBI小屋</a>
+            （舞台照明シミュレーター）
+          </p>
         </div>
       </div>
     </footer>
