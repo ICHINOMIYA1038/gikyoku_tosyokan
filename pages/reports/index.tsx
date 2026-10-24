@@ -2,8 +2,7 @@ import { useState } from "react";
 import Layout from "@/components/Layout";
 import Seo from "@/components/seo";
 import Link from "next/link";
-import Image from "next/image";
-import { FaTheaterMasks, FaCalendarAlt, FaMapMarkerAlt, FaCamera, FaPlus } from "react-icons/fa";
+import BoardHeader, { BoardEmpty, BOARD_ROW_TITLE } from "@/components/BoardHeader";
 import { prisma } from "@/lib/prisma";
 import { GetStaticProps } from "next";
 
@@ -31,100 +30,48 @@ export default function ReportsPage({ reports }: { reports: Report[] }) {
         pageType="website"
       />
       <Layout>
-        <div className="min-h-screen bg-gradient-to-b from-green-50 to-white">
-          {/* ヘッダー */}
-          <div className="bg-gradient-to-r from-green-100 via-emerald-50 to-green-100 py-8 px-4">
-            <div className="max-w-4xl mx-auto">
-              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                <div>
-                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-green-200/50 text-green-800 text-sm font-medium mb-2">
-                    <FaCamera />
-                    上演レポート
-                  </div>
-                  <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
-                    みんなの上演レポート
-                  </h1>
-                  <p className="text-gray-600 text-sm mt-1">
-                    上演した感想や写真を共有して、次に演じる人の参考に
-                  </p>
-                </div>
-                <Link
-                  href="/reports/new"
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-bold rounded-full transition-colors self-start"
-                >
-                  <FaPlus />
-                  レポートを書く
-                </Link>
-              </div>
-            </div>
-          </div>
+        <div className="max-w-5xl mx-auto pb-12">
+          <BoardHeader
+            current="reports"
+            title="上演レポート"
+            description="上演した感想や、稽古・本番で工夫したこと。次にその作品を選ぶ人の参考になります。"
+            postHref="/reports/new"
+            postLabel="レポートを書く"
+          />
 
-          <div className="max-w-4xl mx-auto px-4 py-8">
+          <div className="mt-8">
             {reports.length === 0 ? (
-              <div className="text-center py-16">
-                <FaTheaterMasks className="text-gray-300 text-5xl mx-auto mb-4" />
-                <h2 className="text-xl font-bold text-gray-600 mb-2">
-                  まだレポートはありません
-                </h2>
-                <p className="text-gray-400 mb-6">
-                  最初の上演レポートを投稿してみませんか？
-                </p>
-                <Link
-                  href="/reports/new"
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-bold rounded-full transition-colors"
-                >
-                  <FaPlus />
-                  レポートを書く
-                </Link>
-              </div>
+              <BoardEmpty message="まだレポートはありません。" postHref="/reports/new" postLabel="最初のレポートを書く" />
             ) : (
-              <div className="grid gap-6 md:grid-cols-2">
+              <ul className="border-t border-[#D9D5CF]">
                 {reports.map((report) => (
-                  <Link
-                    key={report.id}
-                    href={`/reports/${report.id}`}
-                    className="bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow group"
-                  >
-                    {report.imageUrl && (
-                      <div className="relative h-48 bg-gray-100">
-                        <Image
-                          src={report.imageUrl}
-                          alt={report.title}
-                          fill
-                          className="object-cover group-hover:scale-105 transition-transform duration-300"
-                        />
-                      </div>
-                    )}
-                    <div className="p-4">
-                      <h2 className="font-bold text-gray-900 mb-1 group-hover:text-green-700 transition-colors line-clamp-2">
-                        {report.title}
-                      </h2>
-                      {report.scriptTitle && (
-                        <p className="text-sm text-green-600 mb-2">
-                          <FaTheaterMasks className="inline mr-1" />
-                          {report.scriptTitle}
-                        </p>
-                      )}
-                      <p className="text-sm text-gray-600 line-clamp-2 mb-3">
-                        {report.content}
-                      </p>
-                      <div className="flex flex-wrap items-center gap-3 text-xs text-gray-400">
-                        {report.theaterGroupName && <span>{report.theaterGroupName}</span>}
-                        {report.venue && (
-                          <span className="flex items-center gap-1">
-                            <FaMapMarkerAlt />
-                            {report.venue}
-                          </span>
+                  <li key={report.id} className="border-b border-[#D9D5CF]">
+                    <Link
+                      href={`/reports/${report.id}`}
+                      className="group grid md:grid-cols-[minmax(0,1fr)_9rem] gap-x-4 py-4 px-2 hover:bg-[#F4F2EE] transition-colors"
+                    >
+                      <div className="min-w-0">
+                        <h2 className={BOARD_ROW_TITLE}>
+                          {report.title}
+                        </h2>
+                        {(report.scriptTitle || report.theaterGroupName || report.venue) && (
+                          <p className="mt-1 text-sm text-gray-700 truncate">
+                            {[report.scriptTitle, report.theaterGroupName, report.venue].filter(Boolean).join("　/　")}
+                          </p>
                         )}
-                        <span className="flex items-center gap-1">
-                          <FaCalendarAlt />
-                          {report.createdAt}
-                        </span>
+                        <p className="mt-1 text-sm text-gray-500 line-clamp-2">{report.content}</p>
+                        <p className="md:hidden mt-2 text-xs text-gray-500">
+                          {report.authorName}・{report.createdAt.replace(/-/g, "/")}
+                        </p>
                       </div>
-                    </div>
-                  </Link>
+                      <div className="hidden md:block text-right text-xs text-gray-500 leading-relaxed">
+                        <p className="truncate">{report.authorName}</p>
+                        <p className="tabular-nums">{report.createdAt.replace(/-/g, "/")}</p>
+                      </div>
+                    </Link>
+                  </li>
                 ))}
-              </div>
+              </ul>
             )}
           </div>
         </div>
