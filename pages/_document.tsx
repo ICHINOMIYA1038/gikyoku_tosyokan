@@ -22,7 +22,7 @@ export default function Document() {
         <link rel="apple-touch-icon" href="/apple-icon.png" />
 
         {/* Theme color for mobile browsers */}
-        <meta name="theme-color" content="#ec4899" />
+        <meta name="theme-color" content="#ffffff" />
 
         {/* Disable automatic telephone detection */}
         <meta name="format-detection" content="telephone=no" />

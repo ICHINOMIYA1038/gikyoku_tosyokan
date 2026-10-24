@@ -15,8 +15,8 @@ const MobileOptimizations = () => {
       <meta name="apple-mobile-web-app-title" content="戯曲図書館" />
       
       {/* テーマカラー */}
-      <meta name="theme-color" content="#ec4899" media="(prefers-color-scheme: light)" />
-      <meta name="theme-color" content="#db2777" media="(prefers-color-scheme: dark)" />
+      <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+      <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: dark)" />
       
       {/* リソースヒント */}
       <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
@@ -27,13 +27,13 @@ const MobileOptimizations = () => {
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       
       {/* タッチアイコン */}
-      <link rel="apple-touch-icon" sizes="180x180" href="/logo.png" />
+      <link rel="apple-touch-icon" sizes="180x180" href="/apple-icon.png" />
       <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico" />
       <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico" />
       
       {/* アプリケーションバッジ */}
       <meta name="application-name" content="戯曲図書館" />
-      <meta name="msapplication-TileColor" content="#ec4899" />
+      <meta name="msapplication-TileColor" content="#B3123A" />
       <meta name="msapplication-config" content="/browserconfig.xml" />
     </Head>
   );

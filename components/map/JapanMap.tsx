@@ -1,6 +1,5 @@
 import { useState, useCallback } from 'react';
 import { ComposableMap, Geographies, Geography } from 'react-simple-maps';
-import { regionLabels } from '@/lib/university-theater-constants';
 
 const GEO_URL = '/data/japan.topojson';
 
@@ -22,14 +21,19 @@ export const prefectureToRegion: Record<string, string> = {
   '鹿児島県': 'KYUSHU_OKINAWA', '沖縄県': 'KYUSHU_OKINAWA',
 };
 
+// 地方ごとの色分けはやめ、データのある県は薄い灰、触れた県は薄い紅、選んだ県は紅にする
+const FILL = '#DCD6CE';
+const FILL_ACTIVE = '#E3B5C0';
+const FILL_SELECTED = '#B3123A';
+
 export const regionFillColors: Record<string, string> = {
-  HOKKAIDO: '#bae6fd', TOHOKU: '#c7d2fe', KANTO: '#fecdd3',
-  CHUBU: '#a7f3d0', KANSAI: '#fde68a', CHUGOKU_SHIKOKU: '#99f6e4', KYUSHU_OKINAWA: '#fed7aa',
+  HOKKAIDO: FILL, TOHOKU: FILL, KANTO: FILL,
+  CHUBU: FILL, KANSAI: FILL, CHUGOKU_SHIKOKU: FILL, KYUSHU_OKINAWA: FILL,
 };
 
 export const regionFillActiveColors: Record<string, string> = {
-  HOKKAIDO: '#38bdf8', TOHOKU: '#818cf8', KANTO: '#fb7185',
-  CHUBU: '#34d399', KANSAI: '#fbbf24', CHUGOKU_SHIKOKU: '#2dd4bf', KYUSHU_OKINAWA: '#fb923c',
+  HOKKAIDO: FILL_ACTIVE, TOHOKU: FILL_ACTIVE, KANTO: FILL_ACTIVE,
+  CHUBU: FILL_ACTIVE, KANSAI: FILL_ACTIVE, CHUGOKU_SHIKOKU: FILL_ACTIVE, KYUSHU_OKINAWA: FILL_ACTIVE,
 };
 
 type TooltipData = {
@@ -55,10 +59,10 @@ export default function JapanMap({
     const region = prefectureToRegion[prefName];
     if (!region) return '#e5e7eb';
     const hasPrefData = hasData(prefName);
-    if (selectedPref === prefName) return '#ec4899';
+    if (selectedPref === prefName) return FILL_SELECTED;
     if ((hoveredPref === prefName || tappedPref === prefName) && hasPrefData) return regionFillActiveColors[region] || '#e5e7eb';
     if (hasPrefData) return regionFillColors[region] || '#e5e7eb';
-    return '#f3f4f6';
+    return '#F4F2EE';
   };
 
   const tooltip = (hoveredPref || tappedPref) ? getTooltip(hoveredPref || tappedPref!) : null;
@@ -82,18 +86,14 @@ export default function JapanMap({
   return (
     <div>
       {/* 凡例 */}
-      <div className="flex flex-wrap gap-x-3 gap-y-1 mb-3 justify-center">
-        {Object.entries(regionLabels).map(([key, label]) => (
-          <div key={key} className="flex items-center gap-1">
-            <span className="w-2.5 h-2.5 rounded-sm inline-block" style={{ backgroundColor: regionFillColors[key] }} />
-            <span className="text-[10px] text-gray-500">{label}</span>
-          </div>
-        ))}
+      <div className="flex flex-wrap gap-x-4 gap-y-1 mb-3 justify-center text-xs text-gray-600">
+        <span className="flex items-center gap-1"><span className="w-3 h-3 rounded-sm inline-block" style={{ backgroundColor: FILL }} />掲載あり</span>
+        <span className="flex items-center gap-1"><span className="w-3 h-3 rounded-sm inline-block border border-[#D9D5CF]" style={{ backgroundColor: '#F4F2EE' }} />掲載なし</span>
       </div>
 
       {/* 地図本体 */}
       <div
-        className="relative bg-white rounded-xl border border-gray-100 shadow-sm p-2 touch-manipulation"
+        className="relative bg-white border border-[#D9D5CF] p-2 touch-manipulation"
         role="img"
         aria-label="日本地図。都道府県をクリックまたはタップして劇団情報を表示できます。"
       >
