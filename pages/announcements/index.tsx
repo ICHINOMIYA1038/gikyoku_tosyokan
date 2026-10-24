@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import Layout from '@/components/Layout';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { FaCalendarAlt, FaMapMarkerAlt, FaEye, FaPlus, FaClock, FaTheaterMasks, FaBook, FaUsers } from 'react-icons/fa';
+import BoardHeader, { BoardEmpty, BOARD_ROW_TITLE } from '@/components/BoardHeader';
+import { performanceDateParts, timeAgo } from '@/lib/date-format';
 import Seo from '@/components/seo';
 import StructuredData from '@/components/StructuredData';
 
@@ -24,7 +24,6 @@ type Announcement = {
 };
 
 export default function AnnouncementsPage() {
-  const router = useRouter();
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
@@ -52,44 +51,10 @@ export default function AnnouncementsPage() {
     }
   };
 
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('ja-JP', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    });
-  };
-
-  const formatPerformanceDate = (dateString?: string) => {
-    if (!dateString) return null;
-    const date = new Date(dateString);
-    return date.toLocaleDateString('ja-JP', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      weekday: 'short',
-    });
-  };
-
-  const getTimeAgo = (dateString: string) => {
-    const date = new Date(dateString);
-    const now = new Date();
-    const diff = now.getTime() - date.getTime();
-    const hours = Math.floor(diff / (1000 * 60 * 60));
-    const days = Math.floor(hours / 24);
-
-    if (days > 0) return `${days}日前`;
-    if (hours > 0) return `${hours}時間前`;
-    const minutes = Math.floor(diff / (1000 * 60));
-    if (minutes > 0) return `${minutes}分前`;
-    return 'たった今';
-  };
-
-  const getDisplayScriptTitle = (announcement: Announcement) => {
-    if (announcement.post) return announcement.post.title;
-    if (announcement.scriptTitle) return announcement.scriptTitle;
-    return null;
+  const scriptLabel = (a: Announcement) => {
+    const title = a.post?.title || a.scriptTitle;
+    if (!title) return null;
+    return /^[『「]/.test(title) ? title : `『${title}』`;
   };
 
   return (
@@ -108,131 +73,78 @@ export default function AnnouncementsPage() {
         ]}
       />
       <Layout>
-        <div className="min-h-screen bg-gradient-to-b from-theater-neutral-50 to-white">
-          {/* ヘッダーセクション */}
-          <div className="bg-gradient-to-r from-theater-primary-100 via-theater-primary-50 to-theater-primary-100 py-12 px-4">
-            <div className="max-w-6xl mx-auto">
-              <div className="flex items-center justify-between mb-4">
-                <h1 className="text-3xl md:text-4xl font-bold text-theater-neutral-900 flex items-center gap-3">
-                  <FaTheaterMasks className="text-theater-primary-500" />
-                  公演告知掲示板
-                </h1>
-                <Link
-                  href="/announcements/new"
-                  className="bg-theater-primary-500 hover:bg-theater-primary-600 text-white px-6 py-3 rounded-lg font-bold transition-colors flex items-center gap-2 shadow-lg"
-                >
-                  <FaPlus />
-                  告知を投稿
-                </Link>
-              </div>
-              <p className="text-theater-neutral-700 text-lg">
-                演劇・舞台の公演情報を自由に投稿できます。投稿にはログインが必要です。
-              </p>
-            </div>
-          </div>
+        <div className="max-w-5xl mx-auto pb-12">
+          <BoardHeader
+            current="announcements"
+            title="上演告知"
+            description="これからの公演のお知らせ。劇団・個人のどなたでも投稿できます。"
+            postHref="/announcements/new"
+            postLabel="告知を投稿する"
+          />
 
-          <div className="max-w-6xl mx-auto px-4 py-8">
+          <div className="mt-8">
             {loading ? (
-              <div className="flex justify-center items-center py-12">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-theater-primary-500"></div>
-              </div>
-            ) : !announcements || announcements.length === 0 ? (
-              <div className="bg-white rounded-lg shadow-md p-8 text-center">
-                <FaTheaterMasks className="text-6xl text-gray-300 mx-auto mb-4" />
-                <p className="text-gray-600 mb-4">まだ告知がありません</p>
-                <Link
-                  href="/announcements/new"
-                  className="inline-flex items-center gap-2 bg-theater-primary-500 hover:bg-theater-primary-600 text-white px-6 py-3 rounded-lg font-bold transition-colors"
-                >
-                  <FaPlus />
-                  最初の告知を投稿する
-                </Link>
-              </div>
+              <p className="py-12 text-center text-gray-500">読み込み中…</p>
+            ) : announcements.length === 0 ? (
+              <BoardEmpty message="まだ告知はありません。" postHref="/announcements/new" postLabel="最初の告知を投稿する" />
             ) : (
-              <div className="grid gap-6">
-                {announcements.map((announcement) => (
-                  <Link
-                    key={announcement.id}
-                    href={`/announcements/${announcement.id}`}
-                    className="block"
-                  >
-                    <div className="bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 p-6 border border-gray-100 hover:border-theater-primary-200">
-                      <div className="flex justify-between items-start mb-3">
-                        <h2 className="text-xl font-bold text-theater-neutral-900 hover:text-theater-primary-600 transition-colors">
-                          {announcement.title}
-                        </h2>
-                        <span className="text-sm text-gray-500 flex items-center gap-1">
-                          <FaClock />
-                          {getTimeAgo(announcement.createdAt)}
-                        </span>
-                      </div>
-
-                      <div className="flex flex-wrap gap-4 mb-3 text-sm">
-                        {announcement.performanceDate && (
-                          <div className="flex items-center gap-1 text-theater-primary-600">
-                            <FaCalendarAlt />
-                            <span>{formatPerformanceDate(announcement.performanceDate)}</span>
-                          </div>
-                        )}
-                        {announcement.venue && (
-                          <div className="flex items-center gap-1 text-theater-accent-blue">
-                            <FaMapMarkerAlt />
-                            <span>{announcement.venue}</span>
-                          </div>
-                        )}
-                        {getDisplayScriptTitle(announcement) && (
-                          <div className="flex items-center gap-1 text-theater-primary-600">
-                            <FaBook />
-                            <span>{getDisplayScriptTitle(announcement)}</span>
-                          </div>
-                        )}
-                        {announcement.theaterGroupName && (
-                          <div className="flex items-center gap-1 text-theater-primary-700">
-                            <FaUsers />
-                            <span>{announcement.theaterGroupName}</span>
-                          </div>
-                        )}
-                        <div className="flex items-center gap-1 text-gray-500">
-                          <FaEye />
-                          <span>{announcement.views}回閲覧</span>
+              <ul className="border-t border-[#D9D5CF]">
+                {announcements.map((a) => {
+                  const date = a.performanceDate ? performanceDateParts(a.performanceDate) : null;
+                  const meta = [a.venue, a.theaterGroupName, scriptLabel(a)].filter(Boolean).join("　/　");
+                  return (
+                    <li key={a.id} className="border-b border-[#D9D5CF]">
+                      <Link
+                        href={`/announcements/${a.id}`}
+                        className="group grid grid-cols-[3.75rem_minmax(0,1fr)] md:grid-cols-[6.5rem_minmax(0,1fr)_9rem] gap-x-4 py-4 px-2 hover:bg-[#F4F2EE] transition-colors"
+                      >
+                        <div className="tabular-nums leading-tight">
+                          {date ? (
+                            <>
+                              {date.year && <span className="block text-xs text-gray-500">{date.year}</span>}
+                              <span className="block font-bold text-gray-900">{date.monthDay}</span>
+                              <span className="block text-sm text-gray-600">（{date.weekday}）</span>
+                            </>
+                          ) : (
+                            <span className="block text-sm text-gray-500">日程未定</span>
+                          )}
                         </div>
-                      </div>
-
-                      <p className="text-theater-neutral-700 line-clamp-2 mb-3">
-                        {announcement.content}
-                      </p>
-
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm text-gray-500">
-                          投稿者: {announcement.authorName}
-                        </span>
-                        <span className="text-theater-primary-600 font-medium text-sm">
-                          詳細を見る →
-                        </span>
-                      </div>
-                    </div>
-                  </Link>
-                ))}
-              </div>
+                        <div className="min-w-0">
+                          <h2 className={BOARD_ROW_TITLE}>
+                            {a.title}
+                          </h2>
+                          {meta && <p className="mt-1 text-sm text-gray-700 truncate">{meta}</p>}
+                          <p className="mt-1 text-sm text-gray-500 line-clamp-2">{a.content}</p>
+                          <p className="md:hidden mt-2 text-xs text-gray-500">
+                            {a.authorName}・{timeAgo(a.createdAt)}
+                          </p>
+                        </div>
+                        <div className="hidden md:block text-right text-xs text-gray-500 leading-relaxed">
+                          <p className="truncate">{a.authorName}</p>
+                          <p>{timeAgo(a.createdAt)}</p>
+                          <p>{a.views.toLocaleString()}回表示</p>
+                        </div>
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
             )}
 
-            {/* ページネーション */}
             {totalPages > 1 && (
-              <div className="flex justify-center gap-2 mt-8">
+              <div className="flex justify-center items-center gap-4 mt-8 text-sm">
                 <button
                   onClick={() => setPage(Math.max(1, page - 1))}
                   disabled={page === 1}
-                  className="px-4 py-2 bg-white rounded-lg shadow-md disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition-colors"
+                  className="h-10 px-4 rounded border border-[#D9D5CF] disabled:opacity-40 hover:bg-[#F4F2EE]"
                 >
                   前へ
                 </button>
-                <span className="px-4 py-2 bg-theater-primary-100 rounded-lg font-medium">
-                  {page} / {totalPages}
-                </span>
+                <span className="tabular-nums text-gray-700">{page} / {totalPages}</span>
                 <button
                   onClick={() => setPage(Math.min(totalPages, page + 1))}
                   disabled={page === totalPages}
-                  className="px-4 py-2 bg-white rounded-lg shadow-md disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition-colors"
+                  className="h-10 px-4 rounded border border-[#D9D5CF] disabled:opacity-40 hover:bg-[#F4F2EE]"
                 >
                   次へ
                 </button>
