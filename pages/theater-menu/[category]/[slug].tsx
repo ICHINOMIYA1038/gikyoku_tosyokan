@@ -97,12 +97,12 @@ export default function TheaterMenuDetail({ categories, menu, related }: Props) 
             <section className="mb-6">
               <div className="grid md:grid-cols-2 gap-5 items-start">
                 {menu.imageUrl ? (
-                  <div className="aspect-video md:aspect-[4/3] rounded-2xl overflow-hidden bg-gray-100 shadow-sm border border-gray-100">
+                  <div className="aspect-video md:aspect-[4/3] rounded overflow-hidden bg-gray-100 border border-[#D9D5CF]">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={menu.imageUrl} alt={menu.title} className="w-full h-full object-cover" />
                   </div>
                 ) : (
-                  <div className="aspect-video md:aspect-[4/3] rounded-2xl bg-gradient-to-br from-rose-100 to-pink-50 flex items-center justify-center">
+                  <div className="aspect-video md:aspect-[4/3] rounded flex items-center justify-center">
                     <span className="text-4xl text-rose-300">🎭</span>
                   </div>
                 )}
@@ -128,7 +128,7 @@ export default function TheaterMenuDetail({ categories, menu, related }: Props) 
                     {menu.category.slug === "etude" && (
                       <Link
                         href="/theater-menu/etude-generator"
-                        className="inline-flex items-center gap-1.5 rounded-full border border-fuchsia-300 bg-gradient-to-r from-rose-50 to-fuchsia-50 px-3 py-1.5 text-xs text-fuchsia-700 hover:from-rose-100 hover:to-fuchsia-100 transition"
+                        className="inline-flex items-center gap-1.5 rounded-full border border-[#D9D5CF] px-3 py-1.5 text-xs text-theater-primary-700 hover: hover: transition"
                       >
                         🎲 このメニュー用にお題を振る
                       </Link>
@@ -163,7 +163,7 @@ export default function TheaterMenuDetail({ categories, menu, related }: Props) 
                   </dl>
 
                   {menu.hasPhysicalContact === true && (
-                    <p className="mt-3 inline-flex items-center gap-1.5 text-xs text-amber-800 bg-amber-50 border border-amber-200 rounded-lg px-3 py-1.5 self-start">
+                    <p className="mt-3 inline-flex items-center gap-1.5 text-xs text-gray-900 bg-[#F4F2EE] border border-[#D9D5CF] rounded-lg px-3 py-1.5 self-start">
                       <Hand className="w-3.5 h-3.5" /> 身体接触あり — 事前説明を推奨
                     </p>
                   )}
@@ -171,11 +171,11 @@ export default function TheaterMenuDetail({ categories, menu, related }: Props) 
               </div>
             </section>
 
-            <article className="bg-white rounded-2xl border border-gray-200">
+            <article className="bg-white rounded border border-[#D9D5CF]">
               <div className="p-5 md:p-8">
 
                 {(menu.learningObjectives.length > 0 || menu.materials.length > 0 || menu.spaceRequirement) && (
-                  <div className="grid gap-3 md:grid-cols-2 mb-6 p-4 bg-gray-50 rounded-lg border border-gray-100 text-sm">
+                  <div className="grid gap-3 md:grid-cols-2 mb-6 p-4 bg-gray-50 rounded-lg border border-[#D9D5CF] text-sm">
                     {menu.learningObjectives.length > 0 && (
                       <div>
                         <p className="text-xs font-semibold text-rose-700 mb-1 flex items-center gap-1">
@@ -238,15 +238,15 @@ export default function TheaterMenuDetail({ categories, menu, related }: Props) 
                         key={src}
                         src={src}
                         alt=""
-                        className="rounded-lg border border-gray-200"
+                        className="rounded-lg border border-[#D9D5CF]"
                       />
                     ))}
                   </div>
                 )}
 
                 {menu.sideCoaching && (
-                  <div className="mt-6 p-4 bg-blue-50 border border-blue-100 rounded-lg">
-                    <p className="text-xs font-semibold text-blue-700 mb-2 flex items-center gap-1">
+                  <div className="mt-6 p-4 bg-[#F4F2EE] border border-[#D9D5CF] rounded-lg">
+                    <p className="text-xs font-semibold text-theater-primary-700 mb-2 flex items-center gap-1">
                       <MessageSquare className="w-3.5 h-3.5" /> 進行役の声かけ例 (Side Coaching)
                     </p>
                     <p className="text-sm text-gray-700 leading-relaxed">
@@ -256,8 +256,8 @@ export default function TheaterMenuDetail({ categories, menu, related }: Props) 
                 )}
 
                 {menu.reflectionQuestions.length > 0 && (
-                  <div className="mt-4 p-4 bg-emerald-50 border border-emerald-100 rounded-lg">
-                    <p className="text-xs font-semibold text-emerald-700 mb-2 flex items-center gap-1">
+                  <div className="mt-4 p-4 bg-[#F4F2EE] border border-[#D9D5CF] rounded-lg">
+                    <p className="text-xs font-semibold text-theater-primary-700 mb-2 flex items-center gap-1">
                       <HelpCircle className="w-3.5 h-3.5" /> 振り返り質問
                     </p>
                     <ul className="text-sm text-gray-700 space-y-1">
@@ -269,7 +269,7 @@ export default function TheaterMenuDetail({ categories, menu, related }: Props) 
                 )}
 
                 {(menu.credit || menu.sourceUrl) && (
-                  <div className="mt-6 pt-4 border-t border-gray-100 text-xs text-gray-500">
+                  <div className="mt-6 pt-4 border-t border-[#D9D5CF] text-xs text-gray-500">
                     {menu.credit && (
                       <p>考案・出典: {menu.credit}</p>
                     )}
@@ -287,7 +287,7 @@ export default function TheaterMenuDetail({ categories, menu, related }: Props) 
                 )}
 
                 {menu.tags.length > 0 && (
-                  <div className="flex flex-wrap gap-2 mt-6 pt-6 border-t border-gray-100">
+                  <div className="flex flex-wrap gap-2 mt-6 pt-6 border-t border-[#D9D5CF]">
                     {menu.tags.map((t) => (
                       <span
                         key={t}
@@ -311,7 +311,7 @@ export default function TheaterMenuDetail({ categories, menu, related }: Props) 
                     <li key={r.id}>
                       <Link
                         href={`/theater-menu/${r.category?.slug || menu.category.slug}/${r.slug}`}
-                        className="block rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm text-gray-800 hover:border-rose-200 hover:bg-rose-50 transition"
+                        className="block rounded-lg border border-[#D9D5CF] bg-white px-4 py-3 text-sm text-gray-800 hover:border-rose-200 hover:bg-rose-50 transition"
                       >
                         {r.title}
                       </Link>
@@ -337,7 +337,7 @@ function MetaCell({
   value: string;
 }) {
   return (
-    <div className="rounded-lg border border-gray-100 bg-gray-50 px-3 py-2">
+    <div className="rounded-lg border border-[#D9D5CF] bg-gray-50 px-3 py-2">
       <div className="flex items-center gap-1 text-gray-500 text-[10px]">
         {icon}
         {label}

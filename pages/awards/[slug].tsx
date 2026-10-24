@@ -143,7 +143,7 @@ function WinnerEntry({ winner, showGrandPrize }: { winner: Winner; showGrandPriz
         <div className="flex items-center gap-2 flex-wrap">
           {titleEl}
           {showGrandPrize && winner.awardType === '大賞' && (
-            <span className="text-[10px] px-1.5 py-0.5 bg-amber-50 text-amber-700 border border-amber-200 rounded font-medium">大賞</span>
+            <span className="text-[10px] px-1.5 py-0.5 bg-[#F4F2EE] text-theater-primary-700 border border-[#D9D5CF] rounded font-medium">大賞</span>
           )}
         </div>
         {authorEl}
@@ -224,7 +224,7 @@ export default function AwardDetailPage({ award, stats, topAuthors, yearGroups }
         </nav>
 
         {/* 賞ナビゲーションタブ */}
-        <div className="mb-6 -mx-4 px-4 sticky top-0 z-10 bg-white border-b border-gray-200">
+        <div className="mb-6 -mx-4 px-4 sticky top-0 z-10 bg-white border-b border-[#D9D5CF]">
           <nav className="flex overflow-x-auto no-scrollbar gap-0" aria-label="賞の切り替え">
             {AWARD_NAV.map((nav) => {
               const isCurrent = nav.slug === award.slug;
@@ -233,10 +233,10 @@ export default function AwardDetailPage({ award, stats, topAuthors, yearGroups }
                   key={nav.slug}
                   href={`/awards/${nav.slug}`}
                   className={`flex-shrink-0 px-3 py-2.5 text-xs font-medium border-b-2 transition-colors whitespace-nowrap ${
-                    isCurrent
-                      ? 'border-amber-500 text-amber-700 bg-amber-50/50'
-                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                  }`}
+ isCurrent
+ ? 'border-amber-500 text-theater-primary-700 bg-[#F4F2EE]'
+ : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+ }`}
                   aria-current={isCurrent ? 'page' : undefined}
                 >
                   <span className="hidden sm:inline">{nav.name}</span>
@@ -250,7 +250,7 @@ export default function AwardDetailPage({ award, stats, topAuthors, yearGroups }
         {/* ヒーローセクション */}
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-3">
-            <FaTrophy className="text-amber-400 text-lg" />
+            <FaTrophy className="text-gray-500 text-lg" />
             <h1 className="text-2xl md:text-3xl font-bold text-gray-900">{award.name}</h1>
           </div>
           <p className="text-sm text-gray-600 leading-relaxed mb-4">
@@ -305,7 +305,7 @@ export default function AwardDetailPage({ award, stats, topAuthors, yearGroups }
                 );
                 return author.authorId ? (
                   <Link key={i} href={`/authors/${author.authorId}`}
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gray-50 border border-gray-150 rounded-full text-sm text-gray-700 hover:border-theater-primary-300 hover:text-theater-primary-600 transition-colors">
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gray-50 border border-gray-150 rounded-full text-sm text-gray-700 hover:border-gray-500 hover:text-theater-primary-600 transition-colors">
                     {inner}
                   </Link>
                 ) : (
@@ -339,7 +339,7 @@ export default function AwardDetailPage({ award, stats, topAuthors, yearGroups }
               const hasGrandPrize = mainWinners.some((w) => w.awardType === '大賞');
 
               return (
-                <div key={group.year} className="border-b border-gray-100 last:border-b-0 py-3">
+                <div key={group.year} className="border-b border-[#D9D5CF] last:border-b-0 py-3">
                   {/* Year header */}
                   <div className="flex items-start gap-4">
                     <div className="w-14 flex-shrink-0">
@@ -383,7 +383,7 @@ export default function AwardDetailPage({ award, stats, topAuthors, yearGroups }
               <div className="text-center pt-6 pb-2">
                 <button
                   onClick={() => setShowAll(true)}
-                  className="px-6 py-2.5 bg-white border border-gray-200 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 hover:border-gray-300 transition-colors shadow-sm"
+                  className="px-6 py-2.5 bg-white border border-[#D9D5CF] rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 hover:border-gray-300 transition-colors"
                 >
                   すべて表示する（残り{hiddenYearCount}年分）
                 </button>
@@ -395,7 +395,7 @@ export default function AwardDetailPage({ award, stats, topAuthors, yearGroups }
         <AdSlot slot={AD_SLOTS.BLOG_AFTER_TOC} format="horizontal" />
 
         {/* 免責事項 */}
-        <div className="mt-6 pt-4 border-t border-gray-100">
+        <div className="mt-6 pt-4 border-t border-[#D9D5CF]">
           <p className="text-xs text-gray-400 leading-relaxed">
             ※ 受賞情報は各賞の公式発表をもとに編集部が収集・整理したものです。
             当サイトの戯曲データベースに掲載されている作品のみを表示しています。

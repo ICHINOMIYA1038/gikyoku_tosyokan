@@ -347,7 +347,7 @@ export default function GlossaryIndex() {
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   placeholder="用語・読み方・説明文から検索"
-                  className="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-theater-primary-600"
                 />
               </div>
             </div>
@@ -357,7 +357,7 @@ export default function GlossaryIndex() {
               <select
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
-                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-theater-primary-600"
               >
                 {categories.map(cat => (
                   <option key={cat} value={cat}>
@@ -386,7 +386,7 @@ export default function GlossaryIndex() {
                 </h2>
                 <div className="space-y-6">
                   {groupedTerms[group].map((term, index) => (
-                    <article key={index} className="bg-white p-6 rounded-lg shadow-sm border hover:shadow-md transition-shadow">
+                    <article key={index} className="bg-white p-6 rounded-lg border transition-shadow">
                       <header className="mb-3">
                         <h3 className="text-xl font-bold inline-block">
                           {term.term}
@@ -396,7 +396,7 @@ export default function GlossaryIndex() {
                             （{term.reading}）
                           </span>
                         )}
-                        <span className="ml-3 inline-block px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded">
+                        <span className="ml-3 inline-block px-2 py-1 text-xs bg-[#F4F2EE] text-theater-primary-700 rounded">
                           {term.category}
                         </span>
                       </header>
@@ -420,7 +420,7 @@ export default function GlossaryIndex() {
                               {i > 0 && "、"}
                               <button
                                 onClick={() => setSearchTerm(rel)}
-                                className="text-blue-600 hover:underline"
+                                className="text-theater-primary-700 hover:underline"
                               >
                                 {rel}
                               </button>
@@ -437,11 +437,11 @@ export default function GlossaryIndex() {
         </div>
 
         {/* 追加情報 */}
-        <section className="mt-12 bg-blue-50 p-8 rounded-lg">
+        <section className="mt-12 bg-[#F4F2EE] p-8 rounded-lg">
           <h2 className="text-2xl font-bold mb-4">用語集の使い方</h2>
           <div className="grid md:grid-cols-3 gap-6">
             <div>
-              <FaBook className="text-3xl text-blue-500 mb-2" />
+              <FaBook className="text-3xl text-gray-500 mb-2" />
               <h3 className="font-semibold mb-2">初心者の方へ</h3>
               <p className="text-sm text-gray-700">
                 まずは「舞台用語」カテゴリーから基本的な用語を覚えましょう。
@@ -450,7 +450,7 @@ export default function GlossaryIndex() {
             </div>
             
             <div>
-              <FaTheaterMasks className="text-3xl text-purple-500 mb-2" />
+              <FaTheaterMasks className="text-3xl text-gray-500 mb-2" />
               <h3 className="font-semibold mb-2">稽古で使える</h3>
               <p className="text-sm text-gray-700">
                 「稽古用語」カテゴリーには、練習で必要な用語がまとまっています。
@@ -459,7 +459,7 @@ export default function GlossaryIndex() {
             </div>
             
             <div>
-              <FaLightbulb className="text-3xl text-yellow-500 mb-2" />
+              <FaLightbulb className="text-3xl text-gray-500 mb-2" />
               <h3 className="font-semibold mb-2">実践的な例文</h3>
               <p className="text-sm text-gray-700">
                 各用語には実際の使用例を掲載。
@@ -476,7 +476,7 @@ export default function GlossaryIndex() {
             用語を覚えたら、実際に演劇に挑戦してみましょう
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/guide" className="inline-block bg-theater-primary-600 text-white px-6 py-3 rounded-lg hover:bg-theater-primary-600">
+            <Link href="/guide" className="inline-block bg-theater-primary-600 text-white px-6 py-3 rounded-lg hover:bg-theater-primary-700">
               演劇ガイドを読む
             </Link>
             <Link href="/" className="inline-block bg-gray-500 text-white px-6 py-3 rounded-lg hover:bg-gray-600">

@@ -275,9 +275,9 @@ export default function TimeGuide() {
         </header>
 
         {/* 時間別人気度グラフ */}
-        <section className="mb-12 bg-gradient-to-r from-orange-50 to-red-50 p-6 rounded-lg">
+        <section className="mb-12 p-6 rounded-lg">
           <h2 className="text-xl font-bold mb-4 flex items-center">
-            <FaChartBar className="mr-2 text-orange-500" />
+            <FaChartBar className="mr-2 text-gray-500" />
             上演時間別の人気度
           </h2>
           <div className="space-y-3">
@@ -287,7 +287,7 @@ export default function TimeGuide() {
                 <div className="flex-1 mx-4">
                   <div className="bg-white rounded-full h-8 relative">
                     <div 
-                      className="bg-gradient-to-r from-orange-400 to-red-400 h-full rounded-full flex items-center justify-end pr-2"
+                      className="h-full rounded-full flex items-center justify-end pr-2"
                       style={{ width: `${stat.percentage}%` }}
                     >
                       <span className="text-white text-xs font-bold">{stat.percentage}%</span>
@@ -302,16 +302,16 @@ export default function TimeGuide() {
 
         {/* クイック選択 */}
         <section className="mb-12">
-          <div className="bg-blue-50 p-6 rounded-lg">
+          <div className="bg-[#F4F2EE] p-6 rounded-lg">
             <h2 className="text-xl font-bold mb-4 text-center">上演時間から選ぶ</h2>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
               <button
                 onClick={() => setSelectedDuration("all")}
                 className={`p-3 rounded-lg text-center transition-all ${
-                  selectedDuration === "all" 
-                    ? "bg-theater-primary-600 text-white shadow-lg" 
-                    : "bg-white hover:bg-gray-50 border"
-                }`}
+ selectedDuration === "all" 
+ ? "bg-theater-primary-600 text-white " 
+ : "bg-white hover:bg-gray-50 border"
+ }`}
               >
                 <FaClock className="mx-auto mb-1 text-xl" />
                 <span className="text-sm font-medium">すべて</span>
@@ -321,10 +321,10 @@ export default function TimeGuide() {
                   key={guide.id}
                   onClick={() => setSelectedDuration(guide.id)}
                   className={`p-3 rounded-lg text-center transition-all ${
-                    selectedDuration === guide.id 
-                      ? "bg-theater-primary-600 text-white shadow-lg" 
-                      : "bg-white hover:bg-gray-50 border"
-                  }`}
+ selectedDuration === guide.id 
+ ? "bg-theater-primary-600 text-white " 
+ : "bg-white hover:bg-gray-50 border"
+ }`}
                 >
                   <FaClock className="mx-auto mb-1 text-xl" />
                   <span className="text-sm font-medium">{guide.duration}</span>
@@ -337,14 +337,14 @@ export default function TimeGuide() {
         {/* 時間別詳細ガイド */}
         <div className="space-y-12">
           {filteredGuides.map((guide, index) => (
-            <section key={index} className="bg-white rounded-lg shadow-sm border p-8">
+            <section key={index} className="bg-white rounded-lg border p-8">
               <header className="mb-6">
                 <div className="flex items-center justify-between mb-4">
                   <h2 className="text-2xl font-bold">
                     {guide.title}
                   </h2>
                   <div className="text-right">
-                    <span className="bg-blue-100 text-blue-700 px-4 py-2 rounded-full font-bold block mb-1">
+                    <span className="bg-[#F4F2EE] text-theater-primary-700 px-4 py-2 rounded-full font-bold block mb-1">
                       {guide.duration}
                     </span>
                     <span className="text-xs text-gray-500">{guide.realTime}</span>
@@ -356,7 +356,7 @@ export default function TimeGuide() {
               {/* 構成タイムライン */}
               <div className="mb-6">
                 <h3 className="font-semibold mb-3 flex items-center">
-                  <FaClock className="mr-2 text-blue-500" />
+                  <FaClock className="mr-2 text-gray-500" />
                   理想的な時間配分
                 </h3>
                 <div className="bg-gray-50 p-4 rounded-lg">
@@ -369,7 +369,7 @@ export default function TimeGuide() {
                         <div className="ml-4 flex-1">
                           <div className="flex justify-between items-start">
                             <strong className="text-gray-800">{section.section}</strong>
-                            <span className="text-sm text-blue-600 font-medium">{section.time}</span>
+                            <span className="text-sm text-theater-primary-700 font-medium">{section.time}</span>
                           </div>
                           <p className="text-sm text-gray-600 mt-1">{section.description}</p>
                         </div>
@@ -381,15 +381,15 @@ export default function TimeGuide() {
 
               <div className="grid md:grid-cols-2 gap-6 mb-6">
                 {/* おすすめシーン */}
-                <div className="bg-green-50 p-5 rounded-lg">
-                  <h3 className="font-semibold text-green-800 mb-3 flex items-center">
+                <div className="bg-[#F4F2EE] p-5 rounded-lg">
+                  <h3 className="font-semibold text-gray-900 mb-3 flex items-center">
                     <FaCheckCircle className="mr-2" />
                     最適な上演機会
                   </h3>
                   <ul className="space-y-2">
                     {guide.bestFor.map((item, i) => (
                       <li key={i} className="flex items-start">
-                        <span className="text-green-600 mr-2">✓</span>
+                        <span className="text-theater-primary-700 mr-2">✓</span>
                         <span className="text-sm text-gray-700">{item}</span>
                       </li>
                     ))}
@@ -397,15 +397,15 @@ export default function TimeGuide() {
                 </div>
 
                 {/* 注意点 */}
-                <div className="bg-yellow-50 p-5 rounded-lg">
-                  <h3 className="font-semibold text-yellow-800 mb-3 flex items-center">
+                <div className="bg-[#F4F2EE] p-5 rounded-lg">
+                  <h3 className="font-semibold text-gray-900 mb-3 flex items-center">
                     <FaExclamationTriangle className="mr-2" />
                     課題と対策
                   </h3>
                   <ul className="space-y-2">
                     {guide.challenges.map((challenge, i) => (
                       <li key={i} className="flex items-start">
-                        <span className="text-yellow-600 mr-2">!</span>
+                        <span className="text-theater-primary-700 mr-2">!</span>
                         <span className="text-sm text-gray-700">{challenge}</span>
                       </li>
                     ))}
@@ -416,12 +416,12 @@ export default function TimeGuide() {
               {/* 向いているジャンル */}
               <div className="mb-6">
                 <h3 className="font-semibold mb-3 flex items-center">
-                  <FaTheaterMasks className="mr-2 text-purple-500" />
+                  <FaTheaterMasks className="mr-2 text-gray-500" />
                   向いているジャンル
                 </h3>
                 <div className="flex flex-wrap gap-2">
                   {guide.genres.map((genre, i) => (
-                    <span key={i} className="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-sm">
+                    <span key={i} className="bg-[#F4F2EE] text-theater-primary-700 px-3 py-1 rounded-full text-sm">
                       {genre}
                     </span>
                   ))}
@@ -431,14 +431,14 @@ export default function TimeGuide() {
               {/* 成功のポイント */}
               <div className="mb-6">
                 <h3 className="font-semibold mb-3 flex items-center">
-                  <FaLightbulb className="mr-2 text-yellow-500" />
+                  <FaLightbulb className="mr-2 text-gray-500" />
                   成功のポイント
                 </h3>
-                <div className="bg-yellow-50 p-4 rounded-lg">
+                <div className="bg-[#F4F2EE] p-4 rounded-lg">
                   <ol className="space-y-2">
                     {guide.tips.map((tip, i) => (
                       <li key={i} className="flex items-start">
-                        <span className="bg-yellow-400 text-white rounded-full w-5 h-5 flex items-center justify-center flex-shrink-0 text-xs font-bold mr-2">
+                        <span className="bg-theater-primary-600 text-white rounded-full w-5 h-5 flex items-center justify-center flex-shrink-0 text-xs font-bold mr-2">
                           {i + 1}
                         </span>
                         <span className="text-sm text-gray-700">{tip}</span>
@@ -452,7 +452,7 @@ export default function TimeGuide() {
               <div className="text-center pt-4 border-t">
                 <Link 
                   href={guide.searchLink}
-                  className="inline-block bg-theater-primary-600 text-white px-6 py-3 rounded-lg hover:bg-theater-primary-600 transition-colors"
+                  className="inline-block bg-theater-primary-600 text-white px-6 py-3 rounded-lg hover:bg-theater-primary-700 transition-colors"
                 >
                   {guide.duration}の作品を探す →
                 </Link>
@@ -501,7 +501,7 @@ export default function TimeGuide() {
                 </div>
               </div>
               
-              <div className="bg-blue-50 p-4 rounded-lg">
+              <div className="bg-[#F4F2EE] p-4 rounded-lg">
                 <p className="text-sm">
                   <strong>💡 ヒント：</strong>
                   実際の上演時間は、演出（間の取り方、動き、音楽）により、
@@ -514,7 +514,7 @@ export default function TimeGuide() {
         </section>
 
         {/* 時間管理のコツ */}
-        <section className="mt-12 bg-purple-50 p-8 rounded-lg">
+        <section className="mt-12 bg-[#F4F2EE] p-8 rounded-lg">
           <h2 className="text-2xl font-bold mb-6">稽古での時間管理</h2>
           
           <div className="grid md:grid-cols-2 gap-6">
@@ -595,7 +595,7 @@ export default function TimeGuide() {
         <AdSlot slot={AD_SLOTS.BLOG_AFTER_TOC} format="horizontal" />
 
         {/* まとめとCTA */}
-        <section className="mt-12 bg-gradient-to-r from-blue-100 to-purple-100 p-8 rounded-lg text-center">
+        <section className="mt-12 p-8 rounded-lg text-center">
           <h2 className="text-2xl font-bold mb-4">時間を味方につけて成功へ</h2>
           <p className="mb-6 text-gray-700">
             上演時間は作品選びの重要な要素です。<br />
@@ -603,10 +603,10 @@ export default function TimeGuide() {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/" className="inline-block bg-theater-primary-600 text-white px-8 py-3 rounded-lg hover:bg-theater-primary-600 font-semibold">
+            <Link href="/" className="inline-block bg-theater-primary-600 text-white px-8 py-3 rounded-lg hover:bg-theater-primary-700 font-semibold">
               時間で作品を探す
             </Link>
-            <Link href="/guide/cast-size" className="inline-block bg-white text-blue-500 border-2 border-blue-500 px-8 py-3 rounded-lg hover:bg-blue-50 font-semibold">
+            <Link href="/guide/cast-size" className="inline-block bg-white text-gray-500 border-2 border-blue-500 px-8 py-3 rounded-lg hover:bg-[#F4F2EE] font-semibold">
               人数別ガイドを見る
             </Link>
           </div>

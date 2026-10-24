@@ -98,7 +98,7 @@ export default function CryingPlaysPage({ posts, totalCount }: CryingPlaysPagePr
         </header>
 
         {/* 選び方のポイント */}
-        <section className="bg-gray-50 border border-gray-200 rounded-lg p-6 mb-10">
+        <section className="bg-gray-50 border border-[#D9D5CF] rounded-lg p-6 mb-10">
           <h2 className="font-bold text-gray-800 mb-4">
             泣ける台本を選ぶポイント
           </h2>
@@ -133,7 +133,7 @@ export default function CryingPlaysPage({ posts, totalCount }: CryingPlaysPagePr
         {/* 作品一覧 */}
         <section>
           <h2 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-            <FaStar className="text-yellow-400" />
+            <FaStar className="text-gray-500" />
             おすすめの泣ける戯曲
           </h2>
           {posts.length > 0 ? (
@@ -166,7 +166,7 @@ export default function CryingPlaysPage({ posts, totalCount }: CryingPlaysPagePr
         </div>
 
         {/* 関連ページ */}
-        <section className="mt-12 border-t border-gray-200 pt-8">
+        <section className="mt-12 border-t border-[#D9D5CF] pt-8">
           <h2 className="text-lg font-bold text-gray-900 mb-4">関連ページ</h2>
           <div className="flex flex-wrap gap-3">
             <Link

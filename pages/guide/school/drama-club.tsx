@@ -431,9 +431,9 @@ export default function DramaClubGuide() {
         </header>
 
         {/* イントロダクション */}
-        <section className="mb-12 bg-gradient-to-r from-purple-50 to-pink-50 p-8 rounded-lg">
+        <section className="mb-12 p-8 rounded-lg">
           <h2 className="text-2xl font-bold mb-4 flex items-center">
-            <FaTheaterMasks className="mr-3 text-purple-500" />
+            <FaTheaterMasks className="mr-3 text-gray-500" />
             演劇部運営の基本
           </h2>
           <p className="mb-4 text-gray-700">
@@ -443,19 +443,19 @@ export default function DramaClubGuide() {
           </p>
           <div className="grid md:grid-cols-4 gap-4 mt-6">
             <div className="bg-white p-4 rounded-lg text-center">
-              <div className="text-3xl font-bold text-purple-600">30+</div>
+              <div className="text-3xl font-bold text-theater-primary-700">30+</div>
               <div className="text-sm text-gray-600">年間活動日数</div>
             </div>
             <div className="bg-white p-4 rounded-lg text-center">
-              <div className="text-3xl font-bold text-blue-600">3-5</div>
+              <div className="text-3xl font-bold text-theater-primary-700">3-5</div>
               <div className="text-sm text-gray-600">年間公演回数</div>
             </div>
             <div className="bg-white p-4 rounded-lg text-center">
-              <div className="text-3xl font-bold text-green-600">15-30</div>
+              <div className="text-3xl font-bold text-theater-primary-700">15-30</div>
               <div className="text-sm text-gray-600">理想的な部員数</div>
             </div>
             <div className="bg-white p-4 rounded-lg text-center">
-              <div className="text-3xl font-bold text-orange-600">100%</div>
+              <div className="text-3xl font-bold text-theater-primary-700">100%</div>
               <div className="text-sm text-gray-600">全員が主役</div>
             </div>
           </div>
@@ -467,40 +467,40 @@ export default function DramaClubGuide() {
             <button
               onClick={() => setActiveTab("yearly")}
               className={`px-4 py-2 rounded-lg transition-all ${
-                activeTab === "yearly"
-                  ? "bg-purple-500 text-white shadow"
-                  : "bg-white text-gray-700 hover:bg-gray-50"
-              }`}
+ activeTab === "yearly"
+ ? "bg-theater-primary-600 text-white shadow"
+ : "bg-white text-gray-700 hover:bg-gray-50"
+ }`}
             >
               年間スケジュール
             </button>
             <button
               onClick={() => setActiveTab("management")}
               className={`px-4 py-2 rounded-lg transition-all ${
-                activeTab === "management"
-                  ? "bg-purple-500 text-white shadow"
-                  : "bg-white text-gray-700 hover:bg-gray-50"
-              }`}
+ activeTab === "management"
+ ? "bg-theater-primary-600 text-white shadow"
+ : "bg-white text-gray-700 hover:bg-gray-50"
+ }`}
             >
               運営のポイント
             </button>
             <button
               onClick={() => setActiveTab("training")}
               className={`px-4 py-2 rounded-lg transition-all ${
-                activeTab === "training"
-                  ? "bg-purple-500 text-white shadow"
-                  : "bg-white text-gray-700 hover:bg-gray-50"
-              }`}
+ activeTab === "training"
+ ? "bg-theater-primary-600 text-white shadow"
+ : "bg-white text-gray-700 hover:bg-gray-50"
+ }`}
             >
               部員育成
             </button>
             <button
               onClick={() => setActiveTab("problems")}
               className={`px-4 py-2 rounded-lg transition-all ${
-                activeTab === "problems"
-                  ? "bg-purple-500 text-white shadow"
-                  : "bg-white text-gray-700 hover:bg-gray-50"
-              }`}
+ activeTab === "problems"
+ ? "bg-theater-primary-600 text-white shadow"
+ : "bg-white text-gray-700 hover:bg-gray-50"
+ }`}
             >
               トラブル対策
             </button>
@@ -515,14 +515,14 @@ export default function DramaClubGuide() {
               <div className="space-y-6">
                 {yearlyActivities.map((activity, index) => (
                   <div key={activity.id} className="bg-white border rounded-lg overflow-hidden">
-                    <div className={`p-4 bg-gradient-to-r ${
-                      index === 0 ? "from-green-50 to-blue-50" :
-                      index === 1 ? "from-blue-50 to-purple-50" :
-                      index === 2 ? "from-yellow-50 to-orange-50" :
-                      index === 3 ? "from-orange-50 to-red-50" :
-                      index === 4 ? "from-purple-50 to-pink-50" :
-                      "from-gray-50 to-blue-50"
-                    }`}>
+                    <div className={`p-4 ${
+ index === 0 ? " " :
+ index === 1 ? " " :
+ index === 2 ? " " :
+ index === 3 ? " " :
+ index === 4 ? " " :
+ " "
+ }`}>
                       <div className="flex items-center justify-between">
                         <div className="flex items-center">
                           <activity.icon className="text-2xl mr-3" />
@@ -536,33 +536,33 @@ export default function DramaClubGuide() {
                     <div className="p-6">
                       <div className="grid md:grid-cols-3 gap-6">
                         <div>
-                          <h4 className="font-semibold mb-3 text-blue-600">主な活動</h4>
+                          <h4 className="font-semibold mb-3 text-theater-primary-700">主な活動</h4>
                           <ul className="space-y-2">
                             {activity.tasks.map((task, i) => (
                               <li key={i} className="flex items-start text-sm">
-                                <span className="text-blue-400 mr-2">•</span>
+                                <span className="text-gray-500 mr-2">•</span>
                                 {task}
                               </li>
                             ))}
                           </ul>
                         </div>
                         <div>
-                          <h4 className="font-semibold mb-3 text-green-600">ポイント</h4>
+                          <h4 className="font-semibold mb-3 text-theater-primary-700">ポイント</h4>
                           <ul className="space-y-2">
                             {activity.tips.map((tip, i) => (
                               <li key={i} className="flex items-start text-sm">
-                                <span className="text-green-400 mr-2">✓</span>
+                                <span className="text-gray-500 mr-2">✓</span>
                                 {tip}
                               </li>
                             ))}
                           </ul>
                         </div>
                         <div>
-                          <h4 className="font-semibold mb-3 text-orange-600">注意点</h4>
+                          <h4 className="font-semibold mb-3 text-theater-primary-700">注意点</h4>
                           <ul className="space-y-2">
                             {activity.challenges.map((challenge, i) => (
                               <li key={i} className="flex items-start text-sm">
-                                <span className="text-orange-400 mr-2">!</span>
+                                <span className="text-gray-500 mr-2">!</span>
                                 {challenge}
                               </li>
                             ))}
@@ -583,7 +583,7 @@ export default function DramaClubGuide() {
                 {Object.entries(managementPoints).map(([key, section]) => (
                   <div key={key} className="bg-white border rounded-lg p-6">
                     <h3 className="text-xl font-bold mb-4 flex items-center">
-                      <section.icon className="mr-3 text-purple-500" />
+                      <section.icon className="mr-3 text-gray-500" />
                       {section.title}
                     </h3>
                     <div className="grid md:grid-cols-2 gap-6">
@@ -593,7 +593,7 @@ export default function DramaClubGuide() {
                           <ul className="space-y-2">
                             {item.items.map((point, i) => (
                               <li key={i} className="flex items-start text-sm">
-                                <span className="text-purple-400 mr-2 mt-1">▶</span>
+                                <span className="text-gray-500 mr-2 mt-1">▶</span>
                                 <span>{point}</span>
                               </li>
                             ))}
@@ -614,10 +614,10 @@ export default function DramaClubGuide() {
                 {trainingProgram.map((program, index) => (
                   <div key={index} className="bg-white border rounded-lg overflow-hidden">
                     <div className={`p-4 ${
-                      index === 0 ? "bg-green-50" :
-                      index === 1 ? "bg-blue-50" :
-                      "bg-purple-50"
-                    }`}>
+ index === 0 ? "bg-[#F4F2EE]" :
+ index === 1 ? "bg-[#F4F2EE]" :
+ "bg-[#F4F2EE]"
+ }`}>
                       <h3 className="font-bold text-lg">{program.level}</h3>
                       <p className="text-sm text-gray-600">{program.focus}</p>
                     </div>
@@ -641,7 +641,7 @@ export default function DramaClubGuide() {
                           <ul className="space-y-2">
                             {program.goals.map((goal, i) => (
                               <li key={i} className="flex items-start text-sm">
-                                <span className="text-green-500 mr-2">✓</span>
+                                <span className="text-gray-500 mr-2">✓</span>
                                 {goal}
                               </li>
                             ))}
@@ -660,7 +660,7 @@ export default function DramaClubGuide() {
                   {successTips.map((category, index) => (
                     <div key={index} className="bg-gray-50 p-5 rounded-lg">
                       <h4 className="font-semibold mb-3 flex items-center">
-                        <category.icon className="mr-2 text-purple-500" />
+                        <category.icon className="mr-2 text-gray-500" />
                         {category.category}
                       </h4>
                       <ul className="space-y-1">
@@ -680,7 +680,7 @@ export default function DramaClubGuide() {
           {activeTab === "problems" && (
             <div>
               <h2 className="text-2xl font-bold mb-6 flex items-center">
-                <FaExclamationTriangle className="mr-3 text-yellow-500" />
+                <FaExclamationTriangle className="mr-3 text-gray-500" />
                 よくある問題と解決策
               </h2>
               <div className="space-y-6">
@@ -701,11 +701,11 @@ export default function DramaClubGuide() {
                         </ul>
                       </div>
                       <div>
-                        <h4 className="font-semibold mb-2 text-green-700">解決策</h4>
+                        <h4 className="font-semibold mb-2 text-theater-primary-700">解決策</h4>
                         <ul className="space-y-1">
                           {item.solutions.map((solution, i) => (
                             <li key={i} className="text-sm">
-                              <span className="text-green-500 mr-1">✓</span>
+                              <span className="text-gray-500 mr-1">✓</span>
                               {solution}
                             </li>
                           ))}
@@ -735,19 +735,19 @@ export default function DramaClubGuide() {
               <tbody>
                 <tr className="border-t">
                   <td className="px-4 py-3">部費（20人×500円×12ヶ月）</td>
-                  <td className="px-4 py-3 text-right text-green-600">120,000円</td>
+                  <td className="px-4 py-3 text-right text-theater-primary-700">120,000円</td>
                   <td className="px-4 py-3 text-right">-</td>
                   <td className="px-4 py-3 text-sm text-gray-600">月額制</td>
                 </tr>
                 <tr className="border-t">
                   <td className="px-4 py-3">学校活動費</td>
-                  <td className="px-4 py-3 text-right text-green-600">50,000円</td>
+                  <td className="px-4 py-3 text-right text-theater-primary-700">50,000円</td>
                   <td className="px-4 py-3 text-right">-</td>
                   <td className="px-4 py-3 text-sm text-gray-600">年度配分</td>
                 </tr>
                 <tr className="border-t">
                   <td className="px-4 py-3">文化祭チケット収入</td>
-                  <td className="px-4 py-3 text-right text-green-600">30,000円</td>
+                  <td className="px-4 py-3 text-right text-theater-primary-700">30,000円</td>
                   <td className="px-4 py-3 text-right">-</td>
                   <td className="px-4 py-3 text-sm text-gray-600">300円×100枚</td>
                 </tr>
@@ -789,14 +789,14 @@ export default function DramaClubGuide() {
                 </tr>
                 <tr className="border-t bg-gray-50 font-bold">
                   <td className="px-4 py-3">合計</td>
-                  <td className="px-4 py-3 text-right text-green-600">200,000円</td>
+                  <td className="px-4 py-3 text-right text-theater-primary-700">200,000円</td>
                   <td className="px-4 py-3 text-right text-red-600">200,000円</td>
                   <td className="px-4 py-3 text-right">±0円</td>
                 </tr>
               </tbody>
             </table>
           </div>
-          <div className="mt-4 p-4 bg-blue-50 rounded-lg">
+          <div className="mt-4 p-4 bg-[#F4F2EE] rounded-lg">
             <p className="text-sm">
               <strong>💡 予算管理のポイント：</strong>
               収支のバランスを保ちながら、必要な投資は惜しまない。
@@ -855,7 +855,7 @@ export default function DramaClubGuide() {
         <AdSlot slot={AD_SLOTS.BLOG_AFTER_TOC} format="horizontal" />
 
         {/* まとめ */}
-        <section className="mb-12 bg-gradient-to-r from-blue-50 to-purple-50 p-8 rounded-lg">
+        <section className="mb-12 p-8 rounded-lg">
           <h2 className="text-2xl font-bold mb-4">演劇部を成功に導くために</h2>
           <p className="mb-6 text-gray-700">
             演劇部の運営は、計画性・組織力・情熱の3つが鍵となります。
@@ -891,10 +891,10 @@ export default function DramaClubGuide() {
             演劇部の活動に適した作品を、人数や上演時間から検索できます。
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/?minPlaytime=30&maxPlaytime=60&minCast=10&maxCast=20" className="inline-block bg-purple-500 text-white px-8 py-3 rounded-lg hover:bg-purple-600 font-semibold">
+            <Link href="/?minPlaytime=30&maxPlaytime=60&minCast=10&maxCast=20" className="inline-block bg-theater-primary-600 text-white px-8 py-3 rounded-lg hover:bg-theater-primary-700 font-semibold">
               部活動向け作品を探す
             </Link>
-            <Link href="/guide/school/culture-festival" className="inline-block bg-white text-purple-500 border-2 border-purple-500 px-8 py-3 rounded-lg hover:bg-purple-50 font-semibold">
+            <Link href="/guide/school/culture-festival" className="inline-block bg-white text-gray-500 border-2 border-purple-500 px-8 py-3 rounded-lg hover:bg-[#F4F2EE] font-semibold">
               文化祭ガイドを見る
             </Link>
           </div>

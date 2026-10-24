@@ -99,10 +99,10 @@ export function FilterBar({
         <button
           onClick={() => setOpen(!open)}
           className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs transition shrink-0 ${
-            isActive
-              ? "bg-rose-600 text-white border-rose-600"
-              : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
-          }`}
+ isActive
+ ? "bg-rose-600 text-white border-rose-600"
+ : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
+ }`}
         >
           <SlidersHorizontal className="w-3.5 h-3.5" />
           絞り込み
@@ -126,7 +126,7 @@ export function FilterBar({
       </div>
 
       {open && (
-        <div className="mt-3 rounded-lg border border-gray-200 bg-white p-4 space-y-4 md:max-h-none max-h-[70vh] overflow-y-auto">
+        <div className="mt-3 rounded-lg border border-[#D9D5CF] bg-white p-4 space-y-4 md:max-h-none max-h-[70vh] overflow-y-auto">
           <div>
             <p className="text-xs font-medium text-gray-700 mb-1.5">参加人数</p>
             <div className="flex flex-wrap gap-1.5">
@@ -135,10 +135,10 @@ export function FilterBar({
                   key={n ?? "none"}
                   onClick={() => setFilter({ ...filter, minPeople: n })}
                   className={`px-3 py-1 text-xs rounded-full border ${
-                    filter.minPeople === n
-                      ? "bg-rose-600 text-white border-rose-600"
-                      : "bg-white text-gray-700 border-gray-300"
-                  }`}
+ filter.minPeople === n
+ ? "bg-rose-600 text-white border-rose-600"
+ : "bg-white text-gray-700 border-gray-300"
+ }`}
                 >
                   {n == null ? "指定なし" : `${n}人${n === 20 ? "以上" : ""}`}
                 </button>
@@ -154,10 +154,10 @@ export function FilterBar({
                   key={n ?? "none"}
                   onClick={() => setFilter({ ...filter, maxDuration: n })}
                   className={`px-3 py-1 text-xs rounded-full border ${
-                    filter.maxDuration === n
-                      ? "bg-rose-600 text-white border-rose-600"
-                      : "bg-white text-gray-700 border-gray-300"
-                  }`}
+ filter.maxDuration === n
+ ? "bg-rose-600 text-white border-rose-600"
+ : "bg-white text-gray-700 border-gray-300"
+ }`}
                 >
                   {n == null ? "指定なし" : `${n}分`}
                 </button>
@@ -173,10 +173,10 @@ export function FilterBar({
                   key={n ?? "none"}
                   onClick={() => setFilter({ ...filter, maxDifficulty: n })}
                   className={`px-3 py-1 text-xs rounded-full border ${
-                    filter.maxDifficulty === n
-                      ? "bg-rose-600 text-white border-rose-600"
-                      : "bg-white text-gray-700 border-gray-300"
-                  }`}
+ filter.maxDifficulty === n
+ ? "bg-rose-600 text-white border-rose-600"
+ : "bg-white text-gray-700 border-gray-300"
+ }`}
                 >
                   {n == null ? "指定なし" : "★".repeat(n)}
                 </button>
@@ -202,10 +202,10 @@ export function FilterBar({
                 <button
                   onClick={() => setFilter({ ...filter, tag: null })}
                   className={`px-2.5 py-0.5 text-[11px] rounded border ${
-                    filter.tag === null
-                      ? "bg-rose-600 text-white border-rose-600"
-                      : "bg-white text-gray-600 border-gray-300"
-                  }`}
+ filter.tag === null
+ ? "bg-rose-600 text-white border-rose-600"
+ : "bg-white text-gray-600 border-gray-300"
+ }`}
                 >
                   すべて
                 </button>
@@ -214,10 +214,10 @@ export function FilterBar({
                     key={t}
                     onClick={() => setFilter({ ...filter, tag: t })}
                     className={`px-2.5 py-0.5 text-[11px] rounded border ${
-                      filter.tag === t
-                        ? "bg-rose-600 text-white border-rose-600"
-                        : "bg-white text-gray-600 border-gray-300 hover:bg-gray-50"
-                    }`}
+ filter.tag === t
+ ? "bg-rose-600 text-white border-rose-600"
+ : "bg-white text-gray-600 border-gray-300 hover:bg-gray-50"
+ }`}
                   >
                     #{t}
                   </button>

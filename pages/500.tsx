@@ -23,7 +23,7 @@ export default function Custom500() {
           </p>
           <div className="space-y-4">
             <Link href="/">
-              <button className="w-full bg-theater-primary-600 text-white py-3 px-6 rounded-lg hover:bg-theater-primary-600 transition-colors">
+              <button className="w-full bg-theater-primary-600 text-white py-3 px-6 rounded-lg hover:bg-theater-primary-700 transition-colors">
                 トップページへ戻る
               </button>
             </Link>
@@ -34,12 +34,12 @@ export default function Custom500() {
               ページを再読み込み
             </button>
           </div>
-          <div className="mt-8 pt-8 border-t border-gray-200">
+          <div className="mt-8 pt-8 border-t border-[#D9D5CF]">
             <p className="text-sm text-gray-500">
               問題が解決しない場合
             </p>
             <div className="mt-4">
-              <Link href="/support/contact" className="text-blue-500 hover:underline">
+              <Link href="/support/contact" className="text-gray-500 hover:underline">
                 お問い合わせページ
               </Link>
               <p className="text-sm text-gray-500 mt-2">

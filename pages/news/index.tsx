@@ -28,7 +28,7 @@ export default function NewsPage({ news }: Props) {
         <nav className="mb-6">
           <ol className="flex items-center gap-1 text-sm text-gray-600">
             <li className="flex items-center">
-              <Link href="/" className="hover:text-blue-600 transition-colors">
+              <Link href="/" className="hover:text-theater-primary-700 transition-colors">
                 <FaHome className="inline mr-1" />ホーム
               </Link>
             </li>

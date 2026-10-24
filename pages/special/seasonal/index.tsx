@@ -259,7 +259,7 @@ export default function SeasonalSpecial() {
         </section>
 
         {/* 選択された季節の詳細 */}
-        <section className={`mb-12 bg-gradient-to-r ${selectedTheme.bgGradient} p-8 rounded-lg`}>
+        <section className={`mb-12 ${selectedTheme.bgGradient} p-8 rounded-lg`}>
           <div className="flex items-center mb-6">
             <selectedTheme.icon className={`text-4xl text-${selectedTheme.color}-500 mr-4`} />
             <div>
@@ -326,7 +326,7 @@ export default function SeasonalSpecial() {
           
           <div className="grid md:grid-cols-3 gap-6">
             {selectedTheme.scriptIdeas.map((idea, index) => (
-              <div key={index} className="bg-white border rounded-lg p-6 hover:shadow-lg transition-shadow">
+              <div key={index} className="bg-white border rounded-lg p-6 transition-shadow">
                 <h3 className="font-bold text-lg mb-3">{idea.title}</h3>
                 <p className="text-sm text-gray-600 mb-4">{idea.description}</p>
                 <div className="space-y-2">
@@ -342,7 +342,7 @@ export default function SeasonalSpecial() {
                 <div className="mt-4 pt-4 border-t">
                   <Link 
                     href={`/?keywords=${selectedTheme.searchKeywords[0]}`}
-                    className="text-blue-600 hover:underline text-sm"
+                    className="text-theater-primary-700 hover:underline text-sm"
                   >
                     類似作品を探す →
                   </Link>
@@ -355,15 +355,15 @@ export default function SeasonalSpecial() {
         {/* 演出のコツ */}
         <section className="mb-12">
           <h2 className="text-2xl font-bold mb-6 flex items-center">
-            <FaLightbulb className="mr-3 text-yellow-500" />
+            <FaLightbulb className="mr-3 text-gray-500" />
             {selectedTheme.season}の演出のコツ
           </h2>
           
-          <div className="bg-yellow-50 p-6 rounded-lg">
+          <div className="bg-[#F4F2EE] p-6 rounded-lg">
             <ul className="space-y-3">
               {selectedTheme.tips.map((tip, index) => (
                 <li key={index} className="flex items-start">
-                  <span className="bg-yellow-400 text-white rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 text-sm mr-3">
+                  <span className="bg-theater-primary-600 text-white rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 text-sm mr-3">
                     {index + 1}
                   </span>
                   <span>{tip}</span>
@@ -394,7 +394,7 @@ export default function SeasonalSpecial() {
             </div>
           </div>
           
-          <div className="mt-4 p-4 bg-blue-50 rounded-lg">
+          <div className="mt-4 p-4 bg-[#F4F2EE] rounded-lg">
             <p className="text-sm">
               <strong>💡 ヒント：</strong>
               イベントの2-3ヶ月前から準備を始めると、余裕を持って上演できます。
@@ -422,8 +422,8 @@ export default function SeasonalSpecial() {
               </ol>
             </div>
 
-            <div className="bg-blue-50 p-6 rounded-lg">
-              <h3 className="font-bold mb-4 text-blue-700">
+            <div className="bg-[#F4F2EE] p-6 rounded-lg">
+              <h3 className="font-bold mb-4 text-theater-primary-700">
                 <FaSun className="inline mr-2" />
                 夏（夏休みシーズン）
               </h3>
@@ -436,8 +436,8 @@ export default function SeasonalSpecial() {
               </ol>
             </div>
 
-            <div className="bg-orange-50 p-6 rounded-lg">
-              <h3 className="font-bold mb-4 text-orange-700">
+            <div className="bg-[#F4F2EE] p-6 rounded-lg">
+              <h3 className="font-bold mb-4 text-theater-primary-700">
                 <FaLeaf className="inline mr-2" />
                 秋（文化祭シーズン）
               </h3>
@@ -450,8 +450,8 @@ export default function SeasonalSpecial() {
               </ol>
             </div>
 
-            <div className="bg-indigo-50 p-6 rounded-lg">
-              <h3 className="font-bold mb-4 text-indigo-700">
+            <div className="bg-[#F4F2EE] p-6 rounded-lg">
+              <h3 className="font-bold mb-4 text-theater-primary-700">
                 <FaSnowflake className="inline mr-2" />
                 冬（年末年始シーズン）
               </h3>
@@ -497,7 +497,7 @@ export default function SeasonalSpecial() {
 
             <div className="bg-white border rounded-lg p-6">
               <div className="flex items-start">
-                <FaGraduationCap className="text-2xl text-blue-500 mr-4 mt-1" />
+                <FaGraduationCap className="text-2xl text-gray-500 mr-4 mt-1" />
                 <div className="flex-1">
                   <h3 className="font-bold mb-2">卒業記念公演</h3>
                   <p className="text-sm text-gray-600 mb-3">
@@ -505,13 +505,13 @@ export default function SeasonalSpecial() {
                     在校生から卒業生へのサプライズ演出も。
                   </p>
                   <div className="flex flex-wrap gap-2">
-                    <span className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-xs">
+                    <span className="bg-[#F4F2EE] text-theater-primary-700 px-3 py-1 rounded-full text-xs">
                       感動系
                     </span>
-                    <span className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-xs">
+                    <span className="bg-[#F4F2EE] text-theater-primary-700 px-3 py-1 rounded-full text-xs">
                       60-90分
                     </span>
-                    <span className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-xs">
+                    <span className="bg-[#F4F2EE] text-theater-primary-700 px-3 py-1 rounded-full text-xs">
                       大人数
                     </span>
                   </div>
@@ -521,7 +521,7 @@ export default function SeasonalSpecial() {
 
             <div className="bg-white border rounded-lg p-6">
               <div className="flex items-start">
-                <FaSun className="text-2xl text-yellow-500 mr-4 mt-1" />
+                <FaSun className="text-2xl text-gray-500 mr-4 mt-1" />
                 <div className="flex-1">
                   <h3 className="font-bold mb-2">夏の野外公演</h3>
                   <p className="text-sm text-gray-600 mb-3">
@@ -529,13 +529,13 @@ export default function SeasonalSpecial() {
                     自然を活かした演出で、通常とは違う魅力を。
                   </p>
                   <div className="flex flex-wrap gap-2">
-                    <span className="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-xs">
+                    <span className="bg-[#F4F2EE] text-theater-primary-700 px-3 py-1 rounded-full text-xs">
                       ファンタジー
                     </span>
-                    <span className="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-xs">
+                    <span className="bg-[#F4F2EE] text-theater-primary-700 px-3 py-1 rounded-full text-xs">
                       45-60分
                     </span>
-                    <span className="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-xs">
+                    <span className="bg-[#F4F2EE] text-theater-primary-700 px-3 py-1 rounded-full text-xs">
                       中人数
                     </span>
                   </div>
@@ -545,7 +545,7 @@ export default function SeasonalSpecial() {
 
             <div className="bg-white border rounded-lg p-6">
               <div className="flex items-start">
-                <FaSnowflake className="text-2xl text-indigo-500 mr-4 mt-1" />
+                <FaSnowflake className="text-2xl text-gray-500 mr-4 mt-1" />
                 <div className="flex-1">
                   <h3 className="font-bold mb-2">クリスマス特別公演</h3>
                   <p className="text-sm text-gray-600 mb-3">
@@ -553,13 +553,13 @@ export default function SeasonalSpecial() {
                     サンタクロースの登場や、プレゼント企画も。
                   </p>
                   <div className="flex flex-wrap gap-2">
-                    <span className="bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full text-xs">
+                    <span className="bg-[#F4F2EE] text-theater-primary-700 px-3 py-1 rounded-full text-xs">
                       ファミリー向け
                     </span>
-                    <span className="bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full text-xs">
+                    <span className="bg-[#F4F2EE] text-theater-primary-700 px-3 py-1 rounded-full text-xs">
                       40-50分
                     </span>
-                    <span className="bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full text-xs">
+                    <span className="bg-[#F4F2EE] text-theater-primary-700 px-3 py-1 rounded-full text-xs">
                       全年齢
                     </span>
                   </div>
@@ -624,7 +624,7 @@ export default function SeasonalSpecial() {
               </div>
 
               <div className="flex items-start">
-                <div className="bg-green-500 text-white rounded-full w-10 h-10 flex items-center justify-center flex-shrink-0">
+                <div className="bg-theater-primary-600 text-white rounded-full w-10 h-10 flex items-center justify-center flex-shrink-0">
                   <FaStar />
                 </div>
                 <div className="ml-4 flex-1">
@@ -639,7 +639,7 @@ export default function SeasonalSpecial() {
         </section>
 
         {/* まとめ */}
-        <section className="mb-12 bg-gradient-to-r from-green-50 to-blue-50 p-8 rounded-lg">
+        <section className="mb-12 p-8 rounded-lg">
           <h2 className="text-2xl font-bold mb-4">季節を彩る演劇を</h2>
           
           <p className="mb-6 text-gray-700">
@@ -679,10 +679,10 @@ export default function SeasonalSpecial() {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/" className="inline-block bg-theater-primary-600 text-white px-8 py-3 rounded-lg hover:bg-theater-primary-600 font-semibold">
+            <Link href="/" className="inline-block bg-theater-primary-600 text-white px-8 py-3 rounded-lg hover:bg-theater-primary-700 font-semibold">
               作品を探す
             </Link>
-            <Link href="/guide" className="inline-block bg-white text-blue-500 border-2 border-blue-500 px-8 py-3 rounded-lg hover:bg-blue-50 font-semibold">
+            <Link href="/guide" className="inline-block bg-white text-gray-500 border-2 border-blue-500 px-8 py-3 rounded-lg hover:bg-[#F4F2EE] font-semibold">
               他のガイドを見る
             </Link>
           </div>

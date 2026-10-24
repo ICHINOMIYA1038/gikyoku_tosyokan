@@ -144,7 +144,7 @@ export default function EtudeGenerator({ categories }: Props) {
 
           <main className="flex-1 min-w-0 mt-6 md:mt-0">
             {/* エディトリアル風ヘッダー */}
-            <header className="mb-6 pb-5 border-b border-gray-200">
+            <header className="mb-6 pb-5 border-b border-[#D9D5CF]">
               <div className="flex items-start justify-between gap-3 mb-2">
                 <div>
                   <p className="text-[10px] font-semibold text-rose-600 tracking-widest uppercase mb-1.5">
@@ -178,10 +178,10 @@ export default function EtudeGenerator({ categories }: Props) {
                     key={k}
                     onClick={() => { sfx(playClick); setPoolKey(k); }}
                     className={`px-3 py-1.5 text-xs rounded transition ${
-                      poolKey === k
-                        ? "bg-gray-900 text-white"
-                        : "bg-white text-gray-700 border border-gray-200 hover:border-gray-400"
-                    }`}
+ poolKey === k
+ ? "bg-gray-900 text-white"
+ : "bg-white text-gray-700 border border-[#D9D5CF] hover:border-gray-400"
+ }`}
                   >
                     {POOLS[k].name}
                   </button>
@@ -190,11 +190,11 @@ export default function EtudeGenerator({ categories }: Props) {
             </div>
 
             {/* お題カード */}
-            <div className="rounded-xl border border-gray-200 bg-white overflow-hidden divide-y divide-gray-100">
+            <div className="rounded border border-[#D9D5CF] bg-white overflow-hidden divide-y divide-gray-100">
               {AXES.map((k, idx) => (
                 <div key={k} className="group">
                   <div className="flex items-stretch">
-                    <div className="w-16 md:w-20 shrink-0 flex flex-col items-center justify-center py-4 border-r border-gray-100 bg-gray-50/50">
+                    <div className="w-16 md:w-20 shrink-0 flex flex-col items-center justify-center py-4 border-r border-[#D9D5CF] bg-gray-50/50">
                       <span className="text-[10px] text-gray-400 font-mono">
                         {String(idx + 1).padStart(2, "0")}
                       </span>
@@ -219,10 +219,10 @@ export default function EtudeGenerator({ categories }: Props) {
                       <button
                         onClick={() => toggleLock(k)}
                         className={`p-2 rounded transition ${
-                          locks[k]
-                            ? "text-rose-600 bg-rose-50"
-                            : "text-gray-300 hover:text-gray-900 hover:bg-gray-50"
-                        }`}
+ locks[k]
+ ? "text-rose-600 bg-rose-50"
+ : "text-gray-300 hover:text-gray-900 hover:bg-gray-50"
+ }`}
                         title={locks[k] ? "ロック解除" : "ロック"}
                       >
                         {locks[k] ? <Lock className="w-4 h-4" /> : <Unlock className="w-4 h-4" />}
@@ -267,7 +267,7 @@ export default function EtudeGenerator({ categories }: Props) {
             </div>
 
             {savedPlan && (
-              <div className="mt-3 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-2.5 text-sm text-emerald-800 flex items-center gap-2">
+              <div className="mt-3 rounded-lg border border-[#D9D5CF] bg-[#F4F2EE] px-4 py-2.5 text-sm text-gray-900 flex items-center gap-2">
                 ✓ 「{savedPlan.title}」に追加しました。
                 <Link href={`/theater-menu/plans/${savedPlan.id}`} className="underline font-medium">
                   プランを開く

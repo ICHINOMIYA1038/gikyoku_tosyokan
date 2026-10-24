@@ -126,10 +126,10 @@ export default function AwardsIndex({ awards, totalRecords }: Props) {
         <div className="space-y-4">
           {awards.map((award) => (
             <Link key={award.slug} href={`/awards/${award.slug}`} className="block group">
-              <div className="border border-gray-150 rounded-lg p-5 hover:border-theater-primary-300 hover:shadow-sm transition-all">
+              <div className="border border-gray-150 rounded-lg p-5 hover:border-gray-500 transition-all">
                 <div className="flex items-start gap-4">
                   <div className="flex-shrink-0 mt-0.5">
-                    <FaTrophy className="text-amber-300 group-hover:text-amber-400 transition-colors" />
+                    <FaTrophy className="text-gray-500 group-hover:text-gray-500 transition-colors" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-3 mb-1">
@@ -145,7 +145,7 @@ export default function AwardsIndex({ awards, totalRecords }: Props) {
                       {award.yearRange && <span>{award.yearRange}</span>}
                     </div>
                     <div className="flex items-center gap-3 text-xs">
-                      <span className="text-amber-700">受賞: {award.winnerCount}件</span>
+                      <span className="text-theater-primary-700">受賞: {award.winnerCount}件</span>
                       {award.finalistCount > 0 && (
                         <span className="text-gray-400">最終候補: {award.finalistCount}件</span>
                       )}
@@ -178,7 +178,7 @@ export default function AwardsIndex({ awards, totalRecords }: Props) {
         <AdSlot slot={AD_SLOTS.CATEGORY_AFTER_LIST} format="horizontal" />
 
         {/* フッター説明 */}
-        <div className="mt-10 pt-6 border-t border-gray-100">
+        <div className="mt-10 pt-6 border-t border-[#D9D5CF]">
           <p className="text-xs text-gray-400 leading-relaxed">
             ※ 当サイトに掲載されている受賞情報は、各賞の公式発表をもとに編集部が独自に収集・整理したものです。
             掲載内容の正確性には万全を期しておりますが、最新の情報は各賞の公式サイトをご確認ください。

@@ -84,7 +84,7 @@ export default function ToolsIndex() {
       <div className="max-w-4xl mx-auto px-4 py-8">
         <div className="mb-8">
           <nav className="text-sm text-gray-500 mb-4">
-            <Link href="/" className="hover:text-blue-600">
+            <Link href="/" className="hover:text-theater-primary-700">
               ホーム
             </Link>
             <span className="mx-2">/</span>
@@ -103,7 +103,7 @@ export default function ToolsIndex() {
             <Link
               key={tool.href}
               href={tool.href}
-              className="group block bg-white border border-gray-200 rounded-xl p-5 hover:shadow-md hover:border-gray-300 transition-all"
+              className="group block bg-white border border-[#D9D5CF] rounded p-5 hover:border-gray-300 transition-all"
             >
               <div className="flex items-start gap-4">
                 <div
@@ -112,7 +112,7 @@ export default function ToolsIndex() {
                   {tool.icon}
                 </div>
                 <div>
-                  <h2 className="font-bold text-gray-900 group-hover:text-blue-600 transition-colors mb-1">
+                  <h2 className="font-bold text-gray-900 group-hover:text-theater-primary-700 transition-colors mb-1">
                     {tool.name}
                   </h2>
                   <p className="text-sm text-gray-500 leading-relaxed">

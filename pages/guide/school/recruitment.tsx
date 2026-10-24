@@ -238,9 +238,9 @@ export default function RecruitmentGuide() {
         </header>
 
         {/* イントロダクション */}
-        <section className="mb-12 bg-gradient-to-r from-yellow-50 to-orange-50 p-8 rounded-lg">
+        <section className="mb-12 p-8 rounded-lg">
           <h2 className="text-2xl font-bold mb-4 flex items-center">
-            <FaBullhorn className="mr-3 text-orange-500" />
+            <FaBullhorn className="mr-3 text-gray-500" />
             新入生勧誘の重要性
           </h2>
           <p className="mb-4 text-gray-700">
@@ -249,19 +249,19 @@ export default function RecruitmentGuide() {
           </p>
           <div className="grid md:grid-cols-4 gap-4 mt-6">
             <div className="bg-white p-4 rounded-lg text-center">
-              <div className="text-3xl font-bold text-orange-500 mb-1">73%</div>
+              <div className="text-3xl font-bold text-gray-500 mb-1">73%</div>
               <p className="text-sm text-gray-600">新歓公演を見て入部を決める割合</p>
             </div>
             <div className="bg-white p-4 rounded-lg text-center">
-              <div className="text-3xl font-bold text-yellow-500 mb-1">2週間</div>
+              <div className="text-3xl font-bold text-gray-500 mb-1">2週間</div>
               <p className="text-sm text-gray-600">勝負の勧誘期間</p>
             </div>
             <div className="bg-white p-4 rounded-lg text-center">
-              <div className="text-3xl font-bold text-green-500 mb-1">5-10名</div>
+              <div className="text-3xl font-bold text-gray-500 mb-1">5-10名</div>
               <p className="text-sm text-gray-600">平均的な新入部員数</p>
             </div>
             <div className="bg-white p-4 rounded-lg text-center">
-              <div className="text-3xl font-bold text-blue-500 mb-1">第一印象</div>
+              <div className="text-3xl font-bold text-gray-500 mb-1">第一印象</div>
               <p className="text-sm text-gray-600">最も重要な要素</p>
             </div>
           </div>
@@ -280,10 +280,10 @@ export default function RecruitmentGuide() {
                 key={tab.id}
                 onClick={() => setActiveSection(tab.id)}
                 className={`flex items-center px-4 py-2 rounded-lg transition-all ${
-                  activeSection === tab.id
-                    ? "bg-theater-primary-600 text-white shadow"
-                    : "bg-white text-gray-700 hover:bg-gray-50"
-                }`}
+ activeSection === tab.id
+ ? "bg-theater-primary-600 text-white shadow"
+ : "bg-white text-gray-700 hover:bg-gray-50"
+ }`}
               >
                 <tab.icon className="mr-2" />
                 {tab.label}
@@ -300,18 +300,18 @@ export default function RecruitmentGuide() {
             {/* スケジュール */}
             <div className="mb-8">
               <h3 className="text-xl font-bold mb-4 flex items-center">
-                <FaCalendarCheck className="mr-2 text-blue-500" />
+                <FaCalendarCheck className="mr-2 text-gray-500" />
                 新歓スケジュール
               </h3>
               
               <div className="space-y-6">
                 {recruitmentSchedule.map((phase, index) => (
                   <div key={index} className="bg-white border rounded-lg p-6">
-                    <h4 className="font-bold text-lg mb-4 text-blue-600">{phase.phase}</h4>
+                    <h4 className="font-bold text-lg mb-4 text-theater-primary-700">{phase.phase}</h4>
                     <div className="space-y-3">
                       {phase.tasks.map((item, i) => (
                         <div key={i} className="flex items-start">
-                          <FaCheckCircle className="text-green-500 mr-3 mt-1 flex-shrink-0" />
+                          <FaCheckCircle className="text-gray-500 mr-3 mt-1 flex-shrink-0" />
                           <div className="flex-1">
                             <strong className="block">{item.task}</strong>
                             <p className="text-sm text-gray-600">{item.detail}</p>
@@ -325,7 +325,7 @@ export default function RecruitmentGuide() {
             </div>
 
             {/* 準備チェックリスト */}
-            <div className="bg-yellow-50 p-6 rounded-lg">
+            <div className="bg-[#F4F2EE] p-6 rounded-lg">
               <h3 className="font-bold mb-4">準備チェックリスト</h3>
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
@@ -364,7 +364,7 @@ export default function RecruitmentGuide() {
                 <div key={index} className="bg-white border rounded-lg p-6">
                   <div className="flex justify-between items-start mb-4">
                     <div>
-                      <h3 className="text-xl font-bold text-purple-600">{type.type}</h3>
+                      <h3 className="text-xl font-bold text-theater-primary-700">{type.type}</h3>
                       <p className="text-gray-600 mt-1">{type.description}</p>
                     </div>
                     <div className="text-right">
@@ -390,7 +390,7 @@ export default function RecruitmentGuide() {
                   
                   <div className="grid md:grid-cols-2 gap-4 mb-4">
                     <div>
-                      <h4 className="font-semibold mb-2 text-green-600">メリット</h4>
+                      <h4 className="font-semibold mb-2 text-theater-primary-700">メリット</h4>
                       <ul className="space-y-1 text-sm">
                         {type.pros.map((pro, i) => (
                           <li key={i}>• {pro}</li>
@@ -407,7 +407,7 @@ export default function RecruitmentGuide() {
                     </div>
                   </div>
                   
-                  <div className="bg-blue-50 p-3 rounded">
+                  <div className="bg-[#F4F2EE] p-3 rounded">
                     <strong className="text-sm">例：</strong>
                     <p className="text-sm text-gray-700">{type.example}</p>
                   </div>
@@ -416,9 +416,9 @@ export default function RecruitmentGuide() {
             </div>
 
             {/* 公演のポイント */}
-            <div className="mt-8 bg-purple-50 p-6 rounded-lg">
+            <div className="mt-8 bg-[#F4F2EE] p-6 rounded-lg">
               <h3 className="font-bold mb-4 flex items-center">
-                <FaLightbulb className="mr-2 text-yellow-500" />
+                <FaLightbulb className="mr-2 text-gray-500" />
                 新歓公演成功のポイント
               </h3>
               <div className="grid md:grid-cols-2 gap-4">
@@ -451,7 +451,7 @@ export default function RecruitmentGuide() {
               <div className="grid md:grid-cols-2 gap-6">
                 {recruitmentTips.appeal.map((item, index) => (
                   <div key={index} className="bg-white border rounded-lg p-5">
-                    <h4 className="font-bold mb-2 text-blue-600">{item.target}</h4>
+                    <h4 className="font-bold mb-2 text-theater-primary-700">{item.target}</h4>
                     <p className="text-sm font-semibold mb-3 text-gray-700">
                       「{item.message}」
                     </p>
@@ -491,7 +491,7 @@ export default function RecruitmentGuide() {
             </div>
 
             {/* 勧誘ツール */}
-            <div className="bg-blue-50 p-6 rounded-lg">
+            <div className="bg-[#F4F2EE] p-6 rounded-lg">
               <h3 className="font-bold mb-4">効果的な勧誘ツール</h3>
               <div className="grid md:grid-cols-3 gap-4">
                 <div className="bg-white p-4 rounded">
@@ -537,44 +537,44 @@ export default function RecruitmentGuide() {
               
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="bg-white border rounded-lg p-6">
-                  <h4 className="font-bold mb-3 text-green-600">最初の1週間</h4>
+                  <h4 className="font-bold mb-3 text-theater-primary-700">最初の1週間</h4>
                   <ul className="space-y-2 text-sm">
                     <li className="flex items-start">
-                      <span className="text-green-500 mr-2">✓</span>
+                      <span className="text-gray-500 mr-2">✓</span>
                       <span>歓迎会で全員と顔合わせ</span>
                     </li>
                     <li className="flex items-start">
-                      <span className="text-green-500 mr-2">✓</span>
+                      <span className="text-gray-500 mr-2">✓</span>
                       <span>先輩とのペア制度導入</span>
                     </li>
                     <li className="flex items-start">
-                      <span className="text-green-500 mr-2">✓</span>
+                      <span className="text-gray-500 mr-2">✓</span>
                       <span>簡単な役割を与える</span>
                     </li>
                     <li className="flex items-start">
-                      <span className="text-green-500 mr-2">✓</span>
+                      <span className="text-gray-500 mr-2">✓</span>
                       <span>LINEグループに招待</span>
                     </li>
                   </ul>
                 </div>
                 
                 <div className="bg-white border rounded-lg p-6">
-                  <h4 className="font-bold mb-3 text-blue-600">最初の1ヶ月</h4>
+                  <h4 className="font-bold mb-3 text-theater-primary-700">最初の1ヶ月</h4>
                   <ul className="space-y-2 text-sm">
                     <li className="flex items-start">
-                      <span className="text-blue-500 mr-2">✓</span>
+                      <span className="text-gray-500 mr-2">✓</span>
                       <span>基礎練習で実力アップ実感</span>
                     </li>
                     <li className="flex items-start">
-                      <span className="text-blue-500 mr-2">✓</span>
+                      <span className="text-gray-500 mr-2">✓</span>
                       <span>小さな発表の機会を作る</span>
                     </li>
                     <li className="flex items-start">
-                      <span className="text-blue-500 mr-2">✓</span>
+                      <span className="text-gray-500 mr-2">✓</span>
                       <span>個人面談で不安を解消</span>
                     </li>
                     <li className="flex items-start">
-                      <span className="text-blue-500 mr-2">✓</span>
+                      <span className="text-gray-500 mr-2">✓</span>
                       <span>次回公演への参加意欲醸成</span>
                     </li>
                   </ul>
@@ -583,13 +583,13 @@ export default function RecruitmentGuide() {
             </div>
 
             {/* 新入部員向けプログラム */}
-            <div className="bg-gradient-to-r from-green-50 to-blue-50 p-6 rounded-lg mb-8">
+            <div className="p-6 rounded-lg mb-8">
               <h3 className="font-bold mb-4">新入部員育成プログラム</h3>
               
               <div className="space-y-4">
                 <div className="bg-white p-4 rounded-lg">
                   <div className="flex items-center mb-2">
-                    <span className="bg-green-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold mr-3">1</span>
+                    <span className="bg-theater-primary-600 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold mr-3">1</span>
                     <h4 className="font-semibold">第1週：オリエンテーション</h4>
                   </div>
                   <p className="text-sm text-gray-600 ml-11">
@@ -599,7 +599,7 @@ export default function RecruitmentGuide() {
                 
                 <div className="bg-white p-4 rounded-lg">
                   <div className="flex items-center mb-2">
-                    <span className="bg-green-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold mr-3">2</span>
+                    <span className="bg-theater-primary-600 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold mr-3">2</span>
                     <h4 className="font-semibold">第2-3週：基礎トレーニング</h4>
                   </div>
                   <p className="text-sm text-gray-600 ml-11">
@@ -609,7 +609,7 @@ export default function RecruitmentGuide() {
                 
                 <div className="bg-white p-4 rounded-lg">
                   <div className="flex items-center mb-2">
-                    <span className="bg-green-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold mr-3">3</span>
+                    <span className="bg-theater-primary-600 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold mr-3">3</span>
                     <h4 className="font-semibold">第4週：ミニ発表会</h4>
                   </div>
                   <p className="text-sm text-gray-600 ml-11">
@@ -619,7 +619,7 @@ export default function RecruitmentGuide() {
                 
                 <div className="bg-white p-4 rounded-lg">
                   <div className="flex items-center mb-2">
-                    <span className="bg-green-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold mr-3">4</span>
+                    <span className="bg-theater-primary-600 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold mr-3">4</span>
                     <h4 className="font-semibold">第2ヶ月〜：本格始動</h4>
                   </div>
                   <p className="text-sm text-gray-600 ml-11">
@@ -649,14 +649,14 @@ export default function RecruitmentGuide() {
         {/* 成功事例 */}
         <section className="mb-12">
           <h2 className="text-2xl font-bold mb-6 flex items-center">
-            <FaTrophy className="mr-3 text-yellow-500" />
+            <FaTrophy className="mr-3 text-gray-500" />
             新歓成功事例
           </h2>
           
           <div className="grid md:grid-cols-2 gap-6">
             {successStories.map((story, index) => (
               <div key={index} className="bg-white border rounded-lg p-6">
-                <h3 className="font-bold text-lg mb-3 text-blue-600">{story.title}</h3>
+                <h3 className="font-bold text-lg mb-3 text-theater-primary-700">{story.title}</h3>
                 <div className="space-y-3">
                   <div>
                     <strong className="text-sm text-gray-500">状況：</strong>
@@ -668,10 +668,10 @@ export default function RecruitmentGuide() {
                   </div>
                   <div>
                     <strong className="text-sm text-gray-500">結果：</strong>
-                    <p className="text-sm text-green-600 font-semibold">{story.result}</p>
+                    <p className="text-sm text-theater-primary-700 font-semibold">{story.result}</p>
                   </div>
                   <div className="pt-3 border-t">
-                    <span className="inline-block bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-xs">
+                    <span className="inline-block bg-[#F4F2EE] text-theater-primary-700 px-3 py-1 rounded-full text-xs">
                       💡 {story.keyPoint}
                     </span>
                   </div>
@@ -704,7 +704,7 @@ export default function RecruitmentGuide() {
                     {item.icon}
                   </div>
                   <div className="ml-6 bg-white p-4 rounded-lg shadow flex-1">
-                    <div className="font-bold text-blue-600">{item.date}</div>
+                    <div className="font-bold text-theater-primary-700">{item.date}</div>
                     <div className="text-sm">{item.task}</div>
                   </div>
                 </div>
@@ -716,7 +716,7 @@ export default function RecruitmentGuide() {
         <AdSlot slot={AD_SLOTS.BLOG_AFTER_TOC} format="horizontal" />
 
         {/* まとめ */}
-        <section className="mb-12 bg-gradient-to-r from-purple-50 to-pink-50 p-8 rounded-lg">
+        <section className="mb-12 p-8 rounded-lg">
           <h2 className="text-2xl font-bold mb-4">新歓成功の秘訣</h2>
           
           <div className="grid md:grid-cols-3 gap-4">
@@ -750,10 +750,10 @@ export default function RecruitmentGuide() {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/?minPlaytime=10&maxPlaytime=30" className="inline-block bg-theater-primary-600 text-white px-8 py-3 rounded-lg hover:bg-theater-primary-600 font-semibold">
+            <Link href="/?minPlaytime=10&maxPlaytime=30" className="inline-block bg-theater-primary-600 text-white px-8 py-3 rounded-lg hover:bg-theater-primary-700 font-semibold">
               30分以内の作品を探す
             </Link>
-            <Link href="/guide/school/culture-festival" className="inline-block bg-white text-blue-500 border-2 border-blue-500 px-8 py-3 rounded-lg hover:bg-blue-50 font-semibold">
+            <Link href="/guide/school/culture-festival" className="inline-block bg-white text-gray-500 border-2 border-blue-500 px-8 py-3 rounded-lg hover:bg-[#F4F2EE] font-semibold">
               文化祭ガイドを見る
             </Link>
           </div>

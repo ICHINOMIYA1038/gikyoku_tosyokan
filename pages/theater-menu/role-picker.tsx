@@ -145,7 +145,7 @@ export default function RolePicker({ categories }: Props) {
           <TheaterMenuSidebar categories={categories} />
 
           <main className="flex-1 min-w-0 mt-6 md:mt-0">
-            <header className="mb-6 pb-5 border-b border-gray-200">
+            <header className="mb-6 pb-5 border-b border-[#D9D5CF]">
               <div className="flex items-start justify-between gap-3 mb-2">
                 <div>
                   <p className="text-[10px] font-semibold text-rose-600 tracking-widest uppercase mb-1.5">
@@ -169,8 +169,8 @@ export default function RolePicker({ categories }: Props) {
 
             <div className="grid gap-5 md:grid-cols-5">
               {/* 参加者 */}
-              <section className="md:col-span-3 rounded-xl border border-gray-200 bg-white p-5">
-                <div className="flex items-center justify-between mb-3 pb-2 border-b border-gray-100">
+              <section className="md:col-span-3 rounded border border-[#D9D5CF] bg-white p-5">
+                <div className="flex items-center justify-between mb-3 pb-2 border-b border-[#D9D5CF]">
                   <h2 className="text-sm font-bold text-gray-900 flex items-center gap-1.5">
                     <Users className="w-4 h-4 text-rose-500" />
                     参加者
@@ -229,31 +229,31 @@ export default function RolePicker({ categories }: Props) {
                     ))}
                   </ul>
                 ) : (
-                  <p className="text-center text-xs text-gray-400 py-6 border border-dashed border-gray-200 rounded">
+                  <p className="text-center text-xs text-gray-400 py-6 border border-dashed border-[#D9D5CF] rounded">
                     参加者を追加してください
                   </p>
                 )}
               </section>
 
               {/* 設定 */}
-              <section className="md:col-span-2 rounded-xl border border-gray-200 bg-white p-5">
-                <h2 className="text-sm font-bold text-gray-900 mb-3 pb-2 border-b border-gray-100">
+              <section className="md:col-span-2 rounded border border-[#D9D5CF] bg-white p-5">
+                <h2 className="text-sm font-bold text-gray-900 mb-3 pb-2 border-b border-[#D9D5CF]">
                   抽選モード
                 </h2>
                 <div className="flex gap-1 mb-4 p-1 rounded-lg bg-gray-100">
                   <button
                     onClick={() => { sfx(playClick); setMode("roles"); }}
                     className={`flex-1 py-1.5 text-xs rounded transition ${
-                      mode === "roles" ? "bg-white text-gray-900 shadow-sm font-medium" : "text-gray-500"
-                    }`}
+ mode === "roles" ? "bg-white text-gray-900 font-medium" : "text-gray-500"
+ }`}
                   >
                     役割配布
                   </button>
                   <button
                     onClick={() => { sfx(playClick); setMode("groups"); }}
                     className={`flex-1 py-1.5 text-xs rounded transition ${
-                      mode === "groups" ? "bg-white text-gray-900 shadow-sm font-medium" : "text-gray-500"
-                    }`}
+ mode === "groups" ? "bg-white text-gray-900 font-medium" : "text-gray-500"
+ }`}
                   >
                     グループ分け
                   </button>
@@ -311,8 +311,8 @@ export default function RolePicker({ categories }: Props) {
 
             {/* 結果 */}
             {participants.length > 0 && (
-              <section className="mt-6 rounded-xl border border-gray-200 bg-white p-5">
-                <div className="flex items-center justify-between mb-4 pb-2 border-b border-gray-100">
+              <section className="mt-6 rounded border border-[#D9D5CF] bg-white p-5">
+                <div className="flex items-center justify-between mb-4 pb-2 border-b border-[#D9D5CF]">
                   <h2 className="text-sm font-bold text-gray-900">結果</h2>
                   <button
                     onClick={openQr}
@@ -328,7 +328,7 @@ export default function RolePicker({ categories }: Props) {
                   ) : (
                     <ul className="grid gap-2 sm:grid-cols-2">
                       {roleAssignment.map((r, i) => (
-                        <li key={i} className="rounded-lg border border-gray-100 px-4 py-3">
+                        <li key={i} className="rounded-lg border border-[#D9D5CF] px-4 py-3">
                           <div className="flex items-center justify-between">
                             <span className="text-sm font-medium text-gray-900 truncate">{r.name}</span>
                             <span className="text-[11px] px-2 py-0.5 rounded bg-gray-900 text-white font-medium shrink-0">
@@ -348,8 +348,8 @@ export default function RolePicker({ categories }: Props) {
                 ) : (
                   <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                     {groups.map((g, i) => (
-                      <div key={i} className="rounded-lg border border-gray-100 p-3">
-                        <p className="text-xs font-bold text-gray-900 mb-2 pb-1.5 border-b border-gray-100">
+                      <div key={i} className="rounded-lg border border-[#D9D5CF] p-3">
+                        <p className="text-xs font-bold text-gray-900 mb-2 pb-1.5 border-b border-[#D9D5CF]">
                           グループ {i + 1}
                           <span className="ml-1 text-gray-400 font-normal">({g.length}人)</span>
                         </p>
@@ -384,7 +384,7 @@ export default function RolePicker({ categories }: Props) {
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            className="bg-white rounded-2xl p-6 max-w-md w-full"
+            className="bg-white rounded p-6 max-w-md w-full"
           >
             <h3 className="text-base font-bold text-gray-900 mb-1">QRコードで共有</h3>
             <p className="text-xs text-gray-500 mb-4">スマホで読み取ると結果ページが開きます</p>

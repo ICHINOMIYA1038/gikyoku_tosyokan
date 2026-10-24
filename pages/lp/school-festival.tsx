@@ -119,7 +119,7 @@ export default function SchoolFestivalPage({
         </header>
 
         {/* ネタ選びのステップ */}
-        <section className="bg-blue-50/40 border border-blue-100 rounded-lg p-6 mb-10">
+        <section className="bg-[#F4F2EE] border border-[#D9D5CF] rounded-lg p-6 mb-10">
           <h2 className="font-bold text-gray-800 mb-3">
             文化祭の劇ネタ 選び方の3ステップ
           </h2>
@@ -131,13 +131,13 @@ export default function SchoolFestivalPage({
               <span className="font-semibold">上演時間と人数を確認</span> — 持ち時間とクラスの人数に合う作品に絞る
             </li>
             <li>
-              <span className="font-semibold">著作権と入手方法をチェック</span> — 有料台本ならライセンス、無料なら<Link href="/lp/free-scripts" className="text-blue-600 underline">フリー台本</Link>を検討
+              <span className="font-semibold">著作権と入手方法をチェック</span> — 有料台本ならライセンス、無料なら<Link href="/lp/free-scripts" className="text-theater-primary-700 underline">フリー台本</Link>を検討
             </li>
           </ol>
         </section>
 
         {/* 脚本選びのポイント */}
-        <section className="bg-gray-50 border border-gray-200 rounded-lg p-6 mb-10">
+        <section className="bg-gray-50 border border-[#D9D5CF] rounded-lg p-6 mb-10">
           <h2 className="font-bold text-gray-800 mb-4">
             文化祭の脚本選び 3つのポイント
           </h2>
@@ -179,7 +179,7 @@ export default function SchoolFestivalPage({
         </section>
 
         {/* 文化祭ガイドリンク */}
-        <div className="bg-white border border-gray-200 rounded-lg p-5 mb-10">
+        <div className="bg-white border border-[#D9D5CF] rounded-lg p-5 mb-10">
           <h2 className="font-bold text-gray-800 mb-1">
             文化祭演劇 完全ガイド
           </h2>
@@ -188,7 +188,7 @@ export default function SchoolFestivalPage({
           </p>
           <Link
             href="/guide/school/culture-festival"
-            className="inline-flex items-center gap-1.5 text-sm font-medium text-blue-600 hover:text-blue-800"
+            className="inline-flex items-center gap-1.5 text-sm font-medium text-theater-primary-700 hover:text-theater-primary-800"
           >
             文化祭演劇ガイドを読む →
           </Link>
@@ -202,14 +202,14 @@ export default function SchoolFestivalPage({
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             <Link
               href="/?maxPlaytime=30&maxTotalCount=10"
-              className="block p-4 border border-gray-200 rounded-lg hover:border-gray-400 hover:bg-gray-50 transition-all text-center"
+              className="block p-4 border border-[#D9D5CF] rounded-lg hover:border-gray-400 hover:bg-gray-50 transition-all text-center"
             >
               <span className="font-semibold block text-sm">30分以内</span>
               <p className="text-xs text-gray-500 mt-1">短時間で完結</p>
             </Link>
             <Link
               href="/?maxPlaytime=45&minTotalCount=5&maxTotalCount=10"
-              className="block p-4 border border-gray-200 rounded-lg hover:border-gray-400 hover:bg-gray-50 transition-all text-center"
+              className="block p-4 border border-[#D9D5CF] rounded-lg hover:border-gray-400 hover:bg-gray-50 transition-all text-center"
             >
               <span className="font-semibold block text-sm">
                 5〜10人・45分以内
@@ -218,14 +218,14 @@ export default function SchoolFestivalPage({
             </Link>
             <Link
               href="/?maxPlaytime=60&category=コメディ&maxTotalCount=15"
-              className="block p-4 border border-gray-200 rounded-lg hover:border-gray-400 hover:bg-gray-50 transition-all text-center"
+              className="block p-4 border border-[#D9D5CF] rounded-lg hover:border-gray-400 hover:bg-gray-50 transition-all text-center"
             >
               <span className="font-semibold block text-sm">コメディ</span>
               <p className="text-xs text-gray-500 mt-1">観客が盛り上がる</p>
             </Link>
             <Link
               href="/?maxPlaytime=60&minTotalCount=10&maxTotalCount=15"
-              className="block p-4 border border-gray-200 rounded-lg hover:border-gray-400 hover:bg-gray-50 transition-all text-center"
+              className="block p-4 border border-[#D9D5CF] rounded-lg hover:border-gray-400 hover:bg-gray-50 transition-all text-center"
             >
               <span className="font-semibold block text-sm">10〜15人</span>
               <p className="text-xs text-gray-500 mt-1">クラス劇向け</p>
@@ -244,42 +244,42 @@ export default function SchoolFestivalPage({
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
             <Link
               href="/?category=%E3%82%B3%E3%83%A1%E3%83%87%E3%82%A3&maxPlaytime=60"
-              className="block p-4 border border-gray-200 rounded-lg hover:border-orange-400 hover:bg-orange-50/50 transition-all"
+              className="block p-4 border border-[#D9D5CF] rounded-lg hover:border-[#D9D5CF] hover:bg-[#F4F2EE] transition-all"
             >
               <span className="font-semibold block">🎭 コメディ・喜劇</span>
               <p className="text-xs text-gray-500 mt-1">笑いで盛り上げる王道ネタ</p>
             </Link>
             <Link
               href="/?category=%E3%83%92%E3%83%A5%E3%83%BC%E3%83%9E%E3%83%B3%E3%83%89%E3%83%A9%E3%83%9E&maxPlaytime=60"
-              className="block p-4 border border-gray-200 rounded-lg hover:border-pink-400 hover:bg-pink-50/50 transition-all"
+              className="block p-4 border border-[#D9D5CF] rounded-lg hover:border-[#D9D5CF] hover:bg-[#F4F2EE] transition-all"
             >
               <span className="font-semibold block">💫 ヒューマンドラマ</span>
               <p className="text-xs text-gray-500 mt-1">感動で締める定番</p>
             </Link>
             <Link
               href="/?category=%E3%83%9F%E3%82%B9%E3%83%86%E3%83%AA%E3%83%BC&maxPlaytime=60"
-              className="block p-4 border border-gray-200 rounded-lg hover:border-indigo-400 hover:bg-indigo-50/50 transition-all"
+              className="block p-4 border border-[#D9D5CF] rounded-lg hover:border-[#D9D5CF] hover:bg-[#F4F2EE] transition-all"
             >
               <span className="font-semibold block">🔍 ミステリー・サスペンス</span>
               <p className="text-xs text-gray-500 mt-1">最後まで目が離せない</p>
             </Link>
             <Link
               href="/?category=%E3%83%95%E3%82%A1%E3%83%B3%E3%82%BF%E3%82%B8%E3%83%BC&maxPlaytime=60"
-              className="block p-4 border border-gray-200 rounded-lg hover:border-purple-400 hover:bg-purple-50/50 transition-all"
+              className="block p-4 border border-[#D9D5CF] rounded-lg hover:border-[#D9D5CF] hover:bg-[#F4F2EE] transition-all"
             >
               <span className="font-semibold block">✨ ファンタジー</span>
               <p className="text-xs text-gray-500 mt-1">世界観で魅せる</p>
             </Link>
             <Link
               href="/?category=%E9%9D%92%E6%98%A5&maxPlaytime=60"
-              className="block p-4 border border-gray-200 rounded-lg hover:border-green-400 hover:bg-green-50/50 transition-all"
+              className="block p-4 border border-[#D9D5CF] rounded-lg hover:border-[#D9D5CF] hover:bg-[#F4F2EE] transition-all"
             >
               <span className="font-semibold block">🌱 青春</span>
               <p className="text-xs text-gray-500 mt-1">学生が演じやすい</p>
             </Link>
             <Link
               href="/lp/two-person-plays"
-              className="block p-4 border border-gray-200 rounded-lg hover:border-gray-400 hover:bg-gray-50 transition-all"
+              className="block p-4 border border-[#D9D5CF] rounded-lg hover:border-gray-400 hover:bg-gray-50 transition-all"
             >
               <span className="font-semibold block">👥 少人数(2〜3人)</span>
               <p className="text-xs text-gray-500 mt-1">濃密な会話劇で勝負</p>
@@ -348,7 +348,7 @@ export default function SchoolFestivalPage({
         </div>
 
         {/* フリー台本リンク */}
-        <div className="mt-10 bg-gray-50 border border-gray-200 rounded-lg p-5">
+        <div className="mt-10 bg-gray-50 border border-[#D9D5CF] rounded-lg p-5">
           <h2 className="font-bold text-gray-800 mb-1">
             フリー台本もチェック
           </h2>
@@ -357,14 +357,14 @@ export default function SchoolFestivalPage({
           </p>
           <Link
             href="/lp/free-scripts"
-            className="inline-flex items-center gap-1.5 text-sm font-medium text-blue-600 hover:text-blue-800"
+            className="inline-flex items-center gap-1.5 text-sm font-medium text-theater-primary-700 hover:text-theater-primary-800"
           >
             フリー台本まとめを見る →
           </Link>
         </div>
 
         {/* 関連ページ */}
-        <section className="mt-12 border-t border-gray-200 pt-8">
+        <section className="mt-12 border-t border-[#D9D5CF] pt-8">
           <h2 className="text-lg font-bold text-gray-900 mb-4">関連ページ</h2>
           <div className="flex flex-wrap gap-3">
             <Link

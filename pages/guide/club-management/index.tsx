@@ -314,10 +314,10 @@ export default function ClubManagement() {
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
                 className={`flex items-center px-4 py-2 rounded-lg transition-all ${
-                  activeTab === tab.id
-                    ? "bg-theater-primary-600 text-white shadow"
-                    : "bg-white text-gray-700 hover:bg-gray-50"
-                }`}
+ activeTab === tab.id
+ ? "bg-theater-primary-600 text-white shadow"
+ : "bg-white text-gray-700 hover:bg-gray-50"
+ }`}
               >
                 <tab.icon className="mr-2" />
                 {tab.label}
@@ -330,11 +330,11 @@ export default function ClubManagement() {
         {activeTab === "yearly-schedule" && (
           <section className="mb-12">
             <h2 className="text-2xl font-bold mb-6 flex items-center">
-              <FaCalendarAlt className="mr-3 text-blue-500" />
+              <FaCalendarAlt className="mr-3 text-gray-500" />
               年間スケジュール
             </h2>
             
-            <div className="bg-blue-50 p-6 rounded-lg mb-6">
+            <div className="bg-[#F4F2EE] p-6 rounded-lg mb-6">
               <p className="text-sm text-gray-700">
                 演劇部の1年間の流れを把握し、計画的に活動を進めましょう。
                 重要な月は特に早めの準備が必要です。
@@ -346,8 +346,8 @@ export default function ClubManagement() {
                 <div 
                   key={index} 
                   className={`border rounded-lg p-4 ${
-                    month.important ? "border-red-300 bg-red-50" : "border-gray-200 bg-white"
-                  }`}
+ month.important ? "border-red-300 bg-red-50" : "border-[#D9D5CF] bg-white"
+ }`}
                 >
                   <div className="flex items-center justify-between mb-3">
                     <h3 className="font-bold text-lg">{month.month}</h3>
@@ -358,7 +358,7 @@ export default function ClubManagement() {
                   <ul className="space-y-1 mb-3">
                     {month.activities.map((activity, i) => (
                       <li key={i} className="flex items-start">
-                        <span className="text-blue-500 mr-2">•</span>
+                        <span className="text-gray-500 mr-2">•</span>
                         <span className="text-sm">{activity}</span>
                       </li>
                     ))}
@@ -374,7 +374,7 @@ export default function ClubManagement() {
               ))}
             </div>
 
-            <div className="mt-8 bg-yellow-50 p-6 rounded-lg">
+            <div className="mt-8 bg-[#F4F2EE] p-6 rounded-lg">
               <h3 className="font-bold mb-3">年間スケジュール作成のポイント</h3>
               <ul className="space-y-2 text-sm">
                 <li>• 大きなイベント（文化祭・卒業公演）から逆算して計画</li>
@@ -391,11 +391,11 @@ export default function ClubManagement() {
         {activeTab === "budget" && (
           <section className="mb-12">
             <h2 className="text-2xl font-bold mb-6 flex items-center">
-              <FaYenSign className="mr-3 text-green-500" />
+              <FaYenSign className="mr-3 text-gray-500" />
               予算管理
             </h2>
 
-            <div className="bg-green-50 p-6 rounded-lg mb-6">
+            <div className="bg-[#F4F2EE] p-6 rounded-lg mb-6">
               <p className="text-sm text-gray-700">
                 限られた予算を効率的に使うことが、演劇部運営の要です。
                 収支を明確にし、計画的な運用を心がけましょう。
@@ -407,8 +407,8 @@ export default function ClubManagement() {
               {budgetItems.map((section, index) => (
                 <div key={index} className="bg-white border rounded-lg p-6">
                   <h3 className={`font-bold text-lg mb-4 ${
-                    section.category === "収入" ? "text-green-600" : "text-red-600"
-                  }`}>
+ section.category === "収入" ? "text-theater-primary-700" : "text-red-600"
+ }`}>
                     {section.category}
                   </h3>
                   <div className="space-y-2">
@@ -435,7 +435,7 @@ export default function ClubManagement() {
             <div className="bg-gray-100 p-6 rounded-lg mb-6">
               <div className="text-center">
                 <p className="text-lg mb-2">年間収支</p>
-                <div className="text-3xl font-bold text-blue-600">
+                <div className="text-3xl font-bold text-theater-primary-700">
                   ¥{(220000 - 200000).toLocaleString()}
                 </div>
                 <p className="text-sm text-gray-600 mt-2">
@@ -445,7 +445,7 @@ export default function ClubManagement() {
             </div>
 
             {/* 節約のコツ */}
-            <div className="bg-yellow-50 p-6 rounded-lg">
+            <div className="bg-[#F4F2EE] p-6 rounded-lg">
               <h3 className="font-bold mb-3">予算節約のコツ</h3>
               <div className="grid md:grid-cols-2 gap-4">
                 <ul className="space-y-2 text-sm">
@@ -469,11 +469,11 @@ export default function ClubManagement() {
         {activeTab === "roles" && (
           <section className="mb-12">
             <h2 className="text-2xl font-bold mb-6 flex items-center">
-              <FaUsers className="mr-3 text-purple-500" />
+              <FaUsers className="mr-3 text-gray-500" />
               役職分担と仕事内容
             </h2>
 
-            <div className="bg-purple-50 p-6 rounded-lg mb-6">
+            <div className="bg-[#F4F2EE] p-6 rounded-lg mb-6">
               <p className="text-sm text-gray-700">
                 明確な役割分担が、スムーズな部活運営の鍵です。
                 各自の適性を見極めて、最適な配置を行いましょう。
@@ -483,7 +483,7 @@ export default function ClubManagement() {
             <div className="grid md:grid-cols-2 gap-6">
               {roles.map((role, index) => (
                 <div key={index} className="bg-white border rounded-lg p-6">
-                  <h3 className="font-bold text-lg mb-3 text-purple-600">
+                  <h3 className="font-bold text-lg mb-3 text-theater-primary-700">
                     {role.title}
                   </h3>
                   <div className="mb-4">
@@ -491,7 +491,7 @@ export default function ClubManagement() {
                     <ul className="space-y-1">
                       {role.responsibilities.map((resp, i) => (
                         <li key={i} className="flex items-start">
-                          <FaCheckSquare className="text-green-500 mr-2 mt-1 flex-shrink-0 text-xs" />
+                          <FaCheckSquare className="text-gray-500 mr-2 mt-1 flex-shrink-0 text-xs" />
                           <span className="text-sm">{resp}</span>
                         </li>
                       ))}
@@ -506,7 +506,7 @@ export default function ClubManagement() {
               ))}
             </div>
 
-            <div className="mt-8 bg-blue-50 p-6 rounded-lg">
+            <div className="mt-8 bg-[#F4F2EE] p-6 rounded-lg">
               <h3 className="font-bold mb-3">組織運営のポイント</h3>
               <ul className="space-y-2 text-sm">
                 <li>• 定期的な幹部会議（週1回）を開催</li>
@@ -523,11 +523,11 @@ export default function ClubManagement() {
         {activeTab === "practice" && (
           <section className="mb-12">
             <h2 className="text-2xl font-bold mb-6 flex items-center">
-              <FaChalkboardTeacher className="mr-3 text-orange-500" />
+              <FaChalkboardTeacher className="mr-3 text-gray-500" />
               効果的な稽古計画
             </h2>
 
-            <div className="bg-orange-50 p-6 rounded-lg mb-6">
+            <div className="bg-[#F4F2EE] p-6 rounded-lg mb-6">
               <p className="text-sm text-gray-700">
                 計画的な稽古が、確実な上達につながります。
                 基礎から応用まで、段階的にスキルアップを図りましょう。
@@ -578,7 +578,7 @@ export default function ClubManagement() {
                       <td className="px-4 py-2">エチュード</td>
                       <td className="px-4 py-2 text-sm text-gray-600">即興・表現練習</td>
                     </tr>
-                    <tr className="border-t bg-blue-50">
+                    <tr className="border-t bg-[#F4F2EE]">
                       <td className="px-4 py-2 font-semibold">土曜</td>
                       <td className="px-4 py-2 font-semibold">13:00-17:00</td>
                       <td className="px-4 py-2 font-semibold">通し稽古</td>
@@ -595,14 +595,14 @@ export default function ClubManagement() {
                 <div key={index} className="bg-white border rounded-lg p-5">
                   <div className="flex justify-between items-center mb-3">
                     <h3 className="font-bold text-lg">{menu.type}</h3>
-                    <span className="bg-orange-100 text-orange-700 px-3 py-1 rounded-full text-sm">
+                    <span className="bg-[#F4F2EE] text-theater-primary-700 px-3 py-1 rounded-full text-sm">
                       {menu.time}
                     </span>
                   </div>
                   <ul className="space-y-2">
                     {menu.contents.map((content, i) => (
                       <li key={i} className="flex items-center">
-                        <span className="w-6 h-6 bg-orange-500 text-white rounded-full flex items-center justify-center text-xs mr-2">
+                        <span className="w-6 h-6 bg-theater-primary-600 text-white rounded-full flex items-center justify-center text-xs mr-2">
                           {i + 1}
                         </span>
                         <span className="text-sm">{content}</span>
@@ -613,7 +613,7 @@ export default function ClubManagement() {
               ))}
             </div>
 
-            <div className="mt-8 bg-green-50 p-6 rounded-lg">
+            <div className="mt-8 bg-[#F4F2EE] p-6 rounded-lg">
               <h3 className="font-bold mb-3">稽古を効果的にするコツ</h3>
               <ul className="space-y-2 text-sm">
                 <li>• 稽古の目的を明確にして開始</li>
@@ -653,7 +653,7 @@ export default function ClubManagement() {
                     <ul className="space-y-2">
                       {item.solutions.map((solution, i) => (
                         <li key={i} className="flex items-start">
-                          <span className="bg-green-500 text-white rounded-full w-5 h-5 flex items-center justify-center flex-shrink-0 text-xs mr-3 mt-0.5">
+                          <span className="bg-theater-primary-600 text-white rounded-full w-5 h-5 flex items-center justify-center flex-shrink-0 text-xs mr-3 mt-0.5">
                             {i + 1}
                           </span>
                           <span className="text-sm">{solution}</span>
@@ -665,7 +665,7 @@ export default function ClubManagement() {
               ))}
             </div>
 
-            <div className="mt-8 bg-blue-50 p-6 rounded-lg">
+            <div className="mt-8 bg-[#F4F2EE] p-6 rounded-lg">
               <h3 className="font-bold mb-3">トラブル予防の心得</h3>
               <ul className="space-y-2 text-sm">
                 <li>• 問題は小さいうちに対処する</li>
@@ -679,9 +679,9 @@ export default function ClubManagement() {
         )}
 
         {/* 成功する演劇部の秘訣 */}
-        <section className="mb-12 bg-gradient-to-r from-yellow-50 to-orange-50 p-8 rounded-lg">
+        <section className="mb-12 p-8 rounded-lg">
           <h2 className="text-2xl font-bold mb-6 flex items-center">
-            <FaTrophy className="mr-3 text-yellow-500" />
+            <FaTrophy className="mr-3 text-gray-500" />
             成功する演劇部の10の秘訣
           </h2>
           
@@ -759,34 +759,34 @@ export default function ClubManagement() {
           
           <div className="grid md:grid-cols-3 gap-4">
             <div className="bg-white border rounded-lg p-5">
-              <FaHandshake className="text-3xl text-blue-500 mb-3" />
+              <FaHandshake className="text-3xl text-gray-500 mb-3" />
               <h3 className="font-semibold mb-2">他校との交流</h3>
               <p className="text-sm text-gray-600 mb-3">
                 地域の演劇連盟や高校演劇連盟に参加して、他校と交流しましょう。
               </p>
-              <Link href="/guide/school/culture-festival" className="text-blue-600 hover:underline text-sm">
+              <Link href="/guide/school/culture-festival" className="text-theater-primary-700 hover:underline text-sm">
                 文化祭演劇ガイド →
               </Link>
             </div>
             
             <div className="bg-white border rounded-lg p-5">
-              <FaChalkboardTeacher className="text-3xl text-green-500 mb-3" />
+              <FaChalkboardTeacher className="text-3xl text-gray-500 mb-3" />
               <h3 className="font-semibold mb-2">演技力向上</h3>
               <p className="text-sm text-gray-600 mb-3">
                 基礎から応用まで、演技力を向上させるトレーニング方法を学びましょう。
               </p>
-              <Link href="/guide/beginner/acting-basics" className="text-blue-600 hover:underline text-sm">
+              <Link href="/guide/beginner/acting-basics" className="text-theater-primary-700 hover:underline text-sm">
                 演技の基礎ガイド →
               </Link>
             </div>
             
             <div className="bg-white border rounded-lg p-5">
-              <FaTheaterMasks className="text-3xl text-purple-500 mb-3" />
+              <FaTheaterMasks className="text-3xl text-gray-500 mb-3" />
               <h3 className="font-semibold mb-2">作品選び</h3>
               <p className="text-sm text-gray-600 mb-3">
                 部員数や実力に合った作品を選ぶことが成功の鍵です。
               </p>
-              <Link href="/guide/beginner/how-to-choose-script" className="text-blue-600 hover:underline text-sm">
+              <Link href="/guide/beginner/how-to-choose-script" className="text-theater-primary-700 hover:underline text-sm">
                 脚本の選び方 →
               </Link>
             </div>
@@ -796,7 +796,7 @@ export default function ClubManagement() {
         <AdSlot slot={AD_SLOTS.BLOG_AFTER_TOC} format="horizontal" />
 
         {/* CTA */}
-        <section className="bg-gradient-to-r from-blue-100 to-purple-100 p-8 rounded-lg text-center">
+        <section className="p-8 rounded-lg text-center">
           <h2 className="text-2xl font-bold mb-4">演劇部を盛り上げよう！</h2>
           <p className="mb-6 text-gray-700">
             素晴らしい演劇部を作るには、情熱と計画が必要です。<br />
@@ -804,10 +804,10 @@ export default function ClubManagement() {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/" className="inline-block bg-theater-primary-600 text-white px-8 py-3 rounded-lg hover:bg-theater-primary-600 font-semibold">
+            <Link href="/" className="inline-block bg-theater-primary-600 text-white px-8 py-3 rounded-lg hover:bg-theater-primary-700 font-semibold">
               上演作品を探す
             </Link>
-            <Link href="/guide" className="inline-block bg-white text-blue-500 border-2 border-blue-500 px-8 py-3 rounded-lg hover:bg-blue-50 font-semibold">
+            <Link href="/guide" className="inline-block bg-white text-gray-500 border-2 border-blue-500 px-8 py-3 rounded-lg hover:bg-[#F4F2EE] font-semibold">
               他のガイドを見る
             </Link>
           </div>

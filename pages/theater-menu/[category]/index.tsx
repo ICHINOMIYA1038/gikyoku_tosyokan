@@ -43,7 +43,7 @@ export default function CategoryPage({ categories, category, menus }: Props) {
           <span className="mx-2">/</span>
           <span>{category.name}</span>
         </nav>
-        <div className="mb-6 rounded-2xl bg-gradient-to-br from-rose-50 to-pink-50 p-6 md:p-8 border border-rose-100">
+        <div className="mb-6 rounded p-6 md:p-8 border border-rose-100">
           <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3">
             {category.name}
             <span className="ml-3 text-sm font-normal text-rose-600">{menus.length}件</span>

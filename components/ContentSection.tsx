@@ -40,7 +40,7 @@ const ContentSection: React.FC<ContentSectionProps> = ({ posts, authors, categor
     })).sort((a: any, b: any) => b.postCount - a.postCount);
 
     return (
-        <section className="py-8 px-4 bg-gradient-to-b from-theater-neutral-50 to-white">
+        <section className="py-8 px-4 from-theater-neutral-50">
             <div className="max-w-7xl mx-auto">
                 {/* セクションタイトル */}
                 <div className="text-center mb-8">
@@ -56,7 +56,7 @@ const ContentSection: React.FC<ContentSectionProps> = ({ posts, authors, categor
                 <div className="grid lg:grid-cols-3 gap-6 mb-8">
                     {/* 人気記事TOP3 */}
                     <div className="lg:col-span-2">
-                        <div className="bg-white rounded-xl shadow-lg p-5">
+                        <div className="bg-white rounded p-5">
                             <div className="flex items-center justify-between gap-2 mb-4">
                                 <h3 className="text-lg sm:text-2xl font-bold text-theater-neutral-900 flex items-center gap-2 min-w-0">
                                     <FaTrophy className="text-theater-accent-yellow shrink-0" />
@@ -80,17 +80,17 @@ const ContentSection: React.FC<ContentSectionProps> = ({ posts, authors, categor
                                             {/* ランキング番号 */}
                                             <div className="flex-shrink-0">
                                                 {index === 0 && (
-                                                    <div className="w-9 h-9 sm:w-12 sm:h-12 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center shadow-lg">
+                                                    <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-full flex items-center justify-center">
                                                         <FaCrown className="text-white text-base sm:text-xl" />
                                                     </div>
                                                 )}
                                                 {index === 1 && (
-                                                    <div className="w-9 h-9 sm:w-12 sm:h-12 bg-gradient-to-br from-gray-300 to-gray-500 rounded-full flex items-center justify-center shadow-lg">
+                                                    <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-full flex items-center justify-center">
                                                         <span className="text-white font-bold text-sm sm:text-lg">2</span>
                                                     </div>
                                                 )}
                                                 {index === 2 && (
-                                                    <div className="w-9 h-9 sm:w-12 sm:h-12 bg-gradient-to-br from-orange-400 to-orange-600 rounded-full flex items-center justify-center shadow-lg">
+                                                    <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-full flex items-center justify-center">
                                                         <span className="text-white font-bold text-sm sm:text-lg">3</span>
                                                     </div>
                                                 )}
@@ -105,7 +105,7 @@ const ContentSection: React.FC<ContentSectionProps> = ({ posts, authors, categor
                                                         className="w-full h-full object-cover group-hover:scale-110 transition-transform"
                                                     />
                                                 ) : (
-                                                    <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-theater-primary-100 to-theater-primary-100">
+                                                    <div className="w-full h-full flex items-center justify-center">
                                                         <FaTheaterMasks className="text-2xl text-theater-primary-300" />
                                                     </div>
                                                 )}
@@ -149,7 +149,7 @@ const ContentSection: React.FC<ContentSectionProps> = ({ posts, authors, categor
 
                     {/* カテゴリー一覧 */}
                     <div className="lg:col-span-1">
-                        <div className="bg-white rounded-xl shadow-lg p-5 h-full">
+                        <div className="bg-white rounded p-5 h-full">
                             <div className="flex items-center justify-between mb-4">
                                 <h3 className="text-xl font-bold text-theater-neutral-900 flex items-center gap-2">
                                     <FaTag className="text-theater-primary-500" />
@@ -186,7 +186,7 @@ const ContentSection: React.FC<ContentSectionProps> = ({ posts, authors, categor
                 </div>
 
                 {/* 作者一覧 */}
-                <div className="bg-white rounded-xl shadow-lg p-5">
+                <div className="bg-white rounded p-5">
                     <div className="flex items-center justify-between mb-4">
                         <h3 className="text-2xl font-bold text-theater-neutral-900 flex items-center gap-2">
                             <FaPen className="text-theater-primary-500" />
@@ -202,7 +202,7 @@ const ContentSection: React.FC<ContentSectionProps> = ({ posts, authors, categor
                             <Link
                                 key={author.id}
                                 href={`/authors/${author.id}`}
-                                className="p-3 bg-gradient-to-br from-theater-primary-50 to-theater-primary-100 rounded-lg hover:from-theater-primary-100 hover:to-theater-primary-200 transition-all group text-center"
+                                className="p-3 rounded-lg hover: hover: transition-all group text-center"
                             >
                                 <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center mx-auto mb-2 group-hover:scale-110 transition-transform">
                                     <FaPen className="text-theater-primary-500" />
@@ -225,14 +225,14 @@ const ContentSection: React.FC<ContentSectionProps> = ({ posts, authors, categor
                     <div className="inline-flex flex-col sm:flex-row gap-4">
                         <Link 
                             href="/posts"
-                            className="px-8 py-3 bg-theater-primary-500 text-white font-bold rounded-lg hover:bg-theater-primary-600 transition-colors flex items-center gap-2 justify-center"
+                            className="px-8 py-3 bg-theater-primary-600 text-white font-bold rounded-lg hover:bg-theater-primary-700 transition-colors flex items-center gap-2 justify-center"
                         >
                             <FaTheaterMasks />
                             すべての作品を見る
                         </Link>
                         <Link 
                             href="/guide"
-                            className="px-8 py-3 bg-theater-primary-500 text-white font-bold rounded-lg hover:bg-theater-primary-600 transition-colors flex items-center gap-2 justify-center"
+                            className="px-8 py-3 bg-theater-primary-600 text-white font-bold rounded-lg hover:bg-theater-primary-700 transition-colors flex items-center gap-2 justify-center"
                         >
                             <FaStar />
                             演劇ガイドを読む

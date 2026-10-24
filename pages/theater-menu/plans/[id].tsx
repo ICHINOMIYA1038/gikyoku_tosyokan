@@ -151,11 +151,11 @@ export default function PlanEditor({ isOwner, plan, items: initialItems, allMenu
           <span>{plan.title}</span>
         </nav>
 
-        <div className="rounded-xl border border-gray-200 bg-white p-5 md:p-8 mb-6 print:border-none print:p-0">
+        <div className="rounded border border-[#D9D5CF] bg-white p-5 md:p-8 mb-6 print:border-none print:p-0">
           {isOwner ? (
             <>
               <input
-                className="w-full text-2xl md:text-3xl font-bold text-gray-900 border-b border-transparent hover:border-gray-200 focus:border-rose-300 focus:outline-none pb-1 mb-3"
+                className="w-full text-2xl md:text-3xl font-bold text-gray-900 border-b border-transparent hover:border-[#D9D5CF] focus:border-rose-300 focus:outline-none pb-1 mb-3"
                 value={title}
                 onChange={(e) => {
                   setTitle(e.target.value);
@@ -163,7 +163,7 @@ export default function PlanEditor({ isOwner, plan, items: initialItems, allMenu
                 }}
               />
               <textarea
-                className="w-full text-sm text-gray-600 border border-transparent hover:border-gray-200 focus:border-rose-300 focus:outline-none rounded p-2 mb-4"
+                className="w-full text-sm text-gray-600 border border-transparent hover:border-[#D9D5CF] focus:border-rose-300 focus:outline-none rounded p-2 mb-4"
                 rows={2}
                 placeholder="このプランの目的・対象・全体の流れなど"
                 value={description}
@@ -232,7 +232,7 @@ export default function PlanEditor({ isOwner, plan, items: initialItems, allMenu
           {items.map((it, i) => (
             <li
               key={`${it.menuId}-${i}`}
-              className="rounded-lg border border-gray-200 bg-white p-4 print:break-inside-avoid"
+              className="rounded-lg border border-[#D9D5CF] bg-white p-4 print:break-inside-avoid"
             >
               <div className="flex items-start gap-3">
                 <div className="w-8 h-8 rounded-full bg-rose-600 text-white text-sm font-bold flex items-center justify-center shrink-0 print:bg-black">
@@ -319,7 +319,7 @@ export default function PlanEditor({ isOwner, plan, items: initialItems, allMenu
         {isOwner && (
           <div className="print:hidden">
             {showPicker ? (
-              <div className="rounded-lg border border-gray-200 bg-white p-4">
+              <div className="rounded-lg border border-[#D9D5CF] bg-white p-4">
                 <div className="flex items-center gap-2 mb-3">
                   <input
                     autoFocus

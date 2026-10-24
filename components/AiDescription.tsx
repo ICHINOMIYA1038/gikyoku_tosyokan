@@ -8,7 +8,7 @@ const AiDescription = ({ description }: AiDescriptionProps) => {
   return (
     <div className="mt-8">
       <h2 className="text-lg font-bold text-gray-900 mb-3 flex items-center gap-2">
-        <FaRobot className="text-purple-500 text-sm" />
+        <FaRobot className="text-gray-500 text-sm" />
         AIによる作品概要
       </h2>
       <p className="text-gray-700 leading-[1.9] text-sm whitespace-pre-wrap">

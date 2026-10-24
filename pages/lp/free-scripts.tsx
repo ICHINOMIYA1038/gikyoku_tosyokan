@@ -98,7 +98,7 @@ export default function FreeScriptsPage({ posts, totalCount }: FreeScriptsPagePr
         </header>
 
         {/* 注意書き */}
-        <div className="bg-gray-50 border border-gray-200 rounded-lg p-5 mb-10">
+        <div className="bg-gray-50 border border-[#D9D5CF] rounded-lg p-5 mb-10">
           <h2 className="font-bold text-gray-800 mb-2">ご利用にあたって</h2>
           <ul className="text-sm text-gray-600 space-y-1.5 list-disc list-inside">
             <li>
@@ -114,7 +114,7 @@ export default function FreeScriptsPage({ posts, totalCount }: FreeScriptsPagePr
         </div>
 
         {/* ブログ記事リンク */}
-        <div className="bg-white border border-gray-200 rounded-lg p-5 mb-10">
+        <div className="bg-white border border-[#D9D5CF] rounded-lg p-5 mb-10">
           <div className="flex items-start gap-3">
             <FaBookOpen className="text-gray-400 mt-1 flex-shrink-0" />
             <div>
@@ -126,7 +126,7 @@ export default function FreeScriptsPage({ posts, totalCount }: FreeScriptsPagePr
               </p>
               <Link
                 href="/blog/ja/2026-02-15-free-script-sites"
-                className="inline-flex items-center gap-1.5 text-sm font-medium text-blue-600 hover:text-blue-800"
+                className="inline-flex items-center gap-1.5 text-sm font-medium text-theater-primary-700 hover:text-theater-primary-800"
               >
                 フリー台本サイトまとめ記事を読む
                 <FaExternalLinkAlt className="text-xs" />
@@ -170,7 +170,7 @@ export default function FreeScriptsPage({ posts, totalCount }: FreeScriptsPagePr
         </div>
 
         {/* 関連ページ */}
-        <section className="mt-12 border-t border-gray-200 pt-8">
+        <section className="mt-12 border-t border-[#D9D5CF] pt-8">
           <h2 className="text-lg font-bold text-gray-900 mb-4">関連ページ</h2>
           <div className="flex flex-wrap gap-3">
             <Link
