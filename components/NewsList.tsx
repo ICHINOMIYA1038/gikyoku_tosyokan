@@ -8,38 +8,26 @@ interface NewsItemProps {
   url: string;
 }
 
-const categoryStyles: Record<string, string> = {
-  "重要": "bg-red-600",
-  "お知らせ": "bg-theater-primary-600",
-  "新着脚本": "bg-green-600",
-  "公演情報": "bg-purple-600",
-};
-
+// 種類は色分けせず、文字で示す。「重要」だけ紅にする
 const NewsItem: React.FC<NewsItemProps> = ({ date, category, title, url }) => {
-  const bgColor = categoryStyles[category] || "bg-gray-600";
-
   const content = (
-    <div>
-      <div className="flex items-center gap-2 mb-1">
-        <span className={`px-2 py-0.5 text-xs font-semibold text-white rounded ${bgColor}`}>
-          {category}
-        </span>
-        <span className="text-xs text-gray-400">{date}</span>
-      </div>
-      <p className="text-sm text-gray-800">{title}</p>
-    </div>
+    <span className="grid grid-cols-[6.5rem_minmax(0,1fr)] md:grid-cols-[7rem_5rem_minmax(0,1fr)] gap-x-3 gap-y-0.5">
+      <span className="text-sm text-gray-600 tabular-nums">{date}</span>
+      <span className={`text-xs md:text-sm ${category === "重要" ? "text-theater-primary-700 font-bold" : "text-gray-600"}`}>{category}</span>
+      <span className="col-span-2 md:col-span-1 text-[15px] text-gray-900">{title}</span>
+    </span>
   );
 
   return (
-    <div className="py-3 border-b border-gray-100 last:border-0">
+    <li className="border-b border-[#D9D5CF]">
       {url ? (
-        <Link href={url} className="block hover:bg-gray-50 -mx-2 px-2 py-1 rounded transition-colors">
+        <Link href={url} className="group block py-3 px-1 hover:bg-[#F4F2EE]">
           {content}
         </Link>
       ) : (
-        <div className="px-2 py-1">{content}</div>
+        <div className="py-3 px-1">{content}</div>
       )}
-    </div>
+    </li>
   );
 };
 
@@ -55,29 +43,23 @@ const NewsList: React.FC<NewsListProps> = ({ news, limit = 3, showAll = false })
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-2">
-        <h2 className="text-xl font-bold">お知らせ</h2>
+      <div className="flex items-baseline justify-between border-b-2 border-gray-900 pb-2">
+        <h2 className="!my-0 !pb-0 !text-base !font-bold !text-gray-900">お知らせ</h2>
         {!showAll && sorted.length > limit && (
-          <Link href="/news" className="text-sm text-blue-600 hover:underline">
+          <Link href="/news" className="text-sm text-theater-primary-700 hover:underline">
             すべて見る
           </Link>
         )}
       </div>
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 px-4">
-        {displayed.length > 0 ? (
-          displayed.map((item: any) => (
-            <NewsItem
-              key={item.id || item.date}
-              date={item.date}
-              category={item.category}
-              title={item.title}
-              url={item.url}
-            />
-          ))
-        ) : (
-          <p className="py-4 text-sm text-gray-500 text-center">お知らせはありません</p>
-        )}
-      </div>
+      {displayed.length > 0 ? (
+        <ul>
+          {displayed.map((item: any) => (
+            <NewsItem key={item.id || item.date} date={item.date} category={item.category} title={item.title} url={item.url} />
+          ))}
+        </ul>
+      ) : (
+        <p className="py-4 text-sm text-gray-600">お知らせはありません</p>
+      )}
     </div>
   );
 };
