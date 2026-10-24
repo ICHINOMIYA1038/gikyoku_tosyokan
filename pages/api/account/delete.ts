@@ -14,6 +14,9 @@ import { stripe } from '@/lib/stripe';
  * 残る情報（匿名化）:
  * - ParentComment: userId を null に、author を「退会済みユーザー」に
  * - ChildComment: 同上
+ * - Announcement: 非公開にし、authorName を「退会済みユーザー」、ipAddress を null に
+ *
+ * 一緒に消える情報: UserSynopsis（ほかの劇団員募集・お気に入りなどは onDelete: Cascade で消える）
  *
  * 副作用:
  * - tomoshibi Pro プランの Stripe サブスクリプションが有効な場合は即時解約する
@@ -62,6 +65,19 @@ export default async function handler(
         where: { userId },
         data: { userId: null, author: '退会済みユーザー' },
       });
+
+      // 1-2. 上演告知は非公開にし、投稿者名と IP アドレスを消す（ひも付けは User 削除で外れる）
+      await tx.announcement.updateMany({
+        where: { userId, deletedAt: null },
+        data: { deletedAt: new Date(), deletedBy: 'account-deleted' },
+      });
+      await tx.announcement.updateMany({
+        where: { userId },
+        data: { authorName: '退会済みユーザー', ipAddress: null },
+      });
+
+      // 1-3. 利用者のあらすじは消す（User への参照が必須で、残っていると User を消せない）
+      await tx.userSynopsis.deleteMany({ where: { userId } });
 
       // 2. Session削除
       await tx.session.deleteMany({

@@ -4,7 +4,6 @@ import "@/styles/theater-menu.css";
 
 import type { AppProps } from "next/app";
 import { SessionProvider } from "next-auth/react";
-import { Analytics } from "@vercel/analytics/react";
 import Script from "next/script";
 import * as gtag from "@/lib/gtag";
 import { useRouter } from "next/router";
@@ -160,7 +159,6 @@ export default function App({ Component, pageProps }: AppProps) {
           </QueryClientProvider>
         </FavoritesProvider>
       </SessionProvider>
-      <Analytics />
       <CookieConsent />
       <InstallPrompt />
     </>
