@@ -1,5 +1,6 @@
 import { GetStaticPaths, GetStaticProps } from 'next';
 import Link from 'next/link';
+import Breadcrumb from '@/components/Breadcrumb';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import Layout from '@/components/Layout';
@@ -16,7 +17,6 @@ import {
   BlogPostMeta,
 } from '@/lib/blog';
 import BlogReferencedPosts from '@/components/BlogReferencedPosts';
-import { FaHome, FaChevronRight, FaClock, FaPen, FaTag, FaBookmark } from 'react-icons/fa';
 
 const CALLOUT_TYPES: CalloutType[] = ['info', 'tip', 'warn', 'quote'];
 
@@ -119,81 +119,43 @@ export default function BlogJaPost({
         <StructuredData type="FAQPage" faqItems={metadata.faq} />
       )}
 
-      {/* Header */}
-      <div className="bg-gray-50 border-b border-gray-100">
-        <div className="container mx-auto px-4 pt-6 pb-8 md:pt-8 md:pb-10">
-          {/* Breadcrumb */}
-          <nav className="mb-5">
-            <ol className="flex items-center flex-wrap gap-1 text-sm text-gray-400">
-              <li className="flex items-center">
-                <Link href="/" className="hover:text-gray-600 transition-colors">
-                  <FaHome className="inline mr-1" />ホーム
-                </Link>
-              </li>
-              <li className="flex items-center">
-                <FaChevronRight className="mx-2 text-gray-300" size={10} />
-                <Link href="/blog/ja" className="hover:text-gray-600 transition-colors">
-                  ブログ
-                </Link>
-              </li>
-            </ol>
-          </nav>
-
-          <h1 className="text-2xl md:text-3xl font-bold text-gray-900 leading-tight mb-4 max-w-3xl">
-            {post.title}
-          </h1>
-
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mb-4">
-            <time className="text-sm text-gray-400">{post.date}</time>
-            <span className="flex items-center gap-1.5 text-sm text-gray-400">
-              <FaClock className="text-gray-300" />
-              約{readingTime}分で読めます
-            </span>
-          </div>
-
+      <div className="max-w-6xl mx-auto pt-6 md:pt-8">
+        <Breadcrumb items={[{ name: 'ホーム', href: '/' }, { name: 'ブログ', href: '/blog/ja' }, { name: post.title }]} />
+        <header className="max-w-3xl">
+          <h1 className="text-[26px] md:text-[34px] font-serif font-bold text-gray-900 leading-snug">{post.title}</h1>
+          <p className="mt-3 text-sm text-gray-600">
+            <time dateTime={post.date}>{post.date.replace(/-/g, '/')}</time>
+            <span className="mx-2">・</span>
+            約{readingTime}分で読めます
+          </p>
           {post.tags.length > 0 && (
-            <div className="flex flex-wrap gap-2">
+            <p className="mt-3 flex flex-wrap gap-x-3 gap-y-1 text-sm">
               {post.tags.map((tag) => (
-                <span key={tag} className="text-xs text-gray-400 bg-white px-2.5 py-1 rounded border border-gray-200">
+                <Link key={tag} href={`/blog/ja/tags/${encodeURIComponent(tag)}`} className="text-gray-700 hover:text-theater-primary-700 hover:underline underline-offset-4">
                   #{tag}
-                </span>
+                </Link>
               ))}
-            </div>
+            </p>
           )}
-        </div>
+        </header>
       </div>
 
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex flex-col lg:flex-row gap-8">
+      <div className="max-w-6xl mx-auto pb-12">
+        <div className="flex flex-col lg:flex-row gap-10">
           <main className="flex-1 min-w-0">
-            <article className="bg-white p-6 lg:p-10">
-              {/* Share buttons at top */}
-              <div className="flex justify-end mb-6">
-                <BlogShareButtons url={pageUrl} title={post.title} />
-              </div>
+            <article className="max-w-3xl">
+              {post.description && (
+                <aside aria-label="この記事のポイント" className="not-prose mt-6 border-l-4 border-theater-primary-600 bg-[#F4F2EE] px-5 py-4">
+                  <p className="text-xs font-bold text-gray-700">この記事のポイント</p>
+                  <p className="mt-1 text-[15px] leading-relaxed text-gray-900">{post.description}</p>
+                </aside>
+              )}
 
               <BlogTableOfContents content={displayContent} />
 
-              {/* Ad: after TOC */}
-              <div className="my-8 rounded-lg overflow-hidden bg-gray-50 border border-gray-100">
+              <div className="my-8">
                 <AdSlot slot={AD_SLOTS.BLOG_AFTER_TOC} format="horizontal" className="!my-0" />
               </div>
-
-              {/* TL;DR */}
-              {post.description && (
-                <aside
-                  aria-label="この記事のポイント"
-                  className="not-prose mb-10 rounded-xl border border-theater-primary-100 bg-gradient-to-br from-theater-primary-50 to-white p-5 md:p-6"
-                >
-                  <div className="flex items-center gap-2 mb-2.5 text-xs font-bold tracking-wider text-theater-primary-700">
-                    <FaBookmark className="text-theater-primary-500" />
-                    <span>この記事のポイント</span>
-                  </div>
-                  <p className="text-gray-700 leading-relaxed text-[15px]">
-                    {post.description}
-                  </p>
-                </aside>
-              )}
 
               <div className="prose prose-lg max-w-none prose-headings:font-bold prose-p:leading-[1.85] prose-p:text-gray-700">
                 {splitContentByCallouts(displayContent).map((seg, idx) => seg.kind === 'callout' ? (
@@ -210,7 +172,7 @@ export default function BlogJaPost({
                       return (
                         <h2
                           id={id}
-                          className="text-xl font-bold mt-12 mb-5 scroll-mt-20 text-gray-800 relative pl-4 border-l-4 border-theater-primary-500"
+                          className="!text-[22px] !font-bold !mt-14 !mb-5 !pb-2 scroll-mt-20 !text-gray-900 border-b border-[#D9D5CF]"
                         >
                           {children}
                         </h2>
@@ -221,14 +183,14 @@ export default function BlogJaPost({
                       return (
                         <h3
                           id={id}
-                          className="text-lg font-bold mt-8 mb-4 scroll-mt-20 text-gray-800 flex items-center gap-2 before:content-[''] before:inline-block before:w-2 before:h-2 before:rounded-full before:bg-theater-primary-400"
+                          className="!text-lg !font-bold !mt-9 !mb-3 scroll-mt-20 !text-gray-900"
                         >
                           {children}
                         </h3>
                       );
                     },
                     p: ({ children }) => (
-                      <p className="my-5 leading-[1.9] text-gray-700 tracking-wide">
+                      <p className="my-5 leading-[1.95] text-gray-900">
                         {children}
                       </p>
                     ),
@@ -243,8 +205,8 @@ export default function BlogJaPost({
                       </ol>
                     ),
                     li: ({ children }: any) => (
-                      <li className="relative pl-6 text-gray-700 leading-relaxed">
-                        <span className="absolute left-0 top-[0.65em] w-1.5 h-1.5 rounded-full bg-gray-400" />
+                      <li className="relative pl-5 text-gray-900 leading-relaxed">
+                        <span className="absolute left-0 top-[0.7em] w-1.5 h-1.5 rounded-full bg-gray-500" />
                         {children}
                       </li>
                     ),
@@ -264,22 +226,22 @@ export default function BlogJaPost({
                       );
                     },
                     hr: () => (
-                      <hr className="my-10 border-0 h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent" />
+                      <hr className="my-10 border-0 h-px bg-[#D9D5CF]" />
                     ),
                     strong: ({ children }) => <strong className="font-bold text-gray-900">{children}</strong>,
                     blockquote: ({ children }) => (
-                      <blockquote className="border-l-4 border-gray-300 pl-5 pr-4 py-3 my-6 text-gray-500 italic">
+                      <blockquote className="border-l-4 border-[#D9D5CF] pl-5 pr-4 py-1 my-6 text-gray-700">
                         {children}
                       </blockquote>
                     ),
                     table: ({ children }) => (
-                      <div className="overflow-x-auto my-8 rounded-lg border border-gray-200">
+                      <div className="overflow-x-auto my-8 border-t border-[#D9D5CF]">
                         <table className="min-w-full border-collapse text-sm">{children}</table>
                       </div>
                     ),
-                    thead: ({ children }) => <thead className="bg-gray-50 border-b border-gray-200">{children}</thead>,
+                    thead: ({ children }) => <thead className="bg-[#F4F2EE] border-b border-[#D9D5CF]">{children}</thead>,
                     th: ({ children }) => <th className="px-4 py-3 text-left font-semibold text-gray-700">{children}</th>,
-                    td: ({ children }) => <td className="px-4 py-3 border-t border-gray-100 text-gray-600">{children}</td>,
+                    td: ({ children }) => <td className="px-4 py-3 border-b border-[#D9D5CF] text-gray-900">{children}</td>,
                   }}
                 >
                   {seg.body}
@@ -289,40 +251,23 @@ export default function BlogJaPost({
 
               <BlogReferencedPosts posts={referencedPosts} />
 
-              {/* Author / meta section */}
-              <div className="mt-14 pt-8 border-t border-gray-200">
-                <div className="flex items-start gap-4 p-5 bg-gray-50 rounded-xl">
-                  <div className="flex-shrink-0 w-12 h-12 rounded-full bg-theater-primary-100 flex items-center justify-center text-theater-primary-600">
-                    <FaPen className="text-sm" />
-                  </div>
-                  <div className="flex-1">
-                    <p className="text-xs text-gray-400 mb-0.5">Written by</p>
-                    <p className="font-bold text-gray-900">戯曲図書館 編集部</p>
-                    <p className="text-sm text-gray-600 mt-1 leading-relaxed">
-                      演劇経験者が運営する戯曲検索サービス「戯曲図書館」の編集チームです。
-                      脚本選びのノウハウ、演劇業界の最新情報、公演レポートなどを発信しています。
-                    </p>
-                    <div className="flex items-center gap-3 mt-2">
-                      <Link href="/support/about" className="text-xs text-theater-primary-600 hover:underline">
-                        サイトについて
-                      </Link>
-                      <a href="https://twitter.com/gikyokutosyokan" target="_blank" rel="noopener noreferrer" className="text-xs text-gray-400 hover:text-blue-500">
-                        @gikyokutosyokan
-                      </a>
-                    </div>
-                  </div>
-                </div>
-                {/* 公開日・更新日 */}
-                <div className="mt-3 text-xs text-gray-400 flex items-center gap-4">
-                  <span>公開日: {post.date}</span>
-                </div>
+              <div className="mt-14 pt-6 border-t border-[#D9D5CF] text-sm text-gray-700">
+                <p>
+                  <span className="font-bold text-gray-900">戯曲図書館 編集部</span>
+                  <span className="mx-2">・</span>公開日 {post.date.replace(/-/g, '/')}
+                </p>
+                <p className="mt-1">演劇経験者が運営する戯曲検索サービスの編集チームです。脚本選びのノウハウ、演劇の最新情報、公演レポートなどを書いています。</p>
+                <p className="mt-2 flex gap-4">
+                  <Link href="/support/about" className="text-theater-primary-700 underline underline-offset-4">サイトについて</Link>
+                  <a href="https://twitter.com/gikyokutosyokan" target="_blank" rel="noopener noreferrer" className="text-gray-700 underline underline-offset-4">@gikyokutosyokan</a>
+                </p>
               </div>
 
               <BlogRelatedPosts posts={relatedPosts} language="ja" />
 
-              <div className="mt-12 pt-6 border-t border-gray-200 flex flex-wrap items-center justify-between gap-4">
-                <Link href="/blog/ja" className="inline-flex items-center gap-2 text-gray-500 hover:text-gray-800 font-medium transition-colors">
-                  &larr; ブログ一覧に戻る
+              <div className="mt-12 pt-6 border-t border-[#D9D5CF] flex flex-wrap items-center justify-between gap-4">
+                <Link href="/blog/ja" className="text-sm text-gray-700 underline underline-offset-4 hover:text-gray-900">
+                  ブログの一覧へ
                 </Link>
                 <BlogShareButtons url={pageUrl} title={post.title} />
               </div>
@@ -331,7 +276,7 @@ export default function BlogJaPost({
 
           <aside className="lg:w-80">
             {/* Ad: blog sidebar */}
-            <div className="rounded-lg overflow-hidden bg-gray-50 border border-gray-100 mb-4">
+            <div className="mb-8">
               <AdSlot slot={AD_SLOTS.BLOG_SIDEBAR} format="rectangle" className="!my-0" />
             </div>
             <BlogSidebar language="ja" />

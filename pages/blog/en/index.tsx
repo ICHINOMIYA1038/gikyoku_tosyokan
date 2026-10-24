@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { useEffect, useState, useCallback } from 'react';
 import Layout from '@/components/Layout';
 import BlogSidebar from '@/components/BlogSidebar';
+import BlogPostRow from '@/components/BlogPostRow';
 import Seo from '@/components/seo';
 import { getPostsByLanguagePaginated, BlogPostMeta } from '@/lib/blog';
 import AdSlot from '@/components/Ad/AdSlot';
@@ -59,73 +60,35 @@ export default function BlogEnIndex({ posts: initialPosts, total }: Props) {
         ]}
         locale="en_US"
       />
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex flex-col lg:flex-row gap-8">
+      <div className="max-w-6xl mx-auto pt-6 md:pt-8 pb-12">
+        <div className="flex flex-col lg:flex-row gap-10">
           <main className="flex-1 min-w-0">
-            <div className="flex items-center justify-between mb-6">
+            <div className="flex items-end justify-between gap-4">
               <div>
-                <h1 className="text-3xl font-bold">Blog</h1>
-                <p className="text-sm text-gray-400 mt-1">{total} articles</p>
+                <h1 className="text-[26px] md:text-[32px] font-serif font-bold text-gray-900 leading-tight">Blog</h1>
+                <p className="mt-2 text-base text-gray-600">Guides to Japanese theater and plays. {total.toLocaleString()} articles.</p>
               </div>
-              <Link href="/blog/ja" className="text-sm text-gray-500 hover:text-blue-600 transition-colors">
-                &larr; 日本語
-              </Link>
+              <Link href="/blog/ja" className="text-sm text-gray-700 underline underline-offset-4 shrink-0">日本語</Link>
             </div>
 
             {posts.length === 0 ? (
-              <p className="text-gray-600">No articles found.</p>
+              <p className="mt-8 text-gray-700">No articles found.</p>
             ) : (
               <>
-                <div className="space-y-4">
-                  {posts.map((post) => (
-                    <article
-                      key={post.slug}
-                      className="border border-gray-200 rounded-lg p-5 hover:shadow-md transition-shadow bg-white"
-                    >
-                      <Link href={`/blog/en/${post.slug}`}>
-                        <h3 className="text-lg font-bold text-blue-600 hover:text-blue-800 mb-1">
-                          {post.title}
-                        </h3>
-                      </Link>
-                      <p className="text-gray-500 text-xs mb-2">{post.date}</p>
-                      <p className="text-gray-700 text-sm mb-2 line-clamp-2">{post.description}</p>
-                      {post.tags.length > 0 && (
-                        <div className="flex flex-wrap gap-1">
-                          {post.tags.slice(0, 3).map((tag) => (
-                            <span key={tag} className="bg-gray-100 text-gray-600 text-xs px-2 py-0.5 rounded">
-                              {tag}
-                            </span>
-                          ))}
-                          {post.tags.length > 3 && (
-                            <span className="text-gray-400 text-xs">+{post.tags.length - 3}</span>
-                          )}
-                        </div>
-                      )}
-                    </article>
-                  ))}
-                </div>
+                <ul className="mt-6 border-t border-[#D9D5CF]">
+                  {posts.map((post) => <BlogPostRow key={post.slug} post={post} lang="en" />)}
+                </ul>
 
                 <AdSlot slot={AD_SLOTS.CATEGORY_AFTER_LIST} format="horizontal" />
 
-                {/* Load More */}
                 {hasMore && (
                   <div className="mt-8 text-center">
                     <button
                       onClick={loadMore}
                       disabled={loading}
-                      className="inline-flex items-center gap-2 px-6 py-3 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 hover:border-gray-300 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="h-11 px-6 rounded border border-[#D9D5CF] text-sm font-bold text-gray-900 hover:bg-[#F4F2EE] disabled:opacity-50"
                     >
-                      {loading ? (
-                        <>
-                          <svg className="animate-spin h-4 w-4 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                          </svg>
-                          Loading...
-                        </>
-                      ) : (
-                        <>Load more ({posts.length} / {total})</>
-                      )}
+                      {loading ? 'Loading…' : `Load more (${posts.length} / ${total})`}
                     </button>
                   </div>
                 )}

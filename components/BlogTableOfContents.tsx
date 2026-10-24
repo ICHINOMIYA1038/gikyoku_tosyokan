@@ -9,6 +9,7 @@ interface TocItem {
 
 interface BlogTableOfContentsProps {
   content: string;
+  lang?: 'ja' | 'en';
 }
 
 function extractHeadings(markdown: string): TocItem[] {
@@ -20,7 +21,8 @@ function extractHeadings(markdown: string): TocItem[] {
     if (match) {
       const level = match[1].length;
       const text = match[2]
-        .replace(/\*\*/g, '')
+        // 強調の記号（**太字** と *斜体*）は本文では消えて表示されるので、目次と ID でも消す
+        .replace(/\*/g, '')
         .replace(/`([^`]*)`/g, '$1')
         .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
         .trim();
@@ -32,7 +34,7 @@ function extractHeadings(markdown: string): TocItem[] {
   return headings;
 }
 
-const BlogTableOfContents: React.FC<BlogTableOfContentsProps> = ({ content }) => {
+const BlogTableOfContents: React.FC<BlogTableOfContentsProps> = ({ content, lang = 'ja' }) => {
   const [activeId, setActiveId] = useState<string>('');
   const headings = extractHeadings(content);
 
@@ -56,7 +58,9 @@ const BlogTableOfContents: React.FC<BlogTableOfContentsProps> = ({ content }) =>
     return () => observer.disconnect();
   }, [headings]);
 
-  if (headings.length < 2) return null;
+  // 小見出しまで並べると最初の画面が目次で埋まるので、大見出しだけを出す
+  const sections = headings.filter((h) => h.level === 2);
+  if (sections.length < 2) return null;
 
   const handleClick = (e: React.MouseEvent, id: string) => {
     e.preventDefault();
@@ -67,38 +71,30 @@ const BlogTableOfContents: React.FC<BlogTableOfContentsProps> = ({ content }) =>
   };
 
   return (
-    <nav className="border border-gray-200 rounded-lg p-5 my-8 bg-white">
-      <p className="text-sm font-bold text-gray-700 mb-3 flex items-center gap-2">
-        <span className="inline-block w-1 h-4 bg-theater-primary-500 rounded-sm" />
-        目次
-      </p>
-      <ul className="space-y-0.5 text-sm border-l border-gray-200 pl-3">
-        {headings.map((heading, i) => {
+    <details open className="group my-8 border-y border-[#D9D5CF]">
+      <summary className="flex items-center justify-between py-3 cursor-pointer list-none text-sm font-bold text-gray-900">
+        <span>{lang === "en" ? "Contents" : "目次"}<span className="ml-2 font-normal text-gray-600">{lang === "en" ? `${sections.length} sections` : `${sections.length}項目`}</span></span>
+        <span className="text-xs font-normal text-gray-600 group-open:hidden">{lang === "en" ? "Show" : "開く"}</span>
+        <span className="text-xs font-normal text-gray-600 hidden group-open:inline">{lang === "en" ? "Hide" : "閉じる"}</span>
+      </summary>
+      <ol className="pb-3 text-sm">
+        {sections.map((heading, i) => {
           const isActive = activeId === heading.id;
           return (
-            <li key={i} className={`relative ${heading.level === 3 ? 'ml-4' : ''}`}>
-              {isActive && (
-                <span className="absolute -left-[13px] top-1/2 -translate-y-1/2 w-1 h-5 bg-theater-primary-500 rounded-r" />
-              )}
+            <li key={heading.id || i}>
               <a
                 href={`#${heading.id}`}
                 onClick={(e) => handleClick(e, heading.id)}
-                className={`block py-1.5 transition-colors ${
-                  isActive
-                    ? 'text-theater-primary-700 font-semibold'
-                    : 'text-gray-500 hover:text-gray-800'
-                }`}
+                className={`grid grid-cols-[2rem_minmax(0,1fr)] py-1.5 hover:text-theater-primary-700 ${isActive ? 'text-theater-primary-700 font-bold' : 'text-gray-800'}`}
               >
-                {heading.level === 3 && (
-                  <span className="inline-block w-1 h-1 rounded-full bg-gray-300 mr-2 align-middle" />
-                )}
-                {heading.text}
+                <span className="text-gray-500 tabular-nums">{i + 1}.</span>
+                <span>{heading.text}</span>
               </a>
             </li>
           );
         })}
-      </ul>
-    </nav>
+      </ol>
+    </details>
   );
 };
 

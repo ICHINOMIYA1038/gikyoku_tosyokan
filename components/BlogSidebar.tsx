@@ -1,7 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import OptimizedImage from './OptimizedImage';
-import { FaBook, FaGraduationCap, FaTheaterMasks, FaUsers, FaQuestionCircle, FaEnvelope, FaShieldAlt, FaHandshake, FaChevronRight, FaSearch, FaHotjar, FaGlobeAmericas, FaAward, FaMapMarkerAlt } from 'react-icons/fa';
+import { FaBook, FaGraduationCap, FaTheaterMasks, FaUsers, FaQuestionCircle, FaShieldAlt, FaHandshake, FaAward, FaMapMarkerAlt } from 'react-icons/fa';
 
 interface BlogSidebarProps {
   category?: 'guide' | 'support' | 'news';
@@ -86,122 +85,80 @@ function JapaneseSidebar({ category, currentPath }: { category?: string; current
     },
   ];
 
-  const popularPosts = [
-    { title: '30分で上演できる文化祭向け脚本10選', href: '/guide/school/culture-festival', views: 15234 },
-    { title: '少人数(2-3人)で演じられる名作', href: '/guide/cast-size', views: 12893 },
-    { title: '初心者でも演じやすいコメディ作品', href: '/?category=2', views: 10567 },
-    { title: '感動的な卒業公演向け作品', href: '/?category=1', views: 9234 },
+  // 以前は「人気の記事」として作り物の閲覧数を付けていた。実際の人気ではないので、数字を出さずに「おすすめ」とする
+  const recommended = [
+    { title: '30分で上演できる文化祭向けの脚本', href: '/guide/school/culture-festival' },
+    { title: '少人数（2〜3人）で演じられる作品', href: '/guide/cast-size' },
+    { title: '初心者でも演じやすいコメディ', href: '/?category=2' },
+    { title: '卒業公演に向く作品', href: '/?category=1' },
   ];
 
   const menuItems = category === 'support' ? supportMenuItems : guideMenuItems;
 
   return (
-    <div className="space-y-6">
-      <div className="bg-white rounded-lg shadow-sm p-4">
-        <div className="relative">
-          <input type="text" placeholder="記事を検索..." className="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
-          <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-        </div>
-      </div>
+    <div className="space-y-8">
+      <SidebarSection title={category === 'support' ? 'サポート' : 'ガイド'}>
+        {menuItems.map((section) => (
+          <div key={section.title} className="mt-3 first:mt-0">
+            <p className="text-xs font-bold text-gray-600">{section.title}</p>
+            <ul className="mt-1">
+              {section.items.map((item) => (
+                <li key={item.href}>
+                  <Link href={item.href} className={`block py-1.5 text-sm hover:text-theater-primary-700 hover:underline underline-offset-4 ${currentPath === item.href ? 'text-theater-primary-700 font-bold' : 'text-gray-800'}`}>
+                    {item.title}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </SidebarSection>
 
-      <div className="bg-white rounded-lg shadow-sm p-4">
-        <h3 className="font-bold text-lg mb-4">
-          {category === 'support' ? 'サポート' : 'ガイド'}カテゴリ
-        </h3>
-        <nav className="space-y-4">
-          {menuItems.map((section, index) => (
-            <div key={index}>
-              <h4 className="flex items-center gap-2 font-semibold text-gray-700 mb-2">
-                <span className="text-theater-primary-500">{section.icon}</span>
-                {section.title}
-              </h4>
-              <ul className="ml-6 space-y-1">
-                {section.items.map((item, itemIndex) => (
-                  <li key={itemIndex}>
-                    <Link href={item.href} className={`flex items-center gap-2 text-sm py-1 hover:text-theater-primary-600 transition-colors ${currentPath === item.href ? 'text-theater-primary-600 font-medium' : 'text-gray-600'}`}>
-                      <FaChevronRight size={10} />
-                      {item.title}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </nav>
-      </div>
-
-      <div className="bg-white rounded-lg shadow-sm p-4">
-        <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
-          <FaHotjar className="text-orange-500" />
-          人気の記事
-        </h3>
-        <ul className="space-y-3">
-          {popularPosts.map((post, index) => (
-            <li key={index}>
-              <Link href={post.href} className="block hover:bg-gray-50 p-2 rounded transition-colors">
-                <p className="text-sm font-medium text-gray-700 mb-1 line-clamp-2">{post.title}</p>
-                <p className="text-xs text-gray-500">{post.views.toLocaleString()}回閲覧</p>
-              </Link>
+      <SidebarSection title="おすすめ">
+        <ul>
+          {recommended.map((post) => (
+            <li key={post.href} className="border-b border-[#D9D5CF] last:border-0">
+              <Link href={post.href} className="block py-2.5 text-sm text-gray-800 hover:text-theater-primary-700">{post.title}</Link>
             </li>
           ))}
         </ul>
-      </div>
+      </SidebarSection>
 
-      <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg shadow-sm p-4 text-white">
-        <h3 className="font-bold mb-2">脚本をお探しですか？</h3>
-        <p className="text-sm mb-3">条件に合った作品を簡単検索</p>
-        <Link href="/" className="inline-block bg-white text-theater-primary-600 px-4 py-2 rounded-lg font-medium text-sm hover:bg-gray-100 transition-colors">
-          作品を探す →
+      <div className="border border-[#D9D5CF] rounded p-4">
+        <p className="text-sm text-gray-800">人数・上演時間・ジャンルで戯曲を探せます。</p>
+        <Link href="/" className="mt-3 inline-flex items-center h-10 px-4 rounded bg-theater-primary-600 hover:bg-theater-primary-700 text-white text-sm font-bold">
+          戯曲を探す
         </Link>
       </div>
 
-      {/* エチュードメーカー バナー (com.gikyokutosyokan.etude) */}
-      <a
-        href="https://apps.apple.com/us/app/%E3%82%A8%E3%83%81%E3%83%A5%E3%83%BC%E3%83%89%E3%83%A1%E3%83%BC%E3%82%AB%E3%83%BC/id6794500656"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="block cursor-pointer hover:opacity-90 transition-opacity"
-        aria-label="エチュードメーカー - 即興演劇のお題をワンタップで生成するiOSアプリ"
-      >
-        <OptimizedImage
-          src="https://gikyokutosyokan-public.s3.ap-northeast-1.amazonaws.com/assets/banners/etude-rect.png"
-          alt="エチュードメーカー - 即興演劇のお題をワンタップで生成"
-          width={300}
-          height={250}
-          className="w-full h-auto rounded-lg shadow-md"
-        />
-      </a>
-
-      {/* TOMOSHIBI小屋 バナー */}
-      <a
-        href="https://tomoshibi.gikyokutosyokan.com"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="block cursor-pointer hover:opacity-90 transition-opacity"
-        aria-label="TOMOSHIBI小屋 - ブラウザで動く舞台照明シミュレーター"
-      >
-        <div className="relative w-full overflow-hidden rounded-lg shadow-md border border-amber-900/30 bg-gradient-to-br from-[#1a1208] via-[#2a1a10] to-[#3a2a18]">
-          {/* 背景のスポット光 */}
-          <div className="absolute inset-0 opacity-60 pointer-events-none">
-            <div className="absolute top-0 left-1/4 w-32 h-48 -rotate-12 bg-gradient-to-b from-amber-200/40 via-amber-300/20 to-transparent blur-md" />
-            <div className="absolute top-0 right-1/4 w-32 h-48 rotate-12 bg-gradient-to-b from-orange-200/30 via-orange-300/15 to-transparent blur-md" />
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-56 bg-gradient-to-b from-yellow-100/40 via-amber-200/20 to-transparent blur-sm" />
-          </div>
-          <div className="relative p-5 text-center">
-            <div className="text-amber-300 text-2xl mb-1" aria-hidden>✦</div>
-            <div className="text-amber-50 font-serif text-xl tracking-wide">
-              TOMOSHIBI<span className="text-amber-200 text-base ml-1">小屋</span>
-            </div>
-            <div className="mt-1 text-amber-200/80 text-xs tracking-wider">
-              舞台に灯をともす、ちいさな小屋
-            </div>
-            <div className="mt-4 inline-block px-3 py-1 rounded-full bg-amber-900/40 border border-amber-700/40 text-amber-100 text-xs">
-              ブラウザで舞台照明をデザイン
-            </div>
-          </div>
-        </div>
-      </a>
+      <SidebarSection title="姉妹サイト・アプリ">
+        <ul>
+          {SISTER_LINKS.map((l) => (
+            <li key={l.href} className="border-b border-[#D9D5CF] last:border-0">
+              <a href={l.href} target="_blank" rel="noopener noreferrer" className="block py-2.5 hover:bg-[#F4F2EE]">
+                <span className="block text-sm font-bold text-gray-900">{l.name}</span>
+                <span className="block text-xs text-gray-600">{l.note}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </SidebarSection>
     </div>
+  );
+}
+
+const SISTER_LINKS = [
+  { name: 'エチュードメーカー', note: '即興のお題をワンタップで（iOS アプリ）', href: 'https://apps.apple.com/us/app/%E3%82%A8%E3%83%81%E3%83%A5%E3%83%BC%E3%83%89%E3%83%A1%E3%83%BC%E3%82%AB%E3%83%BC/id6794500656' },
+  { name: 'TOMOSHIBI小屋', note: 'ブラウザで舞台照明をデザイン', href: 'https://tomoshibi.gikyokutosyokan.com' },
+];
+
+// サイドバーの欄。見出しは太い罫線の上に置く
+function SidebarSection({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <section>
+      <h2 className="!my-0 !pb-2 !text-sm !font-bold !text-gray-900 border-b-2 border-gray-900">{title}</h2>
+      <div className="mt-2">{children}</div>
+    </section>
   );
 }
 
@@ -254,78 +211,40 @@ function EnglishSidebar({ currentPath }: { currentPath?: string }) {
   ];
 
   return (
-    <div className="space-y-6">
-      <div className="bg-white rounded-lg shadow-sm p-4">
-        <div className="relative">
-          <input type="text" placeholder="Search articles..." className="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
-          <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-        </div>
-      </div>
+    <div className="space-y-8">
+      <SidebarSection title="Guides">
+        {menuItems.map((section) => (
+          <div key={section.title} className="mt-3 first:mt-0">
+            <p className="text-xs font-bold text-gray-600">{section.title}</p>
+            <ul className="mt-1">
+              {section.items.map((item) => (
+                <li key={item.href}>
+                  <Link href={item.href} className={`block py-1.5 text-sm hover:text-theater-primary-700 hover:underline underline-offset-4 ${currentPath === item.href ? 'text-theater-primary-700 font-bold' : 'text-gray-800'}`}>
+                    {item.title}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </SidebarSection>
 
-      <div className="bg-white rounded-lg shadow-sm p-4">
-        <h3 className="font-bold text-lg mb-4">Categories</h3>
-        <nav className="space-y-4">
-          {menuItems.map((section, index) => (
-            <div key={index}>
-              <h4 className="flex items-center gap-2 font-semibold text-gray-700 mb-2">
-                <span className="text-theater-primary-500">{section.icon}</span>
-                {section.title}
-              </h4>
-              <ul className="ml-6 space-y-1">
-                {section.items.map((item, itemIndex) => (
-                  <li key={itemIndex}>
-                    <Link href={item.href} className={`flex items-center gap-2 text-sm py-1 hover:text-theater-primary-600 transition-colors ${currentPath === item.href ? 'text-theater-primary-600 font-medium' : 'text-gray-600'}`}>
-                      <FaChevronRight size={10} />
-                      {item.title}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </nav>
-      </div>
-
-      <div className="bg-white rounded-lg shadow-sm p-4">
-        <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
-          <FaHotjar className="text-orange-500" />
-          Popular Articles
-        </h3>
-        <ul className="space-y-3">
-          {popularPosts.map((post, index) => (
-            <li key={index}>
-              <Link href={post.href} className="block hover:bg-gray-50 p-2 rounded transition-colors">
-                <p className="text-sm font-medium text-gray-700 line-clamp-2">{post.title}</p>
-              </Link>
+      <SidebarSection title="Start here">
+        <ul>
+          {popularPosts.map((post) => (
+            <li key={post.href} className="border-b border-[#D9D5CF] last:border-0">
+              <Link href={post.href} className="block py-2.5 text-sm text-gray-800 hover:text-theater-primary-700">{post.title}</Link>
             </li>
           ))}
         </ul>
-      </div>
+      </SidebarSection>
 
-      <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-lg shadow-sm p-4 text-white">
-        <h3 className="font-bold mb-2">Explore Japanese Scripts</h3>
-        <p className="text-sm mb-3">Search our library of theatrical scripts by cast size, duration, and more.</p>
-        <Link href="/" className="inline-block bg-white text-gray-800 px-4 py-2 rounded-lg font-medium text-sm hover:bg-gray-100 transition-colors">
-          Browse Scripts →
+      <div className="border border-[#D9D5CF] rounded p-4">
+        <p className="text-sm text-gray-800">Search Japanese plays by cast size, running time, and genre.</p>
+        <Link href="/" className="mt-3 inline-flex items-center h-10 px-4 rounded bg-theater-primary-600 hover:bg-theater-primary-700 text-white text-sm font-bold">
+          Browse plays
         </Link>
       </div>
-
-      {/* Etude Maker Banner (com.gikyokutosyokan.etude) */}
-      <a
-        href="https://apps.apple.com/us/app/%E3%82%A8%E3%83%81%E3%83%A5%E3%83%BC%E3%83%89%E3%83%A1%E3%83%BC%E3%82%AB%E3%83%BC/id6794500656"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="block cursor-pointer hover:opacity-90 transition-opacity"
-        aria-label="Etude Maker - iOS app that generates improv theater prompts"
-      >
-        <OptimizedImage
-          src="https://gikyokutosyokan-public.s3.ap-northeast-1.amazonaws.com/assets/banners/etude-rect.png"
-          alt="Etude Maker - Improv prompts, one tap away"
-          width={300}
-          height={250}
-          className="w-full h-auto rounded-lg shadow-md"
-        />
-      </a>
     </div>
   );
 }
