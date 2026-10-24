@@ -3,10 +3,11 @@ import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import Layout from '@/components/Layout';
+import Breadcrumb from '@/components/Breadcrumb';
 import Seo from '@/components/seo';
 import StructuredData from '@/components/StructuredData';
 import { prisma } from '@/lib/prisma';
-import { FaSearch, FaChevronRight, FaMapMarkerAlt, FaUsers, FaGlobe, FaMap, FaList, FaChevronDown, FaExternalLinkAlt, FaFire, FaArrowRight } from 'react-icons/fa';
+import { FaSearch, FaMapMarkerAlt, FaChevronDown, FaExternalLinkAlt, FaArrowRight } from 'react-icons/fa';
 
 const PREFECTURE_SLUG_MAP: Record<string, string> = {
   '北海道': 'hokkaido', '青森県': 'aomori', '岩手県': 'iwate', '宮城県': 'miyagi',
@@ -33,11 +34,9 @@ const JapanMap = dynamic(() => import('@/components/map/JapanMap'), {
 const TYPE_LABELS: Record<string, string> = {
   small: '小劇場', medium: '中劇場', large: '大劇場',
 };
+// 規模は色相ではなく濃さで示す（小さいほど薄い）
 const TYPE_COLORS: Record<string, string> = {
-  small: 'bg-blue-500', medium: 'bg-green-500', large: 'bg-purple-500',
-};
-const TYPE_TEXT_COLORS: Record<string, string> = {
-  small: 'text-blue-500', medium: 'text-green-500', large: 'text-purple-500',
+  small: 'bg-[#CFC8BF]', medium: 'bg-[#9C958D]', large: 'bg-[#5E5A55]',
 };
 const TYPE_TABS = [
   { key: '', label: 'すべて' },
@@ -77,11 +76,11 @@ function MiniCapacityBar({ capacity, venueType }: { capacity: number | null; ven
   const pct = Math.min(100, Math.max(8, ((Math.log(capacity) - minLog) / (maxLog - minLog)) * 100));
   const color = TYPE_COLORS[venueType] || 'bg-gray-400';
   return (
-    <div className="w-16 flex items-center gap-1.5 flex-shrink-0">
-      <div className="flex-1 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+    <div className="w-28 flex items-center gap-2 flex-shrink-0">
+      <div className="flex-1 h-1.5 bg-[#EEEBE6] rounded-full overflow-hidden">
         <div className={`h-full rounded-full ${color}`} style={{ width: `${pct}%` }} />
       </div>
-      <span className="text-[10px] text-gray-400 tabular-nums">{capacity}</span>
+      <span className="text-sm text-gray-800 tabular-nums">{capacity}</span>
     </div>
   );
 }
@@ -178,34 +177,33 @@ export default function VenuesIndex({ venues, venueDetails, stats, prefectures, 
         numberOfItems={stats.total}
       />
 
-      <div className="container mx-auto px-4 py-6 max-w-6xl">
-        <nav className="flex items-center gap-1 text-xs text-gray-500 mb-4">
-          <Link href="/" className="hover:text-theater-primary-600">ホーム</Link>
-          <FaChevronRight className="text-[8px]" />
-          <span className="text-gray-700">劇場データベース</span>
-        </nav>
+      <div className="max-w-5xl mx-auto pt-6 md:pt-8 pb-12">
+        <Breadcrumb items={[{ name: 'ホーム', href: '/' }, { name: '劇場データベース' }]} />
 
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
           <div>
-            <h1 className="text-2xl md:text-3xl font-bold text-gray-900">劇場データベース</h1>
-            <p className="text-sm text-gray-500 mt-1">全国{stats.total}件の劇場・ホール</p>
+            <h1 className="text-[26px] md:text-[32px] font-serif font-bold text-gray-900 leading-tight">劇場データベース</h1>
+            <p className="mt-2 text-base text-gray-600">
+              全国{stats.total}件の劇場・ホール（小劇場{stats.small}・中劇場{stats.medium}・大劇場{stats.large}）。座席数・地図・上演の記録を調べられます。
+            </p>
           </div>
-          <div className="flex gap-1 bg-gray-100 rounded-lg p-0.5">
-            <button onClick={() => setViewMode('map')} className={`px-3 py-1.5 rounded text-xs font-bold transition-colors ${viewMode === 'map' ? 'bg-white shadow-sm text-gray-900' : 'text-gray-500'}`}>
-              <FaMap className="inline mr-1" />地図
-            </button>
-            <button onClick={() => setViewMode('list')} className={`px-3 py-1.5 rounded text-xs font-bold transition-colors ${viewMode === 'list' ? 'bg-white shadow-sm text-gray-900' : 'text-gray-500'}`}>
-              <FaList className="inline mr-1" />一覧
-            </button>
-          </div>
+          <Link href="/support/posting-request" className="text-sm text-theater-primary-700 underline underline-offset-4 shrink-0">
+            劇場の掲載・情報の修正を依頼する
+          </Link>
         </div>
 
-        {/* 統計バー */}
-        <div className="flex flex-wrap gap-2 mb-4 text-xs">
-          <span className="px-2 py-1 bg-blue-50 text-blue-700 rounded font-bold">小劇場 {stats.small}</span>
-          <span className="px-2 py-1 bg-green-50 text-green-700 rounded font-bold">中劇場 {stats.medium}</span>
-          <span className="px-2 py-1 bg-purple-50 text-purple-700 rounded font-bold">大劇場 {stats.large}</span>
-        </div>
+        <nav aria-label="表示" className="mt-6 mb-6 flex gap-6 border-b border-[#D9D5CF] text-sm">
+          {([['map', '地図から探す'], ['list', '一覧で探す']] as const).map(([mode, label]) => (
+            <button
+              key={mode}
+              onClick={() => setViewMode(mode)}
+              aria-pressed={viewMode === mode}
+              className={`-mb-px py-2 border-b-2 ${viewMode === mode ? 'border-theater-primary-600 text-gray-900 font-bold' : 'border-transparent text-gray-600 hover:text-gray-900'}`}
+            >
+              {label}
+            </button>
+          ))}
+        </nav>
 
         {/* 地図ビュー */}
         {viewMode === 'map' && (
@@ -330,7 +328,7 @@ export default function VenuesIndex({ venues, venueDetails, stats, prefectures, 
             {!search && !selectedType && !selectedPrefecture && !selectedCapacity && popularVenues.length > 0 && (
               <section className="mb-6">
                 <h2 className="text-sm font-bold text-gray-700 mb-3 flex items-center gap-1.5">
-                  <FaFire className="text-orange-400" />注目の劇場
+                  注目の劇場
                 </h2>
                 <div className="flex gap-3 overflow-x-auto pb-2 -mx-1 px-1 scrollbar-hide">
                   {popularVenues.map((v) => (
@@ -371,7 +369,7 @@ export default function VenuesIndex({ venues, venueDetails, stats, prefectures, 
                 <button
                   key={key}
                   onClick={() => setSelectedCapacity(key)}
-                  className={`px-3 py-1.5 text-xs font-bold rounded-full transition-colors min-h-[36px] ${selectedCapacity === key ? 'bg-theater-primary-500 text-white' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'}`}
+                  className={`px-3 py-1.5 text-xs rounded border transition-colors min-h-[36px] ${selectedCapacity === key ? 'border-gray-900 text-gray-900 font-bold' : 'border-[#D9D5CF] text-gray-700 hover:border-gray-500'}`}
                 >
                   {label}
                 </button>
@@ -402,27 +400,29 @@ export default function VenuesIndex({ venues, venueDetails, stats, prefectures, 
             <p className="text-sm text-gray-500 mb-4">{filtered.length}件の劇場</p>
 
             {filtered.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                {filtered.map((v) => (
-                  <Link key={v.id} href={`/venues/${v.slug}`} className="block group">
-                    <div className="flex items-center gap-3 p-3 rounded-lg border border-gray-100 hover:border-theater-primary-200 hover:shadow-sm transition-all">
-                      <div className={`w-1.5 self-stretch rounded-full flex-shrink-0 ${TYPE_COLORS[v.venueType] || 'bg-gray-300'}`} />
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2">
-                          <h2 className="font-bold text-sm text-gray-900 group-hover:text-theater-primary-600 truncate">{v.name}</h2>
-                        </div>
-                        <div className="flex items-center gap-3 text-xs text-gray-400 mt-0.5">
-                          <span className="flex items-center gap-0.5"><FaMapMarkerAlt className="text-[9px] text-gray-300" />{v.prefecture}</span>
-                          <span className={`text-[10px] font-medium ${TYPE_TEXT_COLORS[v.venueType] || 'text-gray-400'}`}>{TYPE_LABELS[v.venueType]}</span>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-2 flex-shrink-0">
-                        <MiniCapacityBar capacity={v.capacity} venueType={v.venueType} />
-                        {v.hasWebsite && <FaGlobe className="text-gray-300 text-xs" />}
-                      </div>
-                    </div>
-                  </Link>
-                ))}
+              <div className="border-t border-[#D9D5CF]">
+                <div className="hidden md:grid grid-cols-[minmax(0,1fr)_7rem_5rem_7rem] gap-x-4 py-2 px-2 text-xs font-medium text-gray-600 bg-[#F4F2EE] border-b border-[#D9D5CF]">
+                  <span>劇場</span><span>都道府県</span><span>規模</span><span>座席数</span>
+                </div>
+                <ul>
+                  {filtered.map((v) => (
+                    <li key={v.id} className="border-b border-[#D9D5CF]">
+                      <Link href={`/venues/${v.slug}`} className="group grid md:grid-cols-[minmax(0,1fr)_7rem_5rem_7rem] gap-x-4 items-center py-3 px-2 hover:bg-[#F4F2EE]">
+                        <span className="min-w-0">
+                          <span className="block font-bold text-gray-900 group-hover:text-theater-primary-700 truncate">{v.name}</span>
+                          <span className="md:hidden block text-sm text-gray-600">
+                            {[v.prefecture, TYPE_LABELS[v.venueType], v.capacity ? `${v.capacity}席` : null].filter(Boolean).join('・')}
+                          </span>
+                        </span>
+                        <span className="hidden md:block text-sm text-gray-800">{v.prefecture}</span>
+                        <span className="hidden md:block text-sm text-gray-800">{TYPE_LABELS[v.venueType]}</span>
+                        <span className="hidden md:flex items-center gap-2">
+                          <MiniCapacityBar capacity={v.capacity} venueType={v.venueType} />
+                        </span>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
               </div>
             ) : (
               <div className="text-center py-12 text-gray-400">条件に一致する劇場が見つかりませんでした</div>
