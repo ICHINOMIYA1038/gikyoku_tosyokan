@@ -144,11 +144,11 @@ export default function ContestsPage() {
         ]}
       />
       <Layout>
-        <div className="min-h-screen bg-gradient-to-b from-amber-50 to-white">
+        <div className="min-h-screen">
           {/* ヘッダー */}
-          <div className="bg-gradient-to-r from-yellow-100 via-amber-50 to-yellow-100 py-10 px-4">
+          <div className="py-10 px-4">
             <div className="max-w-4xl mx-auto text-center">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-200/50 text-amber-800 text-sm font-medium mb-3">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#F4F2EE] text-gray-900 text-sm font-medium mb-3">
                 <FaTrophy />
                 ガイド
               </div>
@@ -165,7 +165,7 @@ export default function ContestsPage() {
             {/* 主要戯曲賞 */}
             <section className="mb-12">
               <div className="flex items-center gap-3 mb-6">
-                <FaTrophy className="text-amber-500 text-xl" />
+                <FaTrophy className="text-gray-500 text-xl" />
                 <h2 className="text-xl md:text-2xl font-bold text-gray-900">
                   主要な戯曲賞・脚本コンテスト
                 </h2>
@@ -174,11 +174,11 @@ export default function ContestsPage() {
                 {MAJOR_CONTESTS.map((contest) => (
                   <div
                     key={contest.name}
-                    className="bg-white rounded-xl border border-gray-200 p-5 hover:shadow-md transition-shadow"
+                    className="bg-white rounded border border-[#D9D5CF] p-5 transition-shadow"
                   >
                     <div className="flex flex-wrap items-start justify-between gap-2 mb-2">
                       <h3 className="text-lg font-bold text-gray-900">{contest.name}</h3>
-                      <span className="px-2.5 py-0.5 bg-amber-100 text-amber-700 text-xs font-medium rounded-full">
+                      <span className="px-2.5 py-0.5 bg-[#F4F2EE] text-theater-primary-700 text-xs font-medium rounded-full">
                         {contest.genre}
                       </span>
                     </div>
@@ -202,7 +202,7 @@ export default function ContestsPage() {
             {/* アマチュア向け */}
             <section className="mb-12">
               <div className="flex items-center gap-3 mb-6">
-                <FaBook className="text-green-500 text-xl" />
+                <FaBook className="text-gray-500 text-xl" />
                 <h2 className="text-xl md:text-2xl font-bold text-gray-900">
                   初心者・アマチュア向け
                 </h2>
@@ -211,11 +211,11 @@ export default function ContestsPage() {
                 {AMATEUR_CONTESTS.map((contest) => (
                   <div
                     key={contest.name}
-                    className="bg-white rounded-xl border border-green-100 p-5 hover:shadow-md transition-shadow"
+                    className="bg-white rounded border border-[#D9D5CF] p-5 transition-shadow"
                   >
                     <div className="flex flex-wrap items-start justify-between gap-2 mb-2">
                       <h3 className="text-lg font-bold text-gray-900">{contest.name}</h3>
-                      <span className="px-2.5 py-0.5 bg-green-100 text-green-700 text-xs font-medium rounded-full">
+                      <span className="px-2.5 py-0.5 bg-[#F4F2EE] text-theater-primary-700 text-xs font-medium rounded-full">
                         {contest.genre}
                       </span>
                     </div>
@@ -238,15 +238,15 @@ export default function ContestsPage() {
             {/* 応募のコツ */}
             <section className="mb-12">
               <div className="flex items-center gap-3 mb-6">
-                <FaLightbulb className="text-yellow-500 text-xl" />
+                <FaLightbulb className="text-gray-500 text-xl" />
                 <h2 className="text-xl md:text-2xl font-bold text-gray-900">
                   脚本コンテスト応募のコツ
                 </h2>
               </div>
               <div className="space-y-3">
                 {TIPS.map((tip, i) => (
-                  <div key={i} className="flex gap-4 bg-white rounded-xl border border-gray-100 p-5">
-                    <div className="flex-shrink-0 w-8 h-8 rounded-full bg-yellow-100 flex items-center justify-center text-yellow-700 font-bold text-sm">
+                  <div key={i} className="flex gap-4 bg-white rounded border border-[#D9D5CF] p-5">
+                    <div className="flex-shrink-0 w-8 h-8 rounded-full bg-[#F4F2EE] flex items-center justify-center text-theater-primary-700 font-bold text-sm">
                       {i + 1}
                     </div>
                     <div>
@@ -259,7 +259,7 @@ export default function ContestsPage() {
             </section>
 
             {/* 注意事項 */}
-            <section className="mb-12 bg-gray-50 rounded-xl p-6 border border-gray-200">
+            <section className="mb-12 bg-gray-50 rounded p-6 border border-[#D9D5CF]">
               <h2 className="font-bold text-gray-900 mb-2">ご注意</h2>
               <ul className="text-sm text-gray-600 space-y-1 list-disc pl-5">
                 <li>掲載情報は変更される場合があります。最新の情報は各主催者の公式サイトでご確認ください。</li>
@@ -271,7 +271,7 @@ export default function ContestsPage() {
             <AdSlot slot={AD_SLOTS.BLOG_AFTER_TOC} format="horizontal" />
 
             {/* CTA */}
-            <section className="text-center bg-amber-50 rounded-2xl p-8 border border-amber-200">
+            <section className="text-center bg-[#F4F2EE] rounded p-8 border border-[#D9D5CF]">
               <h2 className="text-xl font-bold text-gray-900 mb-2">
                 コンテストに出す前に、名作を読もう
               </h2>
@@ -281,14 +281,14 @@ export default function ContestsPage() {
               <div className="flex flex-col sm:flex-row justify-center gap-3">
                 <Link
                   href="/posts"
-                  className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-full transition-colors"
+                  className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-theater-primary-600 hover:bg-theater-primary-700 text-white font-bold rounded-full transition-colors"
                 >
                   <FaBook />
                   脚本を探す
                 </Link>
                 <Link
                   href="/lp/shindan"
-                  className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-amber-400 text-amber-700 font-bold rounded-full hover:bg-amber-100 transition-colors"
+                  className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-[#D9D5CF] text-theater-primary-700 font-bold rounded-full hover:bg-[#F4F2EE] transition-colors"
                 >
                   脚本診断を試す
                 </Link>

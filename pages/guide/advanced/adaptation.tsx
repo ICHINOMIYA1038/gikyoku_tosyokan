@@ -341,9 +341,9 @@ export default function AdaptationGuide() {
         </header>
 
         {/* イントロダクション */}
-        <section className="mb-12 bg-gradient-to-r from-indigo-50 to-purple-50 p-8 rounded-lg">
+        <section className="mb-12 p-8 rounded-lg">
           <h2 className="text-2xl font-bold mb-4 flex items-center">
-            <FaPencilAlt className="mr-3 text-indigo-500" />
+            <FaPencilAlt className="mr-3 text-gray-500" />
             翻案・潤色とは
           </h2>
           <div className="grid md:grid-cols-2 gap-6">
@@ -378,50 +378,50 @@ export default function AdaptationGuide() {
             <button
               onClick={() => setActiveSection("basics")}
               className={`px-4 py-2 rounded-lg transition-all ${
-                activeSection === "basics"
-                  ? "bg-indigo-500 text-white shadow"
-                  : "bg-white text-gray-700 hover:bg-gray-50"
-              }`}
+ activeSection === "basics"
+ ? "bg-theater-primary-600 text-white shadow"
+ : "bg-white text-gray-700 hover:bg-gray-50"
+ }`}
             >
               基本知識
             </button>
             <button
               onClick={() => setActiveSection("types")}
               className={`px-4 py-2 rounded-lg transition-all ${
-                activeSection === "types"
-                  ? "bg-indigo-500 text-white shadow"
-                  : "bg-white text-gray-700 hover:bg-gray-50"
-              }`}
+ activeSection === "types"
+ ? "bg-theater-primary-600 text-white shadow"
+ : "bg-white text-gray-700 hover:bg-gray-50"
+ }`}
             >
               翻案の種類
             </button>
             <button
               onClick={() => setActiveSection("techniques")}
               className={`px-4 py-2 rounded-lg transition-all ${
-                activeSection === "techniques"
-                  ? "bg-indigo-500 text-white shadow"
-                  : "bg-white text-gray-700 hover:bg-gray-50"
-              }`}
+ activeSection === "techniques"
+ ? "bg-theater-primary-600 text-white shadow"
+ : "bg-white text-gray-700 hover:bg-gray-50"
+ }`}
             >
               潤色技法
             </button>
             <button
               onClick={() => setActiveSection("process")}
               className={`px-4 py-2 rounded-lg transition-all ${
-                activeSection === "process"
-                  ? "bg-indigo-500 text-white shadow"
-                  : "bg-white text-gray-700 hover:bg-gray-50"
-              }`}
+ activeSection === "process"
+ ? "bg-theater-primary-600 text-white shadow"
+ : "bg-white text-gray-700 hover:bg-gray-50"
+ }`}
             >
               実践プロセス
             </button>
             <button
               onClick={() => setActiveSection("legal")}
               className={`px-4 py-2 rounded-lg transition-all ${
-                activeSection === "legal"
-                  ? "bg-indigo-500 text-white shadow"
-                  : "bg-white text-gray-700 hover:bg-gray-50"
-              }`}
+ activeSection === "legal"
+ ? "bg-theater-primary-600 text-white shadow"
+ : "bg-white text-gray-700 hover:bg-gray-50"
+ }`}
             >
               法的注意点
             </button>
@@ -434,8 +434,8 @@ export default function AdaptationGuide() {
             <h2 className="text-2xl font-bold mb-6">翻案・潤色の基本</h2>
             
             <div className="grid md:grid-cols-2 gap-6 mb-8">
-              <div className="bg-green-50 p-6 rounded-lg">
-                <h3 className="font-bold mb-3 text-green-700">翻案・潤色が必要な理由</h3>
+              <div className="bg-[#F4F2EE] p-6 rounded-lg">
+                <h3 className="font-bold mb-3 text-theater-primary-700">翻案・潤色が必要な理由</h3>
                 <ul className="space-y-2 text-sm">
                   <li>✓ 現代の観客に響く作品にするため</li>
                   <li>✓ 上演条件（時間・人数）に合わせるため</li>
@@ -490,7 +490,7 @@ export default function AdaptationGuide() {
             
             {adaptationTypes.map((type, index) => (
               <div key={index} className="mb-8 bg-white border rounded-lg p-6">
-                <h3 className="text-xl font-bold mb-3 text-indigo-600">{type.type}</h3>
+                <h3 className="text-xl font-bold mb-3 text-theater-primary-700">{type.type}</h3>
                 <p className="text-gray-600 mb-4">{type.description}</p>
                 
                 <div className="grid md:grid-cols-2 gap-6">
@@ -500,7 +500,7 @@ export default function AdaptationGuide() {
                       {type.examples.map((example, i) => (
                         <div key={i} className="bg-gray-50 p-3 rounded text-sm">
                           <strong>{example.original}</strong>
-                          <div className="text-indigo-600 mt-1">→ {example.adapted}</div>
+                          <div className="text-theater-primary-700 mt-1">→ {example.adapted}</div>
                         </div>
                       ))}
                     </div>
@@ -534,7 +534,7 @@ export default function AdaptationGuide() {
             
             {Object.entries(polishingTechniques).map(([key, section]) => (
               <div key={key} className="mb-8">
-                <h3 className="text-xl font-bold mb-4 text-purple-600">{section.title}</h3>
+                <h3 className="text-xl font-bold mb-4 text-theater-primary-700">{section.title}</h3>
                 
                 <div className="space-y-4">
                   {section.methods.map((method, index) => (
@@ -543,7 +543,7 @@ export default function AdaptationGuide() {
                       <p className="text-sm text-gray-600 mb-3">{method.description}</p>
                       
                       {'examples' in method && method.examples && (
-                        <div className="bg-purple-50 p-4 rounded mb-3">
+                        <div className="bg-[#F4F2EE] p-4 rounded mb-3">
                           <h5 className="font-semibold text-sm mb-2">例</h5>
                           <ul className="space-y-1 text-sm">
                             {method.examples.map((example, i) => (
@@ -564,7 +564,7 @@ export default function AdaptationGuide() {
                       )}
                       
                       {'tips' in method && method.tips && (
-                        <div className="mt-3 text-sm text-blue-600">
+                        <div className="mt-3 text-sm text-theater-primary-700">
                           💡 {method.tips}
                         </div>
                       )}
@@ -615,11 +615,11 @@ export default function AdaptationGuide() {
             <h2 className="text-2xl font-bold mb-6">翻案・潤色の実践プロセス</h2>
             
             <div className="relative">
-              <div className="absolute left-12 top-0 bottom-0 w-0.5 bg-indigo-200"></div>
+              <div className="absolute left-12 top-0 bottom-0 w-0.5 bg-[#F4F2EE]"></div>
               
               {adaptationProcess.map((step, index) => (
                 <div key={index} className="relative flex items-start mb-8">
-                  <div className="bg-indigo-500 text-white rounded-full w-24 h-24 flex flex-col items-center justify-center flex-shrink-0 z-10">
+                  <div className="bg-theater-primary-600 text-white rounded-full w-24 h-24 flex flex-col items-center justify-center flex-shrink-0 z-10">
                     <span className="text-2xl font-bold">STEP</span>
                     <span className="text-3xl font-bold">{step.step}</span>
                   </div>
@@ -627,14 +627,14 @@ export default function AdaptationGuide() {
                     <div className="bg-white border rounded-lg p-6">
                       <div className="flex justify-between items-start mb-3">
                         <h3 className="font-bold text-lg">{step.phase}</h3>
-                        <span className="bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full text-sm">
+                        <span className="bg-[#F4F2EE] text-theater-primary-700 px-3 py-1 rounded-full text-sm">
                           {step.duration}
                         </span>
                       </div>
                       <ul className="space-y-2">
                         {step.tasks.map((task, i) => (
                           <li key={i} className="flex items-start">
-                            <FaCheckCircle className="text-green-500 mr-2 mt-0.5 flex-shrink-0" />
+                            <FaCheckCircle className="text-gray-500 mr-2 mt-0.5 flex-shrink-0" />
                             <span className="text-sm">{task}</span>
                           </li>
                         ))}
@@ -677,7 +677,7 @@ export default function AdaptationGuide() {
                     </div>
                     <div>
                       <h4 className="font-semibold mb-2">対処法</h4>
-                      <div className="bg-green-50 p-4 rounded">
+                      <div className="bg-[#F4F2EE] p-4 rounded">
                         <p className="text-sm">{item.solution}</p>
                       </div>
                     </div>
@@ -686,7 +686,7 @@ export default function AdaptationGuide() {
               ))}
             </div>
             
-            <div className="mt-6 bg-blue-50 p-6 rounded-lg">
+            <div className="mt-6 bg-[#F4F2EE] p-6 rounded-lg">
               <h3 className="font-bold mb-3">著作権フリーの作品</h3>
               <p className="text-sm mb-3">
                 以下の作品は基本的に自由に翻案・潤色が可能です：
@@ -704,13 +704,13 @@ export default function AdaptationGuide() {
         {/* 成功事例 */}
         <section className="mb-12">
           <h2 className="text-2xl font-bold mb-6 flex items-center">
-            <FaTheaterMasks className="mr-3 text-green-500" />
+            <FaTheaterMasks className="mr-3 text-gray-500" />
             翻案・潤色の成功事例
           </h2>
           
           <div className="space-y-6">
             {successCases.map((case_, index) => (
-              <div key={index} className="bg-gradient-to-r from-green-50 to-blue-50 p-6 rounded-lg">
+              <div key={index} className="p-6 rounded-lg">
                 <h3 className="font-bold text-lg mb-3">{case_.title}</h3>
                 <div className="grid md:grid-cols-2 gap-4 mb-4">
                   <div>
@@ -725,7 +725,7 @@ export default function AdaptationGuide() {
                 <p className="text-sm text-gray-700 mb-3">
                   <strong>コンセプト：</strong>{case_.concept}
                 </p>
-                <p className="text-sm text-green-700 mb-3">
+                <p className="text-sm text-theater-primary-700 mb-3">
                   <strong>結果：</strong>{case_.result}
                 </p>
                 <div className="bg-white p-4 rounded">
@@ -790,7 +790,7 @@ export default function AdaptationGuide() {
               </div>
               
               <div className="flex gap-4">
-                <button type="button" className="bg-indigo-500 text-white px-6 py-3 rounded-lg hover:bg-indigo-600">
+                <button type="button" className="bg-theater-primary-600 text-white px-6 py-3 rounded-lg hover:bg-theater-primary-700">
                   保存する
                 </button>
                 <button type="button" className="bg-gray-500 text-white px-6 py-3 rounded-lg hover:bg-gray-600">
@@ -804,26 +804,26 @@ export default function AdaptationGuide() {
         <AdSlot slot={AD_SLOTS.BLOG_AFTER_TOC} format="horizontal" />
 
         {/* まとめ */}
-        <section className="mb-12 bg-gradient-to-r from-purple-100 to-indigo-100 p-8 rounded-lg">
+        <section className="mb-12 p-8 rounded-lg">
           <h2 className="text-2xl font-bold mb-4">翻案・潤色を成功させるために</h2>
           
           <div className="grid md:grid-cols-3 gap-4">
             <div className="bg-white p-5 rounded-lg">
-              <FaBook className="text-2xl text-purple-500 mb-2" />
+              <FaBook className="text-2xl text-gray-500 mb-2" />
               <h3 className="font-semibold mb-2">深い理解</h3>
               <p className="text-sm text-gray-600">
                 原作の本質を理解し、何を残し何を変えるか明確に
               </p>
             </div>
             <div className="bg-white p-5 rounded-lg">
-              <FaLightbulb className="text-2xl text-yellow-500 mb-2" />
+              <FaLightbulb className="text-2xl text-gray-500 mb-2" />
               <h3 className="font-semibold mb-2">創造性</h3>
               <p className="text-sm text-gray-600">
                 大胆な発想と繊細な配慮のバランス
               </p>
             </div>
             <div className="bg-white p-5 rounded-lg">
-              <FaCheckCircle className="text-2xl text-green-500 mb-2" />
+              <FaCheckCircle className="text-2xl text-gray-500 mb-2" />
               <h3 className="font-semibold mb-2">実践性</h3>
               <p className="text-sm text-gray-600">
                 上演可能で観客に伝わる作品に
@@ -841,10 +841,10 @@ export default function AdaptationGuide() {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/" className="inline-block bg-indigo-500 text-white px-8 py-3 rounded-lg hover:bg-indigo-600 font-semibold">
+            <Link href="/" className="inline-block bg-theater-primary-600 text-white px-8 py-3 rounded-lg hover:bg-theater-primary-700 font-semibold">
               翻案可能な作品を探す
             </Link>
-            <Link href="/guide/advanced/directing" className="inline-block bg-white text-indigo-500 border-2 border-indigo-500 px-8 py-3 rounded-lg hover:bg-indigo-50 font-semibold">
+            <Link href="/guide/advanced/directing" className="inline-block bg-white text-gray-500 border-2 border-indigo-500 px-8 py-3 rounded-lg hover:bg-[#F4F2EE] font-semibold">
               演出の技法を学ぶ
             </Link>
           </div>

@@ -54,10 +54,10 @@ export function TheaterMenuFavoriteButton({ menuId }: { menuId: number }) {
       onClick={toggle}
       disabled={fav === null || busy}
       className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs transition ${
-        fav
-          ? "bg-rose-50 border-rose-300 text-rose-700"
-          : "bg-white border-gray-300 text-gray-600 hover:border-rose-300 hover:text-rose-600"
-      }`}
+ fav
+ ? "bg-rose-50 border-rose-300 text-rose-700"
+ : "bg-white border-gray-300 text-gray-600 hover:border-rose-300 hover:text-rose-600"
+ }`}
     >
       <Heart className={`w-3.5 h-3.5 ${fav ? "fill-rose-500" : ""}`} />
       {fav ? "お気に入り済み" : "お気に入り"}

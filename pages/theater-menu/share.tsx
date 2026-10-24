@@ -35,7 +35,7 @@ export default function SharePage() {
         </nav>
         <h1 className="text-2xl font-bold text-gray-900 mb-4">共有された結果</h1>
         {text ? (
-          <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+          <div className="rounded border border-[#D9D5CF] bg-white p-6">
             <pre className="whitespace-pre-wrap text-sm text-gray-800 font-sans leading-relaxed">
               {text}
             </pre>

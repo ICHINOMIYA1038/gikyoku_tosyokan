@@ -79,16 +79,16 @@ export default function ActingBasics() {
 
         {/* 導入 */}
         <section className="mb-12">
-          <div className="bg-purple-50 p-6 rounded-lg">
+          <div className="bg-[#F4F2EE] p-6 rounded-lg">
             <h2 className="text-xl font-bold mb-3">演技力向上の3つの柱</h2>
             <div className="grid md:grid-cols-3 gap-4 mt-4">
               <div className="bg-white p-4 rounded">
-                <FaMicrophone className="text-2xl text-purple-500 mb-2" />
+                <FaMicrophone className="text-2xl text-gray-500 mb-2" />
                 <h3 className="font-semibold mb-1">声</h3>
                 <p className="text-sm text-gray-600">発声・発音・抑揚</p>
               </div>
               <div className="bg-white p-4 rounded">
-                <FaRunning className="text-2xl text-blue-500 mb-2" />
+                <FaRunning className="text-2xl text-gray-500 mb-2" />
                 <h3 className="font-semibold mb-1">身体</h3>
                 <p className="text-sm text-gray-600">姿勢・動き・表情</p>
               </div>
@@ -104,7 +104,7 @@ export default function ActingBasics() {
         {/* Step 1: 声の基礎 */}
         <section className="mb-12">
           <h2 className="text-2xl font-bold mb-6 flex items-center">
-            <FaMicrophone className="mr-2 text-purple-500" />
+            <FaMicrophone className="mr-2 text-gray-500" />
             Step 1: 声の基礎トレーニング
           </h2>
 
@@ -121,28 +121,28 @@ export default function ActingBasics() {
                 <h4 className="font-semibold mb-3">基本練習方法</h4>
                 <ol className="space-y-3 text-sm">
                   <li className="flex items-start">
-                    <span className="bg-purple-500 text-white rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 mr-2 text-xs">1</span>
+                    <span className="bg-theater-primary-600 text-white rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 mr-2 text-xs">1</span>
                     <div>
                       <strong>仰向けになる</strong>
                       <p className="text-gray-600">床に寝転がり、お腹に本を乗せる</p>
                     </div>
                   </li>
                   <li className="flex items-start">
-                    <span className="bg-purple-500 text-white rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 mr-2 text-xs">2</span>
+                    <span className="bg-theater-primary-600 text-white rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 mr-2 text-xs">2</span>
                     <div>
                       <strong>鼻から吸う（4秒）</strong>
                       <p className="text-gray-600">本が上に上がるのを確認</p>
                     </div>
                   </li>
                   <li className="flex items-start">
-                    <span className="bg-purple-500 text-white rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 mr-2 text-xs">3</span>
+                    <span className="bg-theater-primary-600 text-white rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 mr-2 text-xs">3</span>
                     <div>
                       <strong>口から吐く（8秒）</strong>
                       <p className="text-gray-600">ゆっくりと本が下がるのを確認</p>
                     </div>
                   </li>
                   <li className="flex items-start">
-                    <span className="bg-purple-500 text-white rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 mr-2 text-xs">4</span>
+                    <span className="bg-theater-primary-600 text-white rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 mr-2 text-xs">4</span>
                     <div>
                       <strong>立った状態でも練習</strong>
                       <p className="text-gray-600">同じ感覚で呼吸できるまで繰り返す</p>
@@ -161,7 +161,7 @@ export default function ActingBasics() {
               </p>
               
               <div className="grid md:grid-cols-2 gap-4">
-                <div className="bg-blue-50 p-4 rounded-lg">
+                <div className="bg-[#F4F2EE] p-4 rounded-lg">
                   <h4 className="font-semibold mb-2">母音の練習</h4>
                   <ul className="text-sm space-y-2">
                     <li>• 「あ」：大きく口を開ける</li>
@@ -171,7 +171,7 @@ export default function ActingBasics() {
                     <li>• 「お」：唇を丸くする</li>
                   </ul>
                 </div>
-                <div className="bg-green-50 p-4 rounded-lg">
+                <div className="bg-[#F4F2EE] p-4 rounded-lg">
                   <h4 className="font-semibold mb-2">滑舌トレーニング</h4>
                   <ul className="text-sm space-y-2">
                     <li>• 外郎売り（ういろううり）</li>
@@ -189,7 +189,7 @@ export default function ActingBasics() {
         {/* Step 2: 身体表現 */}
         <section className="mb-12">
           <h2 className="text-2xl font-bold mb-6 flex items-center">
-            <FaRunning className="mr-2 text-blue-500" />
+            <FaRunning className="mr-2 text-gray-500" />
             Step 2: 身体表現の基礎
           </h2>
 
@@ -205,23 +205,23 @@ export default function ActingBasics() {
                 </p>
                 <ul className="space-y-2 text-sm">
                   <li className="flex items-start">
-                    <FaHandPaper className="text-blue-500 mt-1 mr-2" />
+                    <FaHandPaper className="text-gray-500 mt-1 mr-2" />
                     <span><strong>足</strong>：肩幅に開き、つま先は正面</span>
                   </li>
                   <li className="flex items-start">
-                    <FaHandPaper className="text-blue-500 mt-1 mr-2" />
+                    <FaHandPaper className="text-gray-500 mt-1 mr-2" />
                     <span><strong>膝</strong>：軽く緩める（ロックしない）</span>
                   </li>
                   <li className="flex items-start">
-                    <FaHandPaper className="text-blue-500 mt-1 mr-2" />
+                    <FaHandPaper className="text-gray-500 mt-1 mr-2" />
                     <span><strong>背筋</strong>：頭頂部を糸で引っ張られるイメージ</span>
                   </li>
                   <li className="flex items-start">
-                    <FaHandPaper className="text-blue-500 mt-1 mr-2" />
+                    <FaHandPaper className="text-gray-500 mt-1 mr-2" />
                     <span><strong>肩</strong>：力を抜いて自然に下ろす</span>
                   </li>
                   <li className="flex items-start">
-                    <FaHandPaper className="text-blue-500 mt-1 mr-2" />
+                    <FaHandPaper className="text-gray-500 mt-1 mr-2" />
                     <span><strong>視線</strong>：まっすぐ前を見る</span>
                   </li>
                 </ul>
@@ -317,11 +317,11 @@ export default function ActingBasics() {
         {/* 毎日の練習メニュー */}
         <section className="mb-12">
           <h2 className="text-2xl font-bold mb-6 flex items-center">
-            <FaBrain className="mr-2 text-green-500" />
+            <FaBrain className="mr-2 text-gray-500" />
             毎日の練習メニュー
           </h2>
           
-          <div className="bg-green-50 p-6 rounded-lg">
+          <div className="bg-[#F4F2EE] p-6 rounded-lg">
             <h3 className="text-xl font-semibold mb-4">15分でできる基礎練習</h3>
             
             <div className="space-y-4">
@@ -330,14 +330,14 @@ export default function ActingBasics() {
                   <div className="flex justify-between items-start mb-2">
                     <h4 className="font-semibold">{exercise.title}</h4>
                     <div className="flex gap-2">
-                      <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded">
+                      <span className="text-xs bg-[#F4F2EE] text-theater-primary-700 px-2 py-1 rounded">
                         {exercise.time}
                       </span>
                       <span className={`text-xs px-2 py-1 rounded ${
-                        exercise.difficulty === "初級" ? "bg-green-100 text-green-700" :
-                        exercise.difficulty === "中級" ? "bg-yellow-100 text-yellow-700" :
-                        "bg-red-100 text-red-700"
-                      }`}>
+ exercise.difficulty === "初級" ? "bg-[#F4F2EE] text-theater-primary-700" :
+ exercise.difficulty === "中級" ? "bg-[#F4F2EE] text-theater-primary-700" :
+ "bg-red-100 text-red-700"
+ }`}>
                         {exercise.difficulty}
                       </span>
                     </div>
@@ -347,7 +347,7 @@ export default function ActingBasics() {
               ))}
             </div>
             
-            <div className="mt-6 p-4 bg-yellow-50 rounded">
+            <div className="mt-6 p-4 bg-[#F4F2EE] rounded">
               <p className="text-sm">
                 <strong>💡 ポイント：</strong>
                 毎日継続することが大切です。最初は5分からでもOK。徐々に時間を延ばしていきましょう。
@@ -469,7 +469,7 @@ export default function ActingBasics() {
         <AdSlot slot={AD_SLOTS.BLOG_AFTER_TOC} format="horizontal" />
 
         {/* まとめ */}
-        <section className="bg-gradient-to-r from-purple-50 to-pink-50 p-8 rounded-lg mb-12">
+        <section className="p-8 rounded-lg mb-12">
           <h2 className="text-2xl font-bold mb-4">演技上達の極意</h2>
           
           <div className="space-y-4">
@@ -511,7 +511,7 @@ export default function ActingBasics() {
             初心者でも演じやすい作品を集めました。
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
-            <Link href="/?categories=2" className="inline-block bg-theater-primary-600 text-white px-6 py-3 rounded-lg hover:bg-theater-primary-600 text-center">
+            <Link href="/?categories=2" className="inline-block bg-theater-primary-600 text-white px-6 py-3 rounded-lg hover:bg-theater-primary-700 text-center">
               初心者向け作品を探す
             </Link>
             <Link href="/guide" className="inline-block bg-gray-500 text-white px-6 py-3 rounded-lg hover:bg-gray-600 text-center">
@@ -525,17 +525,17 @@ export default function ActingBasics() {
           <h2 className="text-xl font-bold mb-4">関連ガイド</h2>
           <ul className="space-y-2">
             <li>
-              <Link href="/guide/beginner/how-to-choose-script" className="text-blue-600 hover:underline">
+              <Link href="/guide/beginner/how-to-choose-script" className="text-theater-primary-700 hover:underline">
                 → 脚本の選び方完全ガイド
               </Link>
             </li>
             <li>
-              <Link href="/guide/school/culture-festival" className="text-blue-600 hover:underline">
+              <Link href="/guide/school/culture-festival" className="text-theater-primary-700 hover:underline">
                 → 文化祭演劇ガイド
               </Link>
             </li>
             <li>
-              <Link href="/guide/beginner/reading-script" className="text-blue-600 hover:underline">
+              <Link href="/guide/beginner/reading-script" className="text-theater-primary-700 hover:underline">
                 → 脚本の読み方・分析方法（準備中）
               </Link>
             </li>

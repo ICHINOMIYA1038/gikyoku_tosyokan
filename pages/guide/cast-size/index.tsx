@@ -325,16 +325,16 @@ export default function CastSizeGuide() {
 
         {/* クイックアクセス */}
         <section className="mb-12">
-          <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-6 rounded-lg">
+          <div className="p-6 rounded-lg">
             <h2 className="text-xl font-bold mb-4 text-center">人数から選ぶ</h2>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
               <button
                 onClick={() => setSelectedSize("all")}
                 className={`p-3 rounded-lg text-center transition-all ${
-                  selectedSize === "all" 
-                    ? "bg-theater-primary-600 text-white shadow-lg" 
-                    : "bg-white hover:bg-gray-50 border"
-                }`}
+ selectedSize === "all" 
+ ? "bg-theater-primary-600 text-white " 
+ : "bg-white hover:bg-gray-50 border"
+ }`}
               >
                 <span className="text-2xl mb-1 block">📚</span>
                 <span className="text-sm font-medium">すべて</span>
@@ -344,10 +344,10 @@ export default function CastSizeGuide() {
                   key={item.size}
                   onClick={() => setSelectedSize(item.size)}
                   className={`p-3 rounded-lg text-center transition-all ${
-                    selectedSize === item.size 
-                      ? "bg-theater-primary-600 text-white shadow-lg" 
-                      : "bg-white hover:bg-gray-50 border"
-                  }`}
+ selectedSize === item.size 
+ ? "bg-theater-primary-600 text-white " 
+ : "bg-white hover:bg-gray-50 border"
+ }`}
                 >
                   <span className="text-2xl mb-1 block">{item.icon}</span>
                   <span className="text-sm font-medium">{item.label}</span>
@@ -360,14 +360,14 @@ export default function CastSizeGuide() {
         {/* 人数別詳細ガイド */}
         <div className="space-y-12">
           {filteredGuides.map((guide, index) => (
-            <section key={index} className="bg-white rounded-lg shadow-sm border p-8">
+            <section key={index} className="bg-white rounded-lg border p-8">
               <header className="mb-6">
                 <div className="flex items-center justify-between mb-4">
                   <h2 className="text-2xl font-bold flex items-center">
-                    <FaUsers className="mr-3 text-blue-500" />
+                    <FaUsers className="mr-3 text-gray-500" />
                     {guide.title}
                   </h2>
-                  <span className="bg-blue-100 text-blue-700 px-4 py-2 rounded-full font-bold">
+                  <span className="bg-[#F4F2EE] text-theater-primary-700 px-4 py-2 rounded-full font-bold">
                     {guide.range}
                   </span>
                 </div>
@@ -376,15 +376,15 @@ export default function CastSizeGuide() {
 
               <div className="grid md:grid-cols-2 gap-6 mb-6">
                 {/* メリット */}
-                <div className="bg-green-50 p-5 rounded-lg">
-                  <h3 className="font-semibold text-green-800 mb-3 flex items-center">
+                <div className="bg-[#F4F2EE] p-5 rounded-lg">
+                  <h3 className="font-semibold text-gray-900 mb-3 flex items-center">
                     <FaStar className="mr-2" />
                     メリット
                   </h3>
                   <ul className="space-y-2">
                     {guide.pros.map((pro, i) => (
                       <li key={i} className="flex items-start">
-                        <span className="text-green-600 mr-2">✓</span>
+                        <span className="text-theater-primary-700 mr-2">✓</span>
                         <span className="text-sm text-gray-700">{pro}</span>
                       </li>
                     ))}
@@ -411,14 +411,14 @@ export default function CastSizeGuide() {
               {/* おすすめシーン */}
               <div className="mb-6">
                 <h3 className="font-semibold mb-3 flex items-center">
-                  <FaTheaterMasks className="mr-2 text-purple-500" />
+                  <FaTheaterMasks className="mr-2 text-gray-500" />
                   こんな時におすすめ
                 </h3>
-                <div className="bg-purple-50 p-4 rounded-lg">
+                <div className="bg-[#F4F2EE] p-4 rounded-lg">
                   <ul className="grid md:grid-cols-2 gap-2">
                     {guide.recommendedFor.map((scene, i) => (
                       <li key={i} className="flex items-center text-sm">
-                        <span className="text-purple-600 mr-2">◆</span>
+                        <span className="text-theater-primary-700 mr-2">◆</span>
                         {scene}
                       </li>
                     ))}
@@ -441,14 +441,14 @@ export default function CastSizeGuide() {
               {/* 成功のコツ */}
               <div className="mb-6">
                 <h3 className="font-semibold mb-3 flex items-center">
-                  <FaLightbulb className="mr-2 text-yellow-500" />
+                  <FaLightbulb className="mr-2 text-gray-500" />
                   成功のコツ
                 </h3>
-                <div className="bg-yellow-50 p-4 rounded-lg">
+                <div className="bg-[#F4F2EE] p-4 rounded-lg">
                   <ul className="space-y-2">
                     {guide.tips.map((tip, i) => (
                       <li key={i} className="flex items-start">
-                        <span className="text-yellow-600 mr-2 font-bold">{i + 1}.</span>
+                        <span className="text-theater-primary-700 mr-2 font-bold">{i + 1}.</span>
                         <span className="text-sm text-gray-700">{tip}</span>
                       </li>
                     ))}
@@ -460,7 +460,7 @@ export default function CastSizeGuide() {
               <div className="text-center pt-4 border-t">
                 <Link 
                   href={guide.searchLink}
-                  className="inline-block bg-theater-primary-600 text-white px-6 py-3 rounded-lg hover:bg-theater-primary-600 transition-colors"
+                  className="inline-block bg-theater-primary-600 text-white px-6 py-3 rounded-lg hover:bg-theater-primary-700 transition-colors"
                 >
                   {guide.range}の作品を探す →
                 </Link>
@@ -512,7 +512,7 @@ export default function CastSizeGuide() {
           
           <div className="grid md:grid-cols-2 gap-6">
             <div className="bg-white p-6 rounded-lg border">
-              <h3 className="font-semibold mb-3 text-blue-600">
+              <h3 className="font-semibold mb-3 text-theater-primary-700">
                 事例1: 文化祭での8人劇
               </h3>
               <p className="text-sm text-gray-700 mb-3">
@@ -527,7 +527,7 @@ export default function CastSizeGuide() {
             </div>
 
             <div className="bg-white p-6 rounded-lg border">
-              <h3 className="font-semibold mb-3 text-green-600">
+              <h3 className="font-semibold mb-3 text-theater-primary-700">
                 事例2: 市民劇団の3人劇
               </h3>
               <p className="text-sm text-gray-700 mb-3">
@@ -542,7 +542,7 @@ export default function CastSizeGuide() {
             </div>
 
             <div className="bg-white p-6 rounded-lg border">
-              <h3 className="font-semibold mb-3 text-purple-600">
+              <h3 className="font-semibold mb-3 text-theater-primary-700">
                 事例3: 卒業記念の25人劇
               </h3>
               <p className="text-sm text-gray-700 mb-3">
@@ -574,7 +574,7 @@ export default function CastSizeGuide() {
         </section>
 
         {/* よくある質問 */}
-        <section className="mt-12 bg-blue-50 p-8 rounded-lg">
+        <section className="mt-12 bg-[#F4F2EE] p-8 rounded-lg">
           <h2 className="text-2xl font-bold mb-6">よくある質問</h2>
           
           <div className="space-y-4">
@@ -623,7 +623,7 @@ export default function CastSizeGuide() {
         <AdSlot slot={AD_SLOTS.BLOG_AFTER_TOC} format="horizontal" />
 
         {/* まとめとCTA */}
-        <section className="mt-12 bg-gradient-to-r from-purple-100 to-blue-100 p-8 rounded-lg text-center">
+        <section className="mt-12 p-8 rounded-lg text-center">
           <h2 className="text-2xl font-bold mb-4">最適な人数で最高の舞台を</h2>
           <p className="mb-6 text-gray-700">
             人数に合わせた作品選びが、成功への第一歩です。<br />
@@ -631,10 +631,10 @@ export default function CastSizeGuide() {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/" className="inline-block bg-theater-primary-600 text-white px-8 py-3 rounded-lg hover:bg-theater-primary-600 font-semibold">
+            <Link href="/" className="inline-block bg-theater-primary-600 text-white px-8 py-3 rounded-lg hover:bg-theater-primary-700 font-semibold">
               作品を探す
             </Link>
-            <Link href="/guide/beginner/how-to-choose-script" className="inline-block bg-white text-blue-500 border-2 border-blue-500 px-8 py-3 rounded-lg hover:bg-blue-50 font-semibold">
+            <Link href="/guide/beginner/how-to-choose-script" className="inline-block bg-white text-gray-500 border-2 border-blue-500 px-8 py-3 rounded-lg hover:bg-[#F4F2EE] font-semibold">
               脚本の選び方を見る
             </Link>
           </div>

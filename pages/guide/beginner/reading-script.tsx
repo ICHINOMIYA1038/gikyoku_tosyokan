@@ -197,7 +197,7 @@ export default function ReadingScript() {
         </header>
 
         {/* イントロダクション */}
-        <section className="mb-12 bg-blue-50 p-8 rounded-lg">
+        <section className="mb-12 bg-[#F4F2EE] p-8 rounded-lg">
           <h2 className="text-2xl font-bold mb-4">なぜ脚本分析が重要なのか</h2>
           <p className="mb-4 text-gray-700">
             脚本は演劇の設計図です。正しく読み解くことで、作者の意図を理解し、
@@ -205,21 +205,21 @@ export default function ReadingScript() {
           </p>
           <div className="grid md:grid-cols-3 gap-4 mt-6">
             <div className="bg-white p-4 rounded-lg">
-              <FaTheaterMasks className="text-2xl text-blue-500 mb-2" />
+              <FaTheaterMasks className="text-2xl text-gray-500 mb-2" />
               <h3 className="font-semibold mb-1">演者にとって</h3>
               <p className="text-sm text-gray-600">
                 役の内面を理解し、説得力のある演技ができる
               </p>
             </div>
             <div className="bg-white p-4 rounded-lg">
-              <FaPencilAlt className="text-2xl text-green-500 mb-2" />
+              <FaPencilAlt className="text-2xl text-gray-500 mb-2" />
               <h3 className="font-semibold mb-1">演出家にとって</h3>
               <p className="text-sm text-gray-600">
                 作品の核心を捉え、統一感のある演出が可能
               </p>
             </div>
             <div className="bg-white p-4 rounded-lg">
-              <FaUsers className="text-2xl text-purple-500 mb-2" />
+              <FaUsers className="text-2xl text-gray-500 mb-2" />
               <h3 className="font-semibold mb-1">スタッフにとって</h3>
               <p className="text-sm text-gray-600">
                 作品世界を共有し、一体感のある舞台を作れる
@@ -240,12 +240,12 @@ export default function ReadingScript() {
                 key={step.step}
                 onClick={() => setActiveStep(step.step)}
                 className={`relative z-10 flex flex-col items-center ${
-                  activeStep === step.step ? "" : "opacity-60"
-                }`}
+ activeStep === step.step ? "" : "opacity-60"
+ }`}
               >
                 <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-bold ${
-                  activeStep === step.step ? "bg-theater-primary-600" : "bg-gray-400"
-                }`}>
+ activeStep === step.step ? "bg-theater-primary-600" : "bg-gray-400"
+ }`}>
                   {step.step}
                 </div>
                 <span className="text-xs mt-1 hidden md:block max-w-[100px] text-center">
@@ -264,7 +264,7 @@ export default function ReadingScript() {
               <div className="bg-white border rounded-lg p-8">
                 <header className="mb-6">
                   <div className="flex items-center mb-3">
-                    <step.icon className="text-3xl text-blue-500 mr-3" />
+                    <step.icon className="text-3xl text-gray-500 mr-3" />
                     <h3 className="text-xl font-bold">{step.title}</h3>
                   </div>
                   <p className="text-gray-600">{step.description}</p>
@@ -287,15 +287,15 @@ export default function ReadingScript() {
                   
                   <div>
                     <h4 className="font-semibold mb-3">
-                      <FaLightbulb className="inline mr-1 text-yellow-500" />
+                      <FaLightbulb className="inline mr-1 text-gray-500" />
                       ポイント
                     </h4>
-                    <div className="bg-yellow-50 p-4 rounded-lg">
+                    <div className="bg-[#F4F2EE] p-4 rounded-lg">
                       <p className="text-sm text-gray-700">{step.tips}</p>
                     </div>
                     
                     {step.step === 1 && (
-                      <div className="mt-4 p-4 bg-blue-50 rounded-lg">
+                      <div className="mt-4 p-4 bg-[#F4F2EE] rounded-lg">
                         <p className="text-sm">
                           <strong>推奨時間：</strong>60-90分程度の作品なら30分以内で読む
                         </p>
@@ -308,10 +308,10 @@ export default function ReadingScript() {
                   <button
                     onClick={() => setActiveStep(Math.max(1, activeStep - 1))}
                     className={`px-4 py-2 rounded ${
-                      activeStep === 1 
-                        ? "bg-gray-200 text-gray-400 cursor-not-allowed" 
-                        : "bg-gray-500 text-white hover:bg-gray-600"
-                    }`}
+ activeStep === 1 
+ ? "bg-gray-200 text-gray-400 cursor-not-allowed" 
+ : "bg-gray-500 text-white hover:bg-gray-600"
+ }`}
                     disabled={activeStep === 1}
                   >
                     ← 前のステップ
@@ -319,10 +319,10 @@ export default function ReadingScript() {
                   <button
                     onClick={() => setActiveStep(Math.min(5, activeStep + 1))}
                     className={`px-4 py-2 rounded ${
-                      activeStep === 5 
-                        ? "bg-gray-200 text-gray-400 cursor-not-allowed" 
-                        : "bg-theater-primary-600 text-white hover:bg-theater-primary-600"
-                    }`}
+ activeStep === 5 
+ ? "bg-gray-200 text-gray-400 cursor-not-allowed" 
+ : "bg-theater-primary-600 text-white hover:bg-theater-primary-700"
+ }`}
                     disabled={activeStep === 5}
                   >
                     次のステップ →
@@ -336,11 +336,11 @@ export default function ReadingScript() {
         {/* セリフの読み解き方 */}
         <section className="mb-12">
           <h2 className="text-2xl font-bold mb-6 flex items-center">
-            <FaHighlighter className="mr-3 text-green-500" />
+            <FaHighlighter className="mr-3 text-gray-500" />
             セリフの3層構造を理解する
           </h2>
           
-          <div className="bg-green-50 p-6 rounded-lg mb-6">
+          <div className="bg-[#F4F2EE] p-6 rounded-lg mb-6">
             <p className="text-sm text-gray-700">
               セリフには表面的な意味だけでなく、複数の層があります。
               これらを理解することで、深みのある演技が可能になります。
@@ -350,7 +350,7 @@ export default function ReadingScript() {
           <div className="grid md:grid-cols-3 gap-6">
             {Object.entries(dialogueAnalysis).map(([key, layer]) => (
               <div key={key} className="bg-white border rounded-lg p-6">
-                <h3 className="font-bold text-lg mb-3 text-green-600">
+                <h3 className="font-bold text-lg mb-3 text-theater-primary-700">
                   {layer.title}
                 </h3>
                 <p className="text-sm text-gray-600 mb-4">
@@ -368,7 +368,7 @@ export default function ReadingScript() {
             ))}
           </div>
 
-          <div className="mt-6 bg-yellow-50 p-6 rounded-lg">
+          <div className="mt-6 bg-[#F4F2EE] p-6 rounded-lg">
             <h3 className="font-bold mb-3">セリフ分析の実践</h3>
             <p className="text-sm text-gray-700 mb-3">
               一つのセリフを選んで、以下の質問に答えてみましょう：
@@ -387,7 +387,7 @@ export default function ReadingScript() {
         <section className="mb-12">
           <h2 className="text-2xl font-bold mb-6">ト書きの読み方と解釈</h2>
           
-          <div className="bg-purple-50 p-6 rounded-lg mb-6">
+          <div className="bg-[#F4F2EE] p-6 rounded-lg mb-6">
             <p className="text-sm text-gray-700">
               ト書きは作者からの重要なヒントです。
               ただし、それに縛られすぎず、創造的に解釈することも大切です。
@@ -406,7 +406,7 @@ export default function ReadingScript() {
                 <p className="text-sm text-gray-600 mb-3">
                   {direction.interpretation}
                 </p>
-                <div className="bg-blue-50 p-3 rounded">
+                <div className="bg-[#F4F2EE] p-3 rounded">
                   <p className="text-xs">
                     <strong>演技のヒント：</strong>{direction.actingTip}
                   </p>
@@ -419,7 +419,7 @@ export default function ReadingScript() {
         {/* 人物相関図の作り方 */}
         <section className="mb-12">
           <h2 className="text-2xl font-bold mb-6 flex items-center">
-            <FaUsers className="mr-3 text-purple-500" />
+            <FaUsers className="mr-3 text-gray-500" />
             人物相関図の作り方
           </h2>
           
@@ -429,28 +429,28 @@ export default function ReadingScript() {
                 <h3 className="font-semibold mb-4">基本の作り方</h3>
                 <ol className="space-y-3">
                   <li className="flex items-start">
-                    <span className="bg-purple-500 text-white rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 text-sm mr-2">1</span>
+                    <span className="bg-theater-primary-600 text-white rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 text-sm mr-2">1</span>
                     <div>
                       <strong>登場人物をリストアップ</strong>
                       <p className="text-sm text-gray-600">主要人物から脇役まですべて</p>
                     </div>
                   </li>
                   <li className="flex items-start">
-                    <span className="bg-purple-500 text-white rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 text-sm mr-2">2</span>
+                    <span className="bg-theater-primary-600 text-white rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 text-sm mr-2">2</span>
                     <div>
                       <strong>関係性を線で結ぶ</strong>
                       <p className="text-sm text-gray-600">家族、恋愛、友人、敵対など</p>
                     </div>
                   </li>
                   <li className="flex items-start">
-                    <span className="bg-purple-500 text-white rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 text-sm mr-2">3</span>
+                    <span className="bg-theater-primary-600 text-white rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 text-sm mr-2">3</span>
                     <div>
                       <strong>感情や状態を記号化</strong>
                       <p className="text-sm text-gray-600">→（一方的）、⇄（相互）、×（対立）</p>
                     </div>
                   </li>
                   <li className="flex items-start">
-                    <span className="bg-purple-500 text-white rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 text-sm mr-2">4</span>
+                    <span className="bg-theater-primary-600 text-white rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 text-sm mr-2">4</span>
                     <div>
                       <strong>変化を時系列で</strong>
                       <p className="text-sm text-gray-600">幕ごとに関係の変化を追う</p>
@@ -484,7 +484,7 @@ export default function ReadingScript() {
               </div>
             </div>
             
-            <div className="mt-6 p-4 bg-blue-50 rounded-lg">
+            <div className="mt-6 p-4 bg-[#F4F2EE] rounded-lg">
               <p className="text-sm">
                 <strong>💡 デジタルツール：</strong>
                 draw.io、Miro、Canvaなどを使うと、きれいな相関図が作れます。
@@ -497,11 +497,11 @@ export default function ReadingScript() {
         {/* 実践ワークシート */}
         <section className="mb-12">
           <h2 className="text-2xl font-bold mb-6 flex items-center">
-            <FaClipboardList className="mr-3 text-orange-500" />
+            <FaClipboardList className="mr-3 text-gray-500" />
             脚本分析ワークシート
           </h2>
           
-          <div className="bg-orange-50 p-6 rounded-lg mb-6">
+          <div className="bg-[#F4F2EE] p-6 rounded-lg mb-6">
             <p className="text-sm text-gray-700">
               このワークシートを使って、実際に脚本を分析してみましょう。
               すべての項目を埋めることで、作品の理解が深まります。
@@ -517,14 +517,14 @@ export default function ReadingScript() {
                   </label>
                   {item.multiline ? (
                     <textarea
-                      className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-theater-primary-600"
                       rows={3}
                       placeholder={item.placeholder}
                     />
                   ) : (
                     <input
                       type="text"
-                      className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-theater-primary-600"
                       placeholder={item.placeholder}
                     />
                   )}
@@ -533,7 +533,7 @@ export default function ReadingScript() {
             </form>
             
             <div className="mt-6 flex gap-4">
-              <button className="bg-theater-primary-600 text-white px-6 py-2 rounded-lg hover:bg-theater-primary-600">
+              <button className="bg-theater-primary-600 text-white px-6 py-2 rounded-lg hover:bg-theater-primary-700">
                 保存する
               </button>
               <button className="bg-gray-500 text-white px-6 py-2 rounded-lg hover:bg-gray-600">
@@ -604,7 +604,7 @@ export default function ReadingScript() {
           
           <div className="grid md:grid-cols-2 gap-6">
             <div className="bg-white border rounded-lg p-6">
-              <h3 className="font-semibold mb-4 text-blue-600">
+              <h3 className="font-semibold mb-4 text-theater-primary-700">
                 第1回読み合わせ
               </h3>
               <p className="text-sm text-gray-600 mb-3">
@@ -619,7 +619,7 @@ export default function ReadingScript() {
             </div>
 
             <div className="bg-white border rounded-lg p-6">
-              <h3 className="font-semibold mb-4 text-green-600">
+              <h3 className="font-semibold mb-4 text-theater-primary-700">
                 第2回読み合わせ
               </h3>
               <p className="text-sm text-gray-600 mb-3">
@@ -634,7 +634,7 @@ export default function ReadingScript() {
             </div>
 
             <div className="bg-white border rounded-lg p-6">
-              <h3 className="font-semibold mb-4 text-purple-600">
+              <h3 className="font-semibold mb-4 text-theater-primary-700">
                 第3回読み合わせ
               </h3>
               <p className="text-sm text-gray-600 mb-3">
@@ -649,7 +649,7 @@ export default function ReadingScript() {
             </div>
 
             <div className="bg-white border rounded-lg p-6">
-              <h3 className="font-semibold mb-4 text-orange-600">
+              <h3 className="font-semibold mb-4 text-theater-primary-700">
                 本読み稽古
               </h3>
               <p className="text-sm text-gray-600 mb-3">
@@ -668,7 +668,7 @@ export default function ReadingScript() {
         <AdSlot slot={AD_SLOTS.BLOG_AFTER_TOC} format="horizontal" />
 
         {/* まとめ */}
-        <section className="mb-12 bg-gradient-to-r from-blue-50 to-purple-50 p-8 rounded-lg">
+        <section className="mb-12 p-8 rounded-lg">
           <h2 className="text-2xl font-bold mb-4">脚本分析マスターへの道</h2>
           
           <div className="space-y-4">
@@ -715,10 +715,10 @@ export default function ReadingScript() {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/" className="inline-block bg-theater-primary-600 text-white px-8 py-3 rounded-lg hover:bg-theater-primary-600 font-semibold">
+            <Link href="/" className="inline-block bg-theater-primary-600 text-white px-8 py-3 rounded-lg hover:bg-theater-primary-700 font-semibold">
               作品を探す
             </Link>
-            <Link href="/guide/beginner/acting-basics" className="inline-block bg-white text-blue-500 border-2 border-blue-500 px-8 py-3 rounded-lg hover:bg-blue-50 font-semibold">
+            <Link href="/guide/beginner/acting-basics" className="inline-block bg-white text-gray-500 border-2 border-blue-500 px-8 py-3 rounded-lg hover:bg-[#F4F2EE] font-semibold">
               演技の基礎を学ぶ
             </Link>
           </div>

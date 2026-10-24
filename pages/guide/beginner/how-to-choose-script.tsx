@@ -60,11 +60,11 @@ export default function HowToChooseScript() {
         <nav className="bg-gray-50 p-6 rounded-lg mb-8">
           <h2 className="text-xl font-bold mb-4">目次</h2>
           <ol className="list-decimal list-inside space-y-2">
-            <li><a href="#step1" className="text-blue-600 hover:underline">上演条件を明確にする</a></li>
-            <li><a href="#step2" className="text-blue-600 hover:underline">キャストの実力を把握する</a></li>
-            <li><a href="#step3" className="text-blue-600 hover:underline">観客層を考慮する</a></li>
-            <li><a href="#step4" className="text-blue-600 hover:underline">予算と制作期間を確認する</a></li>
-            <li><a href="#step5" className="text-blue-600 hover:underline">脚本の試し読みをする</a></li>
+            <li><a href="#step1" className="text-theater-primary-700 hover:underline">上演条件を明確にする</a></li>
+            <li><a href="#step2" className="text-theater-primary-700 hover:underline">キャストの実力を把握する</a></li>
+            <li><a href="#step3" className="text-theater-primary-700 hover:underline">観客層を考慮する</a></li>
+            <li><a href="#step4" className="text-theater-primary-700 hover:underline">予算と制作期間を確認する</a></li>
+            <li><a href="#step5" className="text-theater-primary-700 hover:underline">脚本の試し読みをする</a></li>
           </ol>
         </nav>
 
@@ -78,29 +78,29 @@ export default function HowToChooseScript() {
 
         <section id="step1" className="mb-12">
           <h2 className="text-2xl font-bold mb-4 flex items-center">
-            <FaClock className="mr-2 text-blue-500" />
+            <FaClock className="mr-2 text-gray-500" />
             1. 上演条件を明確にする
           </h2>
           
-          <div className="bg-blue-50 p-6 rounded-lg mb-6">
+          <div className="bg-[#F4F2EE] p-6 rounded-lg mb-6">
             <h3 className="text-xl font-semibold mb-3">確認すべき条件</h3>
             <ul className="space-y-2">
               <li className="flex items-start">
-                <span className="text-blue-500 mr-2">✓</span>
+                <span className="text-gray-500 mr-2">✓</span>
                 <div>
                   <strong>上演時間</strong>: 
                   準備・撤収時間を含めた持ち時間から逆算
                 </div>
               </li>
               <li className="flex items-start">
-                <span className="text-blue-500 mr-2">✓</span>
+                <span className="text-gray-500 mr-2">✓</span>
                 <div>
                   <strong>会場の広さ</strong>: 
                   舞台のサイズ、客席数、音響・照明設備
                 </div>
               </li>
               <li className="flex items-start">
-                <span className="text-blue-500 mr-2">✓</span>
+                <span className="text-gray-500 mr-2">✓</span>
                 <div>
                   <strong>上演日程</strong>: 
                   練習期間、リハーサル回数
@@ -128,7 +128,7 @@ export default function HowToChooseScript() {
 
         <section id="step2" className="mb-12">
           <h2 className="text-2xl font-bold mb-4 flex items-center">
-            <FaUsers className="mr-2 text-green-500" />
+            <FaUsers className="mr-2 text-gray-500" />
             2. キャストの実力を把握する
           </h2>
           
@@ -147,7 +147,7 @@ export default function HowToChooseScript() {
                 <td className="border p-2">1-3人</td>
                 <td className="border p-2">密度の高い演技が必要</td>
                 <td className="border p-2">
-                  <Link href="/?minTotalCount=1&maxTotalCount=3" className="text-blue-600 hover:underline">
+                  <Link href="/?minTotalCount=1&maxTotalCount=3" className="text-theater-primary-700 hover:underline">
                     少人数作品を探す
                   </Link>
                 </td>
@@ -156,7 +156,7 @@ export default function HowToChooseScript() {
                 <td className="border p-2">4-8人</td>
                 <td className="border p-2">バランスが取りやすい</td>
                 <td className="border p-2">
-                  <Link href="/?minTotalCount=4&maxTotalCount=8" className="text-blue-600 hover:underline">
+                  <Link href="/?minTotalCount=4&maxTotalCount=8" className="text-theater-primary-700 hover:underline">
                     中人数作品を探す
                   </Link>
                 </td>
@@ -165,7 +165,7 @@ export default function HowToChooseScript() {
                 <td className="border p-2">9人以上</td>
                 <td className="border p-2">演出の工夫が必要</td>
                 <td className="border p-2">
-                  <Link href="/?minTotalCount=9&maxTotalCount=20" className="text-blue-600 hover:underline">
+                  <Link href="/?minTotalCount=9&maxTotalCount=20" className="text-theater-primary-700 hover:underline">
                     大人数作品を探す
                   </Link>
                 </td>
@@ -174,7 +174,7 @@ export default function HowToChooseScript() {
           </table>
           </div>
 
-          <div className="bg-yellow-50 p-6 rounded-lg">
+          <div className="bg-[#F4F2EE] p-6 rounded-lg">
             <h3 className="text-xl font-semibold mb-3">
               <FaLightbulb className="inline mr-2" />
               経験レベル別の選び方
@@ -198,7 +198,7 @@ export default function HowToChooseScript() {
 
         <section id="step3" className="mb-12">
           <h2 className="text-2xl font-bold mb-4 flex items-center">
-            <FaTheaterMasks className="mr-2 text-purple-500" />
+            <FaTheaterMasks className="mr-2 text-gray-500" />
             3. 観客層を考慮する
           </h2>
           
@@ -210,7 +210,7 @@ export default function HowToChooseScript() {
                 <li>• テンポの良い展開</li>
                 <li>• 笑いの要素</li>
               </ul>
-              <Link href="/categories/2" className="inline-block mt-4 text-blue-600 hover:underline">
+              <Link href="/categories/2" className="inline-block mt-4 text-theater-primary-700 hover:underline">
                 コメディ作品を見る →
               </Link>
             </div>
@@ -222,7 +222,7 @@ export default function HowToChooseScript() {
                 <li>• 世代を超えた共感</li>
                 <li>• 感動的な要素</li>
               </ul>
-              <Link href="/categories/1" className="inline-block mt-4 text-blue-600 hover:underline">
+              <Link href="/categories/1" className="inline-block mt-4 text-theater-primary-700 hover:underline">
                 ドラマ作品を見る →
               </Link>
             </div>
@@ -256,7 +256,7 @@ export default function HowToChooseScript() {
             5. 脚本の試し読みをする
           </h2>
           
-          <div className="bg-green-50 p-6 rounded-lg mb-6">
+          <div className="bg-[#F4F2EE] p-6 rounded-lg mb-6">
             <h3 className="text-xl font-semibold mb-3">読み合わせのポイント</h3>
             <ol className="list-decimal list-inside space-y-2">
               <li>主要キャストで実際に読み合わせ</li>
@@ -280,7 +280,7 @@ export default function HowToChooseScript() {
             戯曲図書館では、これらの条件で簡単に作品を検索できます。
             ぜひ、あなたの公演にぴったりの作品を見つけてください。
           </p>
-          <Link href="/" className="inline-block bg-theater-primary-600 text-white px-6 py-3 rounded-lg hover:bg-theater-primary-600">
+          <Link href="/" className="inline-block bg-theater-primary-600 text-white px-6 py-3 rounded-lg hover:bg-theater-primary-700">
             作品を探す →
           </Link>
         </section>
@@ -289,17 +289,17 @@ export default function HowToChooseScript() {
           <h2 className="text-xl font-bold mb-4">関連記事</h2>
           <ul className="space-y-2">
             <li>
-              <Link href="/guide/beginner/reading-script" className="text-blue-600 hover:underline">
+              <Link href="/guide/beginner/reading-script" className="text-theater-primary-700 hover:underline">
                 → 脚本の読み方・分析方法（準備中）
               </Link>
             </li>
             <li>
-              <Link href="/guide/beginner/acting-basics" className="text-blue-600 hover:underline">
+              <Link href="/guide/beginner/acting-basics" className="text-theater-primary-700 hover:underline">
                 → 演技の基礎
               </Link>
             </li>
             <li>
-              <Link href="/guide/school/culture-festival" className="text-blue-600 hover:underline">
+              <Link href="/guide/school/culture-festival" className="text-theater-primary-700 hover:underline">
                 → 文化祭演劇を成功させるコツ
               </Link>
             </li>

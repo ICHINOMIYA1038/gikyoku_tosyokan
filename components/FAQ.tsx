@@ -59,7 +59,7 @@ const FAQ: React.FC<FAQProps> = ({ items, title = "よくある質問" }) => {
           {items.map((item, index) => (
             <div
               key={index}
-              className="border rounded-lg shadow-sm hover:shadow-md transition-shadow"
+              className="border rounded-lg transition-shadow"
             >
               <button
                 className="w-full px-5 py-3 text-left flex justify-between items-center hover:bg-gray-50"

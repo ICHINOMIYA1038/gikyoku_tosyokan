@@ -101,7 +101,7 @@ export default function TwoPersonPlaysPage({
         </header>
 
         {/* 二人芝居の魅力 */}
-        <section className="bg-gray-50 border border-gray-200 rounded-lg p-6 mb-10">
+        <section className="bg-gray-50 border border-[#D9D5CF] rounded-lg p-6 mb-10">
           <h2 className="font-bold text-gray-800 mb-4">二人芝居の魅力</h2>
           <div className="grid md:grid-cols-3 gap-4">
             <div>
@@ -132,7 +132,7 @@ export default function TwoPersonPlaysPage({
         </section>
 
         {/* ブログ記事リンク */}
-        <div className="bg-white border border-gray-200 rounded-lg p-5 mb-10">
+        <div className="bg-white border border-[#D9D5CF] rounded-lg p-5 mb-10">
           <h2 className="font-bold text-gray-800 mb-1">
             二人芝居ガイド
           </h2>
@@ -141,7 +141,7 @@ export default function TwoPersonPlaysPage({
           </p>
           <Link
             href="/blog/ja/2026-02-15-two-person-play-guide"
-            className="inline-flex items-center gap-1.5 text-sm font-medium text-blue-600 hover:text-blue-800"
+            className="inline-flex items-center gap-1.5 text-sm font-medium text-theater-primary-700 hover:text-theater-primary-800"
           >
             二人芝居ガイドを読む →
           </Link>
@@ -150,7 +150,7 @@ export default function TwoPersonPlaysPage({
         {/* 作品一覧 */}
         <section>
           <h2 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-            <FaStar className="text-yellow-400" />
+            <FaStar className="text-gray-500" />
             おすすめの二人芝居
           </h2>
           {posts.length > 0 ? (
@@ -183,14 +183,14 @@ export default function TwoPersonPlaysPage({
         </div>
 
         {/* 人数別リンク */}
-        <section className="mt-10 bg-gray-50 border border-gray-200 rounded-lg p-6">
+        <section className="mt-10 bg-gray-50 border border-[#D9D5CF] rounded-lg p-6">
           <h2 className="font-bold text-gray-800 mb-3">
             人数別で台本を探す
           </h2>
           <div className="flex flex-wrap gap-3">
             <Link
               href="/?maxTotalCount=1"
-              className="px-4 py-2 bg-white border border-gray-200 rounded-full text-sm hover:bg-gray-50"
+              className="px-4 py-2 bg-white border border-[#D9D5CF] rounded-full text-sm hover:bg-gray-50"
             >
               一人芝居
             </Link>
@@ -202,19 +202,19 @@ export default function TwoPersonPlaysPage({
             </Link>
             <Link
               href="/?minTotalCount=3&maxTotalCount=5"
-              className="px-4 py-2 bg-white border border-gray-200 rounded-full text-sm hover:bg-gray-50"
+              className="px-4 py-2 bg-white border border-[#D9D5CF] rounded-full text-sm hover:bg-gray-50"
             >
               3〜5人
             </Link>
             <Link
               href="/?minTotalCount=6&maxTotalCount=10"
-              className="px-4 py-2 bg-white border border-gray-200 rounded-full text-sm hover:bg-gray-50"
+              className="px-4 py-2 bg-white border border-[#D9D5CF] rounded-full text-sm hover:bg-gray-50"
             >
               6〜10人
             </Link>
             <Link
               href="/?minTotalCount=11"
-              className="px-4 py-2 bg-white border border-gray-200 rounded-full text-sm hover:bg-gray-50"
+              className="px-4 py-2 bg-white border border-[#D9D5CF] rounded-full text-sm hover:bg-gray-50"
             >
               11人以上
             </Link>
@@ -222,7 +222,7 @@ export default function TwoPersonPlaysPage({
         </section>
 
         {/* 関連ページ */}
-        <section className="mt-12 border-t border-gray-200 pt-8">
+        <section className="mt-12 border-t border-[#D9D5CF] pt-8">
           <h2 className="text-lg font-bold text-gray-900 mb-4">関連ページ</h2>
           <div className="flex flex-wrap gap-3">
             <Link

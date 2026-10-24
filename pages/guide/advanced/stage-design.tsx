@@ -274,9 +274,9 @@ export default function StageDesignGuide() {
         </header>
 
         {/* イントロダクション */}
-        <section className="mb-12 bg-gradient-to-r from-orange-50 to-yellow-50 p-8 rounded-lg">
+        <section className="mb-12 p-8 rounded-lg">
           <h2 className="text-2xl font-bold mb-4 flex items-center">
-            <FaPalette className="mr-3 text-orange-500" />
+            <FaPalette className="mr-3 text-gray-500" />
             舞台美術・照明の役割
           </h2>
           <p className="mb-4 text-gray-700">
@@ -285,21 +285,21 @@ export default function StageDesignGuide() {
           </p>
           <div className="grid md:grid-cols-3 gap-4 mt-6">
             <div className="bg-white p-4 rounded-lg">
-              <FaPaintBrush className="text-2xl text-orange-500 mb-2" />
+              <FaPaintBrush className="text-2xl text-gray-500 mb-2" />
               <h3 className="font-semibold mb-1">空間デザイン</h3>
               <p className="text-sm text-gray-600">
                 物語の舞台となる世界を構築
               </p>
             </div>
             <div className="bg-white p-4 rounded-lg">
-              <FaLightbulb className="text-2xl text-yellow-500 mb-2" />
+              <FaLightbulb className="text-2xl text-gray-500 mb-2" />
               <h3 className="font-semibold mb-1">雰囲気演出</h3>
               <p className="text-sm text-gray-600">
                 光と影で感情を表現
               </p>
             </div>
             <div className="bg-white p-4 rounded-lg">
-              <FaRuler className="text-2xl text-green-500 mb-2" />
+              <FaRuler className="text-2xl text-gray-500 mb-2" />
               <h3 className="font-semibold mb-1">機能性</h3>
               <p className="text-sm text-gray-600">
                 演技しやすく安全な環境
@@ -314,50 +314,50 @@ export default function StageDesignGuide() {
             <button
               onClick={() => setActiveTab("concept")}
               className={`px-4 py-2 rounded-lg transition-all ${
-                activeTab === "concept"
-                  ? "bg-orange-500 text-white shadow"
-                  : "bg-white text-gray-700 hover:bg-gray-50"
-              }`}
+ activeTab === "concept"
+ ? "bg-theater-primary-600 text-white shadow"
+ : "bg-white text-gray-700 hover:bg-gray-50"
+ }`}
             >
               美術コンセプト
             </button>
             <button
               onClick={() => setActiveTab("practical")}
               className={`px-4 py-2 rounded-lg transition-all ${
-                activeTab === "practical"
-                  ? "bg-orange-500 text-white shadow"
-                  : "bg-white text-gray-700 hover:bg-gray-50"
-              }`}
+ activeTab === "practical"
+ ? "bg-theater-primary-600 text-white shadow"
+ : "bg-white text-gray-700 hover:bg-gray-50"
+ }`}
             >
               実践製作
             </button>
             <button
               onClick={() => setActiveTab("lighting")}
               className={`px-4 py-2 rounded-lg transition-all ${
-                activeTab === "lighting"
-                  ? "bg-orange-500 text-white shadow"
-                  : "bg-white text-gray-700 hover:bg-gray-50"
-              }`}
+ activeTab === "lighting"
+ ? "bg-theater-primary-600 text-white shadow"
+ : "bg-white text-gray-700 hover:bg-gray-50"
+ }`}
             >
               照明デザイン
             </button>
             <button
               onClick={() => setActiveTab("budget")}
               className={`px-4 py-2 rounded-lg transition-all ${
-                activeTab === "budget"
-                  ? "bg-orange-500 text-white shadow"
-                  : "bg-white text-gray-700 hover:bg-gray-50"
-              }`}
+ activeTab === "budget"
+ ? "bg-theater-primary-600 text-white shadow"
+ : "bg-white text-gray-700 hover:bg-gray-50"
+ }`}
             >
               予算管理
             </button>
             <button
               onClick={() => setActiveTab("safety")}
               className={`px-4 py-2 rounded-lg transition-all ${
-                activeTab === "safety"
-                  ? "bg-orange-500 text-white shadow"
-                  : "bg-white text-gray-700 hover:bg-gray-50"
-              }`}
+ activeTab === "safety"
+ ? "bg-theater-primary-600 text-white shadow"
+ : "bg-white text-gray-700 hover:bg-gray-50"
+ }`}
             >
               安全管理
             </button>
@@ -371,11 +371,11 @@ export default function StageDesignGuide() {
             
             {stageElements.concept.elements.map((element, index) => (
               <div key={index} className="mb-8 bg-white border rounded-lg p-6">
-                <h3 className="text-xl font-bold mb-3 text-orange-600">{element.name}</h3>
+                <h3 className="text-xl font-bold mb-3 text-theater-primary-700">{element.name}</h3>
                 <p className="text-gray-600 mb-4">{element.description}</p>
                 
                 {element.considerations && (
-                  <div className="bg-orange-50 p-4 rounded-lg">
+                  <div className="bg-[#F4F2EE] p-4 rounded-lg">
                     <h4 className="font-semibold mb-2">検討事項</h4>
                     <ul className="space-y-1">
                       {element.considerations.map((item, i) => (
@@ -400,7 +400,7 @@ export default function StageDesignGuide() {
                     <h4 className="font-semibold mb-2">象徴的な使用例</h4>
                     <div className="space-y-2">
                       {element.examples.map((example, i) => (
-                        <div key={i} className="bg-yellow-50 p-3 rounded text-sm">
+                        <div key={i} className="bg-[#F4F2EE] p-3 rounded text-sm">
                           {example}
                         </div>
                       ))}
@@ -419,7 +419,7 @@ export default function StageDesignGuide() {
             
             {stageElements.practical.items.map((item, index) => (
               <div key={index} className="mb-8">
-                <h3 className="text-xl font-bold mb-4 text-green-600">{item.category}</h3>
+                <h3 className="text-xl font-bold mb-4 text-theater-primary-700">{item.category}</h3>
                 <div className="grid md:grid-cols-2 gap-4">
                   {item.elements.map((element, i) => (
                     <div key={i} className="bg-white border rounded-lg p-4">
@@ -435,35 +435,35 @@ export default function StageDesignGuide() {
             ))}
 
             {/* 製作スケジュール */}
-            <div className="bg-green-50 p-6 rounded-lg">
+            <div className="bg-[#F4F2EE] p-6 rounded-lg">
               <h3 className="font-bold mb-4">美術製作スケジュール</h3>
               <div className="space-y-3">
                 <div className="flex items-center">
-                  <span className="bg-green-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold mr-3">1</span>
+                  <span className="bg-theater-primary-600 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold mr-3">1</span>
                   <div>
                     <strong>2ヶ月前：</strong>デザイン決定、材料リスト作成
                   </div>
                 </div>
                 <div className="flex items-center">
-                  <span className="bg-green-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold mr-3">2</span>
+                  <span className="bg-theater-primary-600 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold mr-3">2</span>
                   <div>
                     <strong>6週間前：</strong>材料調達、大道具製作開始
                   </div>
                 </div>
                 <div className="flex items-center">
-                  <span className="bg-green-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold mr-3">3</span>
+                  <span className="bg-theater-primary-600 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold mr-3">3</span>
                   <div>
                     <strong>4週間前：</strong>小道具製作、塗装作業
                   </div>
                 </div>
                 <div className="flex items-center">
-                  <span className="bg-green-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold mr-3">4</span>
+                  <span className="bg-theater-primary-600 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold mr-3">4</span>
                   <div>
                     <strong>2週間前：</strong>舞台設置、調整
                   </div>
                 </div>
                 <div className="flex items-center">
-                  <span className="bg-green-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold mr-3">5</span>
+                  <span className="bg-theater-primary-600 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold mr-3">5</span>
                   <div>
                     <strong>1週間前：</strong>最終チェック、補修
                   </div>
@@ -480,7 +480,7 @@ export default function StageDesignGuide() {
             
             {stageElements.lighting.basics.map((item, index) => (
               <div key={index} className="mb-8 bg-white border rounded-lg p-6">
-                <h3 className="text-xl font-bold mb-3 text-yellow-600">{item.type}</h3>
+                <h3 className="text-xl font-bold mb-3 text-theater-primary-700">{item.type}</h3>
                 <p className="text-gray-600 mb-4">{item.description}</p>
                 
                 {item.equipment && (
@@ -488,7 +488,7 @@ export default function StageDesignGuide() {
                     <h4 className="font-semibold mb-2">使用機材</h4>
                     <div className="grid md:grid-cols-2 gap-2">
                       {item.equipment.map((equip, i) => (
-                        <div key={i} className="bg-yellow-50 p-3 rounded text-sm">
+                        <div key={i} className="bg-[#F4F2EE] p-3 rounded text-sm">
                           {equip}
                         </div>
                       ))}
@@ -514,12 +514,12 @@ export default function StageDesignGuide() {
                       {item.colors.map((color, i) => (
                         <div key={i} className="flex items-center bg-gray-50 p-3 rounded">
                           <div className={`w-8 h-8 rounded mr-3 ${
-                            color.color === "青" ? "bg-theater-primary-600" :
-                            color.color === "赤" ? "bg-red-500" :
-                            color.color === "緑" ? "bg-green-500" :
-                            color.color === "アンバー" ? "bg-yellow-600" :
-                            "bg-gray-200"
-                          }`}></div>
+ color.color === "青" ? "bg-theater-primary-600" :
+ color.color === "赤" ? "bg-red-500" :
+ color.color === "緑" ? "bg-theater-primary-600" :
+ color.color === "アンバー" ? "bg-theater-primary-600" :
+ "bg-gray-200"
+ }`}></div>
                           <div className="flex-1">
                             <strong className="text-sm">{color.color}：</strong>
                             <span className="text-sm ml-2">{color.meaning}</span>
@@ -534,7 +534,7 @@ export default function StageDesignGuide() {
             ))}
 
             {/* 照明プラン作成 */}
-            <div className="bg-yellow-50 p-6 rounded-lg">
+            <div className="bg-[#F4F2EE] p-6 rounded-lg">
               <h3 className="font-bold mb-4">照明プラン作成の流れ</h3>
               <div className="space-y-4">
                 <div>
@@ -570,17 +570,17 @@ export default function StageDesignGuide() {
         {activeTab === "budget" && (
           <section className="mb-12">
             <h2 className="text-2xl font-bold mb-6 flex items-center">
-              <FaYenSign className="mr-3 text-green-500" />
+              <FaYenSign className="mr-3 text-gray-500" />
               低予算での工夫
             </h2>
             
             {budgetTips.map((category, index) => (
               <div key={index} className="mb-6 bg-white border rounded-lg p-6">
-                <h3 className="font-bold text-lg mb-4 text-green-600">{category.category}</h3>
+                <h3 className="font-bold text-lg mb-4 text-theater-primary-700">{category.category}</h3>
                 <ul className="space-y-2">
                   {category.tips.map((tip, i) => (
                     <li key={i} className="flex items-start">
-                      <FaCheckCircle className="text-green-500 mr-2 mt-0.5 flex-shrink-0" />
+                      <FaCheckCircle className="text-gray-500 mr-2 mt-0.5 flex-shrink-0" />
                       <span className="text-sm">{tip}</span>
                     </li>
                   ))}
@@ -589,14 +589,14 @@ export default function StageDesignGuide() {
             ))}
 
             {/* 予算配分の目安 */}
-            <div className="bg-green-50 p-6 rounded-lg">
+            <div className="bg-[#F4F2EE] p-6 rounded-lg">
               <h3 className="font-bold mb-4">予算配分の目安（総予算10万円の場合）</h3>
               <div className="space-y-3">
                 <div className="flex justify-between items-center">
                   <span>大道具材料費</span>
                   <div className="flex items-center">
                     <div className="w-32 bg-gray-200 rounded-full h-4 mr-3">
-                      <div className="bg-green-500 h-4 rounded-full" style={{width: "30%"}}></div>
+                      <div className="bg-theater-primary-600 h-4 rounded-full" style={{width: "30%"}}></div>
                     </div>
                     <span className="font-semibold">30,000円</span>
                   </div>
@@ -614,7 +614,7 @@ export default function StageDesignGuide() {
                   <span>照明レンタル</span>
                   <div className="flex items-center">
                     <div className="w-32 bg-gray-200 rounded-full h-4 mr-3">
-                      <div className="bg-yellow-500 h-4 rounded-full" style={{width: "25%"}}></div>
+                      <div className="bg-theater-primary-600 h-4 rounded-full" style={{width: "25%"}}></div>
                     </div>
                     <span className="font-semibold">25,000円</span>
                   </div>
@@ -623,7 +623,7 @@ export default function StageDesignGuide() {
                   <span>衣装費</span>
                   <div className="flex items-center">
                     <div className="w-32 bg-gray-200 rounded-full h-4 mr-3">
-                      <div className="bg-purple-500 h-4 rounded-full" style={{width: "15%"}}></div>
+                      <div className="bg-theater-primary-600 h-4 rounded-full" style={{width: "15%"}}></div>
                     </div>
                     <span className="font-semibold">15,000円</span>
                   </div>
@@ -662,7 +662,7 @@ export default function StageDesignGuide() {
                 <ul className="space-y-2">
                   {guide.points.map((point, i) => (
                     <li key={i} className="flex items-start">
-                      <FaExclamationTriangle className="text-yellow-500 mr-2 mt-0.5 flex-shrink-0" />
+                      <FaExclamationTriangle className="text-gray-500 mr-2 mt-0.5 flex-shrink-0" />
                       <span className="text-sm">{point}</span>
                     </li>
                   ))}
@@ -671,7 +671,7 @@ export default function StageDesignGuide() {
             ))}
 
             {/* 緊急時対応 */}
-            <div className="bg-yellow-50 p-6 rounded-lg">
+            <div className="bg-[#F4F2EE] p-6 rounded-lg">
               <h3 className="font-bold mb-4">緊急時の対応</h3>
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
@@ -706,7 +706,7 @@ export default function StageDesignGuide() {
           <div className="grid md:grid-cols-3 gap-6">
             {caseStudies.map((study, index) => (
               <div key={index} className="bg-white border rounded-lg p-6">
-                <h3 className="font-bold text-lg mb-2 text-purple-600">{study.title}</h3>
+                <h3 className="font-bold text-lg mb-2 text-theater-primary-700">{study.title}</h3>
                 <p className="text-sm text-gray-600 mb-3">
                   <strong>作品：</strong>{study.production}
                 </p>
@@ -721,10 +721,10 @@ export default function StageDesignGuide() {
                   </div>
                   <div>
                     <strong className="text-sm">効果：</strong>
-                    <p className="text-sm text-green-600">{study.effect}</p>
+                    <p className="text-sm text-theater-primary-700">{study.effect}</p>
                   </div>
                   <div className="pt-3 border-t">
-                    <span className="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-xs">
+                    <span className="bg-[#F4F2EE] text-theater-primary-700 px-3 py-1 rounded-full text-xs">
                       予算: {study.budget}
                     </span>
                   </div>
@@ -782,7 +782,7 @@ export default function StageDesignGuide() {
               </div>
               
               <div className="flex gap-4">
-                <button type="button" className="bg-orange-500 text-white px-6 py-3 rounded-lg hover:bg-orange-600">
+                <button type="button" className="bg-theater-primary-600 text-white px-6 py-3 rounded-lg hover:bg-theater-primary-700">
                   保存する
                 </button>
                 <button type="button" className="bg-gray-500 text-white px-6 py-3 rounded-lg hover:bg-gray-600">
@@ -796,33 +796,33 @@ export default function StageDesignGuide() {
         <AdSlot slot={AD_SLOTS.BLOG_AFTER_TOC} format="horizontal" />
 
         {/* まとめ */}
-        <section className="mb-12 bg-gradient-to-r from-orange-100 to-yellow-100 p-8 rounded-lg">
+        <section className="mb-12 p-8 rounded-lg">
           <h2 className="text-2xl font-bold mb-4">効果的な舞台美術・照明のために</h2>
           
           <div className="grid md:grid-cols-4 gap-4">
             <div className="bg-white p-4 rounded-lg">
-              <FaPalette className="text-2xl text-orange-500 mb-2" />
+              <FaPalette className="text-2xl text-gray-500 mb-2" />
               <h3 className="font-semibold mb-2">統一感</h3>
               <p className="text-sm text-gray-600">
                 コンセプトに基づいた一貫性のあるデザイン
               </p>
             </div>
             <div className="bg-white p-4 rounded-lg">
-              <FaTools className="text-2xl text-blue-500 mb-2" />
+              <FaTools className="text-2xl text-gray-500 mb-2" />
               <h3 className="font-semibold mb-2">実用性</h3>
               <p className="text-sm text-gray-600">
                 安全で演技しやすい空間設計
               </p>
             </div>
             <div className="bg-white p-4 rounded-lg">
-              <FaYenSign className="text-2xl text-green-500 mb-2" />
+              <FaYenSign className="text-2xl text-gray-500 mb-2" />
               <h3 className="font-semibold mb-2">経済性</h3>
               <p className="text-sm text-gray-600">
                 限られた予算での最大効果
               </p>
             </div>
             <div className="bg-white p-4 rounded-lg">
-              <FaLightbulb className="text-2xl text-yellow-500 mb-2" />
+              <FaLightbulb className="text-2xl text-gray-500 mb-2" />
               <h3 className="font-semibold mb-2">創造性</h3>
               <p className="text-sm text-gray-600">
                 独創的なアイデアで観客を魅了
@@ -840,10 +840,10 @@ export default function StageDesignGuide() {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/" className="inline-block bg-orange-500 text-white px-8 py-3 rounded-lg hover:bg-orange-600 font-semibold">
+            <Link href="/" className="inline-block bg-theater-primary-600 text-white px-8 py-3 rounded-lg hover:bg-theater-primary-700 font-semibold">
               上演作品を探す
             </Link>
-            <Link href="/guide/advanced/directing" className="inline-block bg-white text-orange-500 border-2 border-orange-500 px-8 py-3 rounded-lg hover:bg-orange-50 font-semibold">
+            <Link href="/guide/advanced/directing" className="inline-block bg-white text-gray-500 border-2 border-orange-500 px-8 py-3 rounded-lg hover:bg-[#F4F2EE] font-semibold">
               演出の技法を見る
             </Link>
           </div>

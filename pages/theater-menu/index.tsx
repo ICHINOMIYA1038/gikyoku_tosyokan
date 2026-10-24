@@ -83,7 +83,7 @@ export default function TheaterMenuIndex({ categories, menus }: Props) {
               if (items.length === 0) return null;
               return (
                 <section key={cat.slug}>
-                  <div className="flex items-baseline justify-between mb-3 pb-2 border-b border-gray-200">
+                  <div className="flex items-baseline justify-between mb-3 pb-2 border-b border-[#D9D5CF]">
                     <h2 className="text-xl font-bold text-gray-900">
                       {cat.name}
                       <span className="ml-2 text-xs font-normal text-gray-400">
@@ -126,7 +126,7 @@ export function MenuGrid({ menus }: { menus: MenuItem[] }) {
         <Link
           key={m.id}
           href={`/theater-menu/${m.category.slug}/${m.slug}`}
-          className="group block rounded-xl border border-gray-200 bg-white overflow-hidden hover:shadow-md hover:border-rose-200 transition"
+          className="group block rounded border border-[#D9D5CF] bg-white overflow-hidden hover:border-rose-200 transition"
         >
           {m.imageUrl && (
             <div className="aspect-video bg-gray-100 overflow-hidden">
@@ -222,18 +222,18 @@ function PopularTagCloud({
 
 function CrossLinkFooter() {
   return (
-    <section className="rounded-xl border border-gray-200 bg-gradient-to-br from-rose-50 to-pink-50 p-5">
+    <section className="rounded border border-[#D9D5CF] p-5">
       <h2 className="text-sm font-bold text-gray-800 mb-3">関連サービス</h2>
       <div className="grid gap-3 sm:grid-cols-3 text-xs">
-        <Link href="/" className="rounded-lg bg-white p-3 border border-gray-100 hover:border-rose-200 transition">
+        <Link href="/" className="rounded-lg bg-white p-3 border border-[#D9D5CF] hover:border-rose-200 transition">
           <p className="font-bold text-gray-900">戯曲を検索</p>
           <p className="text-gray-500 mt-1">人数・時間・ジャンルで戯曲を探す</p>
         </Link>
-        <Link href="/tools" className="rounded-lg bg-white p-3 border border-gray-100 hover:border-rose-200 transition">
+        <Link href="/tools" className="rounded-lg bg-white p-3 border border-[#D9D5CF] hover:border-rose-200 transition">
           <p className="font-bold text-gray-900">演劇ツール</p>
           <p className="text-gray-500 mt-1">上演時間見積・稽古タイマー・スケジューラ</p>
         </Link>
-        <Link href="/announcements" className="rounded-lg bg-white p-3 border border-gray-100 hover:border-rose-200 transition">
+        <Link href="/announcements" className="rounded-lg bg-white p-3 border border-[#D9D5CF] hover:border-rose-200 transition">
           <p className="font-bold text-gray-900">上演告知</p>
           <p className="text-gray-500 mt-1">全国の上演情報を掲載</p>
         </Link>

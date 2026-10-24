@@ -77,7 +77,7 @@ export default function ReactionsRankingPage() {
 
       <div className="max-w-4xl mx-auto px-4 py-8">
         <header className="text-center mb-10">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-amber-100 rounded-full mb-4">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-[#F4F2EE] rounded-full mb-4">
             <span className="text-3xl">🏆</span>
           </div>
           <h1 className="text-3xl md:text-4xl font-bold mb-3">{title}</h1>
@@ -87,7 +87,7 @@ export default function ReactionsRankingPage() {
         </header>
 
         {/* Filter tabs */}
-        <div className="mb-8 bg-gray-50 rounded-xl p-4">
+        <div className="mb-8 bg-gray-50 rounded p-4">
           <p className="text-xs text-gray-500 mb-2 font-medium">リアクション別に見る</p>
           <div className="flex flex-wrap gap-2">
             {REACTIONS.map((r) => (
@@ -95,10 +95,10 @@ export default function ReactionsRankingPage() {
                 key={r.key}
                 onClick={() => setFilter(r.key)}
                 className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
-                  r.key === filter
-                    ? "bg-amber-500 text-white shadow-sm"
-                    : "bg-white border border-gray-200 text-gray-600 hover:border-amber-300 hover:bg-amber-50"
-                }`}
+ r.key === filter
+ ? "bg-theater-primary-600 text-white "
+ : "bg-white border border-[#D9D5CF] text-gray-600 hover:border-[#D9D5CF] hover:bg-[#F4F2EE]"
+ }`}
               >
                 <span className="mr-1">{r.emoji}</span>
                 {r.label}
@@ -110,7 +110,7 @@ export default function ReactionsRankingPage() {
         {/* Ranking list */}
         {loading ? (
           <div className="text-center py-16">
-            <div className="animate-spin w-8 h-8 border-4 border-amber-300 border-t-amber-600 rounded-full mx-auto mb-4"></div>
+            <div className="animate-spin w-8 h-8 border-4 border-[#D9D5CF] border-t-amber-600 rounded-full mx-auto mb-4"></div>
             <p className="text-gray-500">ランキングを読み込み中...</p>
           </div>
         ) : posts.length === 0 ? (
@@ -125,21 +125,21 @@ export default function ReactionsRankingPage() {
               <Link
                 key={post.id}
                 href={`/posts/${post.id}`}
-                className="flex items-start gap-4 bg-white rounded-xl border border-gray-100 p-4 hover:shadow-md hover:border-amber-200 transition-all group"
+                className="flex items-start gap-4 bg-white rounded border border-[#D9D5CF] p-4 hover:border-[#D9D5CF] transition-all group"
               >
                 {/* Rank number */}
                 <div className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center font-bold text-lg ${
-                  index === 0 ? "bg-yellow-400 text-white" :
-                  index === 1 ? "bg-gray-300 text-white" :
-                  index === 2 ? "bg-amber-600 text-white" :
-                  "bg-gray-100 text-gray-500"
-                }`}>
+ index === 0 ? "bg-theater-primary-600 text-white" :
+ index === 1 ? "bg-gray-300 text-white" :
+ index === 2 ? "bg-theater-primary-600 text-white" :
+ "bg-gray-100 text-gray-500"
+ }`}>
                   {index + 1}
                 </div>
 
                 {/* Post info */}
                 <div className="flex-1 min-w-0">
-                  <h2 className="font-bold text-gray-800 group-hover:text-amber-700 transition-colors truncate">
+                  <h2 className="font-bold text-gray-800 group-hover:text-theater-primary-700 transition-colors truncate">
                     {post.title}
                   </h2>
                   <p className="text-sm text-gray-500 mt-0.5">
@@ -155,7 +155,7 @@ export default function ReactionsRankingPage() {
                       .map(([key, count]) => (
                         <span
                           key={key}
-                          className="inline-flex items-center gap-0.5 px-2 py-0.5 bg-amber-50 border border-amber-100 rounded-full text-xs text-amber-700"
+                          className="inline-flex items-center gap-0.5 px-2 py-0.5 bg-[#F4F2EE] border border-[#D9D5CF] rounded-full text-xs text-theater-primary-700"
                         >
                           {REACTION_EMOJI[key] || ""} {key} {count}
                         </span>
@@ -165,7 +165,7 @@ export default function ReactionsRankingPage() {
 
                 {/* Total count */}
                 <div className="flex-shrink-0 text-center">
-                  <div className="text-2xl font-bold text-amber-600">{post.reactionCount}</div>
+                  <div className="text-2xl font-bold text-theater-primary-700">{post.reactionCount}</div>
                   <div className="text-xs text-gray-400">リアクション</div>
                 </div>
               </Link>
@@ -176,19 +176,19 @@ export default function ReactionsRankingPage() {
         <AdSlot slot={AD_SLOTS.CATEGORY_AFTER_LIST} format="horizontal" />
 
         {/* Related links */}
-        <section className="mt-12 bg-gray-50 rounded-xl p-6">
+        <section className="mt-12 bg-gray-50 rounded p-6">
           <h2 className="text-xl font-bold mb-4">関連ページ</h2>
           <div className="flex flex-wrap gap-3">
-            <Link href="/search/comedy" className="px-4 py-2 bg-white border border-gray-200 rounded-full hover:bg-gray-100 text-sm">
+            <Link href="/search/comedy" className="px-4 py-2 bg-white border border-[#D9D5CF] rounded-full hover:bg-gray-100 text-sm">
               コメディ戯曲
             </Link>
-            <Link href="/search/school" className="px-4 py-2 bg-white border border-gray-200 rounded-full hover:bg-gray-100 text-sm">
+            <Link href="/search/school" className="px-4 py-2 bg-white border border-[#D9D5CF] rounded-full hover:bg-gray-100 text-sm">
               学校演劇向け
             </Link>
-            <Link href="/lp/shindan" className="px-4 py-2 bg-white border border-gray-200 rounded-full hover:bg-gray-100 text-sm">
+            <Link href="/lp/shindan" className="px-4 py-2 bg-white border border-[#D9D5CF] rounded-full hover:bg-gray-100 text-sm">
               脚本診断
             </Link>
-            <Link href="/guide/cast-size" className="px-4 py-2 bg-white border border-gray-200 rounded-full hover:bg-gray-100 text-sm">
+            <Link href="/guide/cast-size" className="px-4 py-2 bg-white border border-[#D9D5CF] rounded-full hover:bg-gray-100 text-sm">
               人数別ガイド
             </Link>
           </div>

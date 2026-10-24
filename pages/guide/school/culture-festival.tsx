@@ -61,23 +61,23 @@ export default function CultureFestivalGuide() {
 
         {/* 導入 */}
         <section className="mb-12">
-          <div className="bg-blue-50 p-6 rounded-lg">
+          <div className="bg-[#F4F2EE] p-6 rounded-lg">
             <h2 className="text-xl font-bold mb-3">このガイドで解決できること</h2>
             <ul className="space-y-2">
               <li className="flex items-start">
-                <FaCheckCircle className="text-green-500 mt-1 mr-2 flex-shrink-0" />
+                <FaCheckCircle className="text-gray-500 mt-1 mr-2 flex-shrink-0" />
                 <span>限られた練習時間での効率的な稽古方法</span>
               </li>
               <li className="flex items-start">
-                <FaCheckCircle className="text-green-500 mt-1 mr-2 flex-shrink-0" />
+                <FaCheckCircle className="text-gray-500 mt-1 mr-2 flex-shrink-0" />
                 <span>予算内での衣装・小道具の準備方法</span>
               </li>
               <li className="flex items-start">
-                <FaCheckCircle className="text-green-500 mt-1 mr-2 flex-shrink-0" />
+                <FaCheckCircle className="text-gray-500 mt-1 mr-2 flex-shrink-0" />
                 <span>クラス全員が参加できる演出の工夫</span>
               </li>
               <li className="flex items-start">
-                <FaCheckCircle className="text-green-500 mt-1 mr-2 flex-shrink-0" />
+                <FaCheckCircle className="text-gray-500 mt-1 mr-2 flex-shrink-0" />
                 <span>本番での緊張を和らげる方法</span>
               </li>
             </ul>
@@ -87,7 +87,7 @@ export default function CultureFestivalGuide() {
         {/* 8週間スケジュール */}
         <section className="mb-12">
           <h2 className="text-2xl font-bold mb-6 flex items-center">
-            <FaCalendarAlt className="mr-2 text-blue-500" />
+            <FaCalendarAlt className="mr-2 text-gray-500" />
             8週間完全スケジュール
           </h2>
           
@@ -112,9 +112,9 @@ export default function CultureFestivalGuide() {
             </table>
           </div>
 
-          <div className="mt-6 p-4 bg-yellow-50 rounded-lg">
+          <div className="mt-6 p-4 bg-[#F4F2EE] rounded-lg">
             <p className="text-sm">
-              <FaExclamationTriangle className="inline text-yellow-600 mr-2" />
+              <FaExclamationTriangle className="inline text-theater-primary-700 mr-2" />
               <strong>重要:</strong> このスケジュールは目安です。メンバーの経験や作品の難易度に応じて調整してください。
             </p>
           </div>
@@ -127,9 +127,9 @@ export default function CultureFestivalGuide() {
           </h2>
           
           <div className="grid md:grid-cols-2 gap-6">
-            <div className="bg-green-50 p-6 rounded-lg">
+            <div className="bg-[#F4F2EE] p-6 rounded-lg">
               <h3 className="font-bold mb-3 flex items-center">
-                <FaClock className="mr-2 text-green-600" />
+                <FaClock className="mr-2 text-theater-primary-700" />
                 上演時間
               </h3>
               <ul className="space-y-2 text-sm">
@@ -137,14 +137,14 @@ export default function CultureFestivalGuide() {
                 <li>• 20-30分がベスト（観客の集中力維持）</li>
                 <li>• 転換が多い作品は避ける</li>
               </ul>
-              <Link href="/?minPlaytime=20&maxPlaytime=30" className="inline-block mt-3 text-blue-600 hover:underline text-sm">
+              <Link href="/?minPlaytime=20&maxPlaytime=30" className="inline-block mt-3 text-theater-primary-700 hover:underline text-sm">
                 20-30分の作品を探す →
               </Link>
             </div>
 
-            <div className="bg-purple-50 p-6 rounded-lg">
+            <div className="bg-[#F4F2EE] p-6 rounded-lg">
               <h3 className="font-bold mb-3 flex items-center">
-                <FaUserFriends className="mr-2 text-purple-600" />
+                <FaUserFriends className="mr-2 text-theater-primary-700" />
                 人数構成
               </h3>
               <ul className="space-y-2 text-sm">
@@ -152,7 +152,7 @@ export default function CultureFestivalGuide() {
                 <li>• 裏方も含めて全員に役割を</li>
                 <li>• ダブルキャストも検討</li>
               </ul>
-              <Link href="/?minTotalCount=8&maxTotalCount=15" className="inline-block mt-3 text-blue-600 hover:underline text-sm">
+              <Link href="/?minTotalCount=8&maxTotalCount=15" className="inline-block mt-3 text-theater-primary-700 hover:underline text-sm">
                 8-15人の作品を探す →
               </Link>
             </div>
@@ -162,7 +162,7 @@ export default function CultureFestivalGuide() {
         {/* 予算管理 */}
         <section className="mb-12">
           <h2 className="text-2xl font-bold mb-6 flex items-center">
-            <FaYenSign className="mr-2 text-green-500" />
+            <FaYenSign className="mr-2 text-gray-500" />
             予算管理のコツ
           </h2>
           
@@ -191,7 +191,7 @@ export default function CultureFestivalGuide() {
               </div>
             </div>
             
-            <div className="mt-6 p-4 bg-blue-50 rounded">
+            <div className="mt-6 p-4 bg-[#F4F2EE] rounded">
               <h4 className="font-semibold mb-2">節約のアイデア</h4>
               <ul className="text-sm space-y-1">
                 <li>• 衣装は私服を活用、100均でアレンジ</li>
@@ -292,7 +292,7 @@ export default function CultureFestivalGuide() {
 
         {/* 成功の秘訣 */}
         <section className="mb-12">
-          <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-8 rounded-lg">
+          <div className="p-8 rounded-lg">
             <h2 className="text-2xl font-bold mb-6">
               文化祭演劇・成功の5箇条
             </h2>
@@ -349,7 +349,7 @@ export default function CultureFestivalGuide() {
               <p className="text-sm text-gray-600 mb-4">
                 日常会話が中心で、演技初心者でも取り組みやすい作品
               </p>
-              <Link href="/?minPlaytime=20&maxPlaytime=30&categories=2" className="text-blue-600 hover:underline">
+              <Link href="/?minPlaytime=20&maxPlaytime=30&categories=2" className="text-theater-primary-700 hover:underline">
                 コメディ作品を見る →
               </Link>
             </div>
@@ -359,7 +359,7 @@ export default function CultureFestivalGuide() {
               <p className="text-sm text-gray-600 mb-4">
                 観客の心に残る、メッセージ性のある作品
               </p>
-              <Link href="/?minPlaytime=30&maxPlaytime=40&categories=1" className="text-blue-600 hover:underline">
+              <Link href="/?minPlaytime=30&maxPlaytime=40&categories=1" className="text-theater-primary-700 hover:underline">
                 ドラマ作品を見る →
               </Link>
             </div>
@@ -380,7 +380,7 @@ export default function CultureFestivalGuide() {
             観客も演者も楽しめる舞台を作り上げてください。
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
-            <Link href="/" className="inline-block bg-theater-primary-600 text-white px-6 py-3 rounded-lg hover:bg-theater-primary-600 text-center">
+            <Link href="/" className="inline-block bg-theater-primary-600 text-white px-6 py-3 rounded-lg hover:bg-theater-primary-700 text-center">
               作品を探す
             </Link>
             <Link href="/guide" className="inline-block bg-gray-500 text-white px-6 py-3 rounded-lg hover:bg-gray-600 text-center">
@@ -394,17 +394,17 @@ export default function CultureFestivalGuide() {
           <h2 className="text-xl font-bold mb-4">関連ガイド</h2>
           <ul className="space-y-2">
             <li>
-              <Link href="/guide/beginner/how-to-choose-script" className="text-blue-600 hover:underline">
+              <Link href="/guide/beginner/how-to-choose-script" className="text-theater-primary-700 hover:underline">
                 → 脚本の選び方完全ガイド
               </Link>
             </li>
             <li>
-              <Link href="/guide/beginner/acting-basics" className="text-blue-600 hover:underline">
+              <Link href="/guide/beginner/acting-basics" className="text-theater-primary-700 hover:underline">
                 → 演技の基礎
               </Link>
             </li>
             <li>
-              <Link href="/guide/school/drama-club" className="text-blue-600 hover:underline">
+              <Link href="/guide/school/drama-club" className="text-theater-primary-700 hover:underline">
                 → 演劇部運営ガイド（準備中）
               </Link>
             </li>

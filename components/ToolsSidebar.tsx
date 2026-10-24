@@ -60,12 +60,12 @@ export default function ToolsSidebar({ currentTool }: ToolsSidebarProps) {
                   key={tool.slug}
                   href={tool.href}
                   className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
-                    isActive
-                      ? "bg-blue-50 text-blue-700 border border-blue-200"
-                      : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
-                  }`}
+ isActive
+ ? "bg-[#F4F2EE] text-theater-primary-700 border border-[#D9D5CF]"
+ : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+ }`}
                 >
-                  <span className={`text-base ${isActive ? "text-blue-500" : "text-gray-400"}`}>
+                  <span className={`text-base ${isActive ? "text-gray-500" : "text-gray-400"}`}>
                     {tool.icon}
                   </span>
                   {tool.name}
@@ -74,18 +74,18 @@ export default function ToolsSidebar({ currentTool }: ToolsSidebarProps) {
             })}
           </nav>
 
-          <div className="mt-6 pt-4 border-t border-gray-200 space-y-2">
+          <div className="mt-6 pt-4 border-t border-[#D9D5CF] space-y-2">
             {session && (
               <Link
                 href="/mypage"
-                className="block text-sm text-gray-500 hover:text-blue-600 transition-colors"
+                className="block text-sm text-gray-500 hover:text-theater-primary-700 transition-colors"
               >
                 マイデータ &rarr;
               </Link>
             )}
             <Link
               href="/"
-              className="block text-sm text-gray-500 hover:text-blue-600 transition-colors"
+              className="block text-sm text-gray-500 hover:text-theater-primary-700 transition-colors"
             >
               戯曲を探す &rarr;
             </Link>
@@ -103,10 +103,10 @@ export default function ToolsSidebar({ currentTool }: ToolsSidebarProps) {
                 key={tool.slug}
                 href={tool.href}
                 className={`flex items-center gap-1.5 px-3 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${
-                  isActive
-                    ? "bg-blue-600 text-white"
-                    : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                }`}
+ isActive
+ ? "bg-theater-primary-600 text-white"
+ : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+ }`}
               >
                 <span className="text-xs">{tool.icon}</span>
                 {tool.name}

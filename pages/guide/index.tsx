@@ -10,7 +10,7 @@ export default function GuideIndex() {
   const guides = {
     beginner: {
       title: "初心者向けガイド",
-      icon: <FaUserGraduate className="text-4xl text-green-500" />,
+      icon: <FaUserGraduate className="text-4xl text-gray-500" />,
       description: "演劇を始めたばかりの方へ",
       items: [
         {
@@ -35,7 +35,7 @@ export default function GuideIndex() {
     },
     school: {
       title: "学校演劇ガイド",
-      icon: <FaSchool className="text-4xl text-blue-500" />,
+      icon: <FaSchool className="text-4xl text-gray-500" />,
       description: "文化祭・部活動での上演に",
       items: [
         {
@@ -60,7 +60,7 @@ export default function GuideIndex() {
     },
     advanced: {
       title: "上級者向けガイド",
-      icon: <FaTheaterMasks className="text-4xl text-purple-500" />,
+      icon: <FaTheaterMasks className="text-4xl text-gray-500" />,
       description: "より深い演劇表現を目指す方へ",
       items: [
         {
@@ -111,28 +111,28 @@ export default function GuideIndex() {
         </header>
 
         {/* クイックアクセス */}
-        <section className="bg-blue-50 p-6 rounded-lg mb-12">
+        <section className="bg-[#F4F2EE] p-6 rounded-lg mb-12">
           <h2 className="text-xl font-bold mb-4">人気のガイド</h2>
           <div className="grid md:grid-cols-3 gap-4">
-            <Link href="/guide/beginner/how-to-choose-script" className="bg-white p-4 rounded-lg shadow hover:shadow-lg transition-shadow">
+            <Link href="/guide/beginner/how-to-choose-script" className="bg-white p-4 rounded-lg shadow transition-shadow">
               <div className="flex items-center mb-2">
-                <FaBook className="text-blue-500 mr-2" />
+                <FaBook className="text-gray-500 mr-2" />
                 <span className="font-semibold">脚本の選び方</span>
               </div>
               <p className="text-sm text-gray-600">初めての脚本選びで失敗しないために</p>
             </Link>
             
-            <Link href="/guide/school/culture-festival" className="bg-white p-4 rounded-lg shadow hover:shadow-lg transition-shadow">
+            <Link href="/guide/school/culture-festival" className="bg-white p-4 rounded-lg shadow transition-shadow">
               <div className="flex items-center mb-2">
-                <FaClock className="text-green-500 mr-2" />
+                <FaClock className="text-gray-500 mr-2" />
                 <span className="font-semibold">文化祭演劇ガイド</span>
               </div>
               <p className="text-sm text-gray-600">限られた時間で最高の舞台を</p>
             </Link>
             
-            <Link href="/guide/beginner/acting-basics" className="bg-white p-4 rounded-lg shadow hover:shadow-lg transition-shadow">
+            <Link href="/guide/beginner/acting-basics" className="bg-white p-4 rounded-lg shadow transition-shadow">
               <div className="flex items-center mb-2">
-                <FaUsers className="text-purple-500 mr-2" />
+                <FaUsers className="text-gray-500 mr-2" />
                 <span className="font-semibold">演技の基礎</span>
               </div>
               <p className="text-sm text-gray-600">発声から感情表現まで</p>
@@ -157,10 +157,10 @@ export default function GuideIndex() {
                   <div key={index}>
                     {item.available ? (
                       <Link href={item.href} className="block h-full">
-                        <div className="border rounded-lg p-6 h-full hover:shadow-lg transition-shadow hover:border-blue-300">
+                        <div className="border rounded-lg p-6 h-full transition-shadow hover:border-[#D9D5CF]">
                           <h3 className="text-lg font-semibold mb-2">{item.title}</h3>
                           <p className="text-gray-600 text-sm mb-3">{item.description}</p>
-                          <span className="text-blue-600 text-sm hover:underline">
+                          <span className="text-theater-primary-700 text-sm hover:underline">
                             詳しく見る →
                           </span>
                         </div>
@@ -187,7 +187,7 @@ export default function GuideIndex() {
           <p className="mb-6">
             ガイドを参考に、あなたの条件に合った作品を探してみましょう
           </p>
-          <Link href="/" className="inline-block bg-theater-primary-600 text-white px-6 py-3 rounded-lg hover:bg-theater-primary-600">
+          <Link href="/" className="inline-block bg-theater-primary-600 text-white px-6 py-3 rounded-lg hover:bg-theater-primary-700">
             作品を検索する
           </Link>
         </section>

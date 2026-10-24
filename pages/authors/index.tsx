@@ -55,8 +55,8 @@ function AuthorListPage({ authors }: AuthorListPageProps) {
         numberOfItems={authors.length}
       />
       <Layout>
-        <div className="min-h-screen bg-gradient-to-b from-theater-neutral-50 to-white">
-          <div className="bg-gradient-to-r from-theater-primary-100 to-theater-primary-50 py-10 px-4">
+        <div className="min-h-screen from-theater-neutral-50">
+          <div className="py-10 px-4">
             <div className="max-w-6xl mx-auto">
               <div className="flex items-center gap-3 mb-3">
                 <FaUser className="text-3xl text-theater-primary-500" />
@@ -79,7 +79,7 @@ function AuthorListPage({ authors }: AuthorListPageProps) {
                 placeholder="作者名・劇団名で絞り込み"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:border-theater-primary-400"
+                className="w-full pl-10 pr-4 py-3 border border-[#D9D5CF] rounded-lg focus:outline-none focus:border-theater-primary-400"
               />
               {searchQuery && (
                 <p className="text-sm text-gray-500 mt-2">
@@ -94,7 +94,7 @@ function AuthorListPage({ authors }: AuthorListPageProps) {
                   <Link
                     key={author.id}
                     href={`/authors/${author.id}`}
-                    className="block p-4 bg-white border border-gray-100 rounded-lg shadow-sm hover:shadow-md hover:border-theater-primary-300 transition-all"
+                    className="block p-4 bg-white border border-[#D9D5CF] rounded-lg hover:border-gray-500 transition-all"
                   >
                     <h2 className="text-base font-bold text-gray-900 group-hover:text-theater-primary-700 mb-1">
                       {author.name}

@@ -114,7 +114,7 @@ export default function PlansIndex({ categories, plans }: Props) {
                   <li key={p.id}>
                     <Link
                       href={`/theater-menu/plans/${p.id}`}
-                      className="block rounded-xl border border-gray-200 bg-white p-4 hover:border-rose-200 hover:shadow-sm transition"
+                      className="block rounded border border-[#D9D5CF] bg-white p-4 hover:border-rose-200 transition"
                     >
                       <h3 className="font-bold text-gray-900 mb-1">{p.title}</h3>
                       {p.description && (
@@ -124,7 +124,7 @@ export default function PlansIndex({ categories, plans }: Props) {
                         <span>{p.itemCount} メニュー</span>
                         <span>更新: {new Date(p.updatedAt).toLocaleDateString("ja-JP", { timeZone: 'Asia/Tokyo' })}</span>
                         {p.isPublic && (
-                          <span className="text-emerald-700 bg-emerald-50 px-1.5 rounded">公開中</span>
+                          <span className="text-theater-primary-700 bg-[#F4F2EE] px-1.5 rounded">公開中</span>
                         )}
                       </div>
                     </Link>

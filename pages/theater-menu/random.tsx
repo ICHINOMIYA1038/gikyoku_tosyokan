@@ -57,7 +57,7 @@ export default function RandomPickerPage({ categories }: Props) {
           <TheaterMenuSidebar categories={categories} />
 
           <main className="flex-1 min-w-0 mt-6 md:mt-0">
-            <header className="mb-6 pb-5 border-b border-gray-200">
+            <header className="mb-6 pb-5 border-b border-[#D9D5CF]">
               <p className="text-[10px] font-semibold text-rose-600 tracking-widest uppercase mb-1.5">
                 Random Picker
               </p>
@@ -78,10 +78,10 @@ export default function RandomPickerPage({ categories }: Props) {
                 <button
                   onClick={() => { if (!muted) playClick(); setSelected(""); }}
                   className={`px-3 py-1.5 text-xs rounded transition ${
-                    selected === ""
-                      ? "bg-gray-900 text-white"
-                      : "bg-white text-gray-700 border border-gray-200 hover:border-gray-400"
-                  }`}
+ selected === ""
+ ? "bg-gray-900 text-white"
+ : "bg-white text-gray-700 border border-[#D9D5CF] hover:border-gray-400"
+ }`}
                 >
                   すべて
                 </button>
@@ -90,10 +90,10 @@ export default function RandomPickerPage({ categories }: Props) {
                     key={c.slug}
                     onClick={() => { if (!muted) playClick(); setSelected(c.slug); }}
                     className={`px-3 py-1.5 text-xs rounded transition ${
-                      selected === c.slug
-                        ? "bg-gray-900 text-white"
-                        : "bg-white text-gray-700 border border-gray-200 hover:border-gray-400"
-                    }`}
+ selected === c.slug
+ ? "bg-gray-900 text-white"
+ : "bg-white text-gray-700 border border-[#D9D5CF] hover:border-gray-400"
+ }`}
                   >
                     {c.name}
                   </button>
@@ -124,9 +124,9 @@ export default function RandomPickerPage({ categories }: Props) {
             {menu && (
               <article
                 key={menu.id}
-                className="mt-6 rounded-xl border border-gray-200 bg-white overflow-hidden animate-fadeIn"
+                className="mt-6 rounded border border-[#D9D5CF] bg-white overflow-hidden animate-fadeIn"
               >
-                <div className="px-6 py-4 border-b border-gray-100 bg-gray-50/50 flex items-center justify-between">
+                <div className="px-6 py-4 border-b border-[#D9D5CF] bg-gray-50/50 flex items-center justify-between">
                   <p className="text-[10px] font-semibold text-gray-500 tracking-widest uppercase">
                     Today&apos;s Pick
                   </p>
@@ -153,7 +153,7 @@ export default function RandomPickerPage({ categories }: Props) {
             )}
 
             {!menu && (
-              <p className="mt-6 text-center text-xs text-gray-400 py-8 border border-dashed border-gray-200 rounded-lg">
+              <p className="mt-6 text-center text-xs text-gray-400 py-8 border border-dashed border-[#D9D5CF] rounded-lg">
                 「引く」ボタンでメニューを1つランダムに抽選します
               </p>
             )}

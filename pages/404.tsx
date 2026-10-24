@@ -27,7 +27,7 @@ export default function Custom404() {
           </p>
           <div className="space-y-4">
             <Link href="/">
-              <button className="w-full bg-theater-primary-600 text-white py-3 px-6 rounded-lg hover:bg-theater-primary-600 transition-colors">
+              <button className="w-full bg-theater-primary-600 text-white py-3 px-6 rounded-lg hover:bg-theater-primary-700 transition-colors">
                 トップページへ戻る
               </button>
             </Link>
@@ -38,7 +38,7 @@ export default function Custom404() {
               前のページへ戻る
             </button>
           </div>
-          <div className="mt-8 pt-8 border-t border-gray-200">
+          <div className="mt-8 pt-8 border-t border-[#D9D5CF]">
             <p className="text-sm text-gray-500 mb-4">
               人気のページ
             </p>
