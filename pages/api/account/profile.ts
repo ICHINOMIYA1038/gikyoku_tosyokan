@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { prisma } from '@/lib/prisma';
 import { requireAuth } from '@/lib/auth';
+import { publicName } from '@/lib/public-name';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'PATCH') {
@@ -58,6 +59,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       avatarUrl: true,
     },
   });
+
+  // 表示名を変えたら、過去のコメント・告知の投稿者名を揃え、コメントのある作品ページを作り直す
+  if (displayName !== undefined) {
+    const name = publicName(updated);
+    await prisma.parentComment.updateMany({ where: { userId: updated.id, deleted: false }, data: { author: name } });
+    await prisma.childComment.updateMany({ where: { userId: updated.id, deleted: false }, data: { author: name } });
+    await prisma.announcement.updateMany({ where: { userId: updated.id }, data: { authorName: name } });
+    const posts = await prisma.parentComment.findMany({
+      where: { userId: updated.id },
+      select: { post_id: true },
+      distinct: ['post_id'],
+      take: 100,
+    });
+    await Promise.all(posts.map((p) => res.revalidate(`/posts/${p.post_id}`).catch(() => {})));
+  }
 
   return res.status(200).json(updated);
 }
