@@ -218,18 +218,12 @@ function generateSiteMap(posts, authors, categories, blogPosts, studentGroups, s
        })
        .join("")}
 
-     <!-- 小劇場・劇団ページ -->
-     <url>
-       <loc>${EXTERNAL_DATA_URL}/shogekijo</loc>
-       <lastmod>${currentDate}</lastmod>
-       <changefreq>weekly</changefreq>
-       <priority>0.7</priority>
-     </url>
+     <!-- 小劇場・劇団ページ（/shogekijo は /theater-groups へ転送されるので、転送先を載せる） -->
      ${shogekijoGroups
        .map(({ slug }) => {
          return `
        <url>
-           <loc>${EXTERNAL_DATA_URL}/shogekijo/${slug}</loc>
+           <loc>${EXTERNAL_DATA_URL}/theater-groups/${slug}</loc>
            <lastmod>${currentDate}</lastmod>
            <changefreq>monthly</changefreq>
            <priority>0.6</priority>

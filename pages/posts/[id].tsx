@@ -459,9 +459,9 @@ function PostPage({ post, blogMentions }: any) {
                   </div>
                   <p className="mt-4 text-sm text-gray-600">
                     劇団を探す：
-                    <Link href="/university-theater" className="text-theater-primary-700 hover:underline">大学演劇</Link>
+                    <Link href="/theater-groups?type=university" className="text-theater-primary-700 hover:underline">大学演劇</Link>
                     <span className="mx-1">・</span>
-                    <Link href="/shogekijo" className="text-theater-primary-700 hover:underline">小劇場</Link>
+                    <Link href="/theater-groups" className="text-theater-primary-700 hover:underline">小劇場</Link>
                   </p>
                 </div>
               </section>
@@ -641,7 +641,8 @@ export async function getStaticProps(context: any) {
         },
         _count: {
           select: {
-            ratings: true
+            // 範囲外の値（0 や 6）は以前の不具合で入ったものなので数えない
+            ratings: { where: { star: { gte: 1, lte: 5 } } }
           }
         }
       }

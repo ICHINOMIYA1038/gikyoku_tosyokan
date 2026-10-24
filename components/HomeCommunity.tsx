@@ -75,7 +75,7 @@ export default function HomeCommunity() {
 
       <div className="mt-6 grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)]">
         <div className="min-w-0">
-          <ColumnHead title="作品への声" href="/ranking" more="作品を探して書く" />
+          <ColumnHead title="作品への声" href="/popular" more="人気の作品から書く" />
           {comments.isLoading ? (
             <Placeholder rows={4} />
           ) : comments.data && comments.data.length > 0 ? (

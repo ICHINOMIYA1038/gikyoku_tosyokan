@@ -1,4 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
+import type { GetServerSideProps } from 'next';
+import { prisma } from '@/lib/prisma';
+import { getAuthSSP } from '@/lib/auth';
+import { PUBLIC_ANNOUNCEMENT_SELECT } from '@/lib/announcement-public';
 import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
 import Layout from '@/components/Layout';
@@ -20,7 +24,7 @@ type Announcement = {
   contactInfo?: string;
   authorName: string;
   userId?: string;
-  ipAddress?: string;
+  images?: string[];
   createdAt: string;
   updatedAt: string;
   views: number;
@@ -30,41 +34,21 @@ type Announcement = {
   post?: { id: number; title: string } | null;
 };
 
-export default function AnnouncementDetailPage() {
+export default function AnnouncementDetailPage({ announcement }: { announcement: Announcement }) {
   const router = useRouter();
   const { data: session } = useSession();
-  const { id } = router.query;
-  const [announcement, setAnnouncement] = useState<Announcement | null>(null);
-  const [loading, setLoading] = useState(true);
+  const id = announcement.id;
 
   const canDelete = !!(
     session?.user?.id &&
-    announcement?.userId &&
+    announcement.userId &&
     session.user.id === announcement.userId
   );
 
+  // 表示回数はブラウザで開いたときだけ数える（クローラーでは増やさない）
   useEffect(() => {
-    if (id) {
-      fetchAnnouncement();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    fetch(`/api/announcements/${id}`).catch(() => {});
   }, [id]);
-
-  const fetchAnnouncement = async () => {
-    try {
-      const response = await fetch(`/api/announcements/${id}`);
-      if (response.ok) {
-        const data = await response.json();
-        setAnnouncement(data);
-      } else if (response.status === 404) {
-        router.push('/announcements');
-      }
-    } catch (error) {
-      console.error('Error fetching announcement:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleDelete = async () => {
     if (!confirm('この告知を削除してもよろしいですか？')) {
@@ -88,18 +72,6 @@ export default function AnnouncementDetailPage() {
     }
   };
 
-  if (loading) {
-    return (
-      <Layout>
-        <p className="py-24 text-center text-gray-500">読み込み中…</p>
-      </Layout>
-    );
-  }
-
-  if (!announcement) {
-    return null;
-  }
-
   const shareUrl = `https://gikyokutosyokan.com/announcements/${announcement.id}`;
   const shareTitle = `【公演告知】${announcement.title}`;
 
@@ -109,7 +81,8 @@ export default function AnnouncementDetailPage() {
     <>
       <Seo
         pageTitle={`${announcement.title} | 公演告知掲示板`}
-        pageDescription={announcement.content.substring(0, 160)}
+        pageDescription={announcement.content.replace(/\s+/g, ' ').substring(0, 160)}
+        pageImg={announcement.images?.[0]}
         pagePath={`/announcements/${announcement.id}`}
         pageType="article"
       />
@@ -211,3 +184,20 @@ export default function AnnouncementDetailPage() {
     </>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const id = parseInt(context.params?.id as string);
+  if (isNaN(id)) return { notFound: true };
+
+  const found = await prisma.announcement.findUnique({ where: { id }, select: PUBLIC_ANNOUNCEMENT_SELECT });
+  if (!found || found.deletedAt) return { notFound: true };
+
+  // 未承認の告知は投稿した本人だけが見られる
+  if (found.status !== 'approved') {
+    const session = await getAuthSSP(context);
+    if (!session || session.user.id !== found.userId) return { notFound: true };
+  }
+
+  const { deletedAt: _deletedAt, ...announcement } = found;
+  return { props: { announcement: JSON.parse(JSON.stringify(announcement)) } };
+};

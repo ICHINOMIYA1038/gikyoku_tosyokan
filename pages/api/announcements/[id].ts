@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { prisma } from '@/lib/prisma';
 import { getAuth } from '@/lib/auth';
+import { PUBLIC_ANNOUNCEMENT_SELECT } from '@/lib/announcement-public';
 
 export default async function handler(
   req: NextApiRequest,
@@ -17,9 +18,7 @@ export default async function handler(
     try {
       const announcement = await prisma.announcement.findUnique({
         where: { id: announcementId },
-        include: {
-          post: { select: { id: true, title: true } },
-        },
+        select: PUBLIC_ANNOUNCEMENT_SELECT,
       });
 
       if (!announcement || announcement.deletedAt) {
@@ -41,7 +40,8 @@ export default async function handler(
         });
       }
 
-      res.status(200).json(announcement);
+      const { deletedAt: _deletedAt, ...publicFields } = announcement;
+      res.status(200).json(publicFields);
     } catch (error) {
       console.error('Error fetching announcement:', error);
       res.status(500).json({ error: 'Failed to fetch announcement' });

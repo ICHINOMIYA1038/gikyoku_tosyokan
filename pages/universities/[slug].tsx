@@ -47,7 +47,7 @@ export default function UniversityDetail({ university }: Props) {
         type="BreadcrumbList"
         breadcrumbs={[
           { name: 'ホーム', url: 'https://gikyokutosyokan.com' },
-          { name: '大学演劇', url: 'https://gikyokutosyokan.com/university-theater' },
+          { name: '大学演劇', url: 'https://gikyokutosyokan.com/theater-groups?type=university' },
           { name: university.name, url: `https://gikyokutosyokan.com/universities/${university.slug}` },
         ]}
       />
@@ -57,7 +57,7 @@ export default function UniversityDetail({ university }: Props) {
         <nav className="flex items-center gap-1 text-xs text-gray-500 mb-4 flex-wrap">
           <Link href="/" className="hover:text-theater-primary-700">ホーム</Link>
           <FaChevronRight className="text-[8px]" />
-          <Link href="/university-theater" className="hover:text-theater-primary-700">大学演劇</Link>
+          <Link href="/theater-groups?type=university" className="hover:text-theater-primary-700">大学演劇</Link>
           <FaChevronRight className="text-[8px]" />
           <span className="text-gray-800">{university.name}</span>
         </nav>

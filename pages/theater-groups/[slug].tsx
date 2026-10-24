@@ -73,7 +73,7 @@ export default function TheaterGroupDetail({ group, relatedShogekijoGroups, acti
         breadcrumbs={[
           { name: 'ホーム', url: 'https://gikyokutosyokan.com' },
           ...(isUniversity
-            ? [{ name: '大学演劇', url: 'https://gikyokutosyokan.com/university-theater' }]
+            ? [{ name: '大学演劇', url: 'https://gikyokutosyokan.com/theater-groups?type=university' }]
             : []),
           { name: '劇団データベース', url: 'https://gikyokutosyokan.com/theater-groups' },
           { name: group.name, url: `https://gikyokutosyokan.com/theater-groups/${group.slug}` },
@@ -84,7 +84,7 @@ export default function TheaterGroupDetail({ group, relatedShogekijoGroups, acti
         <Breadcrumb
           items={[
             { name: 'ホーム', href: '/' },
-            ...(isUniversity ? [{ name: '大学演劇', href: '/university-theater' }] : []),
+            ...(isUniversity ? [{ name: '大学演劇', href: '/theater-groups?type=university' }] : []),
             { name: '劇団データベース', href: '/theater-groups' },
             { name: group.name },
           ]}
@@ -179,15 +179,15 @@ export default function TheaterGroupDetail({ group, relatedShogekijoGroups, acti
             <ul className="mt-3 border-t border-[#D9D5CF]">
               {relatedShogekijoGroups.map((rg) => (
                 <li key={rg.slug} className="border-b border-[#D9D5CF]">
-                  <Link href={`/shogekijo/${rg.slug}`} className="group flex items-baseline gap-3 py-3 px-2 hover:bg-[#F4F2EE]">
+                  <Link href={`/theater-groups/${rg.slug}`} className="group flex items-baseline gap-3 py-3 px-2 hover:bg-[#F4F2EE]">
                     <span className="flex-1 font-serif font-bold text-gray-900 group-hover:text-theater-primary-700">{rg.name}</span>
                     <span className="text-sm text-gray-600">{groupTypeLabels[rg.groupType] || rg.groupType}</span>
                   </Link>
                 </li>
               ))}
             </ul>
-            <Link href="/shogekijo" className="mt-3 inline-block text-sm text-theater-primary-700 hover:underline">
-              小劇場データベースを見る
+            <Link href="/theater-groups" className="mt-3 inline-block text-sm text-theater-primary-700 hover:underline">
+              小劇場の劇団をもっと見る
             </Link>
           </section>
         )}
