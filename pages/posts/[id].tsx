@@ -720,13 +720,16 @@ export async function getStaticProps(context: any) {
       // 削除済みのコメントは、本文と投稿者をページに埋め込まない（管理画面からの削除は本文を残しているため）
       comments: post.comments.map((comment: any) => ({
         ...comment,
+        // ログインユーザーの投稿者名は今の表示名にする（保存された名前にアカウント名が入っていることがあるため）
+        ...(comment.userId ? { author: comment.user?.displayName || "ユーザー" } : {}),
         ...(comment.deleted ? HIDDEN_COMMENT : {}),
-        name: comment.deleted ? "" : comment.author,
+        name: comment.deleted ? "" : comment.userId ? comment.user?.displayName || "ユーザー" : comment.author,
         date: formatDatetime(comment.date),
         children: comment.children.map((child: any) => ({
           ...child,
+          ...(child.userId ? { author: child.user?.displayName || "ユーザー" } : {}),
           ...(child.deleted ? HIDDEN_COMMENT : {}),
-          name: child.deleted ? "" : child.author,
+          name: child.deleted ? "" : child.userId ? child.user?.displayName || "ユーザー" : child.author,
           parent_id: child.parentCommentId,
           date: formatDatetime(child.date),
         })),
