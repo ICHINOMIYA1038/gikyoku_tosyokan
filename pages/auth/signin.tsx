@@ -103,6 +103,14 @@ export default function SignIn({ providers, callbackUrl }: Props) {
               ))}
           </div>
 
+          <p className="mt-4 text-xs text-gray-600 text-center leading-relaxed">
+            続けることで、
+            <Link href="/support/tos" className="text-theater-primary-700 underline underline-offset-2">利用規約</Link>
+            と
+            <Link href="/support/privacy-policy" className="text-theater-primary-700 underline underline-offset-2">プライバシーポリシー</Link>
+            に同意したものとみなされます。投稿すると、表示名とプロフィール画像が公開されます（マイページで変更できます）。
+          </p>
+
           <div className="mt-5 pt-5 border-t border-gray-200">
             <p className="text-xs text-gray-500 leading-relaxed">
               <b className="text-gray-700">{other.name}</b>（{other.tagline}）も同じアカウントで使えます。

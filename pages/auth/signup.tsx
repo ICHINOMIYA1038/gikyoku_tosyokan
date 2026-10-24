@@ -147,7 +147,7 @@ export default function SignUp({ providers, callbackUrl }: Props) {
               <Link href="/support/tos" className="text-theater-primary-600 hover:underline">利用規約</Link>
               および
               <Link href="/support/privacy-policy" className="text-theater-primary-600 hover:underline">プライバシーポリシー</Link>
-              に同意したものとみなされます。
+              に同意したものとみなされます。投稿すると、表示名とプロフィール画像が公開されます（マイページで変更できます）。
             </p>
 
             {/* ログインリンク */}

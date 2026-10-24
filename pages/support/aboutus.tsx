@@ -56,7 +56,7 @@ function Home() {
         </p>
 
         <h3 className="font-bold text-lg mt-6 mb-3">お問い合わせ</h3>
-        <p>メール: gekidankatakago@gmail.com</p>
+        <p>メール: support@gikyokutosyokan.com</p>
         <p>連絡はお問い合わせフォームまでよろしくお願いいたします。</p>
         <div className="text-blue-600 my-5">
           <Link href="/support/contact">お問い合わせフォーム</Link>

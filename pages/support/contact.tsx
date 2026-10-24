@@ -25,7 +25,7 @@ function Home() {
         faqItems={[
           {
             question: 'お問い合わせ方法は？',
-            answer: 'ページ内のお問い合わせフォームまたはメール（gekidankatakago@gmail.com）からご連絡いただけます。',
+            answer: 'ページ内のお問い合わせフォームまたはメール（support@gikyokutosyokan.com）からご連絡いただけます。',
           },
           {
             question: 'どのような内容を問い合わせできますか？',
@@ -41,7 +41,7 @@ function Home() {
           </p>
           <div className="bg-blue-50 p-4 rounded-lg mb-6">
             <p className="font-semibold mb-2">直接メールでのお問い合わせ</p>
-            <p className="text-blue-600">gekidankatakago@gmail.com</p>
+            <p className="text-blue-600">support@gikyokutosyokan.com</p>
           </div>
         </div>
         <ContactForm />
