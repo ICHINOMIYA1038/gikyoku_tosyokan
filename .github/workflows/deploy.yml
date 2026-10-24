@@ -47,8 +47,15 @@ jobs:
           echo "current version: ${id:-unknown}"
           echo "version_id=$id" >> "$GITHUB_OUTPUT"
 
+      # Cloudflare の API がまれに一時的なエラーを返す（2026-10-24 にアセットのアップロードで1回）。少し待って最大3回まで試す
       - name: Deploy
-        run: npx opennextjs-cloudflare deploy
+        run: |
+          for i in 1 2 3; do
+            npx opennextjs-cloudflare deploy && exit 0
+            echo "deploy failed (attempt $i), retrying"
+            sleep 30
+          done
+          exit 1
 
       - name: Check production
         id: check
