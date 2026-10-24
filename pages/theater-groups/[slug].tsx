@@ -5,17 +5,12 @@ import Seo from '@/components/seo';
 import StructuredData from '@/components/StructuredData';
 import SocialLinks from '@/components/SocialLinks';
 import { prisma } from '@/lib/prisma';
-import { FaUniversity, FaUsers, FaCalendarAlt, FaChevronRight, FaBook, FaTheaterMasks, FaMapMarkerAlt, FaBuilding } from 'react-icons/fa';
+import Breadcrumb from '@/components/Breadcrumb';
 
 const venueTypeLabels: Record<string, string> = {
   small: '小劇場', medium: '中劇場', large: '大劇場',
   SMALL: '小劇場', MEDIUM: '中劇場', LARGE: '大劇場',
   outdoor: '野外', other: 'その他',
-};
-const venueTypeColors: Record<string, string> = {
-  small: 'bg-blue-100 text-blue-700', medium: 'bg-green-100 text-green-700', large: 'bg-purple-100 text-purple-700',
-  SMALL: 'bg-blue-100 text-blue-700', MEDIUM: 'bg-green-100 text-green-700', LARGE: 'bg-purple-100 text-purple-700',
-  outdoor: 'bg-yellow-100 text-yellow-700', other: 'bg-gray-100 text-gray-700',
 };
 
 const groupTypeLabels: Record<string, string> = {
@@ -26,6 +21,17 @@ const groupTypeLabels: Record<string, string> = {
   PROFESSIONAL: 'プロ',
   YOUTH: 'ユース',
 };
+
+// 全体の h2 の余白と大きさ（globals.css）を打ち消す
+const SECTION_TITLE = '!my-0 !pb-0 !text-lg !font-bold !text-gray-900';
+
+const SpecRow = ({ label, children }: { label: string; children: React.ReactNode }) => (
+  <div className="flex items-baseline gap-2 py-1">
+    <dt className="text-gray-600 flex-shrink-0">{label}</dt>
+    <span className="flex-1 border-b border-dotted border-gray-400 translate-y-[-4px]" aria-hidden="true" />
+    <dd className="text-gray-900 text-right">{children}</dd>
+  </div>
+);
 
 type RelatedGroup = {
   name: string;
@@ -74,167 +80,115 @@ export default function TheaterGroupDetail({ group, relatedShogekijoGroups, acti
         ]}
       />
 
-      <div className="px-4 py-6 max-w-3xl mx-auto">
-        {/* パンくず */}
-        <nav className="flex items-center gap-1 text-xs text-gray-500 mb-4 flex-wrap">
-          <Link href="/" className="hover:text-theater-primary-700">ホーム</Link>
-          <FaChevronRight className="text-[8px]" />
-          {isUniversity && (
-            <>
-              <Link href="/university-theater" className="hover:text-theater-primary-700">大学演劇</Link>
-              <FaChevronRight className="text-[8px]" />
-            </>
+      <div className="max-w-3xl mx-auto pt-6 md:pt-8 pb-12 [&>section:last-child]:border-b-0">
+        <Breadcrumb
+          items={[
+            { name: 'ホーム', href: '/' },
+            ...(isUniversity ? [{ name: '大学演劇', href: '/university-theater' }] : []),
+            { name: '劇団データベース', href: '/theater-groups' },
+            { name: group.name },
+          ]}
+        />
+
+        <header className="border-b border-[#D9D5CF] pb-6">
+          <p className="text-sm text-gray-600">
+            {[groupTypeLabels[group.groupType] || group.groupType, prefecture || group.prefecture].filter(Boolean).join('　/　')}
+          </p>
+          <h1 className="mt-1 text-[28px] md:text-[36px] font-serif font-bold text-gray-900 leading-tight">{group.name}</h1>
+          {group.description && <p className="mt-4 text-base leading-relaxed text-gray-800">{group.description}</p>}
+
+          {(group.foundedYear || group.memberCount || group.universities?.length > 0) && (
+            <dl className="mt-5 max-w-md text-sm">
+              {group.foundedYear && <SpecRow label="設立">{group.foundedYear}年</SpecRow>}
+              {group.memberCount && <SpecRow label="部員数">{group.memberCount}名</SpecRow>}
+              {group.universities?.length > 0 && (
+                <SpecRow label="所属大学">
+                  {group.universities.map((u: any, i: number) => (
+                    <span key={i}>
+                      {i > 0 && '、'}
+                      <Link href={`/universities/${u.university.slug}`} className="text-theater-primary-700 hover:underline">
+                        {u.university.name}
+                      </Link>
+                      {u.campus && `（${u.campus}）`}
+                    </span>
+                  ))}
+                </SpecRow>
+              )}
+            </dl>
           )}
-          <Link href="/theater-groups" className="hover:text-theater-primary-700">劇団データベース</Link>
-          <FaChevronRight className="text-[8px]" />
-          <span className="text-gray-800">{group.name}</span>
-        </nav>
 
-        {/* ヘッダー */}
-        <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl p-6 md:p-8 mb-6">
-          <div className="flex items-start gap-3 mb-3">
-            <h1 className="font-serif text-2xl md:text-3xl font-bold text-gray-800">
-              {group.name}
-            </h1>
-            <span className="shrink-0 mt-1 px-2 py-0.5 text-xs font-medium rounded bg-white/80 text-gray-700">
-              {groupTypeLabels[group.groupType] || group.groupType}
-            </span>
-          </div>
-
-          {group.description && (
-            <p className="text-sm text-gray-600 mb-4">{group.description}</p>
+          {(group.website || group.twitter || group.instagram || group.corich || (group.otherLinks && group.otherLinks.length > 0)) && (
+            <div className="mt-5">
+              <SocialLinks
+                website={group.website}
+                twitter={group.twitter}
+                instagram={group.instagram}
+                corich={group.corich}
+                otherLinks={group.otherLinks}
+              />
+            </div>
           )}
+        </header>
 
-          <div className="flex flex-wrap gap-4 text-sm text-gray-600">
-            {group.memberCount && (
-              <div className="flex items-center gap-1">
-                <FaUsers className="text-blue-500" />
-                <span>部員数: {group.memberCount}名</span>
-              </div>
-            )}
-            {group.foundedYear && (
-              <div className="flex items-center gap-1">
-                <FaCalendarAlt className="text-green-500" />
-                <span>設立: {group.foundedYear}年</span>
-              </div>
-            )}
+        {/* 劇団の人に、告知と募集を書いてもらう入口 */}
+        <section className="py-6 border-b border-[#D9D5CF]">
+          <h2 className={SECTION_TITLE}>この劇団の方へ</h2>
+          <p className="mt-2 text-sm text-gray-700">公演の告知や、劇団員・スタッフの募集を無料で載せられます。</p>
+          <div className="mt-4 flex flex-wrap gap-2">
+            <Link href="/announcements/new" className="inline-flex items-center h-11 px-5 rounded bg-theater-primary-600 hover:bg-theater-primary-700 text-white text-sm font-bold">
+              公演を告知する
+            </Link>
+            <Link href="/recruit/new" className="inline-flex items-center h-11 px-5 rounded border border-theater-primary-600 text-theater-primary-700 text-sm font-bold hover:bg-theater-primary-50">
+              劇団員を募集する
+            </Link>
+            <Link href="/support/posting-request" className="inline-flex items-center h-11 px-2 text-sm text-gray-700 underline underline-offset-4 hover:text-gray-900">
+              情報の修正を依頼する
+            </Link>
           </div>
-        </div>
+        </section>
 
-        {/* 所属大学 */}
-        {group.universities && group.universities.length > 0 && (
-          <section className="bg-white rounded-xl border border-gray-100 shadow-sm p-5 mb-4">
-            <h2 className="font-serif font-bold text-lg text-gray-800 mb-3 flex items-center gap-2">
-              <FaUniversity className="text-purple-500" />
-              所属大学
-            </h2>
-            <ul className="space-y-2">
-              {group.universities.map((u: any, i: number) => (
-                <li key={i} className="flex items-center gap-2">
-                  <Link
-                    href={`/universities/${u.university.slug}`}
-                    className="text-sm text-theater-primary-700 hover:underline"
-                  >
-                    {u.university.name}
+        {activeVenues && activeVenues.length > 0 && (
+          <section className="py-6 border-b border-[#D9D5CF]">
+            <h2 className={SECTION_TITLE}>公演実績のある劇場</h2>
+            <ul className="mt-3 border-t border-[#D9D5CF]">
+              {activeVenues.map((v) => (
+                <li key={v.id} className="border-b border-[#D9D5CF]">
+                  <Link href={`/venues/${v.slug}`} className="group flex items-baseline gap-3 py-3 px-2 hover:bg-[#F4F2EE]">
+                    <span className="flex-1 font-medium text-gray-900 group-hover:text-theater-primary-700">{v.name}</span>
+                    <span className="text-sm text-gray-600">{[v.prefecture, venueTypeLabels[v.venueType] || v.venueType].filter(Boolean).join('・')}</span>
+                    <span className="w-14 text-right text-sm text-gray-600 tabular-nums">{v.performanceCount}公演</span>
                   </Link>
-                  {u.campus && (
-                    <span className="text-xs text-gray-400">({u.campus})</span>
-                  )}
-                  <span className="text-xs text-gray-400">{u.university.prefecture}</span>
                 </li>
               ))}
             </ul>
           </section>
         )}
 
-        {/* SNSリンク */}
-        {(group.website || group.twitter || group.instagram || group.corich || (group.otherLinks && group.otherLinks.length > 0)) && (
-          <section className="bg-white rounded-xl border border-gray-100 shadow-sm p-5 mb-4">
-            <h2 className="font-serif font-bold text-lg text-gray-800 mb-3">公式リンク</h2>
-            <SocialLinks
-              website={group.website}
-              twitter={group.twitter}
-              instagram={group.instagram}
-              corich={group.corich}
-              otherLinks={group.otherLinks}
-            />
-          </section>
-        )}
-
-        {/* 関連ブログ記事 */}
         {group.blogPostSlug && (
-          <section className="bg-white rounded-xl border border-gray-100 shadow-sm p-5 mb-4">
-            <h2 className="font-serif font-bold text-lg text-gray-800 mb-3 flex items-center gap-2">
-              <FaBook className="text-theater-primary-500" />
-              関連記事
-            </h2>
-            <Link
-              href={`/blog/ja/${group.blogPostSlug}`}
-              className="text-sm text-theater-primary-700 hover:underline"
-            >
-              この劇団が掲載されているブログ記事を読む
+          <section className="py-6 border-b border-[#D9D5CF]">
+            <h2 className={SECTION_TITLE}>関連記事</h2>
+            <Link href={`/blog/ja/${group.blogPostSlug}`} className="mt-2 inline-block text-sm text-theater-primary-700 hover:underline">
+              この劇団が載っているブログ記事を読む
             </Link>
           </section>
         )}
 
-        {/* 活動劇場 */}
-        {activeVenues && activeVenues.length > 0 && (
-          <section className="bg-white rounded-xl border border-gray-100 shadow-sm p-5 mb-4">
-            <h2 className="font-serif font-bold text-lg text-gray-800 mb-3 flex items-center gap-2">
-              <FaBuilding className="text-indigo-500" />
-              公演実績のある劇場
-            </h2>
-            <ul className="space-y-2">
-              {activeVenues.map((v) => (
-                <li key={v.id} className="flex items-center gap-2">
-                  <Link
-                    href={`/venues/${v.slug}`}
-                    className="text-sm text-theater-primary-700 hover:underline flex-1"
-                  >
-                    {v.name}
-                  </Link>
-                  <span className="text-xs text-gray-400">{v.prefecture}</span>
-                  <span className={`px-1.5 py-0.5 text-[10px] font-bold rounded ${venueTypeColors[v.venueType] || 'bg-gray-100 text-gray-700'}`}>
-                    {venueTypeLabels[v.venueType] || v.venueType}
-                  </span>
-                  <span className="text-xs text-gray-500">{v.performanceCount}公演</span>
-                </li>
-              ))}
-            </ul>
-          </section>
-        )}
-
-        {/* この地域の小劇場 */}
         {relatedShogekijoGroups.length > 0 && (
-          <section className="bg-white rounded-xl border border-gray-100 shadow-sm p-5 mb-4">
-            <h2 className="font-serif font-bold text-lg text-gray-800 mb-3 flex items-center gap-2">
-              <FaTheaterMasks className="text-orange-500" />
-              {prefecture ? `${prefecture}の劇団` : 'この地域の劇団'}
-            </h2>
-            <ul className="space-y-2">
+          <section className="py-6">
+            <h2 className={SECTION_TITLE}>{prefecture ? `${prefecture}の劇団` : 'この地域の劇団'}</h2>
+            <ul className="mt-3 border-t border-[#D9D5CF]">
               {relatedShogekijoGroups.map((rg) => (
-                <li key={rg.slug} className="flex items-center gap-2">
-                  <FaTheaterMasks className="text-orange-400 text-sm shrink-0" />
-                  <Link
-                    href={`/shogekijo/${rg.slug}`}
-                    className="text-sm text-orange-700 hover:underline flex-1"
-                  >
-                    {rg.name}
+                <li key={rg.slug} className="border-b border-[#D9D5CF]">
+                  <Link href={`/shogekijo/${rg.slug}`} className="group flex items-baseline gap-3 py-3 px-2 hover:bg-[#F4F2EE]">
+                    <span className="flex-1 font-serif font-bold text-gray-900 group-hover:text-theater-primary-700">{rg.name}</span>
+                    <span className="text-sm text-gray-600">{groupTypeLabels[rg.groupType] || rg.groupType}</span>
                   </Link>
-                  <span className="text-[10px] text-gray-400">
-                    {groupTypeLabels[rg.groupType] || rg.groupType}
-                  </span>
                 </li>
               ))}
             </ul>
-            <div className="mt-3 pt-3 border-t border-gray-50">
-              <Link
-                href="/shogekijo"
-                className="text-xs text-orange-600 hover:text-orange-800 transition-colors"
-              >
-                小劇場データベースを見る →
-              </Link>
-            </div>
+            <Link href="/shogekijo" className="mt-3 inline-block text-sm text-theater-primary-700 hover:underline">
+              小劇場データベースを見る
+            </Link>
           </section>
         )}
       </div>
