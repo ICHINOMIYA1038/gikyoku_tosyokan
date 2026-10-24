@@ -74,7 +74,7 @@ export default async function handler(
     const jst = new Date(
       (comment as { date: Date }).date.toLocaleString("en-US", { timeZone: "Asia/Tokyo" })
     );
-    const formatted = `${jst.getFullYear()}/${jst.getMonth() + 1}/${jst.getDate()} ${jst.getHours()}:${jst.getMinutes()}`;
+    const formatted = `${jst.getFullYear()}/${jst.getMonth() + 1}/${jst.getDate()} ${jst.getHours()}:${String(jst.getMinutes()).padStart(2, "0")}`;
 
     // ISRキャッシュを再検証（次回アクセス時に最新コメントが表示される）
     let revalidatePostId: number | null = targetid;
