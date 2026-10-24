@@ -102,7 +102,7 @@ export default function RecruitListPage() {
             <ul className="border-t border-[#D9D5CF]">
               {recruitments.map((r: any) => {
                 const days = r.expiresAt ? Math.ceil((new Date(r.expiresAt).getTime() - Date.now()) / 86400000) : null;
-                const who = r.theaterGroupName || r.theaterGroup?.name || r.poster?.name || '個人';
+                const who = r.theaterGroupName || r.theaterGroup?.name || r.poster?.displayName || '個人';
                 const place = r.venue || r.rehearsalLocation;
                 const extras = [
                   ...(r.vibe || []),

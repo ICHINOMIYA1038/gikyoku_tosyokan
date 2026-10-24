@@ -393,7 +393,7 @@ const Comments = ({ comments: initialComments, postid, postTitle, inline = false
             <p className="text-xs text-gray-600">
               <span className={newComment.length > maxChars * 0.9 ? "text-theater-primary-700 font-bold" : ""}>{newComment.length}</span>/{maxChars}字
               <span className="mx-2">・</span>
-              {session.user.name ?? "ユーザー"}として投稿
+              <Link href="/mypage/edit" className="underline underline-offset-4 hover:text-gray-900">表示名</Link>で投稿
               <span className="mx-2">・</span>
               <button className="underline underline-offset-4 hover:text-gray-900" onClick={() => setShowGuidelines(!showGuidelines)} aria-expanded={showGuidelines}>
                 投稿のルール

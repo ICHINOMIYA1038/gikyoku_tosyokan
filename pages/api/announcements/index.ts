@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { prisma } from '@/lib/prisma';
 import { getAuth, requireAuth } from '@/lib/auth';
 import { parseJstInput } from '@/lib/date-format';
+import { publicName } from '@/lib/public-name';
 
 export default async function handler(
   req: NextApiRequest,
@@ -101,7 +102,7 @@ export default async function handler(
         where: { id: userId },
         select: { displayName: true, name: true },
       });
-      const displayAuthor = dbUser?.displayName || dbUser?.name || session.user.name || 'ユーザー';
+      const displayAuthor = publicName(dbUser);
 
       const announcement = await prisma.announcement.create({
         data: {

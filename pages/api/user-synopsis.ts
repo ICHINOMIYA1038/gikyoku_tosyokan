@@ -16,7 +16,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         id: true,
         content: true,
         createdAt: true,
-        user: { select: { name: true, displayName: true } },
+        user: { select: { displayName: true } },
       },
       orderBy: { createdAt: "desc" },
       take: 5,

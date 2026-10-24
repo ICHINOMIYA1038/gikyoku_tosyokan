@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { NextApiRequest, NextApiResponse } from "next";
 import { requireAuth } from "@/lib/auth";
+import { publicName } from "@/lib/public-name";
 
 /**
  * コメント投稿API
@@ -37,7 +38,7 @@ export default async function handler(
     where: { id: userId },
     select: { displayName: true, name: true },
   });
-  const displayAuthor = dbUser?.displayName || dbUser?.name || session.user.name || "ユーザー";
+  const displayAuthor = publicName(dbUser);
 
   try {
     let comment;
@@ -52,7 +53,7 @@ export default async function handler(
           user: { connect: { id: userId } },
         },
         include: {
-          user: { select: { id: true, name: true, displayName: true, image: true, avatarUrl: true } },
+          user: { select: { id: true, displayName: true, image: true, avatarUrl: true } },
         },
       });
     } else {
@@ -65,7 +66,7 @@ export default async function handler(
           user: { connect: { id: userId } },
         },
         include: {
-          user: { select: { id: true, name: true, displayName: true, image: true, avatarUrl: true } },
+          user: { select: { id: true, displayName: true, image: true, avatarUrl: true } },
         },
       });
     }

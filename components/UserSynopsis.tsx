@@ -66,7 +66,7 @@ const UserSynopsis = ({ postId }: UserSynopsisProps) => {
             <div key={entry.id} className="text-sm text-gray-600 leading-relaxed">
               <p>{entry.content}</p>
               <p className="text-xs text-gray-400 mt-1">
-                — {entry.user.displayName || entry.user.name || "名無しさん"}
+                — {entry.user.displayName || "名無しさん"}
               </p>
             </div>
           ))}

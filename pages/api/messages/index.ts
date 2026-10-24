@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { prisma } from '@/lib/prisma';
 import { requireAuth } from '@/lib/auth';
+import { publicName, publicNameOf } from '@/lib/public-name';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const session = await requireAuth(req, res);
@@ -42,7 +43,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         id: c.id,
         other: other ? {
           id: other.id,
-          name: other.displayName || other.name,
+          name: publicName(other),
           image: other.avatarUrl || other.image,
         } : null,
         lastMessage: c.lastMessage,
@@ -128,7 +129,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // メール通知
     try {
       if (receiver.email) {
-        const senderName = session.user.name || 'ユーザー';
+        const senderName = await publicNameOf(session.user.id);
         const { sendMail } = await import('@/lib/mailer');
         await sendMail({
           from: `戯曲図書館 <${process.env.GMAIL_USER || 'noreply@gikyokutosyokan.com'}>`,

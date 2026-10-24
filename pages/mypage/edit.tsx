@@ -22,7 +22,7 @@ interface Props {
 }
 
 export default function EditProfile({ user }: Props) {
-  const [displayName, setDisplayName] = useState(user.displayName ?? user.name ?? '');
+  const [displayName, setDisplayName] = useState(user.displayName ?? '');
   const [bio, setBio] = useState(user.bio ?? '');
   const [groupName, setGroupName] = useState(user.groupName ?? '');
   const [emailOptIn, setEmailOptIn] = useState(user.emailOptIn);
@@ -167,7 +167,7 @@ export default function EditProfile({ user }: Props) {
               type="text"
               value={displayName}
               onChange={(e) => setDisplayName(e.target.value)}
-              placeholder={user.name ?? 'ユーザー'}
+              placeholder="例：演劇好きのたろう（空なら「ユーザー」）"
               maxLength={50}
               className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-theater-primary-300 focus:border-theater-primary-300"
             />

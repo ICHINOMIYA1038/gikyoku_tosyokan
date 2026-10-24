@@ -5,6 +5,9 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  // サンプルデータを作る開発用の API。本番では使わせない
+  if (process.env.NODE_ENV !== 'development') return res.status(404).end();
+
   if (req.method !== 'POST') {
     return res.status(405).json({ message: 'Method not allowed' });
   }

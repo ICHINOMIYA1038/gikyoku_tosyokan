@@ -70,7 +70,7 @@ export default function RecruitDetailPage({ recruitment: r, isOwner, hasApplied,
   const poster = r.poster;
   const group = r.theaterGroup;
   const expLabels: Record<string, string> = { ANY: '問わない', BEGINNER: '未経験歓迎', EXPERIENCED: '経験者優遇' };
-  const who = r.theaterGroupName || group?.name || poster?.displayName || poster?.name || '個人';
+  const who = r.theaterGroupName || group?.name || poster?.displayName || '個人';
   const canApply = !isOwner && r.status === 'ACTIVE' && !applied;
 
   return (
@@ -219,13 +219,13 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
   const recruitment = await prisma.recruitment.findUnique({
     where: { id },
     include: {
-      poster: { select: { id: true, name: true, displayName: true, image: true, avatarUrl: true } },
+      poster: { select: { id: true, displayName: true, image: true, avatarUrl: true } },
       theaterGroup: { select: { id: true, name: true, slug: true, prefecture: true, groupType: true, website: true } },
       _count: { select: { applications: true } },
     },
   });
 
-  if (!recruitment) return { notFound: true };
+  if (!recruitment || recruitment.deletedAt) return { notFound: true };
 
   let hasApplied = false;
   let hasInterest = false;
