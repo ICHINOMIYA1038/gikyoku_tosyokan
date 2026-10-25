@@ -22,8 +22,13 @@ import { PrismaClient } from '@prisma/client';
 import { JSDOM } from 'jsdom';
 import fs from 'fs';
 import path from 'path';
+import { randomUUID } from 'crypto';
+import { summarizeFetches, classifyPerformanceContext, type FetchObservation } from './performance-outcomes';
 
 const prisma = new PrismaClient();
+const runId = randomUUID();
+const startedAt = new Date().toISOString();
+const fetchObservations: FetchObservation[] = [];
 
 const USER_AGENT = 'GikyokuTosyokan-Bot/1.0 (+https://gikyokutosyokan.com)';
 const FETCH_TIMEOUT_MS = 10_000;
@@ -46,6 +51,8 @@ interface PerformanceMatch {
   sourceType: 'official';
   confidence: 'high' | 'medium';
   matchedText: string;
+  collectedAt: string;
+  collectionRunId: string;
 }
 
 // robots.txt のキャッシュ（ドメイン単位）
@@ -76,7 +83,7 @@ async function getDisallowedPaths(origin: string): Promise<string[]> {
     });
 
     if (!response.ok) {
-      // robots.txt がない場合は制限なし
+      if (response.status !== 404 && response.status !== 410) throw new Error('robots unavailable');
       robotsCache.set(origin, []);
       return [];
     }
@@ -99,9 +106,8 @@ async function getDisallowedPaths(origin: string): Promise<string[]> {
     robotsCache.set(origin, disallowed);
     return disallowed;
   } catch {
-    // robots.txt 取得失敗は制限なしとして扱う
-    robotsCache.set(origin, []);
-    return [];
+    // Unknown access policy is a separate deferred outcome, not permission to crawl.
+    throw new Error('robots unavailable');
   }
 }
 
@@ -121,14 +127,17 @@ async function isAllowedByRobots(url: string): Promise<boolean> {
     }
     return true;
   } catch {
-    return false;
+    throw new Error('robots unavailable');
   }
 }
 
 async function fetchPageText(url: string): Promise<string | null> {
   // robots.txt チェック
-  const allowed = await isAllowedByRobots(url);
+  let allowed: boolean;
+  try { allowed = await isAllowedByRobots(url); }
+  catch { fetchObservations.push({url, outcome:'robots_unavailable'}); return null; }
   if (!allowed) {
+    fetchObservations.push({url, outcome:'robots_denied'});
     console.log(`  [SKIP] robots.txt で拒否: ${url}`);
     return null;
   }
@@ -144,12 +153,14 @@ async function fetchPageText(url: string): Promise<string | null> {
     });
 
     if (!response.ok) {
+      fetchObservations.push({url, outcome:'http_error', status:response.status});
       console.log(`  [SKIP] HTTP ${response.status}: ${url}`);
       return null;
     }
 
     const contentType = response.headers.get('content-type') || '';
     if (!contentType.includes('text/html') && !contentType.includes('text/plain')) {
+      fetchObservations.push({url, outcome:'unsupported_content'});
       console.log(`  [SKIP] Non-HTML content: ${contentType}`);
       return null;
     }
@@ -163,8 +174,12 @@ async function fetchPageText(url: string): Promise<string | null> {
     const text = doc.body?.textContent || '';
 
     // 連続空白を圧縮
-    return text.replace(/\s+/g, ' ').trim();
+    const cleaned = text.replace(/\s+/g, ' ').trim();
+    dom.window.close();
+    fetchObservations.push({url,outcome:cleaned ? 'ok' : 'empty'});
+    return cleaned;
   } catch (error: any) {
+    fetchObservations.push({url,outcome:error.name === 'AbortError' ? 'timeout' : 'network_error'});
     if (error.name === 'AbortError') {
       console.log(`  [SKIP] Timeout: ${url}`);
     } else {
@@ -198,13 +213,7 @@ function findMatches(
     const end = Math.min(pageText.length, index + post.title.length + 40);
     const matchedText = pageText.substring(start, end);
 
-    // 信頼度判定:
-    //   - 「公演」「上演」「演目」等のキーワードが文脈に含まれる → high
-    //   - タイトルが6文字以上 → high
-    //   - それ以外 → medium
-    const contextKeywords = ['公演', '上演', '演目', '脚本', '作・', '作：', '原作'];
-    const hasContextHint = contextKeywords.some((kw) => matchedText.includes(kw));
-    const confidence = (hasContextHint || post.title.length >= 6) ? 'high' : 'medium';
+    const confidence = classifyPerformanceContext(matchedText);
 
     matches.push({
       postId: post.id,
@@ -215,6 +224,8 @@ function findMatches(
       sourceType: 'official',
       confidence,
       matchedText,
+      collectedAt: new Date().toISOString(),
+      collectionRunId: runId,
     });
   }
 
@@ -312,8 +323,7 @@ async function main() {
   // 3. 各劇団websiteをクロール
   const allMatches: PerformanceMatch[] = [];
   let processed = 0;
-  let fetchErrors = 0;
-  let robotsBlocked = 0;
+
 
   for (const group of theaterGroups) {
     if (!group.website) continue;
@@ -325,7 +335,6 @@ async function main() {
     const pageText = await fetchPageText(group.website);
 
     if (!pageText) {
-      fetchErrors++;
       if (processed < theaterGroups.length) await sleep(DELAY_MS);
       continue;
     }
@@ -380,16 +389,29 @@ async function main() {
   const mediumCount = allMatches.filter((m) => m.confidence === 'medium').length;
   console.log('\n=== サマリー ===');
   console.log(`処理劇団数: ${processed}`);
-  console.log(`取得エラー: ${fetchErrors}`);
-  console.log(`robots.txt拒否: ${robotsBlocked}`);
+  const fetchSummary = summarizeFetches(fetchObservations);
+  console.log(`取得エラー: ${fetchSummary.errors}`);
+  console.log(`robots.txt拒否: ${fetchSummary.robotsDenied} / 確認不能: ${fetchSummary.robotsUnavailable}`);
   console.log(`新規マッチ総数: ${allMatches.length}`);
   console.log(`  high confidence: ${highCount}`);
   console.log(`  medium confidence: ${mediumCount}`);
   if (apply) {
     console.log(`DB投入: ${applyResult.created}件 / 重複スキップ: ${applyResult.skipped}件 / エラー: ${applyResult.errors}件`);
   }
+  const reportPath = path.join(outputDir, `performance-outcome-${runId}.json`);
+  fs.writeFileSync(reportPath, JSON.stringify({
+    schema_version:1, collection_run_id:runId, started_at:startedAt, finished_at:new Date().toISOString(),
+    summary:'上演候補の収集。DB投入と利用者への表示・実利用は別の確認が必要。',
+    metrics:{processed,...fetchSummary,highCandidates:highCount,reviewPending:mediumCount,dbUpserts:applyResult.created,dbErrors:applyResult.errors},
+    usage:'unverified',
+    evidence:[{kind:'artifact',ref:outputPath,observation:`候補${allMatches.length}件。confidenceは機械判定で上演主体の確定を意味しない。`}],
+    fetches:fetchObservations, apply_requested:apply,
+    consumer:'作品詳細 /posts/[id] の上演の記録。DB読戻し・公開ページ表示・利用者の閲覧はそれぞれ別に確認する。',
+  }, null, 2));
+  console.log(`成果評価: ${reportPath}`);
   console.log(`出力: ${outputPath}`);
   console.log(`完了: ${new Date().toISOString()}`);
+  if (applyResult.errors > 0) process.exitCode = 1;
 }
 
 main()
