@@ -58,14 +58,17 @@ interface PerformanceMatch {
 // robots.txt のキャッシュ（ドメイン単位）
 const robotsCache = new Map<string, string[]>();
 
-function parseArgs(): { limit: number | null; apply: boolean } {
+function parseArgs(): { limit: number | null; apply: boolean; outputDir: string } {
   const args = process.argv.slice(2);
   const limitIndex = args.indexOf('--limit');
   const limit = limitIndex !== -1 && args[limitIndex + 1]
     ? parseInt(args[limitIndex + 1], 10)
     : null;
   const apply = args.includes('--apply');
-  return { limit, apply };
+  const outputIndex = args.indexOf('--output-dir');
+  if (outputIndex !== -1 && !args[outputIndex+1]) throw new Error('--output-dir requires a path');
+  if (limit !== null && (!Number.isInteger(limit) || limit < 1)) throw new Error('--limit must be positive');
+  return { limit, apply, outputDir:outputIndex === -1 ? path.join(process.cwd(),'data') : path.resolve(args[outputIndex+1]) };
 }
 
 /**
@@ -281,7 +284,7 @@ async function applyMatches(matches: PerformanceMatch[]): Promise<{ created: num
 }
 
 async function main() {
-  const { limit, apply } = parseArgs();
+  const { limit, apply, outputDir } = parseArgs();
 
   console.log('=== 上演実績データ収集 ===');
   console.log(`開始: ${new Date().toISOString()}`);
@@ -371,11 +374,10 @@ async function main() {
 
   // 5. 結果をJSONに出力
   const today = new Date().toISOString().split('T')[0];
-  const outputDir = path.join(process.cwd(), 'data');
   if (!fs.existsSync(outputDir)) {
     fs.mkdirSync(outputDir, { recursive: true });
   }
-  const outputPath = path.join(outputDir, `performance-matches-${today}.json`);
+  const outputPath = path.join(outputDir, `performance-matches-${today}-${runId}.json`);
   fs.writeFileSync(outputPath, JSON.stringify(allMatches, null, 2), 'utf8');
 
   // --apply: high confidence マッチをDBに投入
