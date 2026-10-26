@@ -239,7 +239,7 @@ The mountain is outside the hut. Its voice is also inside the room.
 
 ## Sources
 
-- Japanese Playwrights Association, [Masanori Otakeno digital archive](https://playtextdigitalarchive.com/public/author/detail/279)
+- Japanese Playwrights Association, [The Voice of the Mountain digital archive](https://playtextdigitalarchive.com/public/drama/detail/473)
 - Osaka Gas Network, [OMS Drama Award overview](https://network.osakagas.co.jp/effort/oms/)
 - Stage Web, [Report on the 16th OMS Drama Award](https://www.stageweb.com/news/200912271/)
 - Onsen Dragon, [The Voice of the Mountain: Recollections of a Mountaineer](https://www.onsendragon.com/yamanokoe)
