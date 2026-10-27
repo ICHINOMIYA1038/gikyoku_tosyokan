@@ -102,6 +102,8 @@ English support may help you identify:
 - major reversals or revelations;
 - the meaning of an unfamiliar scene.
 
+At Kabukiza, the official visitor information currently lists English or Simplified Chinese captioning for essential dialogue, lyrics, and explanations. The listed captioning fee is **¥1,500 for a full program** or **¥1,000 for a Single Act**, cash only. A short performance may not always offer the service, so confirm the exact program before you go. The same official information also notes that English synopses are available in the back pages of Japanese programs sold at the theater.
+
 It may not explain every convention in real time. A performer’s mie—a highly charged pose in which the actor momentarily fixes the body and gaze—can communicate intensity even when you do not understand the preceding speech. The music may tell you that the atmosphere has changed before you know why. A costume, wig, prop, or entrance pattern may identify a character type without a spoken explanation.
 
 Try this three-level viewing method:
