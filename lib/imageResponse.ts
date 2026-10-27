@@ -14,5 +14,5 @@ export async function loadImageResponse(): Promise<ImageResponseCtor> {
     );
     return mod.ImageResponse as ImageResponseCtor;
   }
-  return (await import("next/og")).ImageResponse;
+  return (await import("@vercel/og")).ImageResponse;
 }
