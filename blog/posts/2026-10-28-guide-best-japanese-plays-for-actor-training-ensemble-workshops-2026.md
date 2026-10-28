@@ -170,7 +170,7 @@ A related English-language spotlight on the Japanese Play Library discusses the 
 
 Seishin Chinen's *Human Pavilion* is a demanding choice for an advanced ensemble workshop. It begins from the history of the 1903 Human Pavilion incident and turns the stage into a contested site where colonial display, Okinawan identity, language, memory, and spectatorship collide.
 
-The play should not be used as a quick cultural exercise or as material for actors to demonstrate an exotic style. Its value lies in the questions it forces the ensemble to confront: Who is looking? Who is being displayed? Which language carries authority? When does comedy expose violence, and when does it allow an audience to remain comfortable?
+The play should not be used as a quick cultural exercise. Its value lies in the questions it forces the ensemble to confront: Who is looking? Who is being displayed? Which language carries authority? When does comedy expose violence, and when does it allow an audience to remain comfortable?
 
 Three performers can create a surprisingly large field of perspectives if the group works with careful vocal and physical transitions. One actor may hold a historical position, then become a commentator, witness, or target of the audience's gaze. The workshop can map these shifts without assuming that a single actor “owns” one identity throughout the performance.
 
