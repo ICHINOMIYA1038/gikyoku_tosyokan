@@ -85,7 +85,7 @@ For an international workshop, this is particularly useful because it prevents â
 - **Runtime:** approximately 60 minutes
 - **Best workshop focus:** partner listening, absence, memory, and the pressure of unfinished speech
 
-A two-person play is not automatically a good listening exercise. The strongest two-handers make every pause consequential, so that the actors cannot hide behind a crowd, a scene change, or a busy design. Nami Kuno's *A Glass of Spilled Milk* is a useful text for that kind of concentrated work.
+A two-person play is not automatically a good listening exercise. The strongest two-handers make every pause consequential, so actors cannot hide behind a crowd, scene change, or busy design. Nami Kuno's *A Glass of Spilled Milk* is a useful text for that kind of concentrated work.
 
 The title suggests an image of loss that cannot simply be reversed. For actors, that image can become a practical question: what does a person do with an event that has already happened but has not been emotionally completed? The scene can be approached through action, avoidance, repetition, or silence rather than through a single explanatory backstory.
 
