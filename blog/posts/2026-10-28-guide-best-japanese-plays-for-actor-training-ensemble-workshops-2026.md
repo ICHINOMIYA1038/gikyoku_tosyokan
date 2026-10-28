@@ -31,7 +31,7 @@ The recommendations are especially useful for international theater makers who w
 
 ## What makes a play good for actor training?
 
-A workshop script should produce work for the actor. That sounds obvious, but many scripts are selected because they look short or inexpensive. A short play can still be technically demanding, and a small cast can require more concentration than a large one.
+A workshop script should produce work for the actor. A short play can still be technically demanding, and a small cast can require more concentration than a large one.
 
 For this guide, a useful training text has at least two of the following qualities:
 
