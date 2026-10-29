@@ -42,6 +42,12 @@ test('new articles still publish',async()=>{const c=await execute('scripts/migra
 test('dry run never writes changed content',async()=>{const c=await execute('scripts/migrate-blog-to-db.ts',{dry:true});assert.equal(c.writes.length,0);});
 test('missing date preserves stored timestamp',async()=>{const c=await execute('scripts/migrate-blog-to-db.ts',{existing:record,date:null});assert.equal(c.writes.length,0);});
 test('invalid date fails without writing',async()=>{const c=await execute('scripts/migrate-blog-to-db.ts',{date:'invalid'});assert.equal(c.exitCode,1);assert.equal(c.writes.length,0);});
+test('targeted blog sync accepts one exact safe slug',async()=>{const c=await execute('scripts/migrate-blog-to-db.ts',{args:['--slug','post']});assert.equal(c.exitCode,0);assert.equal(c.writes.length,1);});
+test('targeted blog sync rejects unsafe or missing slugs before querying',async()=>{
+ for(const args of [['--slug'],['--slug','../post'],['--slug','post.md']]) {
+  const c=await execute('scripts/migrate-blog-to-db.ts',{args});assert.equal(c.exitCode,1);assert.equal(c.reads.length,0);assert.equal(c.writes.length,0);
+ }
+});
 
 test('usage refuses absent or unpublished articles before writing',async()=>{
  for(const existing of [null,{published:false}]) {
