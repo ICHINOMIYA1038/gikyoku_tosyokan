@@ -44,6 +44,8 @@ import BlogCallout, { CalloutType } from '@/components/BlogCallout';
 import ReadingProgressBar from '@/components/ReadingProgressBar';
 import AdSlot from '@/components/Ad/AdSlot';
 import { AD_SLOTS } from '@/lib/adSlots';
+import AffiliateDisclosure from '@/components/AffiliateDisclosure';
+import { containsAffiliateHref, externalLinkRel } from '@/lib/affiliateLinks';
 import {
   extractBlogMetadata,
   stripMetadataComment,
@@ -151,6 +153,8 @@ export default function BlogJaPost({
                 </aside>
               )}
 
+              {containsAffiliateHref(displayContent) && <AffiliateDisclosure language="ja" />}
+
               <BlogTableOfContents content={displayContent} />
 
               <div className="my-8">
@@ -220,7 +224,7 @@ export default function BlogJaPost({
                         );
                       }
                       return (
-                        <a href={href} className="text-theater-primary-600 hover:text-theater-primary-800 underline underline-offset-2 transition-colors" target="_blank" rel="noopener noreferrer">
+                        <a href={href} className="text-theater-primary-600 hover:text-theater-primary-800 underline underline-offset-2 transition-colors" target="_blank" rel={externalLinkRel(href)}>
                           {children}
                         </a>
                       );

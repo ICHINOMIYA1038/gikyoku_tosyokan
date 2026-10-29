@@ -22,6 +22,8 @@ import BlogRelatedPosts from '@/components/BlogRelatedPosts';
 import ReadingProgressBar from '@/components/ReadingProgressBar';
 import AdSlot from '@/components/Ad/AdSlot';
 import { AD_SLOTS } from '@/lib/adSlots';
+import AffiliateDisclosure from '@/components/AffiliateDisclosure';
+import { containsAffiliateHref, externalLinkRel } from '@/lib/affiliateLinks';
 import {
   extractBlogMetadata,
   stripMetadataComment,
@@ -133,6 +135,8 @@ export default function BlogEnPost({
         <div className="flex flex-col lg:flex-row gap-10">
           <main className="flex-1 min-w-0">
             <article className="max-w-3xl">
+              {containsAffiliateHref(displayContent) && <AffiliateDisclosure language="en" />}
+
               <BlogTableOfContents content={displayContent} lang="en" />
 
               <div className="my-8">
@@ -196,7 +200,7 @@ export default function BlogEnPost({
                         );
                       }
                       return (
-                        <a href={href} className="text-theater-primary-600 hover:text-theater-primary-800 underline underline-offset-2 transition-colors" target="_blank" rel="noopener noreferrer">
+                        <a href={href} className="text-theater-primary-600 hover:text-theater-primary-800 underline underline-offset-2 transition-colors" target="_blank" rel={externalLinkRel(href)}>
                           {children}
                         </a>
                       );
