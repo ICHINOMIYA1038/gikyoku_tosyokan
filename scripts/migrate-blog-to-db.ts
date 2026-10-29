@@ -3,6 +3,7 @@
  *
  * 使い方:
  *   npx tsx scripts/migrate-blog-to-db.ts
+ *   npx tsx scripts/migrate-blog-to-db.ts --slug 2026-02-15-theater-books-for-actors
  */
 
 import fs from 'fs';
@@ -14,12 +15,23 @@ const prisma = new PrismaClient();
 const postsDirectory = path.join(process.cwd(), 'blog/posts');
 
 async function main() {
-  const fileNames = fs.readdirSync(postsDirectory).filter((f) => f.endsWith('.md'));
+  const slugIndex = process.argv.indexOf('--slug');
+  const requestedSlug = slugIndex >= 0 ? process.argv[slugIndex + 1] : null;
+  if (slugIndex >= 0 && (!requestedSlug || !/^[a-z0-9][a-z0-9-]*$/.test(requestedSlug))) {
+    throw new Error('Invalid or missing --slug value');
+  }
+
+  const fileNames = fs.readdirSync(postsDirectory)
+    .filter((f) => f.endsWith('.md'))
+    .filter((f) => !requestedSlug || f === `${requestedSlug}.md`);
+  if (requestedSlug && fileNames.length !== 1) {
+    throw new Error(`Blog source not found for slug: ${requestedSlug}`);
+  }
 
   const dryRun = process.argv.includes('--dry-run');
   let changed = 0;
   let skipped = 0;
-  console.log(`Found ${fileNames.length} markdown files${dryRun ? ' (dry run)' : ''}`);
+  console.log(`Found ${fileNames.length} markdown files${requestedSlug ? ` for ${requestedSlug}` : ''}${dryRun ? ' (dry run)' : ''}`);
 
   for (const fileName of fileNames) {
     const slug = fileName.replace(/\.md$/, '');
