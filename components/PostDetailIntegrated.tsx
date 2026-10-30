@@ -14,6 +14,7 @@ import AdSlot from "./Ad/AdSlot";
 import { AD_SLOTS } from "@/lib/adSlots";
 import AiImageBadge from "./AiImageBadge";
 import { trackAffiliateClick } from "@/lib/gtag";
+import { amazonBookUrl } from "@/lib/amazonBookLink";
 
 type PostPageProps = {
   post: any;
@@ -171,6 +172,8 @@ const PurchaseCTAs: React.FC<{ post: any }> = ({ post }) => {
 
   // モバイルで44px以上のタップターゲットを確保（Apple HIG / WCAG基準）
   const btnBase = "inline-flex items-center justify-center gap-1.5 px-4 py-2.5 min-h-[44px] text-sm font-bold rounded transition-colors";
+  // 登録リンクが無くても ISBN から Amazon の商品ページを出す（ISBN-10 = 書籍の ASIN）
+  const amazonHref = amazonBookUrl(post);
 
   return (
     <div className="flex flex-wrap gap-2 mt-4">
@@ -180,8 +183,8 @@ const PurchaseCTAs: React.FC<{ post: any }> = ({ post }) => {
           <FaBook className="text-xs" /> 台本を読む（外部サイト）
         </a>
       )}
-      {post.amazon_text_url && (
-        <a href={post.amazon_text_url} target="_blank" rel="noopener noreferrer sponsored"
+      {amazonHref && (
+        <a href={amazonHref} target="_blank" rel="noopener noreferrer sponsored"
           onClick={() => trackAffiliateClick("Amazon", post.title, post.id)}
           className={`${btnBase} border border-gray-400 bg-white text-gray-800 hover:bg-gray-50`}>
           Amazonで購入
