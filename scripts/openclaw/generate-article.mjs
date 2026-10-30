@@ -590,6 +590,8 @@ function renderPerformanceCard(perf, count, badges) {
     md += `> ${perf.synopsis}\n\n`;
   }
 
+  md += `**選定理由**: ${selectionReason(perf)}\n\n`;
+
   md += `[公式サイトで詳細を見る](${perf.officialUrl})\n`;
 
   if (perf.dbPost) {
@@ -600,6 +602,35 @@ function renderPerformanceCard(perf, count, badges) {
 
   md += '\n---\n\n';
   return md;
+}
+
+function selectionReason(perf) {
+  if (perf.priceMin !== null && perf.priceMin < 3000) {
+    return '低予算で小劇場の距離感を楽しみたい人向け。';
+  }
+  if (perf.priceMin !== null && perf.priceMin >= 8000) {
+    return '料金よりも大きな会場・話題性を優先する人向け。';
+  }
+  if (perf.endDate && perf.startDate && daysBetween(perf.startDate, perf.endDate) <= 2) {
+    return '上演期間が短く、今日を逃したくない人向け。';
+  }
+  return '作品内容と料金のバランスで選びたい人向け。';
+}
+
+function renderComparisonSection(performances) {
+  let md = `## 観客タイプ別の選び方
+
+迷ったら、次の基準で選ぶのがおすすめです。**低予算なら3,000円未満、特別な一本を選ぶなら8,000円以上、短期公演を優先するなら上演期間が短い作品**という結論です。
+
+| 観客タイプ | 公演 | 日時・会場 | 料金 | 選定理由 |
+|---|---|---|---:|---|
+`;
+  for (const perf of performances) {
+    md += `| ${selectionReason(perf).replace(/。$/, '')} | [${perf.title}](${perf.officialUrl}) | ${perf.dateRange}・${perf.venue} | ${perf.price} | ${selectionReason(perf)} |
+`;
+  }
+  return `${md}
+`;
 }
 
 function buildStructuredData(performances, today) {
@@ -724,7 +755,9 @@ function generateDailyTokyoArticle(performances) {
   const todayStr = formatDate(today);
   const todayJapanese = formatDateJapanese(today);
 
-  const validPerformances = performances.filter((p) => p.officialUrl);
+  const validPerformances = performances.filter(
+    (p) => p.officialUrl && p.venue && p.startDate && p.priceMin !== null && p.priceMax !== null
+  );
   const perfCount = validPerformances.length;
 
   const pickups = selectPickups(validPerformances, today, 3);
@@ -757,6 +790,8 @@ tags: ["公演情報", "演劇", "舞台", "東京", "観劇", "${todayJapanese.
   if (perfCount === 0) {
     article += `最新の公演情報は[戯曲図書館トップページ](/)からもご確認いただけます。\n\n`;
   } else {
+    article += '読後の結論は、**予算を抑えるなら3,000円未満、初見で特別感を求めるなら8,000円以上、予定を合わせやすくしたいなら上演期間の短い公演**です。各作品の選定理由も添えています。\n\n';
+    article += renderComparisonSection(validPerformances);
     article += renderPickupSection(pickups);
 
     article += '## 価格帯別 公演リスト\n\n';
