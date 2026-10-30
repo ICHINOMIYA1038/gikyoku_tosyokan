@@ -131,26 +131,26 @@ tags: ["高校演劇", "コンクール", "脚本選び", "演劇部", "ガイ�
 
 演劇の基礎理論がわかりやすく解説された入門書。脚本を読み解く力が身につきます。
 
-📕 [Amazonで探す](https://www.amazon.co.jp/dp/B00DKX4E3S/ref=nosim?tag=gekidankata00-22)
+📕 [Amazonで探す](https://www.amazon.co.jp/dp/B00DKX4E3S/ref=nosim?tag=gikyokutosyokan-22)
 📖 [戯曲図書館でこの作品の詳細を見る →](/posts/882)
 
 ### 鴻上尚史『発声と身体のレッスン』
 
 発声や身体表現のトレーニング方法が具体的に書かれています。部活の練習メニューに取り入れられます。
 
-📕 [Amazonで探す](https://www.amazon.co.jp/dp/4480430024/ref=nosim?tag=gekidankata00-22)
+📕 [Amazonで探す](https://www.amazon.co.jp/dp/4480430024/ref=nosim?tag=gikyokutosyokan-22)
 
 ### 三谷幸喜『12人の優しい日本人』
 
 高校演劇でも人気の会話劇。コメディの構成を学ぶ教材としても優れています。
 
-📕 [Amazonで探す](https://www.amazon.co.jp/dp/4891948612/ref=nosim?tag=gekidankata00-22)
+📕 [Amazonで探す](https://www.amazon.co.jp/dp/4891948612/ref=nosim?tag=gikyokutosyokan-22)
 
 ### 井上ひさし『父と暮せば』
 
 短編で読みやすく、二人芝居の構成を学ぶのに最適。感動的なテーマの扱い方も参考になります。
 
-📕 [Amazonで探す](https://www.amazon.co.jp/dp/B00FYJFS8Q/ref=nosim?tag=gekidankata00-22)
+📕 [Amazonで探す](https://www.amazon.co.jp/dp/B00FYJFS8Q/ref=nosim?tag=gikyokutosyokan-22)
 
 ---
 

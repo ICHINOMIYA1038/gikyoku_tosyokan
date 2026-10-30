@@ -25,7 +25,7 @@ tags: ["おすすめ戯曲", "初心者", "名作", "戯曲の読み方", "書�
 
 **おすすめポイント**: 戯曲を読み慣れていなくても、会話のテンポの良さですらすら読める
 
-📕 [Amazonで『12人の優しい日本人』を探す](https://www.amazon.co.jp/dp/4891948612/ref=nosim?tag=gekidankata00-22)
+📕 [Amazonで『12人の優しい日本人』を探す](https://www.amazon.co.jp/dp/4891948612/ref=nosim?tag=gikyokutosyokan-22)
 📖 [戯曲図書館でこの作品の詳細を見る →](/posts/882)
 
 ---
@@ -38,7 +38,7 @@ tags: ["おすすめ戯曲", "初心者", "名作", "戯曲の読み方", "書�
 
 **おすすめポイント**: 二人芝居なので登場人物を追いやすく、初めての戯曲読書に最適
 
-📕 [Amazonで『笑の大学』を探す](https://www.amazon.co.jp/dp/483560976X/ref=nosim?tag=gekidankata00-22)
+📕 [Amazonで『笑の大学』を探す](https://www.amazon.co.jp/dp/483560976X/ref=nosim?tag=gikyokutosyokan-22)
 
 ---
 
@@ -50,7 +50,7 @@ tags: ["おすすめ戯曲", "初心者", "名作", "戯曲の読み方", "書�
 
 **おすすめポイント**: 短編で読みやすく、戯曲の力を実感できる名作
 
-📕 [Amazonで『父と暮せば』を探す](https://www.amazon.co.jp/dp/B00FYJFS8Q/ref=nosim?tag=gekidankata00-22)
+📕 [Amazonで『父と暮せば』を探す](https://www.amazon.co.jp/dp/B00FYJFS8Q/ref=nosim?tag=gikyokutosyokan-22)
 
 ---
 
@@ -62,7 +62,7 @@ tags: ["おすすめ戯曲", "初心者", "名作", "戯曲の読み方", "書�
 
 **おすすめポイント**: 言葉のリズムが心地良く、声に出して読みたくなる
 
-📕 [Amazonで『朝日のような夕日をつれて』を探す](https://www.amazon.co.jp/dp/4846024253/ref=nosim?tag=gekidankata00-22)
+📕 [Amazonで『朝日のような夕日をつれて』を探す](https://www.amazon.co.jp/dp/4846024253/ref=nosim?tag=gikyokutosyokan-22)
 📖 [戯曲図書館でこの作品の詳細を見る →](/posts/412)
 
 ---
@@ -75,7 +75,7 @@ tags: ["おすすめ戯曲", "初心者", "名作", "戯曲の読み方", "書�
 
 **おすすめポイント**: 「現代口語演劇」の代表作。普段の会話がこんなにドラマチックだったのかと驚く
 
-📕 [Amazonで『東京ノート』を探す](https://www.amazon.co.jp/dp/4891882484/ref=nosim?tag=gekidankata00-22)
+📕 [Amazonで『東京ノート』を探す](https://www.amazon.co.jp/dp/4891882484/ref=nosim?tag=gikyokutosyokan-22)
 📖 [戯曲図書館でこの作品の詳細を見る →](/posts/64)
 
 ---
@@ -88,7 +88,7 @@ tags: ["おすすめ戯曲", "初心者", "名作", "戯曲の読み方", "書�
 
 **おすすめポイント**: 「演劇ってこんなにパワフルなのか」と実感できる一作
 
-📕 [Amazonで『熱海殺人事件』を探す](https://www.amazon.co.jp/dp/4041422140/ref=nosim?tag=gekidankata00-22)
+📕 [Amazonで『熱海殺人事件』を探す](https://www.amazon.co.jp/dp/4041422140/ref=nosim?tag=gikyokutosyokan-22)
 📖 [戯曲図書館でこの作品の詳細を見る →](/posts/743)
 
 ---
@@ -101,7 +101,7 @@ tags: ["おすすめ戯曲", "初心者", "名作", "戯曲の読み方", "書�
 
 **おすすめポイント**: 短編が多く、一つひとつが短いので気軽に読める
 
-📕 [Amazonで『別役実 戯曲』を探す](https://www.amazon.co.jp/dp/4380692043/ref=nosim?tag=gekidankata00-22)
+📕 [Amazonで『別役実 戯曲』を探す](https://www.amazon.co.jp/dp/4380692043/ref=nosim?tag=gikyokutosyokan-22)
 📖 [戯曲図書館で『マッチ売りの少女』の詳細を見る →](/posts/13)
 
 ---
@@ -116,7 +116,7 @@ tags: ["おすすめ戯曲", "初心者", "名作", "戯曲の読み方", "書�
 
 **おすすめポイント**: 世界中の演劇人に影響を与えた古典。演劇を知る上での必読書
 
-📕 [Amazonで『チェーホフ 桜の園』を探す](https://www.amazon.co.jp/dp/4102065016/ref=nosim?tag=gekidankata00-22)
+📕 [Amazonで『チェーホフ 桜の園』を探す](https://www.amazon.co.jp/dp/4102065016/ref=nosim?tag=gikyokutosyokan-22)
 
 ---
 
@@ -128,7 +128,7 @@ tags: ["おすすめ戯曲", "初心者", "名作", "戯曲の読み方", "書�
 
 **おすすめポイント**: ファンタジー要素があり、純粋に物語として楽しめる
 
-📕 [Amazonで『シェイクスピア 夏の夜の夢』を探す](https://www.amazon.co.jp/dp/4480033041/ref=nosim?tag=gekidankata00-22)
+📕 [Amazonで『シェイクスピア 夏の夜の夢』を探す](https://www.amazon.co.jp/dp/4480033041/ref=nosim?tag=gikyokutosyokan-22)
 
 ---
 
@@ -140,7 +140,7 @@ tags: ["おすすめ戯曲", "初心者", "名作", "戯曲の読み方", "書�
 
 **おすすめポイント**: 記憶と現実が交錯する詩的な構成。文学として極めて完成度が高い
 
-📕 [Amazonで『ガラスの動物園』を探す](https://www.amazon.co.jp/dp/4102109072/ref=nosim?tag=gekidankata00-22)
+📕 [Amazonで『ガラスの動物園』を探す](https://www.amazon.co.jp/dp/4102109072/ref=nosim?tag=gikyokutosyokan-22)
 
 ---
 
