@@ -33,7 +33,7 @@ tags: ["演技", "演出", "おすすめ本", "演劇部", "書籍紹介"]
 
 **こんな人におすすめ**: 演劇を始めたばかりの人、演劇部の顧問の先生
 
-📕 [Amazonで『演劇入門 平田オリザ』を探す](https://www.amazon.co.jp/dp/B00DKX4E3S/ref=nosim?tag=gekidankata00-22)
+📕 [Amazonで『演劇入門 平田オリザ』を探す](https://www.amazon.co.jp/dp/B00DKX4E3S/ref=nosim?tag=gikyokutosyokan-22)
 
 ---
 
@@ -45,7 +45,7 @@ tags: ["演技", "演出", "おすすめ本", "演劇部", "書籍紹介"]
 
 **こんな人におすすめ**: ある程度演劇を経験して、壁にぶつかっている人
 
-📕 [Amazonで『演技と演出 平田オリザ』を探す](https://www.amazon.co.jp/dp/B00APR9FK4/ref=nosim?tag=gekidankata00-22)
+📕 [Amazonで『演技と演出 平田オリザ』を探す](https://www.amazon.co.jp/dp/B00APR9FK4/ref=nosim?tag=gikyokutosyokan-22)
 
 ---
 
@@ -59,7 +59,7 @@ tags: ["演技", "演出", "おすすめ本", "演劇部", "書籍紹介"]
 
 **こんな人におすすめ**: 声が小さい、身体が硬い、表現の幅を広げたい人
 
-📕 [Amazonで『発声と身体のレッスン 鴻上尚史』を探す](https://www.amazon.co.jp/dp/B0FNBWRH45/ref=nosim?tag=gekidankata00-22)
+📕 [Amazonで『発声と身体のレッスン 鴻上尚史』を探す](https://www.amazon.co.jp/dp/B0FNBWRH45/ref=nosim?tag=gikyokutosyokan-22)
 
 ---
 
@@ -71,7 +71,7 @@ tags: ["演技", "演出", "おすすめ本", "演劇部", "書籍紹介"]
 
 **こんな人におすすめ**: 技術はあるが「伝わる」表現ができていないと感じる人
 
-📕 [Amazonで『表現力のレッスン 鴻上尚史』を探す](https://www.amazon.co.jp/dp/B0D947TGJ8/ref=nosim?tag=gekidankata00-22)
+📕 [Amazonで『表現力のレッスン 鴻上尚史』を探す](https://www.amazon.co.jp/dp/B0D947TGJ8/ref=nosim?tag=gikyokutosyokan-22)
 
 ---
 
@@ -83,7 +83,7 @@ tags: ["演技", "演出", "おすすめ本", "演劇部", "書籍紹介"]
 
 **こんな人におすすめ**: 演出に初めて挑戦する人、人の良さを引き出す方法を知りたい人
 
-📕 [Amazonで探す](https://www.amazon.co.jp/dp/B01M5BCYLT/ref=nosim?tag=gekidankata00-22)
+📕 [Amazonで探す](https://www.amazon.co.jp/dp/B01M5BCYLT/ref=nosim?tag=gikyokutosyokan-22)
 
 ---
 
@@ -97,7 +97,7 @@ tags: ["演技", "演出", "おすすめ本", "演劇部", "書籍紹介"]
 
 **こんな人におすすめ**: 戯曲のセリフの深さを理解したい人、脚本を書いてみたい人
 
-📕 [Amazonで『わかりあえないことから 平田オリザ』を探す](https://www.amazon.co.jp/dp/B00APR9FJU/ref=nosim?tag=gekidankata00-22)
+📕 [Amazonで『わかりあえないことから 平田オリザ』を探す](https://www.amazon.co.jp/dp/B00APR9FJU/ref=nosim?tag=gikyokutosyokan-22)
 
 ---
 
@@ -111,7 +111,7 @@ tags: ["演技", "演出", "おすすめ本", "演劇部", "書籍紹介"]
 
 **こんな人におすすめ**: 演技をより体系的に学びたい経験者
 
-📕 [Amazonで『スタニスラフスキー 俳優の仕事』を探す](https://www.amazon.co.jp/dp/4624700902/ref=nosim?tag=gekidankata00-22)
+📕 [Amazonで『スタニスラフスキー 俳優の仕事』を探す](https://www.amazon.co.jp/dp/4624700902/ref=nosim?tag=gikyokutosyokan-22)
 
 ---
 
