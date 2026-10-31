@@ -158,14 +158,14 @@ export default function AnnouncementDetailPage({ announcement }: { announcement:
             <span className="mr-1 px-1 border border-[#D9D5CF] rounded">PR</span>
             公演チラシ・パンフレットの印刷なら
             <a
-              href="https://px.a8.net/svt/ejp?a8mat=4BA6D7+G3AT5M+4JZ2+5YJRM"
+              href="https://px.a8.net/svt/ejp?a8mat=4BA6D7+G3ASDU+4JZ2+5YJRM"
               target="_blank"
               rel="nofollow noopener noreferrer sponsored"
               className="ml-1 text-gray-700 underline underline-offset-2"
             >
               いろぷり（ネット印刷）
             </a>
-            <img src="https://www17.a8.net/0.gif?a8mat=4BA6D7+G3AT5M+4JZ2+5YJRM" width="1" height="1" alt="" style={{ border: 0, display: 'inline' }} />
+            <img src="https://www17.a8.net/0.gif?a8mat=4BA6D7+G3ASDU+4JZ2+5YJRM" width="1" height="1" alt="" style={{ border: 0, display: 'inline' }} />
           </p>
 
           <aside className="mt-10 border border-[#D9D5CF] rounded p-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
