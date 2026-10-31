@@ -220,10 +220,10 @@ const PurchaseCTAs: React.FC<{ post: any }> = ({ post }) => {
 // --- 作品詳細 ---
 export const PostDetails: React.FC<PostPageProps> = ({ post }) => {
   const hasSynopsis = !!post.synopsis;
-  const hasDetails = !!post.details;
+  const hasReview = !!post.content;
   const hasAuthorProfile = !!post.author.profile;
   const hasAiDescription = !!post.aiDescription;
-  const hasContent = hasSynopsis || hasDetails || hasAuthorProfile || hasAiDescription;
+  const hasContent = hasSynopsis || hasReview || hasAuthorProfile || hasAiDescription;
 
   // スペックから自然文を生成
   const specSentences: string[] = [];
@@ -254,11 +254,11 @@ export const PostDetails: React.FC<PostPageProps> = ({ post }) => {
         </section>
       )}
 
-      {hasDetails && (
+      {hasReview && (
         <section>
-          <h2 className="text-lg font-bold text-gray-900 mb-2">詳細</h2>
+          <h2 className="text-lg font-bold text-gray-900 mb-2">感想・レビュー</h2>
           <div className="prose prose-sm max-w-none text-gray-700 mt-3">
-            <CustomMarkdown content={post.details} />
+            <CustomMarkdown content={post.content} />
           </div>
         </section>
       )}
